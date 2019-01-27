@@ -363,8 +363,8 @@ endswitch;
 
         </div>
         
-<?php $this->load->view('Purchasing_gemstones//purch_items_modals/add_supplier_model'); ?>
-<?php $this->load->view('Purchasing_gemstones//purch_items_modals/add_dropdown_modal'); ?>
+<?php $this->load->view('purchasing_gemstones/purch_items_modals/add_supplier_model'); ?>
+<?php $this->load->view('purchasing_gemstones/purch_items_modals/add_dropdown_modal'); ?>
 </div>
     
 <script>
