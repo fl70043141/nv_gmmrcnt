@@ -41,7 +41,9 @@ define('CS_NO_PREFIX', 'CS'. date('my')); //consignee Submission
 define('CR_NO_PREFIX', 'CR'. date('my')); // Consignee Received
 define('OG_NO_PREFIX', 'OG'. date('my')); // Consignee Received
 define('CRF_SUB_NO_PREFIX', 'CMS'. date('my')); // Xragtman Submission No
-define('CRF_REC_NO_PREFIX', 'CMR'. date('my')); // Xragtman Submission No
+define('CRF_REC_NO_PREFIX', 'CMR'. date('my')); // Xragtman Receive No
+define('GM_ISSUE_PREFIX', 'GI'. date('my')); // Gem Issue No 
+define('GM_RECEIVE_PREFIX', 'GR'. date('my')); // Gem Issue No 
 
 
 /*
@@ -136,7 +138,7 @@ define('INV_LOCATION',                  TB_PREFIX.'inventory_location');
 define('INVOICES',                      TB_PREFIX.'invoices');
 define('INVOICE_TYPE',                  TB_PREFIX.'invoice_type');
 define('INVOICES_TEMP',                 TB_PREFIX.'invoice_temp');
-define('INVOICES_ADDONS',                 TB_PREFIX.'invoice_addons');
+define('INVOICES_ADDONS',               TB_PREFIX.'invoice_addons');
 define('SUPPLIER_INVOICE',              TB_PREFIX.'supplier_invoice');
 define('SUPPLIER_INVOICE_DESC',         TB_PREFIX.'supplier_invoice_description');
 define('SALES_ORDERS',                  TB_PREFIX.'sales_orders');
@@ -162,7 +164,7 @@ define('GL_CHART_CLASS',                TB_PREFIX.'gl_chart_classes');
 define('GL_CHART_MASTER',               TB_PREFIX.'gl_chart_master');
 define('GL_CHART_TYPE',                 TB_PREFIX.'gl_chart_types');
 define('GL_TRANS',                      TB_PREFIX.'gl_transections');
-define('GL_QUICK_ENTRY',            TB_PREFIX.'gl_quick_entries');
+define('GL_QUICK_ENTRY',                TB_PREFIX.'gl_quick_entries');
 define('GL_QUICK_ENTRY_ACC',            TB_PREFIX.'gl_quick_entry_accounts');
 define('GL_FISCAL_YEARS',               TB_PREFIX.'gl_fiscal_year');
 define('OLD_GOLD',                      TB_PREFIX.'old_gold');
@@ -172,6 +174,11 @@ define('CRAFTMANS',                     TB_PREFIX.'craftmans');
 define('CRAFTMANS_SUBMISSION',          TB_PREFIX.'so_craftman_submission');
 define('CRAFTMANS_RECEIVE',             TB_PREFIX.'so_craftman_receivals');
 define('CRAFTMANS_RECEIVE_DESC',        TB_PREFIX.'so_craftman_receivals_desc');
+define('GEM_ISSUES',                    TB_PREFIX.'gem_issues');
+define('GEM_ISSUE_TYPES',               TB_PREFIX.'gem_issue_types');
+define('GEM_ISSUE_RECORDS',             TB_PREFIX.'gem_issue_item_record');
+define('GEM_RECEIVAL',                  TB_PREFIX.'gem_receivals');
+define('GEM_LAPIDARY_COSTING',             TB_PREFIX.'gem_lapidary_costing');
 
 
 /*
