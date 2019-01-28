@@ -366,7 +366,7 @@ class Purchasing_gemstones extends CI_Controller {
                 } 
 	}
         
-        function stock_status_check($item_id,$loc_id,$uom,$units=0,$uom_2='',$units_2=0){ //updatiuon for item_stock table
+        function stock_status_check($item_id,$loc_id,$uom,$units=0,$uom_2='',$units_2=0,$calc='-'){ //updatiuon for item_stock table
             $this->load->model('Item_stock_model');
             $stock_det = $this->Item_stock_model->get_single_row('',"location_id = '$loc_id' and item_id = '$item_id'");
             $available_units= $available_units_2 = 0;
@@ -388,13 +388,19 @@ class Purchasing_gemstones extends CI_Controller {
                 $available_units = $units;
                 $available_units_2 = $units_2;
             }else{
-                $available_units = $stock_det['units_available'] + $units;
-                $available_units_2 = $stock_det['units_available_2'] + $units_2;
+                if($calc=='+'){
+                    $available_units = $stock_det['units_available'] + $units;
+                    $available_units_2 = $stock_det['units_available_2'] + $units_2;
+                }else{
+                    
+                    $available_units = $stock_det['units_available'] - $units;
+                    $available_units_2 = $stock_det['units_available_2'] - $units_2;
+                }
             }
                 $update_arr = array('location_id'=>$loc_id,'item_id'=>$item_id,'new_units_available'=>$available_units,'new_units_available_2'=>$available_units_2);
+                
             return $update_arr;
         }
-        
         
 	function update(){ 
             $inputs = $this->input->post();
@@ -439,31 +445,78 @@ class Purchasing_gemstones extends CI_Controller {
         
         function remove(){
             $inputs = $this->input->post(); 
+            $this->load->model('Item_stock_model');
             //check the payments before delete reservation
             $this->load->model('Payments_model');
             $trans_data = $this->Payments_model->get_transections(20,$inputs['id']); //20 for supp in transection
+//            echo '<pre>';            print_r($trans_data); die;
             if(!empty($trans_data)){
                 $this->session->set_flashdata('error','You need to remove the Payments transections before delete Invoice!');
                 redirect(base_url($this->router->fetch_class().'/delete/'.$inputs['id']));
                 return false;
             }
-            $data = array(
+            $data['tbl_data'] = array(
                             'deleted' => 1,
                             'deleted_on' => date('Y-m-d'),
                             'deleted_by' => $this->session->userdata(SYSTEM_CODE)['ID']
                          ); 
                 
-            $existing_data = $this->Purchasing_items_model->get_single_row($inputs['id']);  
+            
+            $si_stock_trans = $this->Item_stock_model->get_stock_transection($inputs['id'],'transection_type = 1'); //1 for purchase invoice
+            
+            foreach ($si_stock_trans as $cn_stock){
+                
+                if($cn_stock['uom_id_2']!=0)
+                    $item_stock_data = $this->stock_status_check($cn_stock['item_id'],$cn_stock['location_id'],$cn_stock['uom_id'],$cn_stock['units'],$cn_stock['uom_id_2'],$cn_stock['units_2'],'-');
+                else
+                    $item_stock_data = $this->stock_status_check($cn_stock['item_id'],$cn_stock['location_id'],$cn_stock['uom_id'],$cn_stock['units'],'','','-');
+                
+                if(!empty($item_stock_data)){
+                    $data['item_stock'][] = $item_stock_data;
+                }
+            }  
+            $existing_data = $this->get_invoice_info($inputs['id']); 
+            $cur_det = get_currency_for_code($existing_data['invoice_dets']['currency_code']);
+             //GL Entries
+            $data['gl_trans'] = array(array(
+                                                'person_type' => 20,
+                                                'person_id' => $existing_data['invoice_dets']['supplier_id'],
+                                                'trans_ref' => $existing_data['invoice_dets']['id'],
+                                                'trans_date' => strtotime("now"),
+                                                'account' => 5, //5 inventory GL
+                                                'account_code' => 1510, //5 inventory GL
+                                                'memo' => 'SI Deletion',
+                                                'amount' => (-$existing_data['invoice_total']),
+                                                'currency_code' => $cur_det['code'], 
+                                                'currency_value' => $cur_det['value'],  
+                                                'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                'status' => 1,
+                                        ),array(
+                                                'person_type' => 20,
+                                                'person_id' => $existing_data['invoice_dets']['supplier_id'],
+                                                'trans_ref' => $existing_data['invoice_dets']['id'],
+                                                'trans_date' => strtotime("now"),
+                                                'account' => 14, //14 AC Payable GL
+                                                'account_code' => 2100, //inventory GL
+                                                'memo' => 'SI Deletion',
+                                                'amount' => ($existing_data['invoice_total']),
+                                                'currency_code' => $cur_det['code'], 
+                                                'currency_value' => $cur_det['value'],  
+                                                'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                'status' => 1,
+                                        )
+                                    );
+                
             $delete_stat = $this->Purchasing_items_model->delete_db($inputs['id'],$data);
                     
             if($delete_stat){
                 //update log data
                 add_system_log(INVOICES, $this->router->fetch_class(), __FUNCTION__,$existing_data, '');
                 $this->session->set_flashdata('warn',RECORD_DELETE);
-                redirect(base_url('Invoice_list'));
+                redirect(base_url('Purchasing_items'));
             }else{
                 $this->session->set_flashdata('warn',ERROR);
-                redirect(base_url('Invoice_list'));
+                redirect(base_url('Purchasing_items'));
             }  
 	}
 	

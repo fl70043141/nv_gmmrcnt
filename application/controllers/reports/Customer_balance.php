@@ -33,9 +33,9 @@ class Customer_balance extends CI_Controller {
             }
         }
         
-        public function search(){ //view the report
-            $invoices = $this->load_data(); 
-            $this->load->view('reports_all/sales/sales_summary/search_summary_report_result',$invoices);
+        public function search(){ //view the report 
+            $data = $this->load_data();
+            $this->load->view('reports_all/sales/customer_balance/search_customer_balance_result',$data);
 	} 
         
         public function print_report(){ 
@@ -98,10 +98,12 @@ class Customer_balance extends CI_Controller {
             $html .= '<table  class="table-line" border="0">
                         <thead> 
                             <tr class="colored_bg">
-                                <th width="31%" align="center">Customer Name</th> 
-                                <th width="23%" align="right">Total Invoices</th> 
-                                <th width="23%" align="right">Settled</th> 
-                                <th width="23%" align="right">Outstanding Amount</th>  
+                                <th width="5%" align="center;">#</th> 
+                                <th width="25%" align="left">Customer Name</th> 
+                                <th width="16%" align="left">City</th> 
+                                <th width="18%" align="right">Total Invoices</th> 
+                                <th width="18%" align="right">Settled</th> 
+                                <th width="18%" align="right">Outstanding Amount</th>  
                             </tr>
                         </thead>
                         <tbody>';
@@ -118,21 +120,22 @@ class Customer_balance extends CI_Controller {
                         $inv_total += $invoice_total;
                         $tot_settled += $cust_payments;
                         $tot_balance += $pending;
-
-                        $g_inv_total += $invoice_total;
-                        $g_tot_settled += $cust_payments;
-                        $g_tot_balance += $pending;
+ 
 
                      } 
                 }
                                  
                 if($tot_balance>0){
+                    $g_inv_total += $inv_total;
+                    $g_tot_settled += $tot_settled;
+                    $g_tot_balance += $tot_balance;
                     $html .= '<tr> 
-                                    <td width="4%" align="left">'.$i.'.</td>
-                                    <td width="30%" align="left">'.$i.'. '.$cust_dets['customer']['customer_name'].'- '.$cust_dets['customer']['city'].(($cust_dets['customer']['short_name']!='')?' ['.$cust_dets['customer']['short_name'].']':'').'</td>
-                                    <td width="22%" align="right">'.number_format($inv_total,2).'</td>
-                                    <td width="22%" align="right">'.number_format($tot_settled,2).'</td>
-                                    <td width="22%" align="right">'.number_format($tot_balance,2).'</td>
+                                    <td width="5%" align="center">'.$i.'.</td>
+                                    <td width="25%" align="left">'.$cust_dets['customer']['customer_name'].'- '.(($cust_dets['customer']['short_name']!='')?' ['.$cust_dets['customer']['short_name'].']':'').'</td>
+                                    <td width="16%" align="left">'.$cust_dets['customer']['city'].'</td>
+                                    <td width="18%" align="right">'.number_format($inv_total,2).'</td>
+                                    <td width="18%" align="right">'.number_format($tot_settled,2).'</td>
+                                    <td width="18%" align="right">'.number_format($tot_balance,2).'</td>
                                 </tr>';
                                          
                 $i++;
@@ -147,10 +150,12 @@ class Customer_balance extends CI_Controller {
                                 <td align="left" colspan="4"></td>
                             </tr> 
                             <tr> 
-                                <th width="31%" align="center"></th>
-                                <th width="23%" align="right"><b>'.number_format($g_inv_total,2).'</b></th>
-                                <th width="23%" align="right"><b>'.number_format($g_tot_settled,2).'</b></th> 
-                                <th width="23%" align="right"><b>'.number_format($g_tot_balance,2).'</b></th>
+                                <th width="5%" align="center"></th>
+                                <th width="25%" align="center"></th>
+                                <th width="16%" align="center"></th>
+                                <th width="18%" align="right"><b>'.number_format($g_inv_total,2).'</b></th>
+                                <th width="18%" align="right"><b>'.number_format($g_tot_settled,2).'</b></th> 
+                                <th width="18%" align="right"><b>'.number_format($g_tot_balance,2).'</b></th>
                             </tr>
                         </tfoot>
                     </table>

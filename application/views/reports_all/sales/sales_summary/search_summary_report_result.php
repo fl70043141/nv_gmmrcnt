@@ -1,3 +1,8 @@
+<style>
+    .table-bordered td{
+        line-height: 28px;;
+    }
+</style>
 <table id="example1" class="table  dataTable table-bordered table-striped">
         <tbody>
               <?php

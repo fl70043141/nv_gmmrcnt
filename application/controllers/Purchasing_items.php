@@ -427,26 +427,43 @@ class Purchasing_items extends CI_Controller {
             } 
 	}	
         
+        
         function remove(){
             $inputs = $this->input->post(); 
-            $existing_data = $this->get_invoice_info($inputs['id']);  
+            $this->load->model('Item_stock_model');
             //check the payments before delete reservation
             $this->load->model('Payments_model');
-            
-            $cur_det = get_currency_for_code($existing_data['invoice_dets']['currency_code']);
             $trans_data = $this->Payments_model->get_transections(20,$inputs['id']); //20 for supp in transection
+//            echo '<pre>';            print_r($trans_data); die;
             if(!empty($trans_data)){
                 $this->session->set_flashdata('error','You need to remove the Payments transections before delete Invoice!');
                 redirect(base_url($this->router->fetch_class().'/delete/'.$inputs['id']));
                 return false;
             }
-            $data['pi_tbl'] = array(
-                                        'deleted' => 1,
-                                        'deleted_on' => date('Y-m-d'),
-                                        'deleted_by' => $this->session->userdata(SYSTEM_CODE)['ID']
-                                     ); 
+            $data['tbl_data'] = array(
+                            'deleted' => 1,
+                            'deleted_on' => date('Y-m-d'),
+                            'deleted_by' => $this->session->userdata(SYSTEM_CODE)['ID']
+                         ); 
+                
             
-                //GL Entries
+            $si_stock_trans = $this->Item_stock_model->get_stock_transection($inputs['id'],'transection_type = 1'); //1 for purchase invoice
+            
+            foreach ($si_stock_trans as $cn_stock){
+                
+                if($cn_stock['uom_id_2']!=0)
+                    $item_stock_data = $this->stock_status_check($cn_stock['item_id'],$cn_stock['location_id'],$cn_stock['uom_id'],$cn_stock['units'],$cn_stock['uom_id_2'],$cn_stock['units_2'],'-');
+                else
+                    $item_stock_data = $this->stock_status_check($cn_stock['item_id'],$cn_stock['location_id'],$cn_stock['uom_id'],$cn_stock['units'],'','','-');
+                
+                if(!empty($item_stock_data)){
+                    $data['item_stock'][] = $item_stock_data;
+                }
+            }
+//            $existing_data = $this->Purchasing_invoices_model->get_single_row($inputs['id']);   
+            $existing_data = $this->get_invoice_info($inputs['id']); 
+            $cur_det = get_currency_for_code($existing_data['invoice_dets']['currency_code']);
+             //GL Entries
             $data['gl_trans'] = array(array(
                                                 'person_type' => 20,
                                                 'person_id' => $existing_data['invoice_dets']['supplier_id'],
@@ -456,8 +473,8 @@ class Purchasing_items extends CI_Controller {
                                                 'account_code' => 1510, //5 inventory GL
                                                 'memo' => 'SI Deletion',
                                                 'amount' => (-$existing_data['invoice_total']),
-                                                'currency_code' => $cur_det['code'],
-                                                'currency_code' => $cur_det['value'],
+                                                'currency_code' => $cur_det['code'], 
+                                                'currency_value' => $cur_det['value'],  
                                                 'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
                                                 'status' => 1,
                                         ),array(
@@ -469,8 +486,8 @@ class Purchasing_items extends CI_Controller {
                                                 'account_code' => 2100, //inventory GL
                                                 'memo' => 'SI Deletion',
                                                 'amount' => ($existing_data['invoice_total']),
-                                                'currency_code' => $cur_det['code'],
-                                                'currency_code' => $cur_det['value'],
+                                                'currency_code' => $cur_det['code'], 
+                                                'currency_value' => $cur_det['value'],  
                                                 'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
                                                 'status' => 1,
                                         )
@@ -480,15 +497,14 @@ class Purchasing_items extends CI_Controller {
                     
             if($delete_stat){
                 //update log data
-                add_system_log(SUPPLIER_INVOICE, $this->router->fetch_class(), __FUNCTION__,$existing_data, '');
+                add_system_log(INVOICES, $this->router->fetch_class(), __FUNCTION__,$existing_data, '');
                 $this->session->set_flashdata('warn',RECORD_DELETE);
-                redirect(base_url($this->router->fetch_class()));
+                redirect(base_url('Purchasing_items'));
             }else{
                 $this->session->set_flashdata('warn',ERROR);
-                redirect(base_url($this->router->fetch_class()));
+                redirect(base_url('Purchasing_items'));
             }  
 	}
-	
 	
 	function remove2(){
             $id  = $this->input->post('id'); 

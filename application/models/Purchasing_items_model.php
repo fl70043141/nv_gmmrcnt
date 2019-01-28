@@ -191,24 +191,35 @@ class Purchasing_items_model extends CI_Model
 	}
         
         public function delete_db($id,$data){ 
-//                echo '<pre>'; print_r($data); die; 
+//            echo '<pre>';            print_r($data); die;
 		$this->db->trans_start();
                 
-		$this->db->where('id', $id); 
+                $this->db->where('id', $id); 
                 $this->db->where('deleted',0);
-		$this->db->update(INVOICES, $data['pi_tbl']);
+		$this->db->update(SUPPLIER_INVOICE, $data['tbl_data']);
 		
-                $this->db->where('invoice_id', $id); 
+                $this->db->where('supplier_invoice_id', $id); 
                 $this->db->where('deleted',0);
-		$this->db->update(INVOICE_DESC, array('deleted'=>1));
+		$this->db->update(SUPPLIER_INVOICE_DESC, array('deleted'=>1));
+		
+                if(!empty($data['item_stock'])){
+                    foreach ($data['item_stock'] as $stock){
+                        $this->db->where('location_id', $stock['location_id']);
+                        $this->db->where('item_id', $stock['item_id']);
+                        $this->db->update(ITEM_STOCK, array('units_available'=>$stock['new_units_available'],'units_available_2'=>$stock['new_units_available_2']));
+                    }
+                }
                 
-//		if(!empty($data['gl_trans']))$this->db->insert_batch(GL_TRANS, $data['gl_trans']); 
+//		if(!empty($data['gl_trans']))$this->db->insert_batch(GL_TRANS, $data['gl_trans']);   
                 $this->db->where('trans_ref', $id); 
                 $this->db->where('person_type', 20); // Supp
                 $this->db->where('deleted',0);
 		$this->db->update(GL_TRANS, array('deleted'=>1,'deleted_on' => date('Y-m-d'),'deleted_by' => $this->session->userdata(SYSTEM_CODE)['ID']));
 		
-		
+                $this->db->where('trans_ref', $id); 
+                $this->db->where('transection_type', 2); 
+                $this->db->delete(ITEM_STOCK_TRANS); 
+                
                 $status=$this->db->trans_complete();
 		return $status;
 	}

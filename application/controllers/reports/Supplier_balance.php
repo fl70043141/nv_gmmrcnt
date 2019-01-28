@@ -35,13 +35,12 @@ class Supplier_balance extends CI_Controller {
         
         public function search(){ //view the report
             $invoices = $this->load_data(); 
-            $this->load->view('reports_all/purchase/purchase_summary/search_summary_report_result',$invoices);
+            $this->load->view('reports_all/purchase/supplier_balance/search_supplier_balance_result',$invoices);
 	} 
         
         public function print_report(){ 
 //            $this->input->post() = 'aa';
             $invoices = $this->load_data(); 
-//            echo '<pre>';            print_r($invoices); die; 
             $this->load->library('Pdf'); 
             $this->load->model('Items_model');
             
@@ -108,23 +107,32 @@ class Supplier_balance extends CI_Controller {
                         <tbody>';
             $i=1;
             $g_tot_settled = $g_inv_total = $g_tot_balance=0;
-            foreach ($invoices['rep_data'] as $cust_dets){$tot_settled = $inv_total = $tot_balance=0;
+            foreach ($invoices['rep_data'] as $cust_dets){
+                $tot_settled = $inv_total = $tot_balance=0;
+//            echo '<pre>';            print_r($cust_dets); die;
+            if(isset($cust_dets['invoices'])){
                 foreach ($cust_dets['invoices'] as $invoice){
                     $due_date = $invoice['invoice_date']+(60*60*24*$invoice['days_after']);
                     $invoice_total = $invoice['invoice_desc_total'];
                     $cust_payments = (!empty($invoice['transections']))?$invoice['transections'][0]['total_amount']:0;
                     $pending = $invoice_total-$cust_payments;
-
+                    
+                    if($pending>0){
                     $inv_total += $invoice_total;
                     $tot_settled += $cust_payments;
                     $tot_balance += $pending;
-
-                    $g_inv_total += $invoice_total;
-                    $g_tot_settled += $cust_payments;
-                    $g_tot_balance += $pending;
+                    }
+//                    $g_inv_total += $invoice_total;
+//                    $g_tot_settled += $cust_payments;
+//                    $g_tot_balance += $pending;
 
                 } 
+            }
                                         
+                if($tot_balance>0){
+                    $g_inv_total += $inv_total;
+                    $g_tot_settled += $tot_settled;
+                    $g_tot_balance += $tot_balance;
                     $html .= '<tr> 
                                     <td width="4%" align="left">'.$i.'.</td>
                                     <td width="30%" align="left">'.$cust_dets['supplier']['supplier_name'].'- '.$cust_dets['supplier']['city'].(($cust_dets['supplier']['supplier_ref']!='')?' ['.$cust_dets['supplier']['supplier_ref'].']':'').'</td>
@@ -132,6 +140,7 @@ class Supplier_balance extends CI_Controller {
                                     <td width="22%" align="right">'.number_format($tot_settled,2).'</td>
                                     <td width="22%" align="right">'.number_format($tot_balance,2).'</td>
                                 </tr>';
+                }
                                          
                 $i++;
             }

@@ -58,7 +58,7 @@ $inv_trans = $inv_data['inv_transection'];
         
         <div class="">
             
-            <?php echo form_open("Invoices/validate", 'id="form_search" class="form-horizontal"')?>  
+            <?php echo form_open($this->router->class."/validate", 'id="form_search" class="form-horizontal"')?>  
               <!-- general form elements -->
               <div class="box box-primary"> 
                   <div class="box-body">
@@ -126,7 +126,8 @@ $inv_trans = $inv_data['inv_transection'];
                         <table width="100%" border="1">
                             <tr><td>
                     <?php
-                            
+                            $cur_det = get_single_row_helper(CURRENCY,'code = "'.$inv_dets['currency_code'].'"');
+//                            echo '<pre>';                            print_r($cur_det); die;
                     foreach ($inv_desc as $inv_itms){ 
                          echo '<table width="100%" id="example1" class="table-line" border="0">
                                     <thead>
@@ -142,8 +143,8 @@ $inv_trans = $inv_data['inv_transection'];
                                              <th width="8%" style="text-align: left;"><u><b>Origin</b></u></th>  
                                              <th width="10%" style="text-align: left;"><u><b>Certificate</b></u></th>  
                                              <th  width="15%"><u><b>Qty</b></u></th> 
-                                             <th width="9%" style="text-align: right;"><u><b>Rate</b></u></th>  
-                                             <th width="10%" style="text-align: right;"><u><b>Total</b></u></th> 
+                                             <th width="9%" style="text-align: right;"><u><b>Rate ('.$cur_det['symbol_left'].')</b></u></th>  
+                                             <th width="10%" style="text-align: right;"><u><b>Total('.$cur_det['symbol_left'].')</b></u></th> 
                                          </tr>
                                     </thead>
                                 <tbody>';
