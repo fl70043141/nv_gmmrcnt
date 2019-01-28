@@ -191,7 +191,7 @@ endswitch;
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group pad1">
-                                                <label for="item_unit_cost">price/crt</label>
+                                                <label for="item_unit_cost">price/<span id="prce_unit_name"></span> <input type="checkbox" name="is_price_per_unit" id="is_price_per_unit" value="1" checked></label>
                                                 <input type="text" name="item_unit_cost" class="form-control add_item_inpt" id="item_unit_cost" placeholder="Unit Cost for item">
                                             </div>
                                         </div>
@@ -424,10 +424,15 @@ $(document).ready(function(){
                                     fl_alert('info','Item category invalid! Please recheck before add.');
                                     return false;
                                 }
+                                
+                                var unit_cost_val = parseFloat($('#item_unit_cost').val());
+                                if (!$('#is_price_per_unit').is(":checked")){
+                                    unit_cost_val = parseFloat($('#item_unit_cost').val()) / parseFloat($('#item_quantity').val())
+                                }
                                 res2.item_name = $('#item_desc').val();
                                 var rowCount = $('#invoice_list_tbl tr').length;
                                 var counter = rowCount+1;
-                                var qtyXprice = parseFloat($('#item_unit_cost').val()) * parseFloat($('#item_quantity').val());
+                                var qtyXprice = unit_cost_val * parseFloat($('#item_quantity').val());
 //                                var item_total = qtyXprice - (parseFloat($('#item_discount').val())* 0.01 * qtyXprice);
                                 var item_total = qtyXprice;
                                 
@@ -445,7 +450,7 @@ $(document).ready(function(){
                                 if(res2.unit_abbreviation_2!=null && res2.unit_abbreviation_2!=0){
                                     row_str = row_str + ' | ' + $('#item_quantity_2').val()+' '+res2.unit_abbreviation_2;
                                 }                                                                                                                                                                                                                                                                        
-                                row_str = row_str + '</td> <td align="right"><input hidden name="inv_items['+rowCount+'][item_unit_cost]" value="'+$('#item_unit_cost').val()+'">'+parseFloat($('#item_unit_cost').val()).toFixed(2)+'</td>'+ 
+                                row_str = row_str + '</td> <td align="right"><input hidden name="inv_items['+rowCount+'][item_unit_cost]" value="'+unit_cost_val+'">'+parseFloat(unit_cost_val).toFixed(2)+'</td>'+ 
                                                         '<td align="right"><input class="item_tots" hidden name="inv_items['+rowCount+'][item_total]" value="'+item_total+'">'+item_total.toFixed(2)+'</td>'+
                                                         '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
                                                     '</tr>';
@@ -513,6 +518,7 @@ $(document).ready(function(){
                                 if(id1!='item_code'){ $('#item_code').val(res1.item_code);}
                                 (res1.price_amount==null)? $('#item_unit_cost').val(0):$('#item_unit_cost').val(res1.price_amount);
                                 $('#unit_abbr').text('Weight '+res1.unit_abbreviation);
+                                $('#prce_unit_name').text(res1.unit_abbreviation);
                                 $('#unit_abbr_2').text(res1.unit_abbreviation_2);
 //                                $('#item_discount').val(0);
                                 $('#item_quantity').val(1);

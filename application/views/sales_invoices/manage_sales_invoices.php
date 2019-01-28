@@ -185,7 +185,7 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                     
                                     <h4 class="">Add Item Invoice</h4> 
                                     <div class="row col-md-12 ">
-                                        <div id="first_col_form" class="col-md-1">
+                                        <div id="first_col_form" class="col-md-2">
                                             <div class="form-group pad">
                                                 <label for="item_code">Item Code</label>
                                                 <?php  echo form_input('item_code',set_value('item_code'),' class="form-control add_item_inpt" data-live-search="true" id="item_code"');?>
@@ -203,11 +203,11 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group pad">
-                                                <label for="item_unit_cost">Unit Cost <span id="cur_code_lineform"></span></label>
+                                                <label for="item_unit_cost">Unit Cost <span id="cur_code_lineform"></span>/<span id="prce_unit_name"></span> <input type="checkbox" name="is_price_per_unit" id="is_price_per_unit" value="1" checked></label>
                                                 <input type="number" min="0" name="item_unit_cost" step=".001"  class="form-control add_item_inpt" id="item_unit_cost" placeholder="Unit Cost for item">
                                             </div>
                                         </div>
-                                        <div class="col-md-1">
+                                        <div hidden class="col-md-1">
                                             <div class="form-group pad">
                                                 <label for="item_unit_cost">Discount(%)</label>
                                                 <input type="number" name="item_discount" step="5" min="0" max="100"  class="form-control add_item_inpt" id="item_discount" value="0" placeholder="Enter Line Discount">
@@ -620,6 +620,7 @@ $(document).ready(function(){
                                 if(id1!='item_code'){ $('#item_code').val(res1.item_code);}
                                 $('#item_unit_cost').val(price_converted.toFixed());
                                 $('#unit_abbr').text('['+res1.stock.units_available+' '+res1.unit_abbreviation+']');
+                                $('#prce_unit_name').text(res1.unit_abbreviation);
                                 
                                 
                                 if(res1.stock.units_available_2=='1'){
@@ -643,12 +644,15 @@ $(document).ready(function(){
 //                            $("#search_result_1").html(result);
                                     var res2 = JSON.parse(result);
                                     var unit_cost1 = $('#item_unit_cost').val();
+                                    if (!$('#is_price_per_unit').is(":checked")) unit_cost1 = parseFloat($('#item_unit_cost').val()) / parseFloat($('#item_quantity').val());
                                     var item_qty1 = $('#item_quantity').val();
                                     var item_qty2 = $('#item_quantity_2').val();
                                     var item_code1 = $('#item_code').val();
                                     var item_discount1 = (isNaN(parseFloat($('#item_discount').val())))?0:$('#item_discount').val();
                                     var invs_total1 = $('#invoice_total').val();
                                 }else{ 
+                                    var unit_cost1 = set_cookie_data.item_unit_cost;
+                                    if (!$('#is_price_per_unit').is(":checked")) unit_cost1 = parseFloat(set_cookie_data.item_unit_cost)/parseFloat(set_cookie_data.item_quantity);
                                     var unit_cost1 = set_cookie_data.item_unit_cost;
                                     var item_qty1 = set_cookie_data.item_quantity;
                                     var item_qty2 = set_cookie_data.item_quantity_2;
@@ -665,7 +669,7 @@ $(document).ready(function(){
                                                 unit_abbreviation_2:set_cookie_data.unit_abbreviation_2,
                                                 }; 
                                 }
-                                
+                                  
 //                                    return false;
 //                                $("#search_result_1").html(result); 
 
@@ -695,6 +699,7 @@ $(document).ready(function(){
                                     fl_alert('warning','Item invalid! Please recheck before add.');
                                     return false;
                                 }
+                                
                                 var rowCount = $('#invoice_list_tbl tr').length;
                                 var counter = rowCount+1;
                                 var qtyXprice = parseFloat(unit_cost1) * parseFloat(item_qty1);
