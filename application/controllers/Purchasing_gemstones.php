@@ -835,7 +835,7 @@ class Purchasing_gemstones extends CI_Controller {
 //            $pdf->Text(160,20,$inv_dets['supplier_invoice_no']);
             // force print dialog
 //            $js = 'this.print();';
-//            $js = 'print(true);';
+            $js = 'print(true);';
             // set javascript
             $pdf->IncludeJS($js);
             $pdf->Output('Purch_invoice_'.$inv_id.'.pdf', 'I');
