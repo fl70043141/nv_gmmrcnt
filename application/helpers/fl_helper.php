@@ -4,7 +4,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 if ( ! function_exists('get_dropdown_data'))
 {
       // generate serial
-	function get_dropdown_data($table='', $name='', $id='',$first_null_option="", $where='',$where_del = 0,$limit=''){
+	function get_dropdown_data($table='', $name='', $id='',$first_null_option="", $where='',$where_del = 0,$limit='',$order_by=''){
 		$CI =& get_instance();
                 
                 $name_select = (is_array($name))?$name[1]:$name;
@@ -24,6 +24,7 @@ if ( ! function_exists('get_dropdown_data'))
                     }
                 } 
                 if($limit!='') $CI->db->limit($limit);
+                if($order_by!='') $CI->db->order_by($order_by);
                 
 		$res = $CI->db->get()->result_array();
 //                echo $CI->db->last_query(); die;

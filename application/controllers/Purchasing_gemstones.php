@@ -857,7 +857,7 @@ class Purchasing_gemstones extends CI_Controller {
             $data['invoice_desc_list'] = $invoice_desc;
             
             $data['item_cats'] = get_dropdown_data(ITEM_CAT, 'category_name','id');
-            $item_cats = get_dropdown_data(ITEM_CAT, 'category_name','id');
+            $item_cats = get_dropdown_data(ITEM_CAT, 'category_name','id','','',0,'','order_by');
             
             $data['invoice_desc_total']= 0;
             foreach ($item_cats as $cat_key=>$cay_name){ 

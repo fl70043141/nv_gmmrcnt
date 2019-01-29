@@ -44,6 +44,7 @@ class Upload_csv extends CI_Controller {
                                     'supplier_invoice_no' => $supplier_invoice_no,
                                     'supplier_id' => $supplier_id,
                                     'reference' => 'UPLOAD CSV',
+                                    'invoice_date' => strtotime("now"),
                                     'invoiced' => 1,
                                     'payment_term_id' => 2,
                                     'currency_code' =>$cur_det['code'],
