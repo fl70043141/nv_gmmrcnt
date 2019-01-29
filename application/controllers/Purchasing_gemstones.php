@@ -727,10 +727,10 @@ class Purchasing_gemstones extends CI_Controller {
                            $gem_list_html .= '<tr>
                                               <td width="16%" style="text-align: left;">'.$inv_itm['supplier_item_desc'].'</td> 
                                               <td width="10%" style="text-align: left;">'.$inv_itm['item_code'].'</td>  
-                                              <td width="10%" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['treatment']):'-').'</td>  
-                                              <td width="10%" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['shape']):'-').'</td>  
+                                              <td width="10%" style="text-align: left;">'. (($item_info['treatment']>0)?get_dropdown_value($item_info['treatment']):'-').'</td>  
+                                              <td width="10%" style="text-align: left;">'. (($item_info['shape']>0)?get_dropdown_value($item_info['shape']):'-').'</td>  
                                               <td width="12%" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['color']):'-').'</td>  
-                                              <td width="12%" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['origin']):'-').'</td>  
+                                              <td width="12%" style="text-align: left;">'. (($item_info['origin']>0)?get_dropdown_value($item_info['origin']):'-').'</td>  
                                               <td width="18%" style="text-align: center;">'.$inv_itm['purchasing_unit'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['secondary_unit_uom_id']>0)?' / '.$inv_itm['secondary_unit'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
                                               <td width="12%" style="text-align: right;"> '. number_format($inv_itm['sub_total'],2).'</td> 
                                           </tr> ';
@@ -834,7 +834,7 @@ class Purchasing_gemstones extends CI_Controller {
             $pdf->SetTextColor(255,125,125);           
 //            $pdf->Text(160,20,$inv_dets['supplier_invoice_no']);
             // force print dialog
-            $js = 'this.print();';
+//            $js = 'this.print();';
 //            $js = 'print(true);';
             // set javascript
             $pdf->IncludeJS($js);
