@@ -97,7 +97,7 @@ $(document).ready(function(){
                                         <div class="col-md-3">  
                                                 <div class="form-group pad  no-pad-top">
                                                     <label for="min_weight">Minimum Weight (cts).</label>
-                                                     <?php echo form_input('min_weight',set_value('min_weight',1),' class="form-control" placeholder="Enter Minimim Carat weight"  id="min_weight"');?>
+                                                     <?php echo form_input('min_weight',set_value('min_weight',0),' class="form-control" placeholder="Enter Minimim Carat weight"  id="min_weight"');?>
                                                </div> 
                                         </div>    
                                         <div class="col-md-3">  

@@ -132,7 +132,12 @@ class Consignee_submission_model extends CI_Model
                     foreach ($data['item_stock'] as $stock){
                         $this->db->where('location_id', $stock['location_id']);
                         $this->db->where('item_id', $stock['item_id']);
-                        $this->db->update(ITEM_STOCK, array('units_on_consignee'=>$stock['new_units_available'],'units_on_consignee_2'=>$stock['new_units_available_2']));
+                        $this->db->update(ITEM_STOCK, array(
+                                                            'units_available'=>$stock['new_units_available'],
+                                                            'units_available_2'=>$stock['new_units_available_2'],
+                                                            'units_on_consignee'=>$stock['new_units_on_consignee'],
+                                                            'units_on_consignee_2'=>$stock['new_units_on_consignee_2']
+                                                            ));
                     }
                 }
                  

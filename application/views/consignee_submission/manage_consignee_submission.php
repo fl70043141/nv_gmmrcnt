@@ -161,7 +161,7 @@ endswitch;
                                     
                                     <h4 class="">Add Item for Consignee Submission</h4> 
                                     <div class="row col-md-12 ">
-                                        <div id="first_col_form" class="col-md-1">
+                                        <div id="first_col_form" class="col-md-2">
                                             <div class="form-group pad">
                                                 <label for="item_code">Item Code</label>
                                                 <?php  echo form_input('item_code',set_value('item_code'),' class="form-control add_item_inpt" data-live-search="true" id="item_code"');?>
@@ -183,7 +183,7 @@ endswitch;
                                                 <input type="number" min="0"  step=".001"  name="item_unit_cost" class="form-control add_item_inpt" id="item_unit_cost" placeholder="Unit Cost for item">
                                             </div>
                                         </div>
-                                        <div class="col-md-1">
+                                        <div hidden class="col-md-1">
                                             <div class="form-group pad">
                                                 <label for="item_unit_cost">Discount(%)</label>
                                                 <input type="number" name="item_discount" step="5" min="0" max="100"  class="form-control add_item_inpt" id="item_discount" value="0" placeholder="Enter Line Discount">
@@ -516,7 +516,7 @@ $(document).ready(function(){
             $.ajax({
 			url: "<?php echo site_url('Consignee_submission/fl_ajax?function_name=get_single_item');?>",
 			type: 'post',
-			data : {function_name:'get_single_item', item_code:$('#item_code').val(), price_type_id:$('#price_type_id').val()},
+			data : {function_name:'get_single_item', item_code:$('#item_code').val(), price_type_id:$('#price_type_id').val(),location_id:$('#location_id').val()},
 			success: function(result){
                             
 //                            $("#search_result_1").html(result);
@@ -554,7 +554,8 @@ $(document).ready(function(){
                                 $('#unit_abbr').text('['+res1.stock.units_available+' '+res1.unit_abbreviation+']');
                                 $('#unit_abbr_2').text('['+res1.stock.units_available_2+' '+res1.unit_abbreviation_2+']');
 //                                $('#item_discount').val(0);
-                                $('#item_quantity').val(1);
+                                $('#item_quantity').val(res1.stock.units_available);
+                                $('#item_quantity_2').val(res1.stock.units_available_2);
 
                                 $("#result_search").html(result);
                             }
@@ -598,7 +599,7 @@ $(document).ready(function(){
                                 
 //                                    return false;
 //                                $("#search_result_1").html(result); 
-                                if(parseFloat(res2.stock.units_available)<parseFloat(item_qty1) || parseFloat(res2.stock.units_available_2)<parseFloat(item_qty2) ){
+                                if((parseFloat(res2.stock.units_available)<parseFloat(item_qty1) || parseFloat(res2.stock.units_available_2)<parseFloat(item_qty2)) || parseFloat(item_qty2)<=0){
                                     fl_alert('info','Please check the Item line Quantity.');
                                     return false;
                                 }

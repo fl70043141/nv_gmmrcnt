@@ -87,7 +87,7 @@ class Stock_sheet_gemstones extends CI_Controller {
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
                     
             // set font
-            $pdf->SetFont('times', '', 10);
+            $pdf->SetFont('times', '', 9.4);
         
         
             $pdf->AddPage();   
@@ -116,43 +116,27 @@ class Stock_sheet_gemstones extends CI_Controller {
                             </tr>
                             <tr class="colored_bg">
                                 <th width="12%" align="center">Code</th> 
-                                <th width="15%" align="center">Desc</th> 
+                                <th width="17%" align="center">Desc</th> 
                                 <th width="9%" align="center">Treatment</th> 
-                                <th width="8%" align="center">color</th> 
-                                <th width="8%" align="center">shape</th> 
-                                <th width="16%" align="center" colspan="2">In Stock</th> 
-                                <th width="16%" align="center" colspan="2">On Reserved</th>  
-                                <th width="16%" align="center" colspan="2">Available</th>
-                            </tr>
-                            <tr class="colored_bg">
-                                <th width="12%" align="center"></th> 
-                                <th width="15%" align="center"></th> 
-                                <th width="9%" align="center"></th> 
-                                <th width="8%" align="center"></th> 
-                                <th width="8%" align="center"></th> 
-                                <th width="8%" align="right">Weight</th> 
-                                <th width="8%" align="center">Qty</th>   
-                                <th width="8%" align="right">Weight</th> 
-                                <th width="8%" align="center">Qty</th>   
-                                <th width="8%" align="right">Weight</th> 
-                                <th width="8%" align="center">Qty</th>    
-                            </tr>
+                                <th width="10%" align="center">color</th> 
+                                <th width="10%" align="center">shape</th> 
+                                <th width="14%" align="center" colspan="1">In Stock</th> 
+                                <th width="14%" align="center" colspan="1">On Lapidary</th>  
+                                <th width="14%" align="center" colspan="1">On Consignee</th>
+                            </tr> 
                         </thead>
                         <tbody>';
                        foreach ($item_stocks['item_list'] as $item){  
-                                            if($item['units_available']>0){
-                                            $html .= '<tr>
+                                        if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
+                                           $html .= '<tr>
                                                         <td width="12%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$item['item_code'].'</td>
-                                                        <td width="15%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['item_name'].'</td>
+                                                        <td width="17%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['item_name'].'</td>
                                                         <td width="9%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['treatment_name'].'</td>
-                                                        <td width="8%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['color_name'].'</td>
-                                                        <td width="8%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['shape_name'].'</td>
-                                                        <td width="8%" align="right" style="border-right: 1px solid #cdd0d4;" >'.$item['units_available'].' '.$item['uom_name'].'</td>
-                                                        <td width="8%" align="center" style="border-right: 1px solid #cdd0d4;">'.(($item['uom_id_2']!=0)?$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
-                                                        <td width="8%" align="right">'.$item['units_on_reserve'].' '.$item['uom_name'].'</td>
-                                                        <td width="8%" align="center" style="border-right: 1px solid #cdd0d4;">'.(($item['uom_id_2']!=0)?$item['units_on_reserve_2'].' '.$item['uom_name_2']:'').'</td>
-                                                        <td width="8%" align="right">'.($item['units_available']-$item['units_on_reserve']).' '.$item['uom_name'].'</td>
-                                                        <td width="8%" align="center" style="border-right: 1px solid #cdd0d4;">'.($item['units_available_2']-$item['units_on_reserve_2']).' '.$item['uom_name_2'].'</td>
+                                                        <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['color_name'].'</td>
+                                                        <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['shape_name'].'</td>
+                                                        <td width="14%" align="center" style="border-right: 1px solid #cdd0d4;" >'.$item['units_available'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td> 
+                                                        <td width="14%" align="center">'.$item['units_on_workshop'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_workshop_2'].' '.$item['uom_name_2']:'').'</td>
+                                                        <td width="14%" align="center">'.$item['units_on_consignee'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_consignee_2'].' '.$item['uom_name_2']:'').'</td>
 
                                                     </tr>';
                                             }
