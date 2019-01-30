@@ -18,7 +18,7 @@
                        echo '
                            <tr>
                                <td>'.($i+1).'</td>
-                               <td><img style="width:30px;height:30px;" src="'. base_url(ITEM_IMAGES.(($search['image']!="")?$search['id'].'/'.$search['image']:'default.jpg')).'"></td> 
+                               <td><img style="width:30px;height:30px;" src="'. base_url(ITEM_IMAGES.(($search['image']!="")?$search['id'].'/'.$search['image']:'../default/default.jpg')).'"></td> 
                                <td>'.$search['item_code'].'</td> 
                                <td>'.$search['item_name'].'</td> 
                                <td>'.$search['category_name'].'</td> 

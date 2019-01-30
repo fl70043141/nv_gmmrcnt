@@ -119,7 +119,7 @@ class Purchasing_gemstones extends CI_Controller {
             if(!empty($item)){ 
                     
                     $item_id = get_autoincrement_no(ITEMS); 
-                    $item_code = gen_id('1', ITEMS, 'id',4);
+                    $item_code = gen_id('A', ITEMS, 'id',3);
                     $inputs['status'] = (isset($inputs['status']))?1:0;
                     $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
                     $inputs['purchases_excluded'] = (isset($inputs['purchases_excluded']))?1:0;
@@ -188,7 +188,6 @@ class Purchasing_gemstones extends CI_Controller {
             $invoice_id = get_autoincrement_no(SUPPLIER_INVOICE);
             $invoice_no = gen_id(SUP_INVOICE_NO_PREFIX, SUPPLIER_INVOICE, 'id');
             
-//            echo '<pre>';            print_r($this->input->post()); die; 
             $cur_det = $this->Purchasing_items_model->get_currency_for_code($inputs['currency_code']);
             if(isset($inputs['status'])){
                 $inputs['status'] = 1;
@@ -213,7 +212,8 @@ class Purchasing_gemstones extends CI_Controller {
                                 );
             $data['inv_desc'] = array(); 
             $data['item_stock_transection'] = array(); //stock transection purchasing
-            
+            ksort($inputs['inv_items']);
+//            echo '<pre>';            print_r($inputs['inv_items']); die; 
             $total = 0;
             foreach ($inputs['inv_items'] as $inv_item){
                 $total += $inv_item['item_quantity']*$inv_item['item_unit_cost'];

@@ -208,15 +208,18 @@ class Consignee_receive extends CI_Controller {
                 $available_units_2 = $units_2;
             }else{
                 if($calc=='+'){
-                    $available_units = $stock_det['units_on_consignee'] + $units;
-                    $available_units_2 = $stock_det['units_on_consignee_2'] + $units_2;
+                    $units_on_consignee = $stock_det['units_on_consignee'] + $units;
+                    $units_on_consignee_2 = $stock_det['units_on_consignee_2'] + $units_2;
+                    $available_units = $stock_det['units_available'] - $units;
+                    $available_units_2 = $stock_det['units_available_2'] - $units_2;
                 }else{
-                    
-                    $available_units = $stock_det['units_on_consignee'] - $units;
-                    $available_units_2 = $stock_det['units_on_consignee_2'] - $units_2;
+                    $units_on_consignee = $stock_det['units_on_consignee'] - $units;
+                    $units_on_consignee_2 = $stock_det['units_on_consignee_2'] - $units_2;
+                    $available_units = $stock_det['units_available'] + $units;
+                    $available_units_2 = $stock_det['units_available_2'] + $units_2;
                 }
             }
-                $update_arr = array('location_id'=>$loc_id,'item_id'=>$item_id,'new_units_available'=>$available_units,'new_units_available_2'=>$available_units_2);
+                $update_arr = array('location_id'=>$loc_id,'item_id'=>$item_id,'new_units_available'=>$available_units,'new_units_available_2'=>$available_units_2,'new_units_on_consignee'=>$units_on_consignee,'new_units_on_consignee_2'=>$units_on_consignee_2);
                 
             return $update_arr;
         }

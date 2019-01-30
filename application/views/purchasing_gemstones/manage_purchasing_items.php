@@ -295,13 +295,15 @@ endswitch;
                                     <table id="invoice_list_tbl" class="table table-bordered table-striped">
                                         <thead>
                                            <tr> 
-                                               <th width="14%"  style="text-align: left;">Stone</th> 
+                                               <th width="3%"  style="text-align: left;">#</th> 
+                                               <th width="13%"  style="text-align: left;">Stone</th> 
                                                <th width="6%" style="text-align: center;">N/H</th> 
-                                               <th width="10%" style="text-align: center;">Shape</th> 
-                                               <th width="10%" style="text-align: center;">Color</th> 
+                                               <th width="9%" style="text-align: center;">Shape</th> 
+                                               <th width="9%" style="text-align: center;">Color</th> 
                                                <th width="12%" style="text-align: center;">Cert</th> 
                                                <th width="8%" style="text-align: center;">Origin</th> 
                                                <th width="12%" style="text-align: center;">Carat Weight</th>   
+                                               <th width="10%" style="text-align: right;">Rate</th> 
                                                <th width="10%" style="text-align: right;">Total</th> 
                                                <th width="5%" style="text-align: center;">Action</th>
                                            </tr>
@@ -430,7 +432,7 @@ $(document).ready(function(){
                                     unit_cost_val = parseFloat($('#item_unit_cost').val()) / parseFloat($('#item_quantity').val())
                                 }
                                 res2.item_name = $('#item_desc').val();
-                                var rowCount = $('#invoice_list_tbl tr').length;
+                                var rowCount = $('#invoice_list_tbl tr').length+'_'+$.now();
                                 var counter = rowCount+1;
                                 var qtyXprice = unit_cost_val * parseFloat($('#item_quantity').val());
 //                                var item_total = qtyXprice - (parseFloat($('#item_discount').val())* 0.01 * qtyXprice);
@@ -438,6 +440,7 @@ $(document).ready(function(){
                                 
                                 
                                 var row_str = '<tr style="pad1ding:10px" id="tr_'+rowCount+'">'+ 
+                                                        '<td><span id="'+rowCount+'_row_cntr" class="row_counter_cls"></span></td>'+
                                                         '<td><input hidden name="inv_items['+rowCount+'][item_desc]" value="'+res2.item_name+'"><input hidden name="inv_items['+rowCount+'][cat_id]" value="'+res2.id+'">'+res2.item_name+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_treatments]" value="'+$('#treatments').val()+'">'+$("#treatments option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][shape]" value="'+$('#shape').val()+'">'+$("#shape option:selected" ).text()+'</td>'+
@@ -455,7 +458,15 @@ $(document).ready(function(){
                                                         '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
                                                     '</tr>';
                                 var newRow = $(row_str);
-                                jQuery('table#invoice_list_tbl ').append(newRow);
+                                jQuery('table#invoice_list_tbl ').prepend(newRow);
+                                
+                                
+                                //set row sew no
+                                var seq_no=1;
+                                $($('.row_counter_cls').get().reverse()).each(function(){
+                                  $('#'+(this.id)).text(seq_no); seq_no++;
+                                });
+                                
                                 var inv_total = parseFloat($('#invoice_total').val()) + item_total;
                                 $('#invoice_total').val(inv_total.toFixed(2));
                                 $('#inv_total').text(inv_total.toFixed(2));
@@ -465,6 +476,12 @@ $(document).ready(function(){
 //                                    if(!confirm("click ok Confirm remove this item.")){
 //                                        return false;
 //                                    }
+                                    //set row sew no
+                                    var seq_no=1;
+                                    $($('.row_counter_cls').get().reverse()).each(function(){
+                                      $('#'+(this.id)).text(seq_no); seq_no++;
+                                    });
+                                    
                                     var tot_amt = 0;
                                     $(this).closest('tr').remove(); 
                                     $('input[class^="item_tots"]').each(function() {
@@ -476,8 +493,6 @@ $(document).ready(function(){
                                 });
                         }
 		});
-
-        
         
     });
 });

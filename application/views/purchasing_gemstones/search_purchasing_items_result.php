@@ -1,4 +1,4 @@
-<table id="example1" class="table dataTable table-bordered table-striped">
+<table id="example1" class="table dataTable11 table-bordered table-striped">
          <thead>
             <tr>
                 <th>#</th>
@@ -48,3 +48,10 @@
             </tr>
            </tfoot>
          </table>
+
+<script>
+    $(document).ready(function() {
+   
+  $(".dataTable11").DataTable({"scrollX": true });
+} );
+</script>
