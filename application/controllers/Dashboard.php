@@ -34,16 +34,16 @@ class Dashboard extends CI_Controller {
         function getData(){
             
             $data['total_1']= array(
-                                                'label' =>'Total Invoices',
+                                                'label' =>'Sales Invoices',
                                                 'count' => $this->Dashboard_model->get_tbl_couts(INVOICES),
                                                 );
             $data['total_2']= array(
-                                            'label' =>'Customers',
-                                            'count' => $this->Dashboard_model->get_tbl_couts(CUSTOMERS),
+                                            'label' =>'Purchase Invoices',
+                                            'count' => $this->Dashboard_model->get_tbl_couts(SUPPLIER_INVOICE),
                                             );
             $data['total_3']= array(
-                                            'label' =>'Items',
-                                            'count' => $this->Dashboard_model->get_tbl_couts(ITEMS),
+                                            'label' =>'Available Items',
+                                            'count' => $this->Dashboard_model->get_available_items(),
                                             );
             $data['total_4']= array(
                                         'label' =>'Categories',
@@ -59,7 +59,7 @@ class Dashboard extends CI_Controller {
                 $date_end = date('Y-m-t', strtotime("-$i month"));
                 
                 $data_bc[$i]['month']= date('M',strtotime("-$i month"));
-                $data_bc[$i]['res']=$this->Dashboard_model->get_number_inv(SALES_ORDERS,$date_start,$date_end);
+                $data_bc[$i]['res']=$this->Dashboard_model->get_number_inv(SUPPLIER_INVOICE,$date_start,$date_end);
                 $data_bc[$i]['inv']=$this->Dashboard_model->get_number_inv(INVOICES,$date_start,$date_end);
             }
             

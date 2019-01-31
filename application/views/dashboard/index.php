@@ -113,6 +113,26 @@
             <!-- /.box-body -->
           </div> 
         </section>
+        <section class="col-lg-6 connectedSortable">
+
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <i class="fa fa-bar-chart-o"></i>
+
+              <h3 class="box-title">Sales</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div id="area-chart" style="height: 338px;" class="full-width-chart"></div>
+            </div>
+            <!-- /.box-body-->
+          </div>
+        </section>
           <!-- /.box -->
           </div>
           <!-- /.box -->
@@ -130,7 +150,8 @@
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
   <div class="control-sidebar-bg"></div>
- 
+  
+<script src="<?php echo base_url('templates/plugins/flot/jquery.flot.min.js');?>"></script> 
 <!-- ./wrapper -->
 <script>
     
@@ -165,8 +186,38 @@ $(function () {
       barColors: ['#3c8dbc', '#f56954'],
       xkey: 'y',
       ykeys: ['a', 'b'],
-      labels: ['Orders', 'Invoices'],
+      labels: ['Purchase Invoices', 'Sales Invoices'],
       hideHover: 'auto'
     });
+    
+    
+
+    /*
+     * FULL WIDTH STATIC AREA CHART
+     * -----------------
+     */
+    var areaData = [[2, 88.0], [3, 93.3], [4, 102.0], [5, 108.5], [6, 115.7], [7, 115.6],
+      [8, 124.6], [9, 130.3], [10, 134.3], [11, 141.4], [12, 146.5], [13, 151.7], [14, 159.9],
+      [15, 165.4], [16, 167.8], [17, 168.7], [18, 169.5], [19, 168.0]];
+    $.plot("#area-chart", [areaData], {
+      grid: {
+        borderWidth: 0
+      },
+      series: {
+        shadowSize: 0, // Drawing is faster without shadows
+        color: "#00c0ef"
+      },
+      lines: {
+        fill: false //Converts the line chart to area chart
+      },
+      yaxis: {
+        show: false
+      },
+      xaxis: {
+        show: false
+      }
+    });
+
+    /* END AREA CHART */
 });
 </script>

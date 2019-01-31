@@ -74,7 +74,8 @@ class Items_model extends CI_Model
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id_2)  as uom_name_2');
             $this->db->join(ITEMS.' itm','itm.id = is.item_id','left');
             $this->db->from(ITEM_STOCK.' is');     
-            $this->db->where('is.units_available >',0);
+//            $this->db->where('is.units_available >',0);
+            $this->db->where('is.units_available > 0 OR is.units_on_consignee OR is.units_on_workshop');
             $this->db->where('is.units_available > is.units_on_reserve');
             $this->db->where('is.deleted',0);
             $this->db->where('is.status',1);
