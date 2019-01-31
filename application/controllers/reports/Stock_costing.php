@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Stock_sheet_gemstones extends CI_Controller {
+class Stock_costing extends CI_Controller {
   
         function __construct() {
             parent::__construct();
@@ -16,7 +16,7 @@ class Stock_sheet_gemstones extends CI_Controller {
             
 //            $this->add();
 //            $data['search_list'] = $this->Sales_invoices_model->search_result();
-            $data['main_content']='reports_all/inventory/stock_sheet_gemstones/search_stock_sheet_report'; 
+            $data['main_content']='reports_all/inventory/stock_costing/search_stock_costing_report'; 
             $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_name','id','Location');
             $data['item_cat_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Gem Category','is_gem = 1');
             
@@ -42,16 +42,23 @@ class Stock_sheet_gemstones extends CI_Controller {
         
         public function search(){ //view the report
             $data['rep_data'] = $this->load_data(); 
-            $this->load->view('reports_all/inventory/stock_sheet_gemstones/search_stock_sheet_report_result',$data);
+            $this->load->view('reports_all/inventory/stock_costing/search_stock_costing_report_result',$data);
 	} 
         
         public function print_report(){ 
 //            $this->input->post() = 'aa';
             $item_stocks_cat = $this->load_data(); 
-//            echo '<pre>';            print_r($item_stocks_cat); die; 
+            $inputs = $this->input->get();
+//            echo '<pre>';            print_r($this->input->get()); die;
+            $location_name = ($inputs['location_id'] != '')?get_single_row_helper(INV_LOCATION,'id = "'.$inputs['location_id'].'"')['location_name']:'All'; 
+            $category_name = ($inputs['item_category_id'] != '')?get_single_row_helper(ITEM_CAT,'id = "'.$inputs['item_category_id'].'"')['category_name']:'All'; 
+            $shape_name = ($inputs['shape_id'] != '')?get_single_row_helper(DROPDOWN_LIST,'id = "'.$inputs['shape_id'].'"')['dropdown_value']:'All'; 
+            $treatment_name = ($inputs['treatment_id'] != '')?get_single_row_helper(DROPDOWN_LIST,'id = "'.$inputs['treatment_id'].'"')['dropdown_value']:'All'; 
+            $color_name = ($inputs['color_id'] != '')?get_single_row_helper(DROPDOWN_LIST,'id = "'.$inputs['color_id'].'"')['dropdown_value']:'All'; 
             $this->load->library('Pdf'); 
             $this->load->model('Items_model');
-            
+             $def_cur = get_single_row_helper(CURRENCY,'code="'.$this->session->userdata(SYSTEM_CODE)['default_currency'].'"');
+//            
             // create new PDF document
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
             $pdf->fl_header='header_jewel';//invice bg
@@ -87,23 +94,14 @@ class Stock_sheet_gemstones extends CI_Controller {
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
                     
             // set font
-            $pdf->SetFont('times', '', 9.4);
+            $pdf->SetFont('times', '', 9);
         
         
             $pdf->AddPage();   
             $pdf->SetTextColor(32,32,32);     
-            $html = '<table border="0">
-                        <tr>
-                            <td><b>Report: Gemstone Stock Summary </b></td>
-                            <td align="right">Printed on : '.date(SYS_DATE_FORMAT).'</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td align="right">Printed by : '.$this->session->userdata(SYSTEM_CODE)['user_first_name'].' '.$this->session->userdata(SYSTEM_CODE)['user_last_name'].'</td>
-                        </tr> 
-                    </table> ';
-            $i=1; 
-            
+            $html =""; 
+            $all_tot_units = $all_tot_units_2 = $all_tot_amount = $item_count = 0;
+            $i = 1; 
             foreach ($item_stocks_cat as $item_stocks){
 //            echo '<pre>';            print_r($item_stocks); die;
             $html .= '<table  class="table-line" border="0">
@@ -115,39 +113,90 @@ class Stock_sheet_gemstones extends CI_Controller {
                                 <th align="left" colspan="6">'.$i.'. <u>'.$item_stocks['item_category_name'].'</u></th>
                             </tr>
                             <tr class="colored_bg">
-                                <th width="12%" align="center">Code</th> 
-                                <th width="17%" align="center">Desc</th> 
-                                <th width="9%" align="center">Treatment</th> 
-                                <th width="10%" align="center">color</th> 
-                                <th width="10%" align="center">shape</th> 
-                                <th width="14%" align="center" colspan="1">In Stock</th> 
-                                <th width="14%" align="center" colspan="1">On Lapidary</th>  
-                                <th width="14%" align="center" colspan="1">On Consignee</th>
+                                <th width="3%" align="center">#</th> 
+                                <th width="10%" align="center">Code</th> 
+                                <th width="16%" align="center">Desc</th> 
+                                <th width="9%" align="center">CDC</th> 
+                                <th width="10%" align="center">Color</th> 
+                                <th width="10%" align="center">Shape</th>  
+                                <th width="16%" align="center">Units</th>  
+                                <th width="13%" align="right">Unit Cost('.$def_cur['code'].')&nbsp;&nbsp;</th>  
+                                <th width="13%" align="right">Total Cost('.$def_cur['code'].')&nbsp;&nbsp;</th>  
                             </tr> 
                         </thead>
                         <tbody>';
+                        $j = 1;
+                        $cat_tot_units = $cat_tot_units_2 = $cat_tot_amount = 0;
                        foreach ($item_stocks['item_list'] as $item){  
+                                        $tot_units = $item['units_available'] + $item['units_on_workshop'] + $item['units_on_consignee'];
+                                        $tot_units_2 = $item['units_available_2'] + $item['units_on_workshop_2'] + $item['units_on_consignee_2'];
+                                        $cost = ($item['price_amount'] / $item['ip_curr_value']) * $tot_units;
+                                        
+                                        $cat_tot_units += $tot_units;
+                                        $cat_tot_units_2 += $tot_units_2;
+                                        $cat_tot_amount += $cost;
+                                        
+                                        $all_tot_units += $tot_units;
+                                        $all_tot_units_2 += $tot_units_2;
+                                        $all_tot_amount += $cost;
+                                        
                                         if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
                                            $html .= '<tr>
-                                                        <td width="12%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$item['item_code'].'</td>
-                                                        <td width="17%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['item_name'].'</td>
+                                                        <td width="3%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$j.'</td>
+                                                        <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$item['item_code'].'</td>
+                                                        <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['item_name'].'</td>
                                                         <td width="9%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['treatment_name'].'</td>
                                                         <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['color_name'].'</td>
                                                         <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['shape_name'].'</td>
-                                                        <td width="14%" align="center" style="border-right: 1px solid #cdd0d4;" >'.$item['units_available'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td> 
-                                                        <td width="14%" align="center" style="border-right: 1px solid #cdd0d4;" >'.$item['units_on_workshop'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_workshop_2'].' '.$item['uom_name_2']:'').'</td>
-                                                        <td width="14%" align="center" style="border-right: 1px solid #cdd0d4;" >'.$item['units_on_consignee'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_consignee_2'].' '.$item['uom_name_2']:'').'</td>
+                                                        <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;" >'.$tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$tot_units_2.' '.$item['uom_name_2']:'-').'</td> 
+                                                        <td width="13%" align="right" style="border-right: 1px solid #cdd0d4;">'. number_format(($item['price_amount'] / $item['ip_curr_value']),2).'&nbsp;&nbsp;</td>
+                                                        <td width="13%" align="right" style="border-right: 1px solid #cdd0d4;">'. number_format($cost,2).' &nbsp;&nbsp;</td>
 
                                                     </tr>';
+                                           
+                                            $j++;
+                                            $item_count++;
                                             }
                                         }      
+                                            if($j>1){
+                                                $html .= '<tr>
+                                                                <td align="right" colspan="6" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;"><b>Total</b></td>
+                                                                <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;">'.$cat_tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$cat_tot_units_2.' '.$item['uom_name_2']:'-').'</td>
+                                                                <td ></td>
+                                                                <td width="13%" align="right" style="border-right: 1px solid #cdd0d4;">'. number_format($cat_tot_amount,2).' &nbsp;&nbsp;</td>
+
+                                                          </tr>';
+                                            }
             $html .= '</tbody> 
                     </table> 
                 ';               
                 $i++;
             } 
             
-            
+            $html = '<table border="0">
+                        <tr>
+                            <td><b>Report: Gemstone Stock Valuation</b></td>
+                            <td align="center">Shape: '.$shape_name.' </td> 
+                            <td align="right">Printed on : '.date(SYS_DATE_FORMAT).'</td>
+                        </tr>
+                        <tr>
+                            <td>Locarion: '.$location_name.' </td>
+                            <td align="center">Color: '.$color_name.' </td>
+                            <td align="right"></td>
+                        </tr> 
+                        <tr>
+                            <td>Variety: '.$category_name.' </td>
+                            <td align="center">CDC: '.$treatment_name.' </td>
+                            <td align="right">Printed by : '.$this->session->userdata(SYSTEM_CODE)['user_first_name'].' '.$this->session->userdata(SYSTEM_CODE)['user_last_name'].'</td>
+                        </tr> 
+                        <tr><td colspan="3"></td></tr>
+                        <tr>
+                            <td colspan="3"><b>Total Valuation -</b><br>
+                                Items: '.$item_count.'<br>
+                                Units: '.$all_tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-').' <br> 
+                                Total Cost: '.$def_cur['code'].' '. number_format($all_tot_amount,2).'</td>
+                        </tr> 
+                    </table> '.$html;
             $html .= '
                     <style>
                     .colored_bg{

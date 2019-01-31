@@ -7,6 +7,7 @@
                 <th>Supplier Reference</th> 
                 <th>Date</th> 
                 <th>Due Date</th> 
+                <th>Memo</th> 
                 <th>Action</th>
             </tr>
         </thead>
@@ -27,6 +28,7 @@
                                <td>'.$search['reference'].'</td>
                                <td>'.(($search['invoice_date']>0)?date('d M Y',$search['invoice_date']):'').'</td>
                                <td>'.(($search['days_after']>0)?$inv_date:'').'</td>
+                               <td>'.$search['comments'].'</td>
                                
                                <td>';
                                     echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'view'))?'<a class="btn  btn-social-icon fl-btn-instagram" title="View" href="'.  base_url($this->router->fetch_class().'/view/'.$search['id']).'"><span class="fa fa-eye"></span></a>  ':' ';

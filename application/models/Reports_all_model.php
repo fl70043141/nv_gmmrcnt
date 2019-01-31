@@ -40,6 +40,7 @@ class Reports_all_model extends CI_Model
     public function get_item_stocks_gemstones($data='',$where=''){ 
 //            echo '<pre>';            print_r('$data'); die;
         $this->db->select('is.*'); 
+        $this->db->select('ip.item_price_type, ip.price_amount,ip.currency_code as ip_curr_code, ip.currency_value as ip_curr_value'); 
         $this->db->select('itm.item_name,itm.item_code,itm.item_category_id'); 
         $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
         $this->db->select('(select location_name from '.INV_LOCATION.' where id = is.location_id)  as location_name');
@@ -50,6 +51,7 @@ class Reports_all_model extends CI_Model
         $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.shape)  as shape_name');
         $this->db->join(ITEMS.' itm','itm.id = is.item_id'); 
         $this->db->join(ITEM_CAT.' itmc','itmc.id = itm.item_category_id'); 
+        $this->db->join(ITEM_PRICES.' ip','ip.item_id = is.item_id and ip.item_price_type = 3 and ip.deleted=0'); //3 standard cost 
         $this->db->from(ITEM_STOCK.' is'); 
         $this->db->where('itmc.is_gem',1); 
         

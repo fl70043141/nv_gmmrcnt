@@ -12,6 +12,10 @@ $(document).ready(function(){
 		event.preventDefault();
 		get_results();
     });
+    $("#search_btn").click(function(){
+		event.preventDefault();
+		get_results();
+    });
 //    $("#status").change(function(){
 //		event.preventDefault();
 //		get_results();

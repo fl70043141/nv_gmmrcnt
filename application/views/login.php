@@ -28,8 +28,8 @@
 </head>
 <body class="hold-transition login-page" style="background-image: url(<?php echo base_url(SAMPLE_PIC.'default/soft_bg.jpg');?>)">
 <div class="login-box">
-  <div class="login-logo">
-    <a href="#l"><b><?PHP echo "<br>";?></b></a>
+    <div style="margin-bottom: 0px;" class="login-logo">
+    <a href="#l"><b><?PHP echo SYSTEM_NAME;?></b></a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body" style="background: none;">

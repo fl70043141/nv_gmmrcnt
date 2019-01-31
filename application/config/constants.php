@@ -23,8 +23,8 @@ defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);
 | of this setting
 |
 */
-define('SYSTEM_NAME', 'GEM MERCHANT');
-define('SYSTEM_CODE', 'NV_GEMS_1');
+define('SYSTEM_NAME', 'NVELOOP GEMS');
+define('SYSTEM_CODE', 'NV_GEM_MERCH_DEV');
 define('SYSTEM_SHOTR_NAME', 'NV GEMS');
 define('SYSTEM_POWERED_BY', 'Nveloop Solution');
 define('SYS_DATE_FORMAT', 'm/d/Y');
