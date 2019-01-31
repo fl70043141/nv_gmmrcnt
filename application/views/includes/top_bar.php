@@ -45,7 +45,7 @@
                 <div class="pull-left">
                     <a href="<?php echo base_url("Users/edit/".$_SESSION[SYSTEM_CODE]['ID']);?>" class="btn btn-default btn-flat">Profile</a>
                 </div>
-                <div class="pull-left">
+                <div hidden class="pull-left">
                     <a id="show_second_display" href="#" class="btn btn-default btn-flat">Second Display</a>
                 </div>
                 <div class="pull-right">
