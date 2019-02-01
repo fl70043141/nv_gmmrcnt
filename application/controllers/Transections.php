@@ -24,7 +24,7 @@ class Transections extends CI_Controller {
 	function add(){ 
             $data  			= $this->load_data(); 
             $data['action']		= 'Add';
-            $data['main_content']='transections/manage_Transections';    
+            $data['main_content']='transections/manage_transections';    
             $this->load->view('includes/template',$data);
 	}
                     
@@ -34,7 +34,7 @@ class Transections extends CI_Controller {
             $data['no_menu']		= 1;
 //            echo '<pre>'; print_r($data); die;
             $data['action']		= 'Delete';
-            $data['main_content']='transections/manage_Transections'; 
+            $data['main_content']='transections/manage_transections'; 
             $this->load->view('includes/template_pos',$data);
 	}
         
@@ -42,14 +42,14 @@ class Transections extends CI_Controller {
             $data  			= $this->load_data($id);
 //            echo '<pre>'; print_r($data); die;
             $data['action']		= 'Delete';
-            $data['main_content']='transections/manage_Transections'; 
+            $data['main_content']='transections/manage_transections'; 
             $this->load->view('includes/template',$data);
 	}
 	
 	function view($id){ 
             $data  			= $this->load_data($id);
             $data['action']		= 'View';
-            $data['main_content']='transections/manage_Transections'; 
+            $data['main_content']='transections/manage_transections'; 
             $data['user_role_list'] = get_dropdown_data(USER_ROLE,'user_role','id');
             $this->load->view('includes/template',$data);
 	}

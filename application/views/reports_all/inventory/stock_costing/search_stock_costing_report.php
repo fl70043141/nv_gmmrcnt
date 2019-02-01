@@ -102,7 +102,7 @@ $(document).ready(function(){
                                         </div>    
                                         <div class="col-md-3">  
                                                 <div class="form-group pad  no-pad-top">
-                                                    <label for="max_weight">Maximum Weight (cts).</label>
+                                                    <label for="max_weight">Maximum Weight (cts) <input type="checkbox" name="max_weight_check" id="max_weight_check" id="max_weight_check" value="1"></label>
                                                      <?php echo form_input('max_weight',set_value('max_weight',10),' class="form-control" placeholder="Enter Maximum Carat weight" id="max_weight"');?>
                                                </div> 
                                         </div>    

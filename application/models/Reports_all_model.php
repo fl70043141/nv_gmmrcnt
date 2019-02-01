@@ -63,7 +63,7 @@ class Reports_all_model extends CI_Model
         if(isset($data['shape_id']) && $data['shape_id'] !='')$this->db->where('itm.shape',$data['shape_id']);
         
         if(isset($data['min_weight']) && $data['min_weight'] >0)$this->db->where('is.units_available >',$data['min_weight']);
-        if(isset($data['max_weight']) && $data['max_weight'] >0)$this->db->where('is.units_available <',$data['max_weight']);
+        if(isset($data['max_weight_check']) && isset($data['max_weight']) && $data['max_weight'] >0)$this->db->where('is.units_available <',$data['max_weight']);
         
         
         if($where!='')$this->db->where($where);
