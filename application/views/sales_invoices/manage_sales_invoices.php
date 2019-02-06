@@ -513,7 +513,7 @@ $(document).ready(function(){
          get_branch_drpdwn();
     });
     $("#customer_branch_id").change(function(){ 
-         set_branch_info();
+         set_cust_info();
     });
     $("#price_type_id").change(function(){ 
 	 $('#item_code').trigger('keyup');
@@ -835,23 +835,23 @@ $(document).ready(function(){
                    });
                     
                    if($('input[name=action]').val()=='Add'){
-                    set_branch_info()
+                    set_cust_info()
                    }
                    
                 get_customers_addons();
             }
         
-        function set_branch_info(){
+        function set_cust_info(){
                                 
                     $.ajax({
-                           url: "<?php echo site_url('Sales_invoices/fl_ajax?function_name=get_single_branch_info');?>",
+                           url: "<?php echo site_url('Sales_invoices/fl_ajax?function_name=get_single_customer');?>",
                            type: 'post',
-                           data : {function_name:'get_single_branch_info',branch_id:$('#customer_branch_id').val()},
+                           data : {function_name:'get_single_customer',customer_id:$('#customer_id').val()},
                            success: function(result){
-//                            $("#search_result_1").html(result);
+//                            $("#search_result_1").html(result);return false;
 //                                console.log(result);return  false;
                                 var obj2 = JSON.parse(result);
-                                $('#delivery_address').text(obj2.billing_address);
+                                $('#delivery_address').text(obj2.address+((obj2.city!="")?', '+obj2.city:'')+((obj2.country_name!="")?', '+obj2.country_name:''));
                                 $('#customer_phone').val(obj2.phone); 
 
                                }

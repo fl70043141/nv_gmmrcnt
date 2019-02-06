@@ -99,7 +99,6 @@ class Quick_entries extends CI_Controller {
             $entry_id = get_autoincrement_no(GL_QUICK_ENTRY);
             $cur_det =  get_currency_for_code($inputs['currency_code']);
             $data = array();
-//            echo '<pre>'; print_r($cur_det); die;
             if(!empty($inputs['inv_items'])){
                 foreach ($inputs['inv_items'] as $entry){ 
                     $data['entry_tbl'][] = array(

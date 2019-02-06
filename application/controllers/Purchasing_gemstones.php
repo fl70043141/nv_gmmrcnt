@@ -556,8 +556,8 @@ class Purchasing_gemstones extends CI_Controller {
             $data['item_list'] = get_dropdown_data(ITEMS,array('item_name',"CONCAT(item_name,'-',item_code) as item_name"),'item_code','','item_type_id = 1'); 
             $data['item_category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','','is_gem = 1'); 
             $data['currency_list'] = get_dropdown_data(CURRENCY,'code','code','Currency');
-            $data['certification_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','Certification','dropdown_id = 4'); //4 for certification
-            $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','Treatment','dropdown_id = 5'); //14 for treatments
+            $data['certification_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Certification','dropdown_id = 4'); //4 for certification
+            $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
             $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
             $data['color_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Color','dropdown_id = 17'); //17 for Color
             $data['origin_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Origin','dropdown_id = 18'); //18 Origin

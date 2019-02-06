@@ -123,21 +123,16 @@ class Fiscal_years extends CI_Controller {
 	
 	function update(){
             $inputs = $this->input->post();   
-            $inputs['status'] = (isset($inputs['status']))?1:0;
+            $inputs['status'] = (isset($inputs['status']))?1:0; 
+            $inputs['closed'] = (isset($inputs['closed']))?1:0; 
             
             $def_cur_val = ($this->session->userdata(SYSTEM_CODE)['default_currency_value']>0)?$this->session->userdata(SYSTEM_CODE)['default_currency_value']:1;
-//            $cur_rate = $def_cur_val/$search['value'];
-            $rel_value = $def_cur_val/$inputs['value'];
+
             $data = array(
-                            'title' => $inputs['title'],
-                            'code' => $inputs['code'],
-                            'code' => $inputs['code'],
-                            'value' => $rel_value,
-                            'value_rate' => $inputs['value'],
-                            'symbol_left' => $inputs['symbol_left'],
-                            'symbol_right' => $inputs['symbol_right'],
-                            'decimal_place' => 2,
-                            'status' => $inputs['status'],
+                            'begin' => strtotime($inputs['begin']),
+                            'end' => strtotime($inputs['end']),
+                            'closed' => $inputs['closed'],
+                            'status' => $inputs['status'], 
                         );
                             
             //old data for log update
@@ -211,7 +206,7 @@ class Fiscal_years extends CI_Controller {
                 }
             }
             
-            $active_fiscal_year = get_single_row_helper(GL_FISCAL_YEARS,'id='.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id1']);
+            $active_fiscal_year = get_single_row_helper(GL_FISCAL_YEARS,'id='.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
             $data['active_fiscal_year'] = $active_fiscal_year;
 //            echo '<pre>';            print_r($active_fiscal_year); die;
             return $data;

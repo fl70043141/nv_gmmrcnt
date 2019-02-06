@@ -1255,10 +1255,20 @@ class Sales_invoices extends CI_Controller {
                 }                       
                 
                 $res = $this->db->get()->result_array();
-                $dropdown_data=array();
-                    
-//                echo '<pre>';                print_r($res); die;
-//                echo form_dropdown('variety',$dropdown_data, set_value('variety'),' class="form-control select" data-live-search="true" id="variety" ');
+                echo json_encode($res[0]);
+        }
+        
+        function get_single_customer(){
+                $customer_id = $this->input->post('customer_id');
+                $this->db->select("c.*");	 	
+                $this->db->from(CUSTOMERS." c");
+                $this->db->select("(select country_name from ".COUNTRY_LIST." where country_code = c.country) as country_name");	
+                $this->db->where('c.deleted',0);
+                if($customer_id > 0){
+                    $this->db->where('c.id',$customer_id);  
+                }                       
+                
+                $res = $this->db->get()->result_array();
                 echo json_encode($res[0]);
         }
         

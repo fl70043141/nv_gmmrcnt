@@ -1,11 +1,11 @@
 <?php
-	
+//	echo '<pre>';        print_r($this->session->userdata(SYSTEM_CODE)['default_currency']); die;
 	$result = array(
                         'id'=>"",
                         'entry_date'=>date('m/d/Y'),
                         'quick_entry_account_id'=>'',
                         'amount'=>0, 
-                        'currency_code'=>'LKR', 
+                        'currency_code'=>$this->session->userdata(SYSTEM_CODE)['default_currency'], 
                         'status'=>1,
                         );   		
 	
@@ -99,7 +99,7 @@ endswitch;
                             <div class="">
                                 <div id='add_item_form' class="col-md-12">
                                     
-                                    <h4 class="">Add Quick entry</h4> 
+                                    <h4 class="">Add Expense entry</h4> 
                                     <table id="example1" class="table bg-gray-light table-bordered table-striped">
                                         <thead>
                                            <tr>
@@ -120,7 +120,7 @@ endswitch;
                                                     </div>
                                                </td> 
                                                
-                                               <td hidden>
+                                               <td>
                                                     <div class="col-md-12">
                                                     <div class="form-group">
                                                         <label for="currency_code">Currency</label>
@@ -155,6 +155,7 @@ endswitch;
                                                <th width="5%">#</th>
                                                <th width="10%"  style="text-align: center;">Date</th> 
                                                <th width="20%" style="text-align: left;">Entry Account</th>  
+                                               <th width="15%" style="text-align: center;">Currency</th> 
                                                <th width="15%" style="text-align: right;">Amount</th> 
                                                <th width="5%" style="text-align: center;">Action</th>
                                            </tr>
@@ -170,16 +171,11 @@ endswitch;
                                                 <th  style="text-align: right;"></th>
                                             </tr>-->
                                             
-                                            <tr>
+                                            <tr hidden>
                                                 <th colspan="2"></th>
                                                 <th  style="text-align: right;">Total</th>
                                                 <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_total"><span id="inv_total">0</span></th>
-                                            </tr>
-                                            <tr hidden="">
-                                                <th colspan="2"></th>
-                                                <th  style="text-align: right;">Customer Payment</th>
-                                                <th  style="text-align: right;"><input type="text" name="deposit_amount" value="0" class=" form-control"></th>
-                                            </tr>
+                                            </tr> 
                                        </tfoot>
                                         </table>
                                 </div>
@@ -273,11 +269,13 @@ $(document).ready(function(){
                             '<td>'+(rowCount)+'</td>'+
                             '<td><input hidden name="inv_items['+rowCount+'_'+qe_id+'][entry_date]" value="'+$('#entry_date').val()+'">'+$('#entry_date').val()+'</td>'+
                             '<td><input hidden name="inv_items['+rowCount+'_'+qe_id+'][quick_entry_account_id]" value="'+$('#quick_entry_account_id').val()+'">'+$('#quick_entry_account_id option:selected').text()+'</td>'+
+                            '<td align="center"><input  hidden name="inv_items['+rowCount+'_'+qe_id+'][currency_code]" value="'+$('#currency_code').val()+'">'+$('#currency_code').val()+'</td>'+
                             '<td align="right"><input class="item_tots" hidden name="inv_items['+rowCount+'_'+qe_id+'][amount]" value="'+$('#amount').val()+'">'+parseFloat($('#amount').val()).toFixed(2)+'</td>'+
                             '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
                         '</tr>'); 
         jQuery('table#invoice_list_tbl ').append(newRow);
         var inv_total = parseFloat($('#invoice_total').val()) + parseFloat($('#amount').val());
+        $('#amount').val(0);
         $('#invoice_total').val(inv_total.toFixed(2));
         $('#inv_total').text(inv_total.toFixed(2));
         
