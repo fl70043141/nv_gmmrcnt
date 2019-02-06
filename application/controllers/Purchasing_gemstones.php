@@ -119,7 +119,7 @@ class Purchasing_gemstones extends CI_Controller {
             if(!empty($item)){ 
                     
                     $item_id = get_autoincrement_no(ITEMS); 
-                    $item_code = gen_id('A', ITEMS, 'id',3);
+                    $item_code = (isset($item['item_code']) && $item['item_code']!="")?$item['item_code']:gen_id('A', ITEMS, 'id',3);
                     $inputs['status'] = (isset($inputs['status']))?1:0;
                     $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
                     $inputs['purchases_excluded'] = (isset($inputs['purchases_excluded']))?1:0;
@@ -177,7 +177,7 @@ class Purchasing_gemstones extends CI_Controller {
                                                     'status' =>1,
                                                     );
                     
-                    
+//                echo '<pre>';                                                    print_r($data); die;
                     $ins_res = $this->Purchasing_items_model->add_new_invoice_item($data);
             }
             

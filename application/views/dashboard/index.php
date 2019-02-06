@@ -29,7 +29,7 @@
             <div class="icon">
               <i class="fa fa-users"></i>
             </div>
-            <a href="<?php echo base_url('Purchasing_invoices');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo base_url('Purchasing_gemstones');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->

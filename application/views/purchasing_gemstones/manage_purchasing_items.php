@@ -173,6 +173,12 @@ endswitch;
                                                 <?php echo form_dropdown('item_category_id',$item_category_list,set_value('item_category_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="item_category_id"');?>
                                             </div>
                                         </div> 
+                                        <div  id="" class="col-md-2">
+                                            <div class="form-group pad1">
+                                                <label for="item_code">Item Code</label>
+                                                <?php echo form_input('item_code',set_value('item_code'),' class="form-control add_item_inpt " style="width:100%;" data-live-search="true" id="item_code"');?>
+                                            </div>
+                                        </div> 
                                         <div hidden id="first_col_form" class="col-md-2">
                                             <div class="form-group pad1">
                                                 <label for="item_desc">Description</label>
@@ -296,14 +302,15 @@ endswitch;
                                         <thead>
                                            <tr> 
                                                <th width="3%"  style="text-align: left;">#</th> 
-                                               <th width="13%"  style="text-align: left;">Stone</th> 
+                                               <th width="10%"  style="text-align: left;">Stone</th> 
+                                               <th width="7%"  style="text-align: left;">Code</th> 
                                                <th width="6%" style="text-align: center;">N/H</th> 
                                                <th width="9%" style="text-align: center;">Shape</th> 
                                                <th width="9%" style="text-align: center;">Color</th> 
-                                               <th width="12%" style="text-align: center;">Cert</th> 
+                                               <th width="10%" style="text-align: center;">Cert</th> 
                                                <th width="8%" style="text-align: center;">Origin</th> 
                                                <th width="12%" style="text-align: center;">Carat Weight</th>   
-                                               <th width="10%" style="text-align: right;">Rate</th> 
+                                               <th width="8%" style="text-align: right;">Rate</th> 
                                                <th width="10%" style="text-align: right;">Total</th> 
                                                <th width="5%" style="text-align: center;">Action</th>
                                            </tr>
@@ -421,12 +428,10 @@ $(document).ready(function(){
 			success: function(result){
                                 var res2 = JSON.parse(result);
 //                                $("#search_result_1").html(result);
-                                
                                 if(res2.id==null){
                                     fl_alert('info','Item category invalid! Please recheck before add.');
                                     return false;
                                 }
-                                
                                 var unit_cost_val = parseFloat($('#item_unit_cost').val());
                                 if (!$('#is_price_per_unit').is(":checked")){
                                     unit_cost_val = parseFloat($('#item_unit_cost').val()) / parseFloat($('#item_quantity').val())
@@ -438,10 +443,20 @@ $(document).ready(function(){
 //                                var item_total = qtyXprice - (parseFloat($('#item_discount').val())* 0.01 * qtyXprice);
                                 var item_total = qtyXprice;
                                 
+                                if($('#item_code').val()==''){
+                                    fl_alert('info','Please enter item code!');
+                                    return false;
+                                }
+                                if(item_total<=0){
+                                    fl_alert('info','Item Weight or cost not valid! Please Recheck before add.');
+                                    return false;
+                                }
+                                
                                 
                                 var row_str = '<tr style="pad1ding:10px" id="tr_'+rowCount+'">'+ 
                                                         '<td><span id="'+rowCount+'_row_cntr" class="row_counter_cls"></span></td>'+
                                                         '<td><input hidden name="inv_items['+rowCount+'][item_desc]" value="'+res2.item_name+'"><input hidden name="inv_items['+rowCount+'][cat_id]" value="'+res2.id+'">'+res2.item_name+'</td>'+
+                                                        '<td><input hidden name="inv_items['+rowCount+'][item_code]" value="'+$('#item_code').val()+'">'+$('#item_code').val()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_treatments]" value="'+$('#treatments').val()+'">'+$("#treatments option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][shape]" value="'+$('#shape').val()+'">'+$("#shape option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][color]" value="'+$('#color').val()+'">'+$("#color option:selected" ).text()+'</td>'+
@@ -509,14 +524,14 @@ $(document).ready(function(){
                             var res1 = JSON.parse(result);
                             
 //                             $('#first_col_form').removeClass('col-md-offset-1');
-                            var div_str = '<div class="col-md-2">'+
+                            var div_str = '<div class="col-md-1">'+
                                                     '<div class="form-group pad1">'+
                                                         '<label for="item_quantity"> <span id="unit_abbr">[Each]<span></label>'+
                                                         '<input type="text" name="item_quantity" class="form-control add_item_inpt" id="item_quantity" placeholder="Enter Quantity">'+
                                                     '</div>'+
                                                 '</div>';
                             if(res1.item_uom_id_2!=0){
-                                    div_str = div_str + '<div class="col-md-2">'+
+                                    div_str = div_str + '<div class="col-md-1">'+
                                                             '<div class="form-group pad1">'+
                                                                 '<label for="item_quantity_2"> <span id="unit_abbr_2">[Each]<span></label>'+
                                                                 '<input type="text" name="item_quantity_2" class="form-control add_item_inpt" value="1" id="item_quantity_2" placeholder="Enter Quantity">'+
