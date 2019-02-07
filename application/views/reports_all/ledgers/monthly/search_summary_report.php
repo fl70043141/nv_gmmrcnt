@@ -1,4 +1,7 @@
-
+<?php
+    $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+//     echo '<pre>'; print_r($fiscyear_info); die;
+?>
 <script>
     
 $(document).ready(function(){  
@@ -82,14 +85,20 @@ $(document).ready(function(){
    
                     <div class="box-body">
                         <div class="row"> 
-                            <div class="row col-md-12 col-md-offset-3">  
-                                        
+                            <div class="row col-md-12">  
+                                         
                                         <div class="col-md-3">  
                                                 <div class="form-group pad">
-                                                    <label for="date_month">Month</label>
-                                                    <?php  echo form_input('date_month',set_value('date_month',date('F Y')),' class="form-control datepicker" readonly  id="date_month"');?>
+                                                    <label for="date_from">From</label>
+                                                    <?php  echo form_input('date_from',set_value('date_from',date('m/d/Y',$fiscyear_info['begin'])),' class="form-control datepicker" readonly  id="date_from"');?>
                                                 </div> 
-                                        </div>    
+                                        </div>  
+                                        <div class="col-md-3">  
+                                                <div class="form-group pad">
+                                                    <label for="date_to">To</label>
+                                                    <?php  echo form_input('date_to',set_value('date_to',date('m/d/Y',$fiscyear_info['end'])),' class="form-control datepicker" readonly  id="date_to"');?>
+                                                </div> 
+                                        </div> 
                                         <div class="col-md-3">  
                                                 <div class="form-group pad">
                                                     <label for="quick_entry_acc">Quick Entry Acc</label>

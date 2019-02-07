@@ -50,14 +50,15 @@ class Ledger_reports extends CI_Controller {
         public function  search_ledger_month(){ // view month ledger
             $trans_group = array();
             $input = (empty($this->input->post()))? $this->input->get():$this->input->post();  
-            $timestamp    = strtotime($input['date_month']);
-            $first_day =  strtotime(date('01-m-Y 00:00:00', $timestamp));
-            $last_day  =  strtotime(date('t-m-Y 23:59:59', $timestamp));  
+//                echo '<pre>';            print_r($input); die;
+//            $timestamp    = strtotime($input['date_month']);
+//            $first_day =  strtotime(date('01-m-Y 00:00:00', $timestamp));
+//            $last_day  =  strtotime(date('t-m-Y 23:59:59', $timestamp));  
               
              
                 $search_data=array( 
-                                    'from_date' => $first_day,
-                                    'to_date' => $last_day,
+                                    'from_date' => ($input['date_from']>0)?strtotime($input['date_from']):'',
+                                    'to_date' => ($input['date_to']>0)?strtotime($input['date_to']):'',
                                     'quick_entry_acc_id' => $input['quick_entry_acc'],   
                                     ); 
                  

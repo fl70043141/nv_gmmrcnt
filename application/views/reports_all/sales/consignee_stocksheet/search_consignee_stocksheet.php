@@ -1,4 +1,7 @@
-
+<?php
+    $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+//     echo '<pre>'; print_r($fiscyear_info); die;
+?>
 <script>
     
 $(document).ready(function(){   
@@ -64,13 +67,13 @@ $(document).ready(function(){
                                         <div class="col-md-4">  
                                                 <div class="form-group pad">
                                                     <label for="from_date">From</label>
-                                                    <?php  echo form_input('from_date',set_value('from_date',date('m/d/Y',strtotime("-1 month"))),' class="form-control datepicker" readonly  id="from_date"');?>
+                                                    <?php  echo form_input('from_date',set_value('from_date',date('m/d/Y',$fiscyear_info['begin'])),' class="form-control datepicker" readonly  id="from_date"');?>
                                                 </div> 
                                         </div>  
                                         <div class="col-md-4">  
                                                 <div class="form-group pad">
                                                     <label for="to_date">To</label>
-                                                    <?php  echo form_input('to_date',set_value('to_date',date('m/d/Y')),' class="form-control datepicker" readonly  id="to_date"');?>
+                                                    <?php  echo form_input('to_date',set_value('to_date',date('m/d/Y',$fiscyear_info['end'])),' class="form-control datepicker" readonly  id="to_date"');?>
                                                 </div> 
                                         </div>    
                                     </div>

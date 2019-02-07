@@ -1,4 +1,7 @@
-
+<?php
+    $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+//     echo '<pre>'; print_r($fiscyear_info); die;
+?>
 <script>
     
 $(document).ready(function(){   
@@ -85,13 +88,13 @@ function get_results(){
                                         <div class="col-md-4">  
                                                 <div class="form-group pad">
                                                     <label for="purchase_from_date">From</label>
-                                                    <?php  echo form_input('purchase_from_date',set_value('purchase_from_date',date('m/d/Y',strtotime("-1 month"))),' class="form-control datepicker" readonly  id="purchase_from_date"');?>
+                                                    <?php  echo form_input('purchase_from_date',set_value('purchase_from_date',date('m/d/Y',$fiscyear_info['begin'])),' class="form-control datepicker" readonly  id="purchase_from_date"');?>
                                                 </div> 
                                         </div>  
                                         <div class="col-md-4">  
                                                 <div class="form-group pad">
                                                     <label for="purchase_to_date">To</label>
-                                                    <?php  echo form_input('purchase_to_date',set_value('purchase_to_date',date('m/d/Y')),' class="form-control datepicker" readonly  id="purchase_to_date"');?>
+                                                    <?php  echo form_input('purchase_to_date',set_value('purchase_to_date',date('m/d/Y',$fiscyear_info['end'])),' class="form-control datepicker" readonly  id="purchase_to_date"');?>
                                                 </div> 
                                         </div>    
                                     </div>

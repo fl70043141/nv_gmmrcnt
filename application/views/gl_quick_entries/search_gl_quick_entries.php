@@ -127,11 +127,7 @@ $(document).ready(function(){
                                     <a id="search_btn" class="btn btn-primary pull-right"><span class="fa fa-search"></span>Search</a>
                                 </div>
               </div>
-    </section>
-                            <?php echo form_close(); ?>               
-                                
-                         
-                             
+                                   
     <div class="box no-pad-top">
             <div class="box-header">
               <h3 class="box-title">Entry List</h3>
@@ -140,6 +136,11 @@ $(document).ready(function(){
             <div  id="result_search" class="box-body"> </div>
             <!-- /.box-body -->
           </div>
+    </section>
+                            <?php echo form_close(); ?>               
+                                
+                         
+          
        
      </div>
 </div> 

@@ -1,4 +1,7 @@
-
+<?php
+    $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+//     echo '<pre>'; print_r($fiscyear_info); die;
+?>
 <script>
     
 $(document).ready(function(){  
@@ -82,13 +85,13 @@ $(document).ready(function(){
                                         <div class="col-md-3">  
                                                 <div class="form-group pad">
                                                     <label for="transfer_from_date">From</label>
-                                                    <?php  echo form_input('transfer_from_date',set_value('transfer_from_date',date('m/d/Y',strtotime("-1 month"))),' class="form-control datepicker" readonly  id="transfer_from_date"');?>
+                                                    <?php  echo form_input('transfer_from_date',set_value('transfer_from_date',date('m/d/Y',$fiscyear_info['begin'])),' class="form-control datepicker" readonly  id="transfer_from_date"');?>
                                                 </div> 
                                         </div>  
                                         <div class="col-md-3">  
                                                 <div class="form-group pad">
                                                     <label for="transfer_to_date">To</label>
-                                                    <?php  echo form_input('transfer_to_date',set_value('transfer_to_date',date('m/d/Y')),' class="form-control datepicker" readonly  id="transfer_to_date"');?>
+                                                    <?php  echo form_input('transfer_to_date',set_value('transfer_to_date',date('m/d/Y',$fiscyear_info['end'])),' class="form-control datepicker" readonly  id="transfer_to_date"');?>
                                                 </div> 
                                         </div> 
                                 
