@@ -130,7 +130,7 @@ class Gems_issue_model extends CI_Model
                         
                         $this->db->where('location_id', $stock['location_id']);
                         $this->db->where('item_id', $stock['item_id']);
-                        $this->db->update(ITEM_STOCK, array('status'=>0,'deleted'=>1));
+                        $this->db->update(ITEM_STOCK, $update_arr);
                     }
                 }
                 

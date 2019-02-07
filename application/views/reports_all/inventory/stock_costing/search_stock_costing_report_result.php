@@ -93,7 +93,7 @@
                             
                             <div class="col-md-4">
                                 <dl class="dl-horizontal">
-                                    <dt>Units: </dt><dd>'.$all_tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-').' </dd>
+                                    <dt>Units: </dt><dd>'.$all_tot_units.' '.((isset($item)?$item['uom_name'].(($item['uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-'):'')).' </dd>
                                 </dl> 
                             </div>
                                 

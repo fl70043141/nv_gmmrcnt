@@ -7,9 +7,9 @@
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3><?php echo $total_1['count'];?></h3>
+              <h3 id="top_sale_box_amount"><?php echo $total_1['count'];?></h3>
 
-              <p><?php echo $total_1['label'];?></p>
+              <p id="top_sale_box_label"><?php echo $total_1['label'];?></p>
             </div>
             <div class="icon">
               <i class="fa fa-shopping-basket"></i>
@@ -22,9 +22,9 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3><?php echo $total_2['count'];?></h3>
+              <h3 id="top_purch_box_amount"><?php echo $total_2['count'];?></h3>
 
-              <p><?php echo $total_2['label'];?></p>
+              <p id="top_purch_box_label"><?php echo $total_2['label'];?></p>
             </div>
             <div class="icon">
               <i class="fa fa-users"></i>
@@ -37,9 +37,9 @@
           <!-- small box -->
           <div class="small-box bg-yellow">
             <div class="inner">
-              <h3><?php echo $total_3['count'];?></h3>
+              <h3 id="top_stock_box_amount"><?php echo $total_3['count'];?></h3>
 
-              <p><?php echo $total_3['label'];?></p>
+              <p id="top_stock_box_label"><?php echo $total_3['label'];?></p>
             </div>
             <div class="icon">
               <i class="fa fa-list"></i>
@@ -52,9 +52,9 @@
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3><?php echo $total_4['count'];?></h3>
+              <h3 id="top_expense_box_amount"><?php echo $total_4['count'];?></h3>
 
-              <p><?php echo $total_4['label'];?></p>
+              <p id="top_expense_box_alabel"><?php echo $total_4['label'];?></p>
             </div>
             <div class="icon">
               <i class="fa fa-tags"></i>

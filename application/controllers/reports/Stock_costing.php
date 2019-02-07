@@ -193,7 +193,7 @@ class Stock_costing extends CI_Controller {
                         <tr>
                             <td colspan="3"><b>Total Valuation -</b><br>
                                 Items: '.$item_count.'<br>
-                                Units: '.$all_tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-').' <br> 
+                                Units: '.$all_tot_units.' '.((isset($item))?$item['uom_name'].(($item['uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-'):'').' <br> 
                                 Total Cost: '.$def_cur['code'].' '. number_format($all_tot_amount,2).'</td>
                         </tr> 
                     </table> '.$html;
