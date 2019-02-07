@@ -147,5 +147,62 @@ class Dashboard extends CI_Controller {
             }
         }
         
+        function get_sales_info(){
+             $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+             $data = array(
+                                'from_date' => ($fiscyear_info['begin']>0)?$fiscyear_info['begin']:'',
+                                'to_date' => ($fiscyear_info['end']>0)?$fiscyear_info['end']:'', 
+                            );
+              
+              $sales_info = $this->Dashboard_model->get_sales_amount($data);
+              $sales_data = array();
+              $tot_sales = 0;
+                foreach ($sales_info as $sale){
+                    $sales_data[$sale['id']] = $sale;
+                    $tot_sales += $sale['inv_subtot'];
+                    $sales_data['symbol_left'] = $sale['cur_left_symbol'];
+                    $sales_data['symbol_right'] = $sale['cur_right_symbol'];
+                }
+                $sales_data['total'] = $tot_sales;
+                
+                echo json_encode($sales_data);
+        }
+        
+        function get_purch_info(){
+             $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+             $data = array(
+                                'from_date' => ($fiscyear_info['begin']>0)?$fiscyear_info['begin']:'',
+                                'to_date' => ($fiscyear_info['end']>0)?$fiscyear_info['end']:'', 
+                            );
+              
+              $purch_info = $this->Dashboard_model->get_purch_amount($data);
+              $purch_data = array();
+              $tot_purch = 0;
+                foreach ($purch_info as $purch){
+                    $purch_data[$purch['id']] = $purch;
+                    $tot_purch += $purch['inv_subtot'];
+                    $purch_data['symbol_left'] = $purch['cur_left_symbol'];
+                    $purch_data['symbol_right'] = $purch['cur_right_symbol'];
+                }
+                $purch_data['total'] = $tot_purch;
+                
+                echo json_encode($purch_data);
+        }
+//        function get_sales_info(){
+//             $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+//             $data = array(
+//                                'from_date' => ($fiscyear_info['begin']>0)?$fiscyear_info['begin']:'',
+//                                'to_date' => ($fiscyear_info['end']>0)?$fiscyear_info['end']:'', 
+//                            );
+//              
+//              $ledger_info = $this->Dashboard_model->get_ledger_info($data);
+//              $ledger_data = array();
+//                foreach ($ledger_info as $ledger){
+//                    $ledger_data[$ledger['glcm_code']] = $ledger;
+//                }
+//                
+//                echo json_encode($ledger_data);
+//        }
+        
         
 }

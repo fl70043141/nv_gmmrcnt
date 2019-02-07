@@ -1,15 +1,15 @@
-
+<div id="result1"></div>
   <!-- Main content -->
     <section class="content">
       <!-- Small boxes (Stat box) -->
       <div class="row">
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-aqua">
+          <div id="top_sale_box" class="small-box bg-aqua">
             <div class="inner">
-              <h3 id="top_sale_box_amount"><?php echo $total_1['count'];?></h3>
+              <h3 id="top_sale_box_amount"><?php // echo $total_1['count'];?></h3>
 
-              <p id="top_sale_box_label"><?php echo $total_1['label'];?></p>
+              <p id="top_sale_box_label"><?php // echo $total_1['label'];?></p>
             </div>
             <div class="icon">
               <i class="fa fa-shopping-basket"></i>
@@ -20,11 +20,11 @@
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-green">
+          <div id="top_purch_box" class="small-box bg-green">
             <div class="inner">
-              <h3 id="top_purch_box_amount"><?php echo $total_2['count'];?></h3>
+              <h3 id="top_purch_box_amount"><?php // echo $total_2['count'];?></h3>
 
-              <p id="top_purch_box_label"><?php echo $total_2['label'];?></p>
+              <p id="top_purch_box_label"><?php // echo $total_2['label'];?></p>
             </div>
             <div class="icon">
               <i class="fa fa-users"></i>
@@ -219,5 +219,75 @@ $(function () {
     });
 
     /* END AREA CHART */
+    
+    
+    get_sales_info();
+    get_purch_info()
+    
 });
+
+
+    function get_sales_info(){
+        $('#top_sale_box').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Loading...');    
+         
+        $.ajax({
+                    url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>", 
+                    type: 'post',
+                    data : {function_name:'get_sales_info'},
+                    success: function(result){ 
+//                             $("#result1").html(result); 
+                        var res2 = JSON.parse(result); 
+                        var sale_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
+                        
+                        var html_sale = '<div class="inner">'+
+                                        '<h3>'+res2['symbol_left']+' '+sale_amount+' '+res2['symbol_right']+'</h3>'+
+                                        '<p>SALES</p>'+
+                                    '</div>'+
+                                    '<div class="icon">'+
+                                '<i class="fa fa-shopping-basket"></i>'+
+                             '</div>'+
+                             '<a href="<?php echo base_url('Sales_invoices');?>" class="small-box-footer">New Sales Invoice<i class="fa fa-arrow-circle-right"></i></a>';
+                     
+                        $('#top_sale_box').html(html_sale); 
+                    }
+            });
+    }
+
+    function get_purch_info(){
+        $('#top_purch_box').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Loading...');    
+         
+        $.ajax({
+                    url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>", 
+                    type: 'post',
+                    data : {function_name:'get_purch_info'},
+                    success: function(result){ 
+//                             $("#result1").html(result); return false;
+                        var res2 = JSON.parse(result); 
+                        var purch_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
+                        
+                        var html_purch = '<div class="inner">'+
+                                        '<h3>'+res2['symbol_left']+' '+purch_amount+' '+res2['symbol_right']+'</h3>'+
+                                        '<p>PURCHASING</p>'+
+                                    '</div>'+
+                                    '<div class="icon">'+
+                                '<i class="fa fa-suitcase"></i>'+
+                             '</div>'+
+                             '<a href="<?php echo base_url('Purchasing_gemstones');?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
+                     
+                        $('#top_purch_box').html(html_purch); 
+                    }
+            });
+    }
+function addCommas(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
 </script>

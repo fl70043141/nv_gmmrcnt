@@ -96,7 +96,8 @@ class Reports_all_model extends CI_Model
         $this->db->join(GL_CHART_TYPE.' gct','gct.id= glcm.account_type_id'); 
         $this->db->join(GL_CHART_CLASS.' gcc','gcc.id= gct.class_id'); 
         
-        if($data['from_date']!='' && $data['to_date']!='') $this->db->where("gt.trans_date>= ".$data['from_date']." AND gt.trans_date<= ".$data['to_date']." ");
+        if(isset($data['from_date']) && $data['from_date']!='') $this->db->where("gt.trans_date>= ",$data['from_date']);
+        if(isset($data['to_date']) && $data['to_date']!='') $this->db->where("gt.trans_date<= ",$data['to_date']); 
         if($where!='')$this->db->where($where);
         $this->db->where('gt.deleted',0);
         $this->db->group_by('glcm.id');

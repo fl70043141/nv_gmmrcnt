@@ -48,6 +48,71 @@ class Dashboard_model extends CI_Model
 //            echo '<pre>';            print_r($result); die;
             return count($result);
 	}
+        
+        public function get_ledger_info($data,$where=''){
+            $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
+            $cur_det = get_currency_for_code($def_curcode);
+
+            $this->db->select('"'.$cur_det['symbol_left'].'" as cur_left_symbol, "'.$cur_det['symbol_right'].'" as cur_right_symbol'); 
+            $this->db->select('sum(gt.amount*('.$cur_det['value'].'/gt.currency_value)) as glcm_tot_amount'); 
+            $this->db->select('gt.*,(gt.amount*('.$cur_det['value'].'/gt.currency_value)) as amount_defcur'); 
+            $this->db->select('glcm.account_name as glcm_account_name, glcm.account_code as glcm_code,glcm.id as glcm_id,glcm.account_type_id');  
+            $this->db->select('gct.id as gct_id,gct.type_name,gct.class_id,gcc.class_name');  
+            $this->db->from(GL_TRANS.' gt'); 
+            $this->db->join(GL_CHART_MASTER.' glcm','glcm.account_code = gt.account_code'); 
+            $this->db->join(GL_CHART_TYPE.' gct','gct.id= glcm.account_type_id'); 
+            $this->db->join(GL_CHART_CLASS.' gcc','gcc.id= gct.class_id'); 
+
+            if(isset($data['from_date']) && $data['from_date']!='') $this->db->where("gt.trans_date>= ",$data['from_date']);
+            if(isset($data['to_date']) && $data['to_date']!='') $this->db->where("gt.trans_date<= ",$data['to_date']); 
+            if($where!='')$this->db->where($where);
+            $this->db->where('gt.deleted',0);
+            $this->db->group_by('glcm.id');
+            $result = $this->db->get()->result_array();   
+    //echo $this->db->last_query(); die;
+
+//            echo '<pre>';        print_r($result); die;
+            return $result;
+        }
+        
+        function get_sales_amount($data, $where=''){ 
+            $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
+            $cur_det = get_currency_for_code($def_curcode);
+            
+            $this->db->select('i.*');
+            $this->db->select('(sum(id.item_quantity * id.unit_price) * '.$cur_det['value'].'/i.currency_value) as inv_subtot');
+            $this->db->select('"'.$cur_det['symbol_left'].'" as cur_left_symbol, "'.$cur_det['symbol_right'].'" as cur_right_symbol'); 
+             $this->db->join(INVOICE_DESC.' id','id.invoice_id = i.id');
+            $this->db->from(INVOICES.' i');
+            $this->db->where('i.deleted',0);
+            $this->db->group_by('i.id');
+            
+            if(isset($data['from_date']) && $data['from_date']!='') $this->db->where("i.invoice_date>= ",$data['from_date']);
+            if(isset($data['to_date']) && $data['to_date']!='') $this->db->where("i.invoice_date<= ",$data['to_date']); 
+               
+            $result = $this->db->get()->result_array(); 
+            
+            return $result;
+        }
+        
+        function get_purch_amount($data, $where=''){ 
+            $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
+            $cur_det = get_currency_for_code($def_curcode);
+            
+            $this->db->select('i.*');
+            $this->db->select('(sum(id.purchasing_unit * id.purchasing_unit_price) * '.$cur_det['value'].'/i.currency_value) as inv_subtot');
+            $this->db->select('"'.$cur_det['symbol_left'].'" as cur_left_symbol, "'.$cur_det['symbol_right'].'" as cur_right_symbol'); 
+             $this->db->join(SUPPLIER_INVOICE_DESC.' id','id.supplier_invoice_id = i.id');
+            $this->db->from(SUPPLIER_INVOICE.' i');
+            $this->db->where('i.deleted',0);
+            $this->db->group_by('i.id');
+            
+            if(isset($data['from_date']) && $data['from_date']!='') $this->db->where("i.invoice_date>= ",$data['from_date']);
+            if(isset($data['to_date']) && $data['to_date']!='') $this->db->where("i.invoice_date<= ",$data['to_date']); 
+               
+            $result = $this->db->get()->result_array(); 
+            return $result;
+        }
  
 }
 ?>
