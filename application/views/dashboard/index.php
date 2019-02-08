@@ -248,7 +248,7 @@ $(function () {
                                     '<div class="icon">'+
                                 '<i class="fa fa-shopping-basket"></i>'+
                              '</div>'+
-                             '<a href="<?php echo base_url('Sales_invoices');?>" class="small-box-footer">New Sales Invoice<i class="fa fa-arrow-circle-right"></i></a>';
+                             '<a href="<?php echo base_url('Sales_invoices');?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
                      
                         $('#top_sale_box').html(html_sale); 
                     }
