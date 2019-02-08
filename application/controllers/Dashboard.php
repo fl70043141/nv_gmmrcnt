@@ -49,8 +49,8 @@ class Dashboard extends CI_Controller {
                                             'count' => $this->Dashboard_model->get_tbl_couts(SUPPLIER_INVOICE),
                                             );
             $data['total_3']= array(
-                                            'label' =>'IN STOCK : '.$tot_count,
-                                            'count' => "ITEMS: ".count($available),
+                                            'count' =>$tot_count,
+                                            'label' => "ITEMS: ".count($available),
                                             );
             $data['total_4']= array(
                                         'label' =>'Categories',

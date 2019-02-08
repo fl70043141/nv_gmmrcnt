@@ -54,9 +54,9 @@
           <!-- small box -->
           <div id="" class="small-box bg-yellow">
             <div class="inner">
-              <h3 id="top_stock_box_amount"><?php echo ($total_3['count']);?></h3>
+              <h4 id="top_stock_box_amount"><?php echo ($total_3['count']);?></h4>
 
-              <p id="top_stock_box_label"><?php echo $total_3['label'];?></p>
+              <p style="font-size:20px;" id="top_stock_box_label"><?php echo $total_3['label'];?></p>
             </div>
             <div class="icon">
               <i class="fa fa-list"></i>
@@ -242,8 +242,8 @@ $(function () {
                         var sale_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
                         
                         var html_sale = '<div class="inner">'+
-                                        '<h3>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+sale_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h3>'+
-                                        '<p>SALES</p>'+
+                                        '<h4>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+sale_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h4>'+
+                                        '<p style="font-size:20px;">SALES</p>'+
                                     '</div>'+
                                     '<div class="icon">'+
                                 '<i class="fa fa-shopping-basket"></i>'+
@@ -268,8 +268,8 @@ $(function () {
                         var purch_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
                         
                         var html_purch = '<div class="inner">'+
-                                        '<h3>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+purch_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h3>'+
-                                        '<p>PURCHASING</p>'+
+                                        '<h4>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+purch_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h4>'+
+                                        '<p style="font-size:20px;">PURCHASING</p>'+
                                     '</div>'+
                                     '<div class="icon">'+
                                 '<i class="fa fa-suitcase"></i>'+
@@ -294,8 +294,8 @@ $(function () {
                         var res2 = JSON.parse(result); 
                         var exp_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
                         var html_exp = '<div class="inner">'+
-                                        '<h3>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+exp_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h3>'+
-                                        '<p>EXPENSES</p>'+
+                                        '<h4>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+exp_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h4>'+
+                                        '<p style="font-size:20px;">EXPENSES</p>'+
                                     '</div>'+
                                     '<div class="icon">'+
                                 '<i class="fa fa-money"></i>'+
