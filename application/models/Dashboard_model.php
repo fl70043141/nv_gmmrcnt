@@ -25,8 +25,10 @@ class Dashboard_model extends CI_Model
             $result = $this->db->get()->result_array(); 
             return count($result);
 	}
-        public function get_available_items($where='',$limit=''){
+        public function get_available_items($where='',$limit='',$res=''){
 //            echo '<pre>';            print_r($limit); die;
+            $this->db->select("sum(is.units_available + is.units_on_consignee + is.units_on_workshop) as sum_unit_1");
+            $this->db->select("sum(is.units_available_2 + is.units_on_consignee_2 + is.units_on_workshop_2) as sum_unit_2");
             $this->db->select("is.*,itm.item_code,itm.item_category_id,CONCAT(itm.item_name,'-',itm.item_code) as item_name");
             $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
             $this->db->select('(select location_name from '.INV_LOCATION.' where id = is.location_id)  as location_name');
@@ -41,12 +43,17 @@ class Dashboard_model extends CI_Model
             $this->db->where('is.status',1);
             $this->db->where('itm.sales_excluded',0);
             $this->db->where('itm.item_type_id !=',4);
+            $this->db->group_by('itm.id');
             if($where!='') $this->db->where($where);
             if($limit!='') $this->db->limit($limit);
-            $result = $this->db->get()->result_array();  
-//            echo $this->db->last_query(); die;
-//            echo '<pre>';            print_r($result); die;
-            return count($result);
+            $result = $this->db->get()->result_array(); 
+//            echo '<pre>';        print_r($result); die; 
+//            echo $this->db->last_query(); die; 
+            if($res==1){
+                return $result;
+            }else{
+                return count($result);
+            }
 	}
         
         public function get_ledger_info($data,$where=''){
@@ -111,6 +118,29 @@ class Dashboard_model extends CI_Model
             if(isset($data['to_date']) && $data['to_date']!='') $this->db->where("i.invoice_date<= ",$data['to_date']); 
                
             $result = $this->db->get()->result_array(); 
+            return $result;
+        }
+        
+        function get_expenses_amount($data, $where=''){ 
+            $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
+            $cur_det = get_currency_for_code($def_curcode);
+            
+//              echo '<pre>';            print_r($cur_det); die;
+            $this->db->select('qa.*');
+            $this->db->select('q.amount,q.entry_date,q.currency_value');
+            $this->db->select('(sum(q.amount) * '.$cur_det['value'].'/q.currency_value) as expense_amount');
+            $this->db->select('"'.$cur_det['symbol_left'].'" as cur_left_symbol, "'.$cur_det['symbol_right'].'" as cur_right_symbol'); 
+             $this->db->join(GL_QUICK_ENTRY.' q','q.quick_entry_account_id = qa.id');
+             $this->db->join(GL_CHART_MASTER.' cm','cm.account_code = qa.debit_gl_code AND (cm.account_type_id = 12 OR cm.account_type_id=13)'); //12: gen expense 13: :ab charges
+            $this->db->from(GL_QUICK_ENTRY_ACC.' qa');
+            $this->db->where('qa.deleted',0);
+            $this->db->group_by('qa.id');
+            
+            if(isset($data['from_date']) && $data['from_date']!='') $this->db->where("q.entry_date>= ",$data['from_date']);
+            if(isset($data['to_date']) && $data['to_date']!='') $this->db->where("q.entry_date<= ",$data['to_date']); 
+               
+            $result = $this->db->get()->result_array(); 
+            
             return $result;
         }
  

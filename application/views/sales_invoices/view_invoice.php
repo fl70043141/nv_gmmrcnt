@@ -148,8 +148,8 @@ $inv_trans = $inv_data['inv_transection'];
                                          </tr>
                                         <tr style="">
                                              <th width="15%" style="text-align: center;"><u><b>Code</b></u></th>  
-                                             <th width="35%" style="text-align: left;"><u><b>Description</b></u></th>
-                                             <th  width="10%"><u><b>Qty</b></u></th>   
+                                             <th width="25%" style="text-align: left;"><u><b>Description</b></u></th>
+                                             <th  width="20%"><u><b>Units</b></u></th>   
                                              <th width="10%" style="text-align: right;"><u><b>Rate</b></u></th>  
                                              <th width="10%" style="text-align: right;"><u><b>Discount</b></u></th>  
                                              <th width="19%" style="text-align: right;"><u><b>Subtotal</b></u></th> 
@@ -163,8 +163,8 @@ $inv_trans = $inv_data['inv_transection'];
                          
                          echo     '<tr>
                                         <td width="15%" style="text-align: center;">'.$inv_itm['item_code'].'</td>  
-                                        <td width="35%" style="text-align: left;">'.$inv_itm['item_description'].'</td>  
-                                        <td width="10%">'.$inv_itm['item_quantity'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['item_quantity_uom_id_2']>0)?' | '.$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
+                                        <td width="25%" style="text-align: left;">'.$inv_itm['item_description'].'</td>  
+                                        <td width="20%">'.$inv_itm['item_quantity'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['item_quantity_uom_id_2']>0)?' | '.$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
                                         <td width="10%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td> 
                                         <td width="10%" style="text-align: right;">'. number_format($inv_itm['discount_fixed'],2).(($inv_itm['discount_persent']>0)?' | '.$inv_itm['discount_persent'].'%':'').'</td> 
                                         <td width="19%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 

@@ -32,7 +32,14 @@ class Dashboard extends CI_Controller {
             $this->load->view('includes/template',$data);
 	}
         function getData(){
-            
+            $available = $this->Dashboard_model->get_available_items('','',1);
+            $tot_weight = $total_pcs = 0;
+//            $tot_weight = $total_pcs = 0;
+            foreach ($available as $item){
+                $tot_weight += $item['sum_unit_1'];
+                $total_pcs += $item['sum_unit_2'];
+            }
+            $tot_count = $tot_weight.' cts | '.$total_pcs.' pcs';
             $data['total_1']= array(
                                                 'label' =>'Sales Invoices',
                                                 'count' => $this->Dashboard_model->get_tbl_couts(INVOICES),
@@ -42,8 +49,8 @@ class Dashboard extends CI_Controller {
                                             'count' => $this->Dashboard_model->get_tbl_couts(SUPPLIER_INVOICE),
                                             );
             $data['total_3']= array(
-                                            'label' =>'Available Items',
-                                            'count' => $this->Dashboard_model->get_available_items(),
+                                            'label' =>'IN STOCK : '.$tot_count,
+                                            'count' => "ITEMS: ".count($available),
                                             );
             $data['total_4']= array(
                                         'label' =>'Categories',
@@ -67,12 +74,43 @@ class Dashboard extends CI_Controller {
             return $data_bc;
         }
         
+        function get_donut_data1(){
+            $data_donut = array();
+                
+                $data_donut['sales']=$this->Dashboard_model->get_number_inv(SALES_ORDERS);
+                $data_donut['purch']=$this->Dashboard_model->get_number_inv(INVOICES);
+                $data_donut['expenses']=$this->Dashboard_model->get_number_inv(SALES_ORDERS,'','',' invoiced=0');
+            
+//            echo '<pre>';            print_r($data_donut);die;
+            return $data_donut;
+        }
         function get_donut_data(){
             $data_donut = array();
-                $data_donut['res']=$this->Dashboard_model->get_number_inv(SALES_ORDERS);
-                $data_donut['inv']=$this->Dashboard_model->get_number_inv(INVOICES);
-                $data_donut['itm']=$this->Dashboard_model->get_number_inv(SALES_ORDERS,'','',' invoiced=0');
             
+                $percentage_tot = $sale_percentage = $purch_percentage = $expenses_percentage= 0;
+                
+                $sales_info = $this->get_sales_info(1);
+                $purch_info = $this->get_purch_info(1);
+                $expenses_info = $this->get_expenses_info(1);
+                
+                if(!empty($sales_info) && isset($sales_info['total'])){
+                    $sale_percentage =$sales_info['total']; 
+                    $percentage_tot +=$sales_info['total']; 
+                }
+                if(!empty($purch_info) && isset($purch_info['total'])){
+                    $purch_percentage =$purch_info['total']; 
+                    $percentage_tot +=$purch_info['total']; 
+                }
+                if(!empty($expenses_info) && isset($expenses_info['total'])){
+                    $expense_percentage =$expenses_info['total']; 
+                    $percentage_tot +=$expenses_info['total']; 
+                }
+                
+                $data_donut['sales']= ($percentage_tot>0)? number_format(($sale_percentage/$percentage_tot)*100):0;
+                $data_donut['purch']= ($percentage_tot>0)? number_format(($purch_percentage/$percentage_tot)*100):0;
+                $data_donut['expenses']= ($percentage_tot>0)? number_format(($expense_percentage/$percentage_tot)*100):0;
+//                $data_donut['expenses']=0;
+                 
 //            echo '<pre>';            print_r($data_donut);die;
             return $data_donut;
         }
@@ -147,7 +185,7 @@ class Dashboard extends CI_Controller {
             }
         }
         
-        function get_sales_info(){
+        function get_sales_info($return=false){
              $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
              $data = array(
                                 'from_date' => ($fiscyear_info['begin']>0)?$fiscyear_info['begin']:'',
@@ -165,10 +203,14 @@ class Dashboard extends CI_Controller {
                 }
                 $sales_data['total'] = $tot_sales;
                 
-                echo json_encode($sales_data);
+                if($return==1){
+                    return $sales_data;
+                }else{
+                    echo json_encode($sales_data);
+                }
         }
         
-        function get_purch_info(){
+        function get_purch_info($return=false){
              $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
              $data = array(
                                 'from_date' => ($fiscyear_info['begin']>0)?$fiscyear_info['begin']:'',
@@ -186,7 +228,36 @@ class Dashboard extends CI_Controller {
                 }
                 $purch_data['total'] = $tot_purch;
                 
-                echo json_encode($purch_data);
+                 if($return==1){
+                    return $purch_data;
+                }else{
+                    echo json_encode($purch_data);
+                }
+        }
+        
+        function get_expenses_info($return=false){
+             $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+             $data = array(
+                                'from_date' => ($fiscyear_info['begin']>0)?$fiscyear_info['begin']:'',
+                                'to_date' => ($fiscyear_info['end']>0)?$fiscyear_info['end']:'', 
+                            );
+              
+              $expense_info = $this->Dashboard_model->get_expenses_amount($data);
+              $expense_data = array();
+              $tot_expense = 0;
+                foreach ($expense_info as $expense){
+                    $expense_data[$expense['id']] = $expense;
+                    $tot_expense += $expense['expense_amount'];
+                    $expense_data['symbol_left'] = $expense['cur_left_symbol'];
+                    $expense_data['symbol_right'] = $expense['cur_right_symbol'];
+                }
+                $expense_data['total'] = $tot_expense;
+                
+                 if($return==1){
+                    return $expense_data;
+                }else{
+                    echo json_encode($expense_data);
+                }
         }
 //        function get_sales_info(){
 //             $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);

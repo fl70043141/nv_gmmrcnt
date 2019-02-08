@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div id="top_sale_box" class="small-box bg-aqua">
+          <div id="top_sale_box" class="small-box bg-green">
             <div class="inner">
               <h3 id="top_sale_box_amount"><?php // echo $total_1['count'];?></h3>
 
@@ -20,7 +20,7 @@
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div id="top_purch_box" class="small-box bg-green">
+          <div id="top_purch_box" class="small-box bg-aqua">
             <div class="inner">
               <h3 id="top_purch_box_amount"><?php // echo $total_2['count'];?></h3>
 
@@ -33,36 +33,37 @@
           </div>
         </div>
         <!-- ./col -->
+        
+        <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div class="small-box bg-yellow">
+          <div id="top_quick_entry_box" class="small-box bg-red">
+              <div id="" class="inner">
+              <h3 id="top_expense_box_amount"><?php // echo $total_4['count'];?></h3>
+
+              <p id="top_expense_box_alabel"><?php // echo $total_4['label'];?></p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-tags"></i>
+            </div>
+            <a href="<?php echo base_url('reports/Ledger_reports/expenses');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div id="" class="small-box bg-yellow">
             <div class="inner">
-              <h3 id="top_stock_box_amount"><?php echo $total_3['count'];?></h3>
+              <h3 id="top_stock_box_amount"><?php echo ($total_3['count']);?></h3>
 
               <p id="top_stock_box_label"><?php echo $total_3['label'];?></p>
             </div>
             <div class="icon">
               <i class="fa fa-list"></i>
             </div>
-              <a href="<?php echo base_url('reports/Stock_sheet_gemstones');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              <a href="<?php echo base_url('reports/Stock_costing');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-red">
-            <div class="inner">
-              <h3 id="top_expense_box_amount"><?php echo $total_4['count'];?></h3>
-
-              <p id="top_expense_box_alabel"><?php echo $total_4['label'];?></p>
-            </div>
-            <div class="icon">
-              <i class="fa fa-tags"></i>
-            </div>
-            <a href="<?php echo base_url('Item_categories');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
       </div>
       <!-- /.row -->
       <!-- Main row -->
@@ -164,9 +165,9 @@ $(function () {
     resize   : true,
     colors   : ['#3c8dbc', '#f56954', '#00a65a'],
     data     : [
-      { label: 'Sales Orders', value: <?php echo $donut['res']?>},
-      { label: 'Invoices', value: <?php echo $donut['inv']?> },
-      { label: 'Pending Orders', value: <?php echo $donut['itm']?> }
+      { label: 'SALES', value: <?php echo $donut['sales']?>},
+      { label: 'PURCHASE', value: <?php echo $donut['purch']?> },
+      { label: 'EXPENSES', value: <?php echo $donut['expenses']?> }
     ],
     hideHover: 'auto'
   });
@@ -222,7 +223,8 @@ $(function () {
     
     
     get_sales_info();
-    get_purch_info()
+    get_purch_info();
+    get_quick_entry_info();
     
 });
 
@@ -275,6 +277,33 @@ $(function () {
                              '<a href="<?php echo base_url('Purchasing_gemstones');?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
                      
                         $('#top_purch_box').html(html_purch); 
+                    }
+            });
+    }
+    
+    function get_quick_entry_info(){
+        $('#top_quick_entry_box').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Loading...');    
+         
+        $.ajax({
+                    url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>", 
+                    type: 'post',
+                    data : {function_name:'get_expenses_info'},
+                    success: function(result){ 
+//                        alert()
+//                             $("#result1").html(result); return false;
+                        var res2 = JSON.parse(result); 
+                        var exp_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
+                        
+                        var html_exp = '<div class="inner">'+
+                                        '<h3>'+res2['symbol_left']+' '+exp_amount+' '+res2['symbol_right']+'</h3>'+
+                                        '<p>EXPENSES</p>'+
+                                    '</div>'+
+                                    '<div class="icon">'+
+                                '<i class="fa fa-money"></i>'+
+                             '</div>'+
+                             '<a href="<?php echo base_url('reports/Ledger_reports/expenses');?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
+                     
+                        $('#top_quick_entry_box').html(html_exp); 
                     }
             });
     }

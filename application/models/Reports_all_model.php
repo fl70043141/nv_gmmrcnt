@@ -141,6 +141,44 @@ class Reports_all_model extends CI_Model
 ------------------------------------------------------------*/
     
     
+/*
+-----------------------------------------------------------
+                      EXPENSES REPORTS MODEL FUNCIONS
+------------------------------------------------------------*/
+    public function get_expenses($data,$where=''){
+        $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
+        $cur_det = get_currency_for_code($def_curcode);
+        
+        $this->db->select('cm.account_name,cm.account_code, cm.account_type_id,ct.type_name');
+        $this->db->select('q.*');
+        $this->db->select('cur.symbol_left, cur.symbol_right');
+        $this->db->select('qa.account_name,qa.short_name');
+        $this->db->select('(sum(q.amount) * '.$cur_det['value'].'/q.currency_value) as expense_amount');
+        $this->db->select('"'.$cur_det['symbol_left'].'" as cur_left_symbol, "'.$cur_det['symbol_right'].'" as cur_right_symbol'); 
+        $this->db->join(GL_QUICK_ENTRY_ACC.' qa','qa.id = q.quick_entry_account_id');
+        $this->db->join(GL_CHART_MASTER.' cm','cm.account_code = qa.debit_gl_code AND (cm.account_type_id = 12 OR cm.account_type_id=13)'); //12: gen expense 13: :ab charges
+        $this->db->join(GL_CHART_TYPE.' ct','ct.id = cm.account_type_id '); 
+        $this->db->join(CURRENCY.' cur','cur.code = q.currency_code'); 
+        $this->db->from(GL_QUICK_ENTRY.' q');
+        $this->db->where('qa.deleted',0);
+        $this->db->group_by('q.id');
+        
+        
+        if(isset($data['quick_entry_acc_id']) && $data['quick_entry_acc_id']!='') $this->db->where("q.quick_entry_account_id",$data['quick_entry_acc_id']);
+        if(isset($data['from_date']) && $data['from_date']!='') $this->db->where("q.entry_date>= ",$data['from_date']);
+        if(isset($data['to_date']) && $data['to_date']!='') $this->db->where("q.entry_date<= ",$data['to_date']); 
+        if($where!='')$this->db->where($where);
+        
+        $result = $this->db->get()->result_array();   
+//        echo $this->db->last_query(); die;
+        return $result;
+    }
+/*
+-----------------------------------------------------------
+                  END    EXPENSES REPORTS MODEL FUNCIONS
+------------------------------------------------------------*/
+    
+    
     
 /*
 -----------------------------------------------------------

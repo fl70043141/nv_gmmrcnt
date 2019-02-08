@@ -2,9 +2,14 @@
      	$CI =& get_instance(); 				
 	$user_group =  $this->session->userdata(SYSTEM_CODE)['user_role_ID']; //'ADMIN';
         $navigation = $this->user_default_model->get_user_menu_navigation($user_group);  
-        $brodcrums = $this->user_default_model->get_broadcrum($CI->router->directory.$CI->router->class); 
+        
+        $link = '';
+        if($CI->router->method!='index'){
+            $link = '/'.$CI->router->method;
+        }
+        $brodcrums = $this->user_default_model->get_broadcrum($CI->router->directory.$CI->router->class,$link); 
+//        echo '<br><br><br><br><pre>'; print_r($CI->router->directory.$CI->router->class,$link);  die;
 //        echo '<pre>'; print_r($brodcrums); die;
-//        echo '<pre>'; print_r($navigation); die;
         
         ?>
   <!-- Left side column. contains the logo and sidebar -->

@@ -29,6 +29,15 @@ class Ledger_reports extends CI_Controller {
             $this->load->view('includes/template',$data);
         }
         
+        public function expenses(){
+            
+//            $this->add();
+//            $data['search_list'] = $this->Sales_invoices_model->search_result();
+            $data['main_content']='reports_all/ledgers/expenses/search_summary_report'; 
+            $data['quick_entry_list'] = get_dropdown_data(GL_QUICK_ENTRY_ACC,'account_name','id','Quick entry');
+            $this->load->view('includes/template',$data);
+        }
+        
         function fl_ajax(){
             
 //            echo '<pre>';            print_r($this->input->post()); die;
@@ -102,6 +111,31 @@ class Ledger_reports extends CI_Controller {
 //                echo '<pre>';            print_r($trans_group); die;
                  
             $this->load->view('reports_all/ledgers/monthly/search_summary_report_result',$trans_group);
+        }
+        
+        public function  search_expenses(){ 
+            $trans_group = array();
+            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();   
+            
+                $search_data=array( 
+                                    'from_date' => ($input['from_date']>0)?strtotime($input['from_date']):'',
+                                    'to_date' => ($input['to_date']>0)?strtotime($input['to_date']):'',
+                                    'quick_entry_acc_id' => $input['quick_entry_acc'],   
+                                    ); 
+                 
+                $expenses_list = $this->Reports_all_model->get_expenses($search_data);
+                $data['search_list'] = $expenses_list;
+//                echo '<pre>';            print_r($expenses_list); die;
+//                $expenses_group =array();
+//                if(!empty($expenses_list)){
+//                    foreach ($expenses_list as $expenses){
+//                        $expenses_group['expenses_group'][$expenses['account_type_id']]['name']=$expenses['type_name']; 
+//                        $expenses_group['expenses_group'][$expenses['account_type_id']]['data'][$expenses['id']]=$expenses; 
+//                    }
+//                }
+//                echo '<pre>';            print_r($data); die;
+                 
+            $this->load->view('reports_all/ledgers/expenses/search_summary_report_result',$data);
         }
         
         public function print_report(){ 

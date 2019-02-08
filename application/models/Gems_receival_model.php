@@ -184,7 +184,7 @@ class Gems_receival_model extends CI_Model
 //                            echo '<pre>';            print_r($data['gi_stock_trans'][$stock['item_id']]['trans_ref']); die;
                         $this->db->where('location_id', $stock['location_id']);
                         $this->db->where('item_id', $stock['item_id']);
-                        $this->db->update(ITEM_STOCK, array('status'=>0,'deleted'=>1));
+                        $this->db->update(ITEM_STOCK,$update_arr);
                         
                         
                         $this->db->where('gem_issue_id', $data['gi_stock_trans'][$stock['item_id']]['trans_ref']);

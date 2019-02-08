@@ -216,7 +216,7 @@ class User_default_model extends CI_Model
         return $nav;
     }
     
-    function get_broadcrum($page_id){
+    function get_broadcrum($page_id,$link=''){
         if($page_id == 'unauthorized' || $page_id == 'UnauthorizedContact'){
             return FALSE;
         }
@@ -225,8 +225,18 @@ class User_default_model extends CI_Model
         $this->db->select('*');
         $this->db->from(MODULES);
         $this->db->where('page_id', $page_id);
-        $res = $this->db->get()->result();
+//        if($link!='') $this->db->where('link', $link);
+        $result = $this->db->get()->result();
+        $res = $result;
+        if($link!=''){
+            foreach ($result as $res1){
+                if($link == $res1->link){
+                    $res[0]=$res1;
+                }
+            }
+        }
         $res[0]->bc_level = 1;
+//        echo '<br><br><br><br><pre>';        print_r($res); die;
         //first level
         $brodcrum[] = $res[0];
         
