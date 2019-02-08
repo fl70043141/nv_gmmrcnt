@@ -242,7 +242,7 @@ $(function () {
                         var sale_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
                         
                         var html_sale = '<div class="inner">'+
-                                        '<h3>'+res2['symbol_left']+' '+sale_amount+' '+res2['symbol_right']+'</h3>'+
+                                        '<h3>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+sale_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h3>'+
                                         '<p>SALES</p>'+
                                     '</div>'+
                                     '<div class="icon">'+
@@ -268,7 +268,7 @@ $(function () {
                         var purch_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
                         
                         var html_purch = '<div class="inner">'+
-                                        '<h3>'+res2['symbol_left']+' '+purch_amount+' '+res2['symbol_right']+'</h3>'+
+                                        '<h3>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+purch_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h3>'+
                                         '<p>PURCHASING</p>'+
                                     '</div>'+
                                     '<div class="icon">'+
@@ -293,9 +293,8 @@ $(function () {
 //                             $("#result1").html(result); return false;
                         var res2 = JSON.parse(result); 
                         var exp_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
-                        
                         var html_exp = '<div class="inner">'+
-                                        '<h3>'+res2['symbol_left']+' '+exp_amount+' '+res2['symbol_right']+'</h3>'+
+                                        '<h3>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+exp_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h3>'+
                                         '<p>EXPENSES</p>'+
                                     '</div>'+
                                     '<div class="icon">'+

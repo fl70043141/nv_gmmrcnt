@@ -37,8 +37,8 @@ class Dashboard_model extends CI_Model
             $this->db->join(ITEMS.' itm','itm.id = is.item_id','left');
             $this->db->from(ITEM_STOCK.' is');     
 //            $this->db->where('is.units_available >',0);
-            $this->db->where('is.units_available > 0 OR is.units_on_consignee OR is.units_on_workshop');
-            $this->db->where('is.units_available > is.units_on_reserve');
+            $this->db->where('is.units_available > 0 OR is.units_on_consignee>0 OR is.units_on_workshop>0');
+//            $this->db->where('is.units_available > is.units_on_reserve');
             $this->db->where('is.deleted',0);
             $this->db->where('is.status',1);
             $this->db->where('itm.sales_excluded',0);
