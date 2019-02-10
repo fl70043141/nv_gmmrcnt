@@ -39,12 +39,12 @@
           <!-- small box -->
           <div id="top_quick_entry_box" class="small-box bg-red">
               <div id="" class="inner">
-              <h3 id="top_expense_box_amount"><?php // echo $total_4['count'];?></h3>
+              <h4 id="top_expense_box_amount"><?php echo $total_5['count'];?></h4>
 
-              <p id="top_expense_box_alabel"><?php // echo $total_4['label'];?></p>
+              <p style="font-size:20px;" id="top_expense_box_alabel"><?php echo $total_5['label'];?></p>
             </div>
             <div class="icon">
-              <i class="fa fa-tags"></i>
+              <i class="fa fa-money"></i>
             </div>
             <a href="<?php echo base_url('reports/Ledger_reports/expenses');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
@@ -224,7 +224,7 @@ $(function () {
     
     get_sales_info();
     get_purch_info();
-    get_quick_entry_info();
+//    get_quick_entry_info();
     
 });
 

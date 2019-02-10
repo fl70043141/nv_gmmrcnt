@@ -47,7 +47,7 @@ class Gemstone_costing extends CI_Controller {
         
         public function print_report(){ 
 //            $this->input->post() = 'aa';
-            $item_stocks_cat = $this->load_data(); 
+            $item_stocks = $this->load_data(); 
             $inputs = $this->input->get();
 //            echo '<pre>';            print_r($this->input->get()); die;
             $location_name = ($inputs['location_id'] != '')?get_single_row_helper(INV_LOCATION,'id = "'.$inputs['location_id'].'"')['location_name']:'All'; 
@@ -94,84 +94,77 @@ class Gemstone_costing extends CI_Controller {
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
                     
             // set font
-            $pdf->SetFont('times', '', 9);
+            $pdf->SetFont('times', '', 8.5);
         
         
             $pdf->AddPage();   
             $pdf->SetTextColor(32,32,32);     
             $html =""; 
+            
+            $html .=' <table id="example1" class="table table-line " border="0">
+                            <thead> 
+                                <tr style=""> 
+                                    <th width="6%" style="text-align: left;"><u><b>#</b></u></th>  
+                                    <th width="10%" style="text-align: left;"><u><b>Code</b></u></th>  
+                                    <th width="10%" style="text-align: left;"><u><b>Desc</b></u></th>  
+                                    <th width="8%" style="text-align: center;"><u><b>Weight</b></u></th> 
+                                    <th width="7%" style="text-align: center;" ><u><b>Pieces</b></u></th>  
+                                    <th width="17%" style="text-align: left;" ><u><b>Type</b></u></th>  
+                                    <th width="14%" style="text-align: left;" ><u><b>Person</b></u></th>  
+                                    <th width="14%" style="text-align: right;"><u><b>Cost</b></u></th> 
+                                    <th width="14%" style="text-align: right;"><u><b>Total Cost</b></u></th> 
+                                 </tr>
+                            </thead>
+                        <tbody>';
+            
             $all_tot_units = $all_tot_units_2 = $all_tot_amount = $item_count = 0;
             $i = 1; 
-            foreach ($item_stocks_cat as $item_stocks){
-//            echo '<pre>';            print_r($item_stocks); die;
-            $html .= '<table  class="table-line" border="0">
-                        <thead>
-                            <tr class="">
-                                <th align="left" colspan="6"></th>
-                            </tr>
-                            <tr class="">
-                                <th align="left" colspan="6">'.$i.'. <u>'.$item_stocks['item_category_name'].'</u></th>
-                            </tr>
-                            <tr class="colored_bg">
-                                <th width="3%" align="center">#</th> 
-                                <th width="10%" align="center">Code</th> 
-                                <th width="16%" align="center">Desc</th> 
-                                <th width="9%" align="center">CDC</th> 
-                                <th width="10%" align="center">Color</th> 
-                                <th width="10%" align="center">Shape</th>  
-                                <th width="16%" align="center">Units</th>  
-                                <th width="13%" align="right">Unit Cost('.$def_cur['code'].')&nbsp;&nbsp;</th>  
-                                <th width="13%" align="right">Total Cost('.$def_cur['code'].')&nbsp;&nbsp;</th>  
-                            </tr> 
-                        </thead>
-                        <tbody>';
-                        $j = 1;
-                        $cat_tot_units = $cat_tot_units_2 = $cat_tot_amount = 0;
-                       foreach ($item_stocks['item_list'] as $item){  
-                                        $tot_units = $item['units_available'] + $item['units_on_workshop'] + $item['units_on_consignee'];
-                                        $tot_units_2 = $item['units_available_2'] + $item['units_on_workshop_2'] + $item['units_on_consignee_2'];
-                                        $cost = ($item['price_amount'] / $item['ip_curr_value']) * $tot_units;
-                                        
-                                        $cat_tot_units += $tot_units;
-                                        $cat_tot_units_2 += $tot_units_2;
-                                        $cat_tot_amount += $cost;
-                                        
-                                        $all_tot_units += $tot_units;
-                                        $all_tot_units_2 += $tot_units_2;
-                                        $all_tot_amount += $cost;
-                                        
-                                        if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
-                                           $html .= '<tr>
-                                                        <td width="3%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$j.'</td>
-                                                        <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$item['item_code'].'</td>
-                                                        <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['item_name'].'</td>
-                                                        <td width="9%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['treatment_name'].'</td>
-                                                        <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['color_name'].'</td>
-                                                        <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['shape_name'].'</td>
-                                                        <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;" >'.$tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$tot_units_2.' '.$item['uom_name_2']:'-').'</td> 
-                                                        <td width="13%" align="right" style="border-right: 1px solid #cdd0d4;">'. number_format(($item['price_amount'] / $item['ip_curr_value']),2).'&nbsp;&nbsp;</td>
-                                                        <td width="13%" align="right" style="border-right: 1px solid #cdd0d4;">'. number_format($cost,2).' &nbsp;&nbsp;</td>
+            foreach ($item_stocks as $item){
+//                echo '<pre>';            print_r($item); die;    
 
-                                                    </tr>';
-                                           
-                                            $j++;
-                                            $item_count++;
-                                            }
-                                        }      
-                                            if($j>1){
-                                                $html .= '<tr>
-                                                                <td align="right" colspan="6" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;"><b>Total</b></td>
-                                                                <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;">'.$cat_tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$cat_tot_units_2.' '.$item['uom_name_2']:'-').'</td>
-                                                                <td ></td>
-                                                                <td width="13%" align="right" style="border-right: 1px solid #cdd0d4;">'. number_format($cat_tot_amount,2).' &nbsp;&nbsp;</td>
+                $tot_units = $item['units_available'] + $item['units_on_workshop'] + $item['units_on_consignee'];
+                $tot_units_2 = $item['units_available_2'] + $item['units_on_workshop_2'] + $item['units_on_consignee_2'];
+                $purch_cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units);
+                $cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units) + $item['total_lapidary_cost'];
 
-                                                          </tr>';
-                                            }
-            $html .= '</tbody> 
-                    </table> 
-                ';               
-                $i++;
+//                $cat_tot_units += $tot_units;
+//                $cat_tot_units_2 += $tot_units_2;
+//                $cat_tot_amount += $cost;
+
+                $all_tot_units += $tot_units;
+                $all_tot_units_2 += $tot_units_2;
+                $all_tot_amount += $cost;
+
+               if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
+                   $bg_colr = ($i%2==0)?'#F5F5F5':'#FFFFFF';
+                   $html .= '
+                       <tr>
+                           <td style="width:6%;">'.$i.'</td> 
+                           <td style="width:10%;" align="left">'.$item['item_code'].'</td>
+                           <td style="width:10%;" align="left">'.$item['item_name'].'</td>
+                           <td style="width:8%;" align="center">'.$item['units_available'].' '.$item['uom_name'].'</td>
+                           <td style="width:7%;" align="center">'.(($item['uom_id_2']!=0)?$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
+                           <td style="width:17%;" align="left">Purchase</td>
+                           <td style="width:14%;" align="left">Supplier</td> 
+                           <td style="width:14%;" align="right">'. number_format($purch_cost,2).'</td>
+                           <td style="width:14%; text-align:right; vertical-align:bottom;" rowspan="'.(count($item['lapidary_costs'])+1).'" >'. number_format($cost,2).'</td>
+                      </tr>';
+                   if(!empty($item['lapidary_costs'])){
+                       foreach ($item['lapidary_costs'] as $lcost){
+                          $html .= '<tr>
+                                              <td colspan="5"></td> 
+                                              <td align="left">'.$lcost['dropdown_list_name'].'</td>
+                                              <td align="left">'.$lcost['dropdown_value'].'</td> 
+                                              <td align="right">'. number_format($lcost['amount_cost'],2).'</td>
+
+                                         </tr>';
+                      }
+                   }
+                   $i++;
+                   $item_count++;
+               }
             } 
+            $html .= '</tbody></table>';
             
             $html = '<table border="0">
                         <tr>
@@ -196,27 +189,27 @@ class Gemstone_costing extends CI_Controller {
                                 Units: '.$all_tot_units.' '.((isset($item))?$item['uom_name'].(($item['uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-'):'').' <br> 
                                 Total Cost: '.$def_cur['code'].' '. number_format($all_tot_amount,2).'</td>
                         </tr> 
+                        
+                        <tr><td colspan="3"></td></tr>
                     </table> '.$html;
+            
             $html .= '
-                    <style>
-                    .colored_bg{
-                        background-color:#E0E0E0;
-                    }
-                    .table-line th, .table-line td {
-                        padding-bottom: 2px;
-                        border-bottom: 1px solid #ddd;
-                        text-align:center; 
-                    }
-                    .text-right,.table-line.text-right{
-                        text-align:right;
-                    }
-                    .table-line tr{
-                        line-height: 20px;
-                    }
-                    .table-line td{ 
-                        font-size: 6px;;
-                    }
-                    </style>';
+                        <style>
+                        .colored_bg{
+                            background-color:#E0E0E0;
+                        }
+                        .table-line th, .table-line td {
+                            padding-bottom: 2px;
+                            border-bottom: 1px solid #ddd; 
+                        }
+                        .text-right,.table-line.text-right{
+                            text-align:right;
+                        }
+                        .table-line tr{
+                            line-height: 20px;
+                        }
+                        </style>
+                                ';
             $pdf->writeHTMLCell(190,'',10,'',$html);
             
             $pdf->SetFont('times', '', 12.5, '', false);

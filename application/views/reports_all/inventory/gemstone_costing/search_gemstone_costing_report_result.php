@@ -10,12 +10,12 @@
                                     <th>#</th>
                                     <th style="text-align:center;">Code</th> 
                                     <th style="text-align:center;">Desc</th>  
-                                    <th style="text-align:center;">CDC</th> 
-                                    <th style="text-align:center;">Color</th> 
-                                    <th style="text-align:center;">Shape</th> 
-                                    <th style="text-align:center;">Units</th>   
-                                    <th style="text-align:right;">Unit Cost ('.$def_cur['code'].')</th>   
-                                    <th style="text-align:right;">Total Cost('.$def_cur['code'].')</th>   
+                                    <th style="text-align:center;">Unit 1</th> 
+                                    <th style="text-align:center;">Unit 2</th>   
+                                    <th style="text-align:left;">Type</th>    
+                                    <th style="text-align:left;">Person</th>    
+                                    <th style="text-align:right;">Cost</th>    
+                                    <th style="text-align:right;">Total Cost</th>    
                                 </tr>
                             </thead>
                             <tbody>';
@@ -28,6 +28,7 @@
 
                                      $tot_units = $item['units_available'] + $item['units_on_workshop'] + $item['units_on_consignee'];
                                      $tot_units_2 = $item['units_available_2'] + $item['units_on_workshop_2'] + $item['units_on_consignee_2'];
+                                     $purch_cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units);
                                      $cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units) + $item['total_lapidary_cost'];
 
                                      $cat_tot_units += $tot_units;
@@ -39,18 +40,30 @@
                                      $all_tot_amount += $cost;
 
                                      if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
+                                         $bg_colr = ($i%2==0)?'#F5F5F5':'#FFFFFF';
                                          $html_row .= '
-                                             <tr>
+                                             <tr style="background-color: '.$bg_colr.'">
                                                  <td>'.($i+1).'</td> 
                                                  <td align="center">'.$item['item_code'].'</td>
                                                  <td align="center">'.$item['item_name'].'</td>
-                                                 <td align="center">'.$item['treatment_name'].'</td>
-                                                 <td align="center">'.$item['color_name'].'</td>
-                                                 <td align="center">'.$item['shape_name'].'</td> 
-                                                 <td align="center">'.$item['units_available'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
-                                                 <td align="right">'. number_format(($item['price_amount'] / $item['ip_curr_value']),2).'</td>
-                                                 <td align="right">'. number_format($cost,2).'</td>
-                                                 </tr>';
+                                                 <td align="center">'.$item['units_available'].' '.$item['uom_name'].'</td>
+                                                 <td align="center">'.(($item['uom_id_2']!=0)?$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
+                                                 <td align="left">Purchase</td>
+                                                 <td align="left">Supplier</td> 
+                                                 <td align="right">'. number_format($purch_cost,2).'</td>
+                                                 <td rowspan="'.(count($item['lapidary_costs'])+1).'" align="right" style="vertical-align: bottom;">'. number_format($cost,2).'</td>
+                                            </tr>';
+                                         if(!empty($item['lapidary_costs'])){
+                                             foreach ($item['lapidary_costs'] as $lcost){
+                                                $html_row .= '<tr style="background-color: '.$bg_colr.'">
+                                                                    <td colspan="5"></td> 
+                                                                    <td align="left">'.$lcost['dropdown_list_name'].'</td>
+                                                                    <td align="left">'.$lcost['dropdown_value'].'</td> 
+                                                                    <td align="right">'. number_format($lcost['amount_cost'],2).'</td>
+                                                                    
+                                                               </tr>';
+                                            }
+                                         }
                                          $i++;
                                          $item_count++;
                                      }

@@ -143,6 +143,28 @@ class Dashboard_model extends CI_Model
             
             return $result;
         }
+        
+        function get_sales_profit(){
+            $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+            
+            $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
+            $cur_det = get_currency_for_code($def_curcode);
+            
+            $this->db->select('id.*');
+            $this->db->select('"'.$cur_det['symbol_left'].'" as cur_left_symbol, "'.$cur_det['symbol_right'].'" as cur_right_symbol'); 
+            $this->db->select('sum((id.unit_price * '.$cur_det['value'].'/i.currency_value) * id.item_quantity) as item_sale_amount');
+            $this->db->select('(SELECT sum(amount_cost * '.$cur_det['value'].'/currency_value) from '.GEM_LAPIDARY_COSTING.' where item_id = id.item_id) as total_lapidary_cost'); 
+            $this->db->select('ip.item_price_type, ((ip.price_amount * '.$cur_det['value'].'/ip.currency_value) * id.item_quantity) as purch_standard_cost,ip.currency_code as ip_curr_code, ip.currency_value as ip_curr_value'); 
+            $this->db->join(ITEM_PRICES.' ip','ip.item_id = id.item_id and ip.item_price_type = 3 and ip.deleted=0'); //3 standard cost 
+            $this->db->join(INVOICES.' i', 'i.id = id.invoice_id');
+            $this->db->from(INVOICE_DESC.' id');
+            $this->db->where('i.invoice_date >= ',$fiscyear_info['begin']);
+            $this->db->where('i.invoice_date <= ',$fiscyear_info['end']);
+            $this->db->group_by('id.item_id'); 
+            $result = $this->db->get()->result_array();  
+            
+            return $result;
+        }
  
 }
 ?>

@@ -32,6 +32,17 @@ class Dashboard extends CI_Controller {
             $this->load->view('includes/template',$data);
 	}
         function getData(){
+            $item_pnl_data = $this->Dashboard_model->get_sales_profit(); //PNL CALCULATIION
+            
+            $pnl_amount = 0; 
+            $cur_left_synbol = $cur_left_synbol ='';
+            foreach ($item_pnl_data as $pnl_info){
+                $pnl_amount += $pnl_info['item_sale_amount'] - ($pnl_info['purch_standard_cost']-$pnl_info['total_lapidary_cost']);
+                $cur_left_synbol = $pnl_info['cur_left_symbol'];
+                $cur_right_synbol = $pnl_info['cur_right_symbol'];
+            }
+//            echo '<pre>';            print_r($item_pnl_data); die;
+            
             $available = $this->Dashboard_model->get_available_items('','',1);
             $tot_weight = $total_pcs = 0;
 //            $tot_weight = $total_pcs = 0;
@@ -55,6 +66,10 @@ class Dashboard extends CI_Controller {
             $data['total_4']= array(
                                         'label' =>'Categories',
                                         'count' => $this->Dashboard_model->get_tbl_couts(ITEM_CAT),
+                                        );
+            $data['total_5']= array(
+                                        'label' =>($pnl_amount>0)?'PROFIT ':'LOST ',
+                                        'count' => $cur_left_synbol.' '.number_format($pnl_amount,2).' '.$cur_right_synbol,
                                         );
             return $data;
         }
