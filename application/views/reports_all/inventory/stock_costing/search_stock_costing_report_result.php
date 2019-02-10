@@ -38,7 +38,7 @@
                             foreach ($search['item_list'] as $item){ 
                                 $tot_units = $item['units_available'] + $item['units_on_workshop'] + $item['units_on_consignee'];
                                 $tot_units_2 = $item['units_available_2'] + $item['units_on_workshop_2'] + $item['units_on_consignee_2'];
-                                $cost = ($item['price_amount'] / $item['ip_curr_value']) * $tot_units;
+                                $cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units) ;
                                 
                                 $cat_tot_units += $tot_units;
                                 $cat_tot_units_2 += $tot_units_2;

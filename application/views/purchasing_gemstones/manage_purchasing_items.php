@@ -327,7 +327,7 @@ endswitch;
                                             </tr>-->
                                             
                                             <tr>
-                                                <th colspan="7"></th>
+                                                <th colspan="9"></th>
                                                 <th  style="text-align: right;">Total</th>
                                                 <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_total"><span id="inv_total">0</span></th>
                                             </tr> 

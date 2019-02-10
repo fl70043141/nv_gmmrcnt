@@ -137,7 +137,7 @@ $(document).ready(function(){
               <h3 class="box-title">Search Results</h3>
             </div>
             <!-- /.box-header -->
-            <div  id="result_search" class="box-body"> </div>
+            <div  id="result_search" class="box-body fl_scrollable_x"> </div>
             <!-- /.box-body -->
           </div>
        

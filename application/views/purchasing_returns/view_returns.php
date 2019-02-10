@@ -117,7 +117,7 @@ $inv_desc = $inv_data['invoice_desc'];
                             </div>
                         </div>
              
-                    <div class="box-body">
+                    <div class="box-body fl_scrollable_x">
                     <div class="col-md-10 col-md-offset-1">
                         <table width="100%" border="1">
                             <tr><td>

@@ -199,7 +199,7 @@ $show_edit = ($action=='Edit')?'':'hidden';
                         </div>
                     </div>
              
-                    <div class="box-body">
+                    <div class="box-body fl_scrollable_x">
                     <div class="col-md-12 col-md-offset-0">
                         <table width="100%" id="example1" class="table table-bordered table-striped fl_scrollable" border="0">
                            <thead>

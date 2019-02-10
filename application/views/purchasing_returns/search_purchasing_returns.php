@@ -134,10 +134,10 @@ $(document).ready(function(){
      <div class="col-md-12">
     <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Data Table With Full Features</h3>
+              <h3 class="box-title">Purchasing Returns List</h3>
             </div>
             <!-- /.box-header -->
-            <div  id="result_search" class="box-body"> </div>
+            <div  id="result_search" class="box-body fl_scrollable_x"> </div>
             <!-- /.box-body -->
           </div>
        
