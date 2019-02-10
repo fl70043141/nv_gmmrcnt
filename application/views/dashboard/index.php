@@ -37,7 +37,7 @@
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
-          <div id="top_quick_entry_box" class="small-box bg-red">
+          <div id="top_quick_entry_box" class="small-box <?php echo $total_5['color'];?>">
               <div id="" class="inner">
               <h4 id="top_expense_box_amount"><?php echo $total_5['count'];?></h4>
 
@@ -46,7 +46,7 @@
             <div class="icon">
               <i class="fa fa-money"></i>
             </div>
-            <a href="<?php echo base_url('reports/Ledger_reports/expenses');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo base_url('reports/Gemstone_costing');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->

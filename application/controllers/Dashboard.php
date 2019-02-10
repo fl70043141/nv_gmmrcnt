@@ -40,6 +40,7 @@ class Dashboard extends CI_Controller {
                 $pnl_amount += $pnl_info['item_sale_amount'] - ($pnl_info['purch_standard_cost']-$pnl_info['total_lapidary_cost']);
                 $cur_left_synbol = $pnl_info['cur_left_symbol'];
                 $cur_right_synbol = $pnl_info['cur_right_symbol'];
+//                echo '<br>code_id: '.$pnl_info['item_id'].'  /  SALE_AMOUNT: '.$pnl_info['item_sale_amount'],'  / PYRCH: '.$pnl_info['purch_standard_cost'];
             }
 //            echo '<pre>';            print_r($item_pnl_data); die;
             
@@ -68,8 +69,9 @@ class Dashboard extends CI_Controller {
                                         'count' => $this->Dashboard_model->get_tbl_couts(ITEM_CAT),
                                         );
             $data['total_5']= array(
-                                        'label' =>($pnl_amount>0)?'PROFIT ':'LOST ',
-                                        'count' => $cur_left_synbol.' '.number_format($pnl_amount,2).' '.$cur_right_synbol,
+                                        'label' =>(($pnl_amount>0)?'PROFIT ':'LOST ').' FOR SALE',
+                                        'count' => $cur_left_synbol.' '.number_format(abs($pnl_amount),2).' '.$cur_right_synbol,
+                                        'color' => (($pnl_amount>0)?'bg-lime-active ':'bg-red ')
                                         );
             return $data;
         }
