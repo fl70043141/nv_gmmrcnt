@@ -198,7 +198,7 @@ class Pnl_gemstones extends CI_Controller {
 //            $js = 'print(true);';
             // set javascript
 //            $pdf->IncludeJS($js);
-            $pdf->Output('Purchase_stock_valuation.pdf', 'I');
+            $pdf->Output('PNL_Gemstone_report.pdf', 'I');
         }
         
         public function  load_data(){
