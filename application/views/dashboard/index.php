@@ -46,7 +46,7 @@
             <div class="icon">
               <i class="fa fa-money"></i>
             </div>
-            <a href="<?php echo base_url('reports/Gemstone_costing');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo base_url('reports/ledgers/Pnl_gemstones');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->

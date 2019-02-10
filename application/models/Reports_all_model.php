@@ -299,11 +299,43 @@ class Reports_all_model extends CI_Model
 //            echo '<pre>';            print_r($result); die;
         return $result;
     } 
+    
 /*
 ---------------------------------------------------------------------
-                END GET LAPIDARY COSTING REPORTS MODEL FUNCIONS REPORTS MODEL FUNCIONS
+                PROFIT LOST ITEM WISE REPORTS MODEL FUNCIONS REPORTS MODEL FUNCIONS
 ----------------------------------------------------------------------*/
-	   
+        function get_sales_profit($data=''){
+//            echo '<pre>';            print_r($data); die;
+            $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+            
+            $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
+            $cur_det = get_currency_for_code($def_curcode);
+            
+            $this->db->select('itm.item_code,itm.item_name');
+            $this->db->select('id.*');
+            $this->db->select('"'.$cur_det['symbol_left'].'" as cur_left_symbol, "'.$cur_det['symbol_right'].'" as cur_right_symbol'); 
+            $this->db->select('sum((id.unit_price * '.$cur_det['value'].'/i.currency_value) * id.item_quantity) as item_sale_amount');
+            $this->db->select('(SELECT sum(amount_cost * '.$cur_det['value'].'/currency_value) from '.GEM_LAPIDARY_COSTING.' where item_id = id.item_id AND deleted=0) as total_lapidary_cost'); 
+            $this->db->select('ip.item_price_type, ((ip.price_amount * '.$cur_det['value'].'/ip.currency_value) * id.item_quantity) as purch_standard_cost,ip.currency_code as ip_curr_code, ip.currency_value as ip_curr_value'); 
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = id.item_quantity_uom_id)  as uom_name');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = id.item_quantity_uom_id_2)  as uom_name_2');
+            $this->db->join(ITEM_PRICES.' ip','ip.item_id = id.item_id and ip.item_price_type = 3 and ip.deleted=0'); //3 standard cost 
+            $this->db->join(INVOICES.' i', 'i.id = id.invoice_id');
+            $this->db->join(ITEMS.' itm', 'itm.id = id.item_id');
+            $this->db->from(INVOICE_DESC.' id');
+            $this->db->where('i.invoice_date >= ',$fiscyear_info['begin']);
+            $this->db->where('i.invoice_date <= ',$fiscyear_info['end']);
+            $this->db->where('id.deleted',0);
+            $this->db->group_by('id.item_id'); 
+            
+            if(isset($data['item_category_id']) && $data['item_category_id'] !='')$this->db->where('itm.item_category_id',$data['item_category_id']);
+            if(isset($data['treatment_id']) && $data['treatment_id'] !='')$this->db->where('itm.treatment',$data['treatment_id']);
+            if(isset($data['item_code']) && $data['item_code'] !='')$this->db->like('itm.item_code',$data['item_code']);
+             
+            $result = $this->db->get()->result_array();  
+            
+            return $result;
+        }
  
 }
 ?>
