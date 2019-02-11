@@ -63,7 +63,7 @@ class Gemstone_costing extends CI_Controller {
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
             $pdf->fl_header='header_jewel';//invice bg
             $pdf->fl_header_title='Report';//invice bg
-            $pdf->fl_header_title_RTOP='Stock Sheet';//invice bg
+            $pdf->fl_header_title_RTOP='Stock Gemstone Costing';//invice bg
             //
             // set document information
             $pdf->SetCreator(PDF_CREATOR);
@@ -168,7 +168,7 @@ class Gemstone_costing extends CI_Controller {
             
             $html = '<table border="0">
                         <tr>
-                            <td><b>Report: Gemstone Stock Valuation</b></td>
+                            <td><b>Report: Gemstone Stock Costing Report</b></td>
                             <td align="center">Shape: '.$shape_name.' </td> 
                             <td align="right">Printed on : '.date(SYS_DATE_FORMAT).'</td>
                         </tr>

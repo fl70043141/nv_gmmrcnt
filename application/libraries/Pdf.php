@@ -51,7 +51,7 @@ class Pdf extends TCPDF
         $this->SetFont('helvetica', 'I', 8);
         $this->SetTextColor(135,133,133);
         // Page number
-        $this->Cell(0, 0, 'Solution by: Nveloop Software Solution - Kaluthara South, Sri Lanka. Contact: +94775440889', 0, false, 'L', 0, '', 0, false, 'T', 'M');
+        $this->Cell(0, 0, 'Nveloop Gem Merchant System | +9477 1786 366 | www.nveloop.com |  info@nveloop.com ', 0, false, 'L', 0, '', 0, false, 'T', 'M');
         $this->Cell(0, 0, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
         $image_zv = DEFAULT_IMAGE_LOC.'small_zv.png';
 //        $this->Image($image_zv, 31, 290, 4, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);

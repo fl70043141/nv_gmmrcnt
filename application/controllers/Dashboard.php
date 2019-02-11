@@ -69,7 +69,7 @@ class Dashboard extends CI_Controller {
                                         'count' => $this->Dashboard_model->get_tbl_couts(ITEM_CAT),
                                         );
             $data['total_5']= array(
-                                        'label' =>(($pnl_amount>0)?'PROFIT ':'LOST ').' FOR SALE',
+                                        'label' =>(($pnl_amount>0)?'PROFIT ':'LOST ').' FROM SALES',
                                         'count' => $cur_left_synbol.' '.number_format(abs($pnl_amount),2).' '.$cur_right_synbol,
                                         'color' => (($pnl_amount>0)?'bg-lime-active ':'bg-red ')
                                         );

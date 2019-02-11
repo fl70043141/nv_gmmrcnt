@@ -61,7 +61,7 @@ class Pnl_gemstones extends CI_Controller {
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
             $pdf->fl_header='header_jewel';//invice bg
             $pdf->fl_header_title='Report';//invice bg
-            $pdf->fl_header_title_RTOP='Stock Sheet';//invice bg
+            $pdf->fl_header_title_RTOP='Sale Profit Contribution';//invice bg
             //
             // set document information
             $pdf->SetCreator(PDF_CREATOR);
@@ -102,14 +102,15 @@ class Pnl_gemstones extends CI_Controller {
             $html .=' <table id="example1" class="table table-line " border="0">
                             <thead> 
                                 <tr style=""> 
-                                    <th width="6%" style="text-align: left;"><u><b>#</b></u></th>  
-                                    <th width="10%" style="text-align: left;"><u><b>Code</b></u></th>  
+                                    <th width="4%" style="text-align: left;"><u><b>#</b></u></th>  
+                                    <th width="8%" style="text-align: left;"><u><b>Code</b></u></th>  
                                     <th width="15%" style="text-align: left;"><u><b>Desc</b></u></th>  
                                     <th width="14%" style="text-align: center;"><u><b>Unit</b></u></th>    
-                                    <th width="14%" style="text-align: right;"><u><b>Total Cost</b></u></th> 
-                                    <th width="14%" style="text-align: right;"><u><b>Sales</b></u></th> 
-                                    <th width="14%" style="text-align: right;"><u><b>PNL</b></u></th> 
-                                    <th width="14%" style="text-align: right;"><u><b>P/L Amount</b></u></th> 
+                                    <th width="12%" style="text-align: right;"><u><b>Purch Cost</b></u></th> 
+                                    <th width="12%" style="text-align: right;"><u><b>Lapidary Cost</b></u></th> 
+                                    <th width="12%" style="text-align: right;"><u><b>Total Cost</b></u></th> 
+                                    <th width="12%" style="text-align: right;"><u><b>Sales</b></u></th>  
+                                    <th width="12%" style="text-align: right;"><u><b>Profit</b></u></th> 
                                  </tr>
                             </thead>
                         <tbody>';
@@ -134,14 +135,15 @@ class Pnl_gemstones extends CI_Controller {
               
                    $html .= '
                        <tr>
-                           <td style="width:6%;">'.$i.'</td> 
-                           <td style="width:10%;" align="left">'.$item['item_code'].'</td>
+                           <td style="width:4%;">'.$i.'</td> 
+                           <td style="width:8%;" align="left">'.$item['item_code'].'</td>
                            <td style="width:15%;" align="left">'.$item['item_name'].'</td>
                            <td style="width:14%;" align="center">'.$item['item_quantity'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['item_quantity_2'].' '.$item['uom_name_2']:'-').'</td>
-                           <td style="width:14%;" align="right">'. number_format($cost,2).'</td>
-                           <td style="width:14%;" align="right">'. number_format($item['item_sale_amount'],2).'</td>
-                           <td style="width:14%;" align="right">'.(($pnl_amount>0)?'<p style="color:green;">PROFIT</p>':'<p style="color:red;">LOST</p>').'</td>
-                           <td style="width:14%; text-align:right;" >'. number_format(abs($pnl_amount),2).'</td>
+                           <td style="width:12%;" align="right">'. number_format($item['purch_standard_cost'],2).'</td>
+                           <td style="width:12%;" align="right">'. number_format($item['total_lapidary_cost'],2).'</td>
+                           <td style="width:12%;" align="right">'. number_format($cost,2).'</td>
+                           <td style="width:12%;" align="right">'. number_format($item['item_sale_amount'],2).'</td>
+                            <td style="width:12%; text-align:right; color:'.(($pnl_amount<0)?'red':'').';" >'. number_format($pnl_amount,2).'</td>
                       </tr>'; 
                    $i++;
                    $item_count++; 
@@ -150,7 +152,7 @@ class Pnl_gemstones extends CI_Controller {
             
             $html = '<table border="0">
                         <tr>
-                            <td><b>Report: Gemstone Profit & Lost Report</b></td>
+                            <td><b>Report: Sales Profit Contribution Report</b></td>
                             <td align="center"> Variety: '.$category_name.' </td> 
                             <td align="right">Printed on : '.date(SYS_DATE_FORMAT).'</td>
                         </tr> 
