@@ -86,7 +86,7 @@ $(document).ready(function(){
                         <div class="row"> 
                             <div class="col-md-6"> 
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Invoice No:<span style="color: red">*</span></label>
+                                        <label class="col-md-3 control-label">Invoice No:<span style="color: red"></span></label>
                                         <div class="col-md-9">                                            
                                             <div class="input-group">
                                                 <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
@@ -94,6 +94,17 @@ $(document).ready(function(){
 
                                             </div>                                            
                                             <span class="help-block"><?php echo form_error('supp_invoice_no');?></span>
+                                        </div>
+                                    </div> 
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Item Code:<span style="color: red"></span></label>
+                                        <div class="col-md-9">                                            
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                                <?php echo form_input('item_code', set_value('item_code'), 'id="item_code" class="form-control" placeholder="Search by Item Code"'); ?>
+
+                                            </div>                                            
+                                            <span class="help-block"><?php echo form_error('item_code');?></span>
                                         </div>
                                     </div> 
                             </div>

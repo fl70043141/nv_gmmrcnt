@@ -571,6 +571,7 @@ class Purchasing_gemstones extends CI_Controller {
             $search_data=array( 
                                 'supp_invoice_no' => $this->input->post('supp_invoice_no'),
                                 'supplier_id' => $input['supplier_id'],  
+                                'item_code' => $input['item_code'],  
 //                                    'category' => $this->input->post('category'), 
                                 ); 
             $invoices['search_list'] = $this->Purchasing_items_model->search_result($search_data);

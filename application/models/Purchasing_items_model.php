@@ -12,12 +12,16 @@ class Purchasing_items_model extends CI_Model
             $this->db->select('(select concat(first_name," ",last_name) from '.USER.' where auth_id = i.added_by) as sales_person');
             $this->db->select('c.supplier_name,c.address,c.city,c.phone,pt.payment_term_name,pt.days_after');
             $this->db->from(SUPPLIER_INVOICE.' i'); 
+            $this->db->join(SUPPLIER_INVOICE_DESC.' sid','sid.supplier_invoice_id = i.id'); 
+            $this->db->join(ITEMS.' itm','itm.id = sid.item_id'); 
             $this->db->join(SUPPLIERS.' c','c.id = i.supplier_id'); 
             $this->db->join(PAYMENT_TERMS.' pt','pt.id = i.payment_term_id'); 
             $this->db->where('i.deleted',0);
-            if(isset($data['supp_invoice_no'])) $this->db->like('i.supplier_invoice_no',$data['supp_invoice_no']);
+            if(isset($data['supp_invoice_no']) && $data['item_code']!='') $this->db->like('i.supplier_invoice_no',$data['supp_invoice_no']);
             if(isset($data['supplier_id']) && $data['supplier_id']!='') $this->db->where('i.supplier_id',$data['supplier_id']);
-            $this->db->order_by('id','desc');
+            if(isset($data['item_code']) && $data['item_code']!='') $this->db->like('itm.item_code',$data['item_code']);
+            $this->db->group_by('i.id');
+            $this->db->order_by('i.id','desc');
             $result = $this->db->get()->result_array();  
 //            echo $this->db->last_query();die;
 //            echo '<pre>';            print_r($result); die;
