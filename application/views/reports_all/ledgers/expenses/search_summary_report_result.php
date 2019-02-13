@@ -41,8 +41,8 @@
                 <th>#</th>
                 <th>Account_name </th> 
                 <th>Type</th> 
-                <th>Amount Entered</th> 
-                <th>Amount</th>  
+                <th style="text-align: right;">Amount Entered</th> 
+                <th style="text-align: right;">Amount</th>  
             </tr>
            </tfoot>
          </table>
