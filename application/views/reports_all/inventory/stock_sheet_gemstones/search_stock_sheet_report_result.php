@@ -35,7 +35,7 @@
                                         <tr>
                                             <td>'.($i+1).'</td> 
                                             <td align="center">'.$item['item_code'].'</td>
-                                            <td align="center">'.$item['item_name'].'</td>
+                                            <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                                             <td align="center">'.$item['treatment_name'].'</td>
                                             <td align="center">'.$item['color_name'].'</td>
                                             <td align="center">'.$item['shape_name'].'</td>

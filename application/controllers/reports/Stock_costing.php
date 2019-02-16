@@ -23,6 +23,7 @@ class Stock_costing extends CI_Controller {
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
             $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
             $data['color_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Color','dropdown_id = 17'); //17 for Color
+            $data['item_type_list'] = get_dropdown_data(ITEM_TYPES,'item_type_name','id','No Item Type'); 
             
             $this->load->view('includes/template',$data);
         }
@@ -144,7 +145,7 @@ class Stock_costing extends CI_Controller {
                                            $html .= '<tr>
                                                         <td width="3%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$j.'</td>
                                                         <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$item['item_code'].'</td>
-                                                        <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['item_name'].'</td>
+                                                        <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                                                         <td width="9%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['treatment_name'].'</td>
                                                         <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['color_name'].'</td>
                                                         <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['shape_name'].'</td>

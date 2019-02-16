@@ -23,6 +23,7 @@ class Stock_sheet_gemstones extends CI_Controller {
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
             $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
             $data['color_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Color','dropdown_id = 17'); //17 for Color
+            $data['item_type_list'] = get_dropdown_data(ITEM_TYPES,'item_type_name','id','No Item Type'); 
             
             $this->load->view('includes/template',$data);
         }
@@ -130,7 +131,7 @@ class Stock_sheet_gemstones extends CI_Controller {
                                         if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
                                            $html .= '<tr>
                                                         <td width="12%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$item['item_code'].'</td>
-                                                        <td width="17%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['item_name'].'</td>
+                                                        <td width="17%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                                                         <td width="9%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['treatment_name'].'</td>
                                                         <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['color_name'].'</td>
                                                         <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['shape_name'].'</td>

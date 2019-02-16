@@ -23,7 +23,7 @@ $(document).ready(function(){
         
         var post_data = jQuery('#form_search').serializeArray(); 
         post_data.push({name:"function_name",value:'search'});
-        console.log(post_data);
+//        console.log(post_data);
         $.ajax({
 			url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>", 
 			type: 'post',
@@ -133,6 +133,13 @@ $(document).ready(function(){
                                               
                                                 </div> 
                                         </div>    
+                                        <div class="col-md-3">  
+                                                <div class="form-group pad  no-pad-top">
+                                                    <label for="item_type_id">Purchasing Type</label>
+                                                     <?php echo form_dropdown('item_type_id',$item_type_list,set_value('item_type_id'),' class="form-control select2" id="item_type_id"');?>
+                                              
+                                                </div> 
+                                        </div> 
                                     </div>
                               
                         </div>

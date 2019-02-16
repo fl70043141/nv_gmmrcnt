@@ -138,7 +138,7 @@ class Pnl_gemstones extends CI_Controller {
                        <tr>
                            <td style="width:4%;">'.$i.'</td> 
                            <td style="width:8%;" align="left">'.$item['item_code'].'</td>
-                           <td style="width:15%;" align="left">'.$item['item_name'].'</td>
+                           <td style="width:15%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                            <td style="width:14%;" align="center">'.$item['item_quantity'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['item_quantity_2'].' '.$item['uom_name_2']:'-').'</td>
                            <td style="width:12%;" align="right">'. number_format($item['purch_standard_cost'],2).'</td>
                            <td style="width:12%;" align="right">'. number_format($item['total_lapidary_cost'],2).'</td>

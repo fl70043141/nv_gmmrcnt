@@ -23,6 +23,7 @@ class Gemstone_costing extends CI_Controller {
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
             $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
             $data['color_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Color','dropdown_id = 17'); //17 for Color
+            $data['item_type_list'] = get_dropdown_data(ITEM_TYPES,'item_type_name','id','No Item Type'); 
             
             $this->load->view('includes/template',$data);
         }
@@ -141,7 +142,7 @@ class Gemstone_costing extends CI_Controller {
                        <tr>
                            <td style="width:6%;">'.$i.'</td> 
                            <td style="width:10%;" align="left">'.$item['item_code'].'</td>
-                           <td style="width:10%;" align="left">'.$item['item_name'].'</td>
+                           <td style="width:10%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                            <td style="width:8%;" align="center">'.$item['units_available'].' '.$item['uom_name'].'</td>
                            <td style="width:7%;" align="center">'.(($item['uom_id_2']!=0)?$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
                            <td style="width:17%;" align="left">Purchase</td>

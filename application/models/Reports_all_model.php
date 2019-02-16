@@ -42,7 +42,7 @@ class Reports_all_model extends CI_Model
         $this->db->select('is.*'); 
         $this->db->select('sum((glc.amount_cost)) as total_lapidary_cost'); 
         $this->db->select('ip.item_price_type, ip.price_amount,ip.currency_code as ip_curr_code, ip.currency_value as ip_curr_value'); 
-        $this->db->select('itm.item_name,itm.item_code,itm.item_category_id'); 
+        $this->db->select('itm.item_name,itm.item_code,itm.item_category_id,ityp.item_type_name,ityp.type_short_name'); 
         $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
         $this->db->select('(select location_name from '.INV_LOCATION.' where id = is.location_id)  as location_name');
         $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id)  as uom_name');
@@ -51,6 +51,7 @@ class Reports_all_model extends CI_Model
         $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.color)  as color_name');
         $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.shape)  as shape_name');
         $this->db->join(ITEMS.' itm','itm.id = is.item_id'); 
+        $this->db->join(ITEM_TYPES.' ityp', 'ityp.id = itm.item_type_id');
         $this->db->join(ITEM_CAT.' itmc','itmc.id =  itm.item_category_id'); 
         $this->db->join(GEM_LAPIDARY_COSTING.' glc','glc.item_id = is.item_id', 'LEFT'); 
         $this->db->join(ITEM_PRICES.' ip','ip.item_id = is.item_id and ip.item_price_type = 3 and ip.deleted=0'); //3 standard cost 
@@ -66,7 +67,8 @@ class Reports_all_model extends CI_Model
         
         if(isset($data['min_weight']) && $data['min_weight'] >0)$this->db->where('is.units_available >',$data['min_weight']);
         if(isset($data['max_weight_check']) && isset($data['max_weight']) && $data['max_weight'] >0)$this->db->where('is.units_available <',$data['max_weight']);
-        
+         if(isset($data['item_type_id']) && $data['item_type_id'] !='')$this->db->like('itm.item_type_id',$data['item_type_id']);
+            
         
         if($where!='')$this->db->where($where);
         $this->db->where('is.deleted',0);
