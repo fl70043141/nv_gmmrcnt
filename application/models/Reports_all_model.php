@@ -311,7 +311,7 @@ class Reports_all_model extends CI_Model
             $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
             $cur_det = get_currency_for_code($def_curcode);
             
-            $this->db->select('itm.item_code,itm.item_name');
+            $this->db->select('itm.item_code,itm.item_name,ityp.item_type_name,ityp.type_short_name');
             $this->db->select('id.*');
             $this->db->select('"'.$cur_det['symbol_left'].'" as cur_left_symbol, "'.$cur_det['symbol_right'].'" as cur_right_symbol'); 
             $this->db->select('sum((id.unit_price * '.$cur_det['value'].'/i.currency_value) * id.item_quantity) as item_sale_amount');
@@ -322,6 +322,7 @@ class Reports_all_model extends CI_Model
             $this->db->join(ITEM_PRICES.' ip','ip.item_id = id.item_id and ip.item_price_type = 3 and ip.deleted=0'); //3 standard cost 
             $this->db->join(INVOICES.' i', 'i.id = id.invoice_id');
             $this->db->join(ITEMS.' itm', 'itm.id = id.item_id');
+            $this->db->join(ITEM_TYPES.' ityp', 'ityp.id = itm.item_type_id');
             $this->db->from(INVOICE_DESC.' id');
             $this->db->where('i.invoice_date >= ',$fiscyear_info['begin']);
             $this->db->where('i.invoice_date <= ',$fiscyear_info['end']);
@@ -331,6 +332,7 @@ class Reports_all_model extends CI_Model
             if(isset($data['item_category_id']) && $data['item_category_id'] !='')$this->db->where('itm.item_category_id',$data['item_category_id']);
             if(isset($data['treatment_id']) && $data['treatment_id'] !='')$this->db->where('itm.treatment',$data['treatment_id']);
             if(isset($data['item_code']) && $data['item_code'] !='')$this->db->like('itm.item_code',$data['item_code']);
+            if(isset($data['item_type_id']) && $data['item_type_id'] !='')$this->db->like('itm.item_type_id',$data['item_type_id']);
              
             $result = $this->db->get()->result_array();  
             

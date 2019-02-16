@@ -100,6 +100,11 @@ endswitch;
         
 ?> 
 <style>
+    
+    .modal-dialog {width:800px;}
+    .thumbnail {margin-bottom:6px;}
+    .modal-body {width:800px; align:center;}
+    .model_img {width: 500px;}
     .policy_tbl td, .pets_tbl  td{
         padding: 5px;
     }
@@ -213,7 +218,7 @@ endswitch;
                                                 <div class="form-group">
                                                     <label class="col-md-3 control-label">Item Type<span style="color: red">*</span></label>
                                                     <div class="col-md-9">    
-                                                       <?php  echo form_dropdown('item_type_id',array($result['item_type_id']=>$item_type_list[$result['item_type_id']]),set_value('item_type_id',$result['item_type_id']),' class="form-control " data-live-search="true" id="item_type_id" '.$o_dis.'');?> 
+                                                       <?php  echo form_dropdown('item_type_id',$item_type_list,set_value('item_type_id',$result['item_type_id']),' class="form-control " data-live-search="true" id="item_type_id" '.$o_dis.'');?> 
                                                         <span class="help-block"><?php echo form_error('item_type_id');?></span>
                                                     </div> 
                                                 </div>
@@ -350,7 +355,7 @@ endswitch;
                                                     <span class="help-block"><?php echo form_error('image');?></span>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <img class="profile-user-img img-responsive img-circle" src="<?php echo base_url(ITEM_IMAGES.(($result['image']!="")?$result['id'].'/'.$result['image']:'default.jpg')); ?>" alt="User profile picture">
+                                                    <img id="def_img_holder" class="profile-user-img img-responsive img-circle thumbnail" src="<?php echo base_url(ITEM_IMAGES.(($result['image']!="")?$result['id'].'/'.$result['image']:'../default/default.jpg')); ?>" alt="User profile picture">
                                                 </div>
                                             </div>
                                           
@@ -593,6 +598,21 @@ endswitch;
           </div> 
     </section> 
  
+ 
+<!--     //image Lightbox-->
+     <div tabindex="-1" class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+            <div class="modal-content"> 
+                  <div align="" class="modal-body">
+                      <div><center><img class="model_img"   src=""></center> </div>
+                  </div>
+                  <div class="modal-footer">
+                          <button class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+             </div>
+            </div>
+          </div>
+ 
 <script>
     
 $(document).ready(function(){  
@@ -693,6 +713,30 @@ $(document).ready(function(){
                         }
 		}); 
     }
+    
+    
+            function readURL(input) {
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                            $('#def_img_holder').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $(".fl_file").change(function(){
+                readURL(this);
+            });
+            
+            $('.thumbnail').click(function(){ 
+                      var title = $(this).parent('a').attr("src");
+                      $(".model_img").attr("src",this.src); 
+                      $('#myModal').modal({show:true});
+                      
+              }); 
 });
 
  

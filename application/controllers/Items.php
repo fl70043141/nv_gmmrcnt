@@ -539,7 +539,7 @@ class Items extends CI_Controller {
             $data['supplier_list'] = get_dropdown_data(SUPPLIERS,'supplier_name','id',''); 
             $data['currency_list'] = get_dropdown_data(CURRENCY,'title','code',''); 
             $data['addon_type_list'] = array(0=>'Default');
-            $data['item_type_list'] = array(1=>'Purchased',4=>'Catelog Item',2=>'Service',3=>'Manufactured');
+            $data['item_type_list'] = get_dropdown_data(ITEM_TYPES,'item_type_name','id','');
             return $data;
          }
         

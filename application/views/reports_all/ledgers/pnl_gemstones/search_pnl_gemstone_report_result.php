@@ -40,7 +40,7 @@
                                              <tr>
                                                  <td>'.($i+1).'</td> 
                                                  <td align="center">'.$item['item_code'].'</td>
-                                                 <td align="center">'.$item['item_name'].'</td>
+                                                 <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                                                  <td align="center">'.$item['item_quantity'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['item_quantity_2'].' '.$item['uom_name_2']:'-').'</td>
                                                  <td align="right">'. number_format($cost,2).'</td>
                                                  <td align="right">'. number_format($item['item_sale_amount'],2).'</td>

@@ -129,6 +129,7 @@ define('TRANSECTION_TYPES',             TB_PREFIX.'transection_types');
 define('PAYMENT_METHOD',                TB_PREFIX.'transection_payment_method');
 define('ITEM_UOM',                      TB_PREFIX.'item_uom');
 define('ITEMS',                         TB_PREFIX.'items');
+define('ITEM_TYPES',                         TB_PREFIX.'item_types');
 define('ITEM_CAT',                      TB_PREFIX.'item_categories');
 define('ITEM_PRICES',                   TB_PREFIX.'item_prices');
 define('ITEM_STOCK',                    TB_PREFIX.'item_stock');

@@ -102,6 +102,13 @@ $(document).ready(function(){
                                               
                                                 </div> 
                                         </div>   
+                                        <div class="col-md-3">  
+                                                <div class="form-group pad  no-pad-top">
+                                                    <label for="item_type_id">Treatment</label>
+                                                     <?php echo form_dropdown('item_type_id',$item_type_list,set_value('item_type_id'),' class="form-control select2" id="item_type_id"');?>
+                                              
+                                                </div> 
+                                        </div>   
                                     </div>
                               
                         </div>
