@@ -269,7 +269,7 @@ class Pnl_General extends CI_Controller {
 //            $js = 'print(true);';
             // set javascript
 //            $pdf->IncludeJS($js);
-            $pdf->Output('Purchase_Summary.pdf', 'I');
+            $pdf->Output('PNL_Return.pdf', 'I');
         }
         
 }
