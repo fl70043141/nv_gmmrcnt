@@ -31,7 +31,7 @@
                             }
                             
                             $income_html .= '<tr>
-                                    <td colspan="3" align="right">Total: </td> 
+                                    <td colspan="3" align="right">Total '.$search[0]['type_name'].': </td> 
                                     <td align="right"><b>'.number_format(abs($type_tot),2).'</b></td> 
                                 </tr>';
                        }
@@ -72,7 +72,7 @@
                             }
                             
                             $cost_html .= '<tr>
-                                    <td colspan="3" align="right">Total: </td> 
+                                    <td colspan="3" align="right">Total '.$search[0]['type_name'].': </td> 
                                     <td align="right"><b>'.number_format(abs($type_tot),2).'</b></td> 
                                 </tr>';
                        }

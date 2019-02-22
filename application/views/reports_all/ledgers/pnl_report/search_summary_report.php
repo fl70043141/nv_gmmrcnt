@@ -1,6 +1,7 @@
 <?php
     $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
-//     echo '<pre>'; print_r($fiscyear_info); die;
+//     echo '<pre>'; print_r($fiscyear_info); die;.
+    
 ?>
 <script>
     
