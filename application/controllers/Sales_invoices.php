@@ -379,7 +379,7 @@ class Sales_invoices extends CI_Controller {
                                                     'person_id' => $inputs['customer_id'],
                                                     'trans_ref' => $invoice_id,
                                                     'trans_date' => strtotime("now"),
-                                                    'account' => 37, //14  SALES GL
+                                                    'account' => 37, //37  SALES GL
                                                     'account_code' => 4010, 
                                                     'memo' => '',
                                                     'amount' => (-$item_total),

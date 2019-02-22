@@ -95,7 +95,7 @@
                             </div>
                             <div class="col-md-4">
                                 <dl class="dl-horizontal">
-                                    <dt>Calculated Return: </dt><dd style="color:'.((($pnl_income_tot+$pnl_cost_tot)>0)?'red':'').';">'. number_format(($pnl_income_tot+$pnl_cost_tot),2).'</dd>
+                                    <dt>Calculated Return: </dt><dd style="color:'.((($pnl_income_tot+$pnl_cost_tot)>0)?'red':'').';">'. number_format(abs($pnl_income_tot+$pnl_cost_tot),2).'</dd>
                                 </dl> 
                             </div> 
 

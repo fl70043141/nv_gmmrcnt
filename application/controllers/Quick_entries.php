@@ -97,15 +97,17 @@ class Quick_entries extends CI_Controller {
             $inputs = $this->input->post(); 
             $this->load->model('GL_quick_entry_accounts_model');
             $entry_id = get_autoincrement_no(GL_QUICK_ENTRY);
-            $cur_det =  get_currency_for_code($inputs['currency_code']);
             $data = array();
             if(!empty($inputs['inv_items'])){
                 foreach ($inputs['inv_items'] as $entry){ 
+                    
+                    $cur_det =  get_currency_for_code($entry['currency_code']);
+//            echo '<pre>';            print_r($cur_det); die; 
                     $data['entry_tbl'][] = array(
                                                 'id' => $entry_id,
                                                 'quick_entry_account_id' => $entry['quick_entry_account_id'],
                                                 'amount' => $entry['amount'],
-                                                'currency_code' => $inputs['currency_code'], 
+                                                'currency_code' => $entry['currency_code'], 
                                                 'currency_value' => $cur_det['value'], 
                                                 'entry_date' => strtotime($entry['entry_date']),  
                                                 'fiscal_year_id' => 1,  
@@ -125,7 +127,7 @@ class Quick_entries extends CI_Controller {
                                                 'account_code' => $qe_acc['debit_gl_code'], 
                                                 'memo' => 'Quick_entry',
                                                 'amount' => ($entry['amount']),
-                                                'currency_code' => $inputs['currency_code'], 
+                                                'currency_code' => $entry['currency_code'], 
                                                 'currency_value' => $cur_det['value'], 
                                                 'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
                                                 'status' => 1,
@@ -139,7 +141,7 @@ class Quick_entries extends CI_Controller {
                                                 'account_code' => $qe_acc['credit_gl_code'], 
                                                 'memo' => 'Quick_entry',
                                                 'amount' => (-$entry['amount']),
-                                                'currency_code' => $inputs['currency_code'], 
+                                                'currency_code' => $entry['currency_code'], 
                                                 'currency_value' => $cur_det['value'], 
                                                 'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
                                                 'status' => 1,

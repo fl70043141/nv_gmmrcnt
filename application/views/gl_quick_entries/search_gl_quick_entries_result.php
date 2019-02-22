@@ -17,7 +17,7 @@
                            <tr>
                                <td>'.($i+1).'</td> 
                                <td>'.$search['account_name'].'</td>
-                               <td>'. number_format($search['amount'],2).'</td>
+                               <td>'.$search['currency_code'].' '. number_format($search['amount'],2).'</td>
                                <td>'.date(SYS_DATE_FORMAT,$search['entry_date']).'</td>
                                
                                <td>';
