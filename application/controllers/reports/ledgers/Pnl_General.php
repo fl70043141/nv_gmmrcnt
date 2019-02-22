@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Ledger_reports extends CI_Controller {
+class Pnl_General extends CI_Controller {
   
         function __construct() {
             parent::__construct();
@@ -12,31 +12,15 @@ class Ledger_reports extends CI_Controller {
               //I'm just using rand() function for data example 
             $this->view_search_report();
 	}
-        public function monthly_ledger(){
+        public function view_search_report(){
             
 //            $this->add();
 //            $data['search_list'] = $this->Sales_invoices_model->search_result();
-            $data['main_content']='reports_all/ledgers/monthly/search_summary_report'; 
-            $data['quick_entry_list'] = get_dropdown_data(GL_QUICK_ENTRY_ACC,'account_name','id','Quick entry');
-            $this->load->view('includes/template',$data);
-        }
-        public function daily_ledger(){
-            
-//            $this->add();
-//            $data['search_list'] = $this->Sales_invoices_model->search_result();
-            $data['main_content']='reports_all/ledgers/daily/search_summary_report'; 
+            $data['main_content']='reports_all/ledgers/pnl_report/search_summary_report'; 
             $data['quick_entry_list'] = get_dropdown_data(GL_QUICK_ENTRY_ACC,'account_name','id','Quick entry');
             $this->load->view('includes/template',$data);
         }
         
-        public function expenses(){
-            
-//            $this->add();
-//            $data['search_list'] = $this->Sales_invoices_model->search_result();
-            $data['main_content']='reports_all/ledgers/expenses/search_summary_report'; 
-            $data['quick_entry_list'] = get_dropdown_data(GL_QUICK_ENTRY_ACC,'account_name','id','Quick entry');
-            $this->load->view('includes/template',$data);
-        }
         
         function fl_ajax(){
             
@@ -50,16 +34,9 @@ class Ledger_reports extends CI_Controller {
                 return false;
             }
         }
-        
-//        public function search_month(){ //view the report
-//            $invoices = $this->get_ledger_month(); 
-//            $this->load->view('reports_all/ledgers/monthly/search_summary_report_result',$invoices);
-//	} 
-        
-        public function  search_ledger_month(){ // view month ledger
-            $trans_group = array();
+        function load_data(){
+            
             $input = (empty($this->input->post()))? $this->input->get():$this->input->post();  
-//                echo '<pre>';            print_r($input); die;
 //            $timestamp    = strtotime($input['date_month']);
 //            $first_day =  strtotime(date('01-m-Y 00:00:00', $timestamp));
 //            $last_day  =  strtotime(date('t-m-Y 23:59:59', $timestamp));  
@@ -67,88 +44,52 @@ class Ledger_reports extends CI_Controller {
              
                 $search_data=array( 
                                     'from_date' => ($input['date_from']>0)?strtotime($input['date_from']):'',
-                                    'to_date' => ($input['date_to']>0)?strtotime($input['date_to']):'',
-                                    'quick_entry_acc_id' => $input['quick_entry_acc'],   
+                                    'to_date' => ($input['date_to']>0)?strtotime($input['date_to']):'', 
                                     ); 
                  
                 $trans_list = $this->Reports_all_model->get_ledger_month($search_data);
                 
-//                echo '<pre>';            print_r(date('Y-m-d H:i:s',$last_day)); die;
                 
+                $data['income_data'] = $data['cost_data'] = array();
                 if(!empty($trans_list)){
                     foreach ($trans_list as $trans){
-                        $trans_group['trans_group_list'][$trans['gct_id']][]=$trans; 
+//                echo '<pre>';            print_r($trans); die;
+                        if($trans['class_id'] == 3){//income
+                            $data['income_data'][$trans['gct_id']][]=$trans; 
+                        } 
+                        if($trans['class_id'] == 4){//cost
+                            $data['cost_data'][$trans['gct_id']][]=$trans; 
+                        } 
                     }
                 }
-//                echo '<pre>';            print_r($trans_group); die;
-                 
-            $this->load->view('reports_all/ledgers/monthly/search_summary_report_result',$trans_group);
+                return $data;
         }
-        
-        public function  search_ledger_day(){ // view month ledger
-            $trans_group = array();
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();  
-            $timestamp    = strtotime($input['date_day']);
-            $begin_time =  strtotime(date('01-m-Y 00:00:00', $timestamp));
-            $end_time  =  strtotime(date('t-m-Y 23:59:59', $timestamp));  
-              
-             
-                $search_data=array( 
-                                    'from_date' => $begin_time,
-                                    'to_date' => $end_time,
-                                    'quick_entry_acc_id' => $input['quick_entry_acc'],   
-                                    ); 
-                 
-                $trans_list = $this->Reports_all_model->get_ledger_day($search_data);
-                
-//                echo '<pre>';            print_r(date('Y-m-d H:i:s',$last_day)); die;
-                
-                if(!empty($trans_list)){
-                    foreach ($trans_list as $trans){
-                        $trans_group['trans_group_list'][$trans['gct_id']][]=$trans; 
-                    }
-                }
-//                echo '<pre>';            print_r($trans_group); die;
-                 
-            $this->load->view('reports_all/ledgers/monthly/search_summary_report_result',$trans_group);
-        }
-        
-        public function  search_expenses(){ 
-            $trans_group = array();
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();   
-            
-                $search_data=array( 
-                                    'from_date' => ($input['from_date']>0)?strtotime($input['from_date']):'',
-                                    'to_date' => ($input['to_date']>0)?strtotime($input['to_date']):'',
-                                    'quick_entry_acc_id' => $input['quick_entry_acc'],   
-                                    ); 
-                 
-                $expenses_list = $this->Reports_all_model->get_expenses($search_data);
-                $data['search_list'] = $expenses_list;
-//                echo '<pre>';            print_r($expenses_list); die;
-//                $expenses_group =array();
-//                if(!empty($expenses_list)){
-//                    foreach ($expenses_list as $expenses){
-//                        $expenses_group['expenses_group'][$expenses['account_type_id']]['name']=$expenses['type_name']; 
-//                        $expenses_group['expenses_group'][$expenses['account_type_id']]['data'][$expenses['id']]=$expenses; 
-//                    }
-//                }
-//                echo '<pre>';            print_r($data); die;
-                 
-            $this->load->view('reports_all/ledgers/expenses/search_summary_report_result',$data);
+
+        public function  search_ledger_month(){ // view month ledger 
+            $data = $this->load_data(); 
+            $this->load->view('reports_all/ledgers/pnl_report/search_summary_report_result',$data);
         }
         
         public function print_report(){ 
 //            $this->input->post() = 'aa';
-            $invoices = $this->load_data(); 
-//            echo '<pre>';            print_r($invoices); die; 
+            $data= $this->load_data(); 
+            $income_data = $data['income_data'];
+            $cost_data = $data['cost_data'];
+            $inputs = $this->input->get();
+            $date_from = date(SYS_DATE_FORMAT, strtotime($inputs['date_from']));
+            $date_to = date(SYS_DATE_FORMAT, strtotime($inputs['date_to']));
+            
+//            echo '<pre>';            print_r($date_to); die;
             $this->load->library('Pdf'); 
             $this->load->model('Items_model');
-            
+            $def_cur = get_single_row_helper(CURRENCY,'code="'.$this->session->userdata(SYSTEM_CODE)['default_currency'].'"');
+//            
             // create new PDF document
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-            $pdf->fl_header='header_am';//invice bg
-            
+            $pdf->fl_header='header_jewel';//invice bg
+            $pdf->fl_header_title='Report';//invice bg
+            $pdf->fl_header_title_RTOP='P & L Statement';//invice bg
+            //
             // set document information
             $pdf->SetCreator(PDF_CREATOR);
             $pdf->SetAuthor('Fahry Lafir');
@@ -178,117 +119,22 @@ class Ledger_reports extends CI_Controller {
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
                     
             // set font
-            $pdf->SetFont('times', '', 10);
+            $pdf->SetFont('times', '', 8.5);
         
         
             $pdf->AddPage();   
-            $pdf->SetTextColor(32,32,32);     
-            $html = '<table border="0">
-                        <tr>
-                            <td><b>Report: Purchase Summary </b></td>
-                            <td align="right">Printed on : '.date(SYS_DATE_FORMAT).'</td>
-                        </tr>
-                        <tr>
-                            <td>Dates Result: '.$this->input->get('sales_from_date').' - '.$this->input->get('sales_to_date').'</td>
-                            <td align="right">Printed by : '.$this->session->userdata(SYSTEM_CODE)['user_first_name'].' '.$this->session->userdata(SYSTEM_CODE)['user_last_name'].'</td>
-                        </tr>
-                    </table> ';
-            $i=1;
-            $g_tot_settled = $g_inv_total = $g_tot_balance=0;
-            foreach ($invoices['rep_data'] as $cust_dets){
-//            echo '<pre>';            print_r($cust_dets); die;
-            $html .= '<table  class="table-line" border="0">
-                        <thead>
-                            <tr class="">
-                                <th align="left" colspan="6"></th>
-                            </tr>
-                            <tr class="">
-                                <th align="left" colspan="6">'.$i.'. <u>'.$cust_dets['supplier']['supplier_name'].'- '.$cust_dets['supplier']['city'].(($cust_dets['supplier']['supplier_ref']!='')?' ['.$cust_dets['supplier']['supplier_ref'].']':'').'</u></th>
-                            </tr>
-                            <tr class="colored_bg">
-                                <th width="20%" align="center">Supp Invoice No</th> 
-                                <th width="15%" align="center">Date</th> 
-                                <th width="17%" align="right">Total</th> 
-                                <th width="17%" align="right">Settled</th> 
-                                <th width="14%" align="center">Due Date</th> 
-                                <th width="17%" align="right">Balance</th> 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="6">
-                                    <table>';
-                                        $tot_settled = $inv_total = $tot_balance=0;
-                                        foreach ($cust_dets['invoices'] as $invoice){
-                                            $due_date = $invoice['invoice_date']+(60*60*24*$invoice['days_after']);
-                                            $invoice_total = $invoice['invoice_desc_total'];
-                                            $cust_payments = (!empty($invoice['transections']))?$invoice['transections'][0]['total_amount']:0;
-                                            $pending = $invoice_total-$cust_payments;
-                                            
-                                            $inv_total += $invoice_total;
-                                            $tot_settled += $cust_payments;
-                                            $tot_balance += $pending;
-                                            
-                                            $g_inv_total += $invoice_total;
-                                            $g_tot_settled += $cust_payments;
-                                            $g_tot_balance += $pending;
-                                            
-                                            
-                                            $html .= '<tr>
-                                                        <td width="20%" align="center">'.$invoice['supplier_invoice_no'].'</td>
-                                                        <td width="15%" align="center">'.date(SYS_DATE_FORMAT,$invoice['invoice_date']).'</td>
-                                                        <td width="17%" align="right">'.number_format($invoice_total,2).'</td>
-                                                        <td width="17%" align="right">'.number_format($cust_payments,2).'</td>
-                                                        <td width="14%" align="center">'. date(SYS_DATE_FORMAT,$due_date).'</td>
-                                                        <td width="17%" align="right">'.number_format($pending,2).'</td>
-                                                    </tr>';
-                                        }
-                                        $html .= '<tr>
-                                                        <td width="20%" align="center"></td>
-                                                        <td width="15%" align="center"></td>
-                                                        <td width="17%" align="right"><b>'.number_format($inv_total,2).'</b></td>
-                                                        <td width="17%" align="right"><b>'.number_format($tot_settled,2).'</b></td>
-                                                        <td width="14%" align="center"></td>
-                                                        <td width="17%" align="right"><b>'.number_format($tot_balance,2).'</b></td>
-                                                    </tr>';
-                                        
-                                    $html .= '</table>
-                                </td>
-                            </tr>
-                        </tbody> 
-                    </table> 
-                ';               
-                $i++;
-            }
-            $html .= '
-                    <table>
-                        
-                        <tfoot> 
-                            <tr class="">
-                                <td align="left" colspan="6"></td>
-                            </tr> 
-                            <tr>
-                                <th width="20%" align="center"></th>
-                                <th width="15%" align="center"></th>
-                                <th width="17%" align="right"><b>'.number_format($g_inv_total,2).'</b></th>
-                                <th width="17%" align="right"><b>'.number_format($g_tot_settled,2).'</b></th>
-                                <th width="14%" align="center"></th>
-                                <th width="17%" align="right"><b>'.number_format($g_tot_balance,2).'</b></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                ';
+            $pdf->SetTextColor(32,32,32);   
             
             
-            $html .= '
-                    <style>
+            $pnl_total = $pnl_income_tot = $pnl_cost_tot = 0;
+            
+            $html = '<style>
                     .colored_bg{
                         background-color:#E0E0E0;
                     }
                     .table-line th, .table-line td {
                         padding-bottom: 2px;
                         border-bottom: 1px solid #ddd;
-                        text-align:center; 
                     }
                     .text-right,.table-line.text-right{
                         text-align:right;
@@ -297,12 +143,129 @@ class Ledger_reports extends CI_Controller {
                         line-height: 20px;
                     }
                     </style>';
+            $income_html = '<h2>INCOME</h2><table class="table-line">
+                            <tbody>';
+                  if(isset($income_data) && !empty($income_data)){
+                                         foreach ($income_data as $glcm_id => $search){
+
+                      //echo '<pre>';print_r($search); die;
+
+                                              $income_html .= '<tr>
+                                                                  <td colspan="4"><b>'.$search[0]['type_name'].'</b></td> 
+                                                              </tr>
+                                                                <table  class="" border="0"> 
+                                                                   <tbody>';
+                                                                        $i = 0; $type_tot = 0;
+                                                                        if(!empty($search)){
+                                                                            foreach ($search as $trans){
+                                                                                $amnt_clr = ($trans['glcm_tot_amount']>=0)?'':'#F1948A'; 
+                                                                                $income_html .= '
+                                                                                    <tr>
+                                                                                        <td width="5%">'.($i+1).'.</td> 
+                                                                                        <td width="10%" align="left">'.$trans['account_code'].'</td>
+                                                                                        <td width="60%" align="left">'.$trans['glcm_account_name'].'</td>
+                                                                                        <td width="25%" align="right" style="color:'.$amnt_clr.';">'. number_format(abs($trans['glcm_tot_amount']),2).'</td> 
+                                                                                    </tr>';
+                                                                                $pnl_income_tot += $trans['glcm_tot_amount'];
+                                                                                $type_tot += $trans['glcm_tot_amount'];
+
+                                                                                $i++;
+                                                                            }
+                                                                        $income_html    .= '</tbody> 
+                                                                        </table> ';
+
+                                                                            $income_html .= '<tr>
+                                                                                              <td colspan="3" align="right">Total '.$search[0]['type_name'].': </td> 
+                                                                                              <td align="right"><b>'.number_format(abs($type_tot),2).'</b></td> 
+                                                                                          </tr>';
+                                                                       }
+                                                                       
+                                                       }
+                                                       
+                                                  }
+                                                  
+                    $income_html .= '<tr>
+                                      <td colspan="3" align="left"><h3>Total Income: </h3></td> 
+                                      <td align="right"><h3>'.number_format(abs($pnl_income_tot),2).'</h3></td> 
+                                  </tr>';
+
+                $income_html .= '</tbody> 
+                                   </table>';
+
+                $cost_html = '<h2>COST</h2><table class="table table-line" border="0">
+                                <tbody>'; 
+                                    if(isset($cost_data) && !empty($cost_data)){
+                                         foreach ($cost_data as $glcm_id => $search){
+
+                      //echo '<pre>';print_r($search); die;
+
+                                              $cost_html .= '<tr>
+                                                                  <td colspan="4"><b>'.$search[0]['type_name'].'</b></td> 
+                                                              </tr>
+                                                                <table  class="" border="0"> 
+                                                                   <tbody>';
+                                                                        $i = 0; $type_tot = 0;
+                                                                        if(!empty($search)){
+                                                                            foreach ($search as $trans){
+                                                                                $amnt_clr = ($trans['glcm_tot_amount']>=0)?'':'#F1948A'; 
+                                                                                $cost_html .= '
+                                                                                    <tr>
+                                                                                        <td width="5%">'.($i+1).'.</td> 
+                                                                                        <td width="10%" align="left">'.$trans['account_code'].'</td>
+                                                                                        <td width="60%" align="left">'.$trans['glcm_account_name'].'</td>
+                                                                                        <td width="25%" align="right" style="color:'.$amnt_clr.';">'. number_format(abs($trans['glcm_tot_amount']),2).'</td> 
+                                                                                    </tr>';
+                                                                                $pnl_cost_tot += $trans['glcm_tot_amount'];
+                                                                                $type_tot += $trans['glcm_tot_amount'];
+
+                                                                                $i++;
+                                                                            }
+                                                                            
+                                                                        $cost_html    .= '</tbody> 
+                                                                        </table> ';
+
+                                                                            $cost_html .= '<tr>
+                                                                                              <td colspan="3" align="right">Total: </td> 
+                                                                                              <td align="right"><b>'.number_format(abs($type_tot),2).'</b></td> 
+                                                                                          </tr>';
+                                                                       }
+                                                                       
+                                                       }
+                                                  }         
+                                                $cost_html .= '<tr>
+                                                                  <td colspan="3" align="left"><h3>Total Cost: </h3></td> 
+                                                                  <td align="right"><h3>'.number_format(abs($pnl_cost_tot),2).'</h3></td> 
+                                                              </tr>';
+                                                $cost_html .= '<tr>
+                                                                  <td colspan="3" align="left"><h3>Calculated Return: </h3></td> 
+                                                                  <td align="right" style="color:'.((($pnl_cost_tot+$pnl_income_tot)>0)?'red':'').';"><h3>'.number_format(abs($pnl_cost_tot+$pnl_income_tot),2).'</h3></td> 
+                                                              </tr>';
+                                                  $cost_html .= '</tbody> 
+                                                                 </table> ';
+            
+            $html .= '<table border="0">
+                        <tr>
+                            <td><b>Report: Profit & Lost Statement</b></td>
+                            <td align="center"> </td> 
+                            <td align="right">Printed on : '.date(SYS_DATE_FORMAT).'</td>
+                        </tr> 
+                        <tr>
+                            <td>Period: '.$date_from.' - '.$date_to.'</td>
+                            <td align="center"></td>
+                            <td align="right">Printed by : '.$this->session->userdata(SYSTEM_CODE)['user_first_name'].' '.$this->session->userdata(SYSTEM_CODE)['user_last_name'].'</td>
+                        </tr> 
+                        
+                        <tr><td colspan="3"></td></tr>
+                        <tr><td colspan="3"></td></tr>
+                    </table> ';
+            
+            $html .= $income_html.' <br>'.$cost_html;
             $pdf->writeHTMLCell(190,'',10,'',$html);
             
             $pdf->SetFont('times', '', 12.5, '', false);
             $pdf->SetTextColor(255,125,125);            
             // force print dialog
-            $js = 'this.print();';
+//            $js = 'this.print();';
 //            $js = 'print(true);';
             // set javascript
 //            $pdf->IncludeJS($js);

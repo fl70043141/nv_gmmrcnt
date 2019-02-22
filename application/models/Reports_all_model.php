@@ -90,6 +90,7 @@ class Reports_all_model extends CI_Model
 ------------------------------------------------------------*/
         
     public function get_ledger_month($data,$where=''){
+//                echo '<pre>';            print_r($data); die;
         $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
         $cur_det = get_currency_for_code($def_curcode);
         

@@ -99,7 +99,7 @@ $(document).ready(function(){
                                                     <?php  echo form_input('date_to',set_value('date_to',date('m/d/Y',$fiscyear_info['end'])),' class="form-control datepicker" readonly  id="date_to"');?>
                                                 </div> 
                                         </div> 
-                                        <div class="col-md-3">  
+                                        <div hidden class="col-md-3">  
                                                 <div class="form-group pad">
                                                     <label for="quick_entry_acc">Quick Entry Acc</label>
                                                      <?php echo form_dropdown('quick_entry_acc',$quick_entry_list,set_value('quick_entry_acc'),' class="form-control select2" id="quick_entry_acc"');?>
