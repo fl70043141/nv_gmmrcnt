@@ -98,6 +98,7 @@ class Quick_entries_model extends CI_Model
 	}
         
         public function edit_db($id,$data){
+            die;
 		$this->db->trans_start();
                 
 		$this->db->where('id', $id);
