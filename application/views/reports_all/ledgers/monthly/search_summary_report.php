@@ -16,8 +16,8 @@ $(document).ready(function(){
     });
     $("#print_btn").click(function(){
         var post_data = jQuery('#form_search').serialize(); 
-//        var json_data = JSON.stringify(post_data)
-        window.open('<?php echo $this->router->fetch_class()."/print_report?";?>'+post_data,'ZV VINDOW',width=600,height=300)
+//        var json_data = JSON.stringify(post_data) 
+        window.open('../<?php echo $this->router->fetch_class()."/print_report?";?>'+post_data,'ZV VINDOW',width=600,height=300)
     });
 	
 	$("#date_month").datepicker({
@@ -29,7 +29,7 @@ $(document).ready(function(){
         $("#result_search").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Retrieving Data..');    
         
         var post_data = jQuery('#form_search').serializeArray(); 
-        post_data.push({name:"function_name",value:'search_ledger_month'});
+        post_data.push({name:"function_name",value:'search_balance_sheet'});
         console.log(post_data);
         $.ajax({
 			url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>", 

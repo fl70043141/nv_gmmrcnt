@@ -114,7 +114,25 @@ class Reports_all_model extends CI_Model
 //        echo '<pre>';        print_r($result); die;
         return $result;
     }
-/*
+    
+    function get_sum_ledger($from='',$to='',$where=''){
+        $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
+        $cur_det = get_currency_for_code($def_curcode);
+        
+        $this->db->select('gt.*,sum(gt.amount) as sum_amount'); 
+        $this->db->from(GL_TRANS.' gt'); 
+        if($where!='') $this->db->where($where);
+        if($from!='') $this->db->where("gt.trans_date> ",$from);
+        if($to!='') $this->db->where("gt.trans_date< ",$to);
+        $this->db->group_by('gt.account');
+        $result = $this->db->get()->result_array();   
+//echo $this->db->last_query(); die;
+
+//        echo '<pre>';        print_r($result); die;
+        return $result;
+        
+    }
+    /*
 -----------------------------------------------------------
                   END    MONTH LEDGER REPORTS MODEL FUNCIONS
 ------------------------------------------------------------*/
