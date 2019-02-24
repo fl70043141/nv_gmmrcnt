@@ -94,6 +94,30 @@ class Ledger_reports extends CI_Controller {
             }
                 return $trans_group;
         }
+        
+        function load_expensess_data(){
+            $trans_group = array();
+            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();   
+            
+                $search_data=array( 
+                                    'from_date' => ($input['from_date']>0)?strtotime($input['from_date']):'',
+                                    'to_date' => ($input['to_date']>0)?strtotime($input['to_date']):'',
+                                    'quick_entry_acc_id' => $input['quick_entry_acc'],   
+                                    ); 
+                 
+                $expenses_list = $this->Reports_all_model->get_expenses($search_data);
+                
+                $data['search_list'] = $expenses_list; 
+                $expenses_group =array();
+                if(!empty($expenses_list)){
+                    foreach ($expenses_list as $expenses){
+                        $expenses_group['expenses_group'][$expenses['account_type_id']]['name']=$expenses['type_name']; 
+                        $expenses_group['expenses_group'][$expenses['account_type_id']]['data'][$expenses['id']]=$expenses; 
+                    }
+                }
+//                echo '<pre>';            print_r($expenses_group); die;
+            return $expenses_group;
+        }
         public function  search_ledger_month(){ // view month ledger
             $trans_group = array();
             $input = (empty($this->input->post()))? $this->input->get():$this->input->post();  
@@ -362,5 +386,153 @@ class Ledger_reports extends CI_Controller {
             // set javascript
 //            $pdf->IncludeJS($js);
             $pdf->Output('Balance_sheet.pdf', 'I');
+        }
+        public function print_expenses_report(){ 
+//            $this->input->post() = 'aa';
+            $expense_data = $this->load_expensess_data(); 
+            $inputs = $this->input->get();
+            
+//                    echo '<pre>';            print_r($inputs); die;
+            $this->load->library('Pdf'); 
+            $this->load->model('Items_model');
+            $def_cur = get_single_row_helper(CURRENCY,'code="'.$this->session->userdata(SYSTEM_CODE)['default_currency'].'"');
+//            
+            $date_from = date(SYS_DATE_FORMAT, strtotime($inputs['from_date']));
+            $date_to = date(SYS_DATE_FORMAT, strtotime($inputs['to_date']));
+            // create new PDF document
+            $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            $pdf->fl_header='header_jewel';//invice bg
+            $pdf->fl_header_title='Report';//invice bg
+            $pdf->fl_header_title_RTOP='Expenses Report';//invice bg
+            //
+            // set document information
+            $pdf->SetCreator(PDF_CREATOR);
+            $pdf->SetAuthor('Fahry Lafir');
+            $pdf->SetTitle('PDF AM Invoice');
+            $pdf->SetSubject('AM Invoice');
+            $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+            
+            // set default header data
+            $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+
+            // set header and footer fonts
+            $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+            $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+            // set default monospaced font
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+            // set margins
+            $pdf->SetMargins(PDF_MARGIN_LEFT, 50, PDF_MARGIN_RIGHT);
+            $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+            $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+            // set auto page breaks
+            $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+            // set image scale factor
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+                    
+            // set font
+            $pdf->SetFont('times', '', 8.5);
+        
+        
+            $pdf->AddPage();   
+            $pdf->SetTextColor(32,32,32);     
+            $html =""; 
+            
+            $total_expenses = $item_count =0;
+            foreach ($expense_data['expenses_group'] as $expense_type){
+//                    echo '<pre>';            print_r($expense_type); die; 
+                $html .=' <table id="example1" class="table table-line " border="0">
+                                <thead> 
+                                    <tr style=""> 
+                                        <th colspan="5" style="text-align: left;"><h3>'.$expense_type['name'].'</h3></th>   
+                                     </tr>
+                                    <tr style=""> 
+                                        <th width="8%" style="text-align: left;"><u><b>#</b></u></th>  
+                                        <th width="40%" style="text-align: left;"><u><b>Expenses</b></u></th>  
+                                        <th width="12%" style="text-align: center;"><u><b>Date</b></u></th> 
+                                        <th width="20%" style="text-align: right;"><u><b>Amount</b></u></th> 
+                                        <th width="20%" style="text-align: right;"><u><b>Amount ('.$def_cur['code'].')</b></u></th> 
+                                     </tr>
+                                </thead>
+                            <tbody>';
+
+                $i = 1; $tot_type=0;
+                foreach ($expense_type['data'] as $expense){
+                    $item_count++;
+                    $tot_type +=$expense['expense_amount']; 
+//                    echo '<pre>';            print_r($expense); die;
+                    $total_expenses += $expense['expense_amount'];
+                       $html .= '
+                           <tr>
+                               <td style="width:8%;">'.$i.'</td> 
+                               <td style="width:40%;" align="left">'.$expense['account_name'].'</td>
+                               <td style="width:12%;" align="center">'. date(SYS_DATE_FORMAT, $expense['entry_date']).'</td>
+                               <td style="width:20%;" align="right">'.$expense['currency_code'].' '. number_format($expense['amount'],2).'</td>
+                               <td style="width:20%;" align="right">'. number_format($expense['expense_amount'],2).'</td>
+                          </tr>'; 
+                       $i++; 
+                } 
+                
+                $html .= '<tr>
+                            <td colspan="2"><b>Total '.$expense_type['name'].' - ('.$expense['def_cur_code'].') </b></td>
+                            <td colspan="3" align="right;"><b>'. number_format($tot_type,2).'</b></td>
+                         </tr>';
+                $html .= '<tr> 
+                            <td colspan="5" align="right;" style="border-bottom: 1px solid #fff; ;"><br></td>
+                         </tr>';
+                $html .= '</tbody></table>';
+            }
+            
+            $html = '<table border="0">
+                        <tr>
+                            <td><b>Report: Expenses Report</b></td>
+                            <td align="center"> </td> 
+                            <td align="right">Printed on : '.date(SYS_DATE_FORMAT).'</td>
+                        </tr> 
+                        <tr>
+                            <td>Period: '.$date_from.' - '.$date_to.'</td>
+                            <td align="center"> </td>
+                            <td align="right">Printed by : '.$this->session->userdata(SYSTEM_CODE)['user_first_name'].' '.$this->session->userdata(SYSTEM_CODE)['user_last_name'].'</td>
+                        </tr>  
+                        
+                        <tr><td colspan="3"></td></tr>
+                        <tr>
+                            <td colspan="3"><b>Report Summary -</b><br>
+                                Total Expenses: '.$def_cur['code'].' <b>'. number_format($total_expenses,2).'</b><br>
+                                Total Expenses Entries: '.$item_count.'<br>
+                            </td>
+                        </tr> 
+                    </table> '.$html;
+            
+            $html .= '
+                        <style>
+                        .colored_bg{
+                            background-color:#E0E0E0;
+                        }
+                        .table-line th, .table-line td {
+                            padding-bottom: 2px;
+                            border-bottom: 1px solid #ddd; 
+                        }
+                        .text-right,.table-line.text-right{
+                            text-align:right;
+                        }
+                        .table-line tr{
+                            line-height: 20px;
+                        }
+                        </style>
+                                ';
+            $pdf->writeHTMLCell(190,'',10,'',$html);
+            
+            $pdf->SetFont('times', '', 12.5, '', false);
+            $pdf->SetTextColor(255,125,125);            
+            // force print dialog
+            $js = 'this.print();';
+//            $js = 'print(true);';
+            // set javascript
+//            $pdf->IncludeJS($js);
+            $pdf->Output('Expenses_report.pdf', 'I');
         }
 }

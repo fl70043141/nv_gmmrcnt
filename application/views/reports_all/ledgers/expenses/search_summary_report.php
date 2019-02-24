@@ -17,7 +17,7 @@ $(document).ready(function(){
     $("#print_btn").click(function(){
         var post_data = jQuery('#form_search').serialize(); 
 //        var json_data = JSON.stringify(post_data)
-        window.open('<?php echo $this->router->fetch_class()."/print_report?";?>'+post_data,'ZV VINDOW',width=600,height=300)
+        window.open('<?php echo $this->router->fetch_class()."/../print_expenses_report?";?>'+post_data,'ZV VINDOW',width=600,height=300)
     });
 	
 	
@@ -108,7 +108,7 @@ $(document).ready(function(){
                     </div>
                 <div class="panel-footer">
                                     <button class="btn btn-default">Clear Form</button>                                    
-                                    <!--<a id="print_btn" class="btn btn-info margin-r-5 pull-right"><span class="fa fa-print"></span> Print</a>-->
+                                    <a id="print_btn" class="btn btn-info margin-r-5 pull-right"><span class="fa fa-print"></span> Print</a>
                                     <a id="search_btn" class="btn btn-primary margin-r-5 pull-right"><span class="fa fa-search"></span> Search</a>
                                 </div>
               </div>

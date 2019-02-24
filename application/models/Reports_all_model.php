@@ -179,7 +179,7 @@ class Reports_all_model extends CI_Model
         $this->db->select('cur.symbol_left, cur.symbol_right');
         $this->db->select('qa.account_name,qa.short_name');
         $this->db->select('(sum(q.amount) * '.$cur_det['value'].'/q.currency_value) as expense_amount');
-        $this->db->select('"'.$cur_det['symbol_left'].'" as cur_left_symbol, "'.$cur_det['symbol_right'].'" as cur_right_symbol'); 
+        $this->db->select('"'.$cur_det['code'].'" as def_cur_code,"'.$cur_det['symbol_left'].'" as cur_left_symbol, "'.$cur_det['symbol_right'].'" as cur_right_symbol'); 
         $this->db->join(GL_QUICK_ENTRY_ACC.' qa','qa.id = q.quick_entry_account_id','left');
         $this->db->join(GL_CHART_MASTER.' cm','cm.account_code = qa.debit_gl_code AND (cm.account_type_id = 12 OR cm.account_type_id=13 OR cm.account_type_id=14)','left'); //12: gen expense 13: lab charges, 14: BKK
         $this->db->join(GL_CHART_TYPE.' ct','ct.id = cm.account_type_id '); 

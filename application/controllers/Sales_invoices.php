@@ -1084,54 +1084,55 @@ class Sales_invoices extends CI_Controller {
                 if(file_exists($pd_file_path)) unlink($pd_file_path);  //check and remove old file exists
                 $pdf->Output($pd_file_path, 'F');
                 
-                if(file_exists($pd_file_path) && $cust_dets['email'] != ''){
-                    $message    = '<table width="100%" border="0">
-						<br>
-						<tr>
-						<td width="7%">&nbsp;</td>
-						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">Please find attached invoice (Invoice No '.$inv_dets['invoice_no'].')  send  at '.date('Y-m-d H:i').'</td>
-						</tr>
-						<tr>
-						<td width="7%">&nbsp;</td>
-						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">&nbsp;</td>
-						</tr> 
-						<tr>
-						<td width="7%">&nbsp;</td>
-						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold"></td>
-						</tr>
-						<tr>
-						<td width="7%">&nbsp;</td>
-						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">Best Regards</td>
-						</tr>
-							
-						<tr>
-						<td width="7%">&nbsp;</td>
-						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">Interline Gems</td>
-						</tr>
-						<td width="7%">&nbsp;</td>
-						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold"></td>
-						</tr>
-						<tr>
-						<td width="7%">&nbsp;</td>
-						<td colspan="2" style="font:Verdana; color:#A8A8A8;">Please note that this is an automatd email from the <a href="http://nveloop.com">Nveloop</a> Gem Merchant Software.</td>
-						</tr>
-			</table>';
-                    $attathments[0] = $pd_file_path;
-//                    $attathments = '';
-                    $this->load->model('Sendmail_model');
-                    if($this->Sendmail_model->send_mail($cust_dets['email'],SMTP_USER,SYSTEM_NAME.' Billing',SYSTEM_SHOTR_NAME.' Invoice # :'.$inv_dets['invoice_no'],$message,$attathments)){
-                         $this->session->set_flashdata('warn','Success! Email send to  '.$cust_dets['email'].' Successfully');
-                         unlink($pd_file_path);
-                         echo '1';
+                    if($cust_dets['email'] == ''){
+                         $this->session->set_flashdata('error','Error! Email not sent. Please Check Customer Email address.');
                     }else{
-//                        echo 'bbbb';
-                         $this->session->set_flashdata('error','Error! Email not sent.');
-                         echo '0';
+                        if(file_exists($pd_file_path) && $cust_dets['email'] != ''){
+                            $message    = '<table width="100%" border="0">
+                                                        <br>
+                                                        <tr>
+                                                        <td width="7%">&nbsp;</td>
+                                                        <td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">Please find attached invoice (Invoice No '.$inv_dets['invoice_no'].')  send  at '.date('Y-m-d H:i').'</td>
+                                                        </tr>
+                                                        <tr>
+                                                        <td width="7%">&nbsp;</td>
+                                                        <td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">&nbsp;</td>
+                                                        </tr> 
+                                                        <tr>
+                                                        <td width="7%">&nbsp;</td>
+                                                        <td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold"></td>
+                                                        </tr>
+                                                        <tr>
+                                                        <td width="7%">&nbsp;</td>
+                                                        <td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">Best Regards</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                        <td width="7%">&nbsp;</td>
+                                                        <td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">Interline Gems</td>
+                                                        </tr>
+                                                        <td width="7%">&nbsp;</td>
+                                                        <td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold"></td>
+                                                        </tr>
+                                                        <tr>
+                                                        <td width="7%">&nbsp;</td>
+                                                        <td colspan="2" style="font:Verdana; color:#A8A8A8;">Please note that this is an automatd email from the <a href="http://nveloop.com">Nveloop</a> Gem Merchant Software.</td>
+                                                        </tr>
+                                </table>';
+                            $attathments[0] = $pd_file_path;
+        //                    $attathments = '';
+                            $this->load->model('Sendmail_model');
+                            if($this->Sendmail_model->send_mail($cust_dets['email'],SMTP_USER,SYSTEM_NAME.' Billing',SYSTEM_SHOTR_NAME.' Invoice # :'.$inv_dets['invoice_no'],$message,$attathments)){
+                                 $this->session->set_flashdata('warn','Success! Email send to  '.$cust_dets['email'].' Successfully');
+                                 unlink($pd_file_path);
+                                 echo '1';
+                            }else{
+        //                        echo 'bbbb';
+                                 $this->session->set_flashdata('error','Error! Email not sent.');
+                                 echo '0';
+                            }
+                        }
                     }
-                }else{
-                    
-                         $this->session->set_flashdata('error','Error! Email not sent. Please Check Customer Email');
-                }
             }else{ 
                 
                 // force print dialog
