@@ -284,7 +284,8 @@ $(document).ready(function(){
         });
         
         $('#send_mail_btn').click(function(){
-            send_mail_func();
+            if(confirm("Please click ok button to confirm send."))
+                send_mail_func();
         });
 	function send_mail_func(){
             $(".content").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Sending...'); 

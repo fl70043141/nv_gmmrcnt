@@ -1128,6 +1128,9 @@ class Sales_invoices extends CI_Controller {
                          $this->session->set_flashdata('error','Error! Email not sent.');
                          echo '0';
                     }
+                }else{
+                    
+                         $this->session->set_flashdata('error','Error! Email not sent. Please Check Customer Email');
                 }
             }else{ 
                 
