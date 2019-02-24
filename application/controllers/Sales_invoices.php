@@ -740,7 +740,7 @@ class Sales_invoices extends CI_Controller {
             echo json_encode($data);
         }
         
-        function sales_invoice_print($inv_id){
+        function sales_invoice_print($inv_id,$tmp_mail=''){
             $this->load->model('Sales_orders_model');
 //            echo '<pre>';            print_r($this->get_invoice_info($inv_id)); die; 
             $inv_data = $this->get_invoice_info($inv_id);
@@ -749,7 +749,8 @@ class Sales_invoices extends CI_Controller {
             $this->load->library('Pdf');
             
             $cur_det = $this->Sales_invoices_model->get_currency_for_code($inv_dets['currency_code']);
-            
+            $cust_dets = get_single_row_helper(CUSTOMERS,'id='.$inv_dets['customer_id']);
+//            echo '<pre>';            print_r($cust_dets); die; 
             // create new PDF document
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
             $pdf->fl_header='header_jewel';//invice bg
@@ -1072,16 +1073,71 @@ class Sales_invoices extends CI_Controller {
                     ';
             $pdf->writeHTML($html);
             
-            $pdf->SetFont('times', '', 12.5, '', false);
+            $pdf->SetFont('times', '', 12.5, '', true);
             $pdf->SetTextColor(255,125,125);           
 //            $pdf->Text(160,20,$inv_dets['sales_order_no']);
-            // force print dialog
-            $js = 'this.print();';
-            $js = 'print(true);';
-            // set javascript
-//            $pdf->IncludeJS($js);
-            $pdf->Output('INV_'.$inv_dets['invoice_no'].'.pdf', 'I');
+
+            if($tmp_mail==1){
                 
+//                    echo '<pre>';                    print_r($cust_dets); die;
+                $pd_file_path = BASEPATH.'.'.PDF_TMP_MAIL.'sales_invoices/INV_'.$inv_dets['invoice_no'].'.pdf';
+                if(file_exists($pd_file_path)) unlink($pd_file_path);  //check and remove old file exists
+                $pdf->Output($pd_file_path, 'F');
+                
+                if(file_exists($pd_file_path) && $cust_dets['email'] != ''){
+                    $message    = '<table width="100%" border="0">
+						<br>
+						<tr>
+						<td width="7%">&nbsp;</td>
+						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">Please find attached invoice (Invoice No '.$inv_dets['invoice_no'].')  send  at '.date('Y-m-d H:i').'</td>
+						</tr>
+						<tr>
+						<td width="7%">&nbsp;</td>
+						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">&nbsp;</td>
+						</tr> 
+						<tr>
+						<td width="7%">&nbsp;</td>
+						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold"></td>
+						</tr>
+						<tr>
+						<td width="7%">&nbsp;</td>
+						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">Best Regards</td>
+						</tr>
+							
+						<tr>
+						<td width="7%">&nbsp;</td>
+						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">Interline Gems</td>
+						</tr>
+						<td width="7%">&nbsp;</td>
+						<td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold"></td>
+						</tr>
+						<tr>
+						<td width="7%">&nbsp;</td>
+						<td colspan="2" style="font:Verdana; color:#A8A8A8;">Please note that this is an automatd email from the <a href="http://nveloop.com">Nveloop</a> Gem Merchant Software.</td>
+						</tr>
+			</table>';
+                    $attathments[0] = $pd_file_path;
+//                    $attathments = '';
+                    $this->load->model('Sendmail_model');
+                    if($this->Sendmail_model->send_mail($cust_dets['email'],SMTP_USER,SYSTEM_NAME.' Billing',SYSTEM_SHOTR_NAME.' Invoice # :'.$inv_dets['invoice_no'],$message,$attathments)){
+                         $this->session->set_flashdata('warn','Success! Email send to  '.$cust_dets['email'].' Successfully');
+                         unlink($pd_file_path);
+                         echo '1';
+                    }else{
+//                        echo 'bbbb';
+                         $this->session->set_flashdata('error','Error! Email not sent.');
+                         echo '0';
+                    }
+                }
+            }else{ 
+                
+                // force print dialog
+                $js = 'this.print();';
+                $js = 'print(true);';
+                // set javascript
+                $pdf->IncludeJS($js);
+                $pdf->Output('INV_'.$inv_dets['invoice_no'].'.pdf', 'I');
+            }
         } 
         function get_invoice_info($inv_id){
             $this->load->model('Items_model');  

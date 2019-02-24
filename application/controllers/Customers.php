@@ -95,7 +95,7 @@ class Customers extends CI_Controller {
             $this->form_validation->set_rules('customer_name','Customer Name','required|min_length[2]');
             $this->form_validation->set_rules('short_name','Short Name','required|callback_check_unique_code');
             $this->form_validation->set_rules('customer_type_id','Property Type','required');
-            $this->form_validation->set_rules('address','Address','required');
+//            $this->form_validation->set_rules('address','Address','required');
             $this->form_validation->set_rules('city','City','required');
 //            $this->form_validation->set_rules('commision_plan','Commission Plan','required');
             $this->form_validation->set_rules('phone','phone','required|min_length[10]|integer'); 

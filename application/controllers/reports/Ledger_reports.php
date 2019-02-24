@@ -361,6 +361,6 @@ class Ledger_reports extends CI_Controller {
 //            $js = 'print(true);';
             // set javascript
 //            $pdf->IncludeJS($js);
-            $pdf->Output('PNL_Return.pdf', 'I');
+            $pdf->Output('Balance_sheet.pdf', 'I');
         }
 }

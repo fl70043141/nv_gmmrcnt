@@ -19,7 +19,7 @@ class Sendmail_model extends CI_model{
             }
             $result = $this->email->send();
             
-
+//
 //            var_dump($result);
 //            echo '<br />';echo $this->email->print_debugger(); exit;
             return $result;  

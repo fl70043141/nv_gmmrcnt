@@ -221,6 +221,9 @@ define('FONTS_LOC',	'./storage/fonts/');
 define('FILE_BACKUP_SOURCE',	'./storage/');
 define('CAT_IMAGES',	'./storage/images/categories/');
 define('OTHER_IMAGES',	'./storage/images/other/');
+
+
+define('PDF_TMP_MAIL',	'./storage/pdf/tmp_mail/'); 
 /*
 |--------------------------------------------------------------------------
 | File and Directory Modes
@@ -245,8 +248,8 @@ defined('DIR_WRITE_MODE')  OR define('DIR_WRITE_MODE', 0755);
 define('ADMIN_EMAIL','fahrylafir@gmail.com');
 
 /******** Temp config for gmail config **/
-define('SMTP_USER','nveloopmailer@gmail.com');
-define('SMTP_PWD','nvtest@123');
+define('SMTP_USER','fahrycc@gmail.com');
+define('SMTP_PWD','a715889595A');
 define('SMTP_HOST','ssl://smtp.gmail.com');
 define('SMTP_PORT','465');
 

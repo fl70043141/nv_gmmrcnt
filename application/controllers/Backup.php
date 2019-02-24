@@ -154,7 +154,7 @@ class Backup extends CI_Controller{
 						</tr>
 						<tr>
 						<td width="7%">&nbsp;</td>
-						<td colspan="2" style="font:Verdana; color:#A8A8A8;">Please note that this is an automatd email from the PAS.</td>
+						<td colspan="2" style="font:Verdana; color:#A8A8A8;">Please note that this is an automatd email from the Nveloop Gem Merchant Software.</td>
 						</tr>
 			</table>';
 			// echo $message; die;

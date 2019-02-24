@@ -37,6 +37,7 @@ $inv_trans = $inv_data['inv_transection'];
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], 'Payments', 'add'))?'<a id="add_payment_inv" href="#" class="btn btn-app "><i class="fa fa-money"></i>Payments</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'delete'))?'<a href="'.base_url($this->router->fetch_class().'/delete/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-trash"></i>Delete Invoice</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'sales_invoice_print'))?'<a target="_blank" href="'.base_url($this->router->fetch_class().'/sales_invoice_print/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-print"></i>Print Invoice</a>':''; ?>
+            <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'send_mail'))?'<a  id="send_mail_btn" class="btn btn-app "><i class="fa fa-envelope"></i>Send Invoice</a>':''; ?>
 
         </div>
     </div>
@@ -281,5 +282,19 @@ $(document).ready(function(){
                 return false;
             }
         });
+        
+        $('#send_mail_btn').click(function(){
+            send_mail_func();
+        });
+	function send_mail_func(){
+            $(".content").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Sending...'); 
+            $.ajax({
+                            url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/sales_invoice_print/'.$user_data['id'].'/1');?>", 
+                            type: 'post', 
+                            success: function(result){ 
+                                location.reload();
+            }
+                    });
+	}
 });
 </script>
