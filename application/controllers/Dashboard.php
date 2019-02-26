@@ -36,11 +36,13 @@ class Dashboard extends CI_Controller {
             
             $pnl_amount = 0; 
             $cur_left_synbol = $cur_left_synbol ='';
-            foreach ($item_pnl_data as $pnl_info){
-                $pnl_amount += $pnl_info['item_sale_amount'] - ($pnl_info['purch_standard_cost']-$pnl_info['total_lapidary_cost']);
-                $cur_left_synbol = $pnl_info['cur_left_symbol'];
-                $cur_right_synbol = $pnl_info['cur_right_symbol'];
-//                echo '<br>code_id: '.$pnl_info['item_id'].'  /  SALE_AMOUNT: '.$pnl_info['item_sale_amount'],'  / PYRCH: '.$pnl_info['purch_standard_cost'];
+            if( !empty($item_pnl_data)){
+                foreach ($item_pnl_data as $pnl_info){
+                    $pnl_amount += $pnl_info['item_sale_amount'] - ($pnl_info['purch_standard_cost']-$pnl_info['total_lapidary_cost']);
+                    $cur_left_synbol = $pnl_info['cur_left_symbol'];
+                    $cur_right_synbol = $pnl_info['cur_right_symbol'];
+    //                echo '<br>code_id: '.$pnl_info['item_id'].'  /  SALE_AMOUNT: '.$pnl_info['item_sale_amount'],'  / PYRCH: '.$pnl_info['purch_standard_cost'];
+                }
             }
 //            echo '<pre>';            print_r($item_pnl_data); die;
             
