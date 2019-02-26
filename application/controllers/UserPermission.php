@@ -88,9 +88,9 @@ class UserPermission extends CI_Controller {
             echo 'okoo';
         }
         function make_fresh_system(){
-            // echo 'WARNING: PLS HIDE THIS COMMENT BEFORE EXECUTE'; die;
+             echo 'WARNING: PLS HIDE THIS COMMENT BEFORE EXECUTE'; die;
             $truncate_tables = array(
-//                                        CONSIGNEES,
+                                        CONSIGNEES,
                                         CONSIGNEE_COMMISH,
                                         CONSIGNEE_RECIEVE,
                                         CONSIGNEE_RECIEVE_DESC,
@@ -98,12 +98,16 @@ class UserPermission extends CI_Controller {
                                         CONSIGNEE_SUBMISSION_DESC,
                                         CREDIT_NOTES,
                                         CREDIT_NOTES_DESC,
-//                                        CUSTOMERS,
+                                        CUSTOMERS,
                                         CUSTOMER_BRANCHES,
 //                                        CUSTOMER_TYPE,
+                                        GEM_ISSUES,
+                                        GEM_ISSUE_RECORDS,
+                                        GEM_RECEIVAL,
+                                        GEM_LAPIDARY_COSTING,
                                         GL_QUICK_ENTRY,
                                         GL_TRANS,
-//                                        INV_LOCATION,
+                                        INV_LOCATION,
                                         LOCATION_TRASNFER,
                                         LOCATION_TRASNFER_DESC,
                                         INVOICES,
@@ -122,11 +126,11 @@ class UserPermission extends CI_Controller {
                                         SALES_ORDERS,
                                         SALES_ORDER_DESC,
                                         SALES_ORDER_ITEM_TEMP,
-//                                        CRAFTMANS,
+                                        CRAFTMANS,
                                         CRAFTMANS_RECEIVE,
                                         CRAFTMANS_RECEIVE_DESC,
                                         CRAFTMANS_SUBMISSION,
-//                                        SUPPLIERS,
+                                        SUPPLIERS,
                                         SUPPLIER_INVOICE,
                                         SUPPLIER_INVOICE_DESC,
                                         SYSTEM_LOG,
