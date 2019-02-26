@@ -81,11 +81,11 @@ class Ledger_reports extends CI_Controller {
                     $trans_group['trans_class_list'][$trans['class_id']]['class_name']=$trans['class_name']; 
 
                     $acc_amount_open =  $this->Reports_all_model->get_sum_ledger('',strtotime($input['date_from']),'gt.account_code = '.$trans['account_code']);
-                    $trans['open_balance'] = (isset($acc_amount_open[0]['amount']))?$acc_amount_open[0]['amount']:0;
+                    $trans['open_balance'] = (isset($acc_amount_open[0]['sum_amount']))?$acc_amount_open[0]['sum_amount']:0;
                    
                     
                     $acc_amount_period =  $this->Reports_all_model->get_sum_ledger('','','gt.trans_date>= '.strtotime($input['date_from']).' AND gt.trans_date <= '.strtotime($input['date_to']).' AND gt.account = '.$trans['account']);
-                    $trans['period_transections'] = (isset($acc_amount_period[0]['amount']))?$acc_amount_period[0]['amount']:0;
+                    $trans['period_transections'] = (isset($acc_amount_period[0]['sum_amount']))?$acc_amount_period[0]['sum_amount']:0;
 // echo '<pre>';                    print_r($trans); die;
                     $trans['close_balance'] = $trans['open_balance'] +$trans['period_transections'];
 

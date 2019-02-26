@@ -76,6 +76,8 @@ class Upload_csv extends CI_Controller {
                             $sales_excluded= $csv[11];
                             $purchase_exclude= $csv[12];
                             
+//                            $purch_price = $purch_price/$qty;
+                            
                             //GEMS 
                             $color = $csv[13];
                             $certfication = $csv[14];

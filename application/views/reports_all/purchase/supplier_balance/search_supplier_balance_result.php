@@ -22,6 +22,7 @@
                         
                          $i=1;
                         $g_tot_settled = $g_inv_total = $g_tot_balance=0;
+                        if(!empty($rep_data)){
                         foreach ($rep_data as $sup_dets){
                             $tot_settled = $inv_total = $tot_balance=0;
                              if(isset($sup_dets['invoices'])){
@@ -55,6 +56,10 @@
                             $i++;
                             }
                         }
+                   }
+                   echo '<tr>
+                                     <td>No Results found</td> 
+                                 </tr>';
                         echo '
                                         <tr> 
                                             <th colspan="3" align="center"></th>

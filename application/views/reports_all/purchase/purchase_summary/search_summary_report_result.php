@@ -6,6 +6,7 @@
 <table id="example1" class="table  dataTable table-bordered table-striped">
         <tbody>
               <?php
+              if(!empty($rep_data)){
                    foreach ($rep_data as $cust_id => $search){ 
                        if(isset($search['invoices'])){
                        if(isset($search['invoices']) && count($search['invoices'])>0){
@@ -73,6 +74,10 @@
                     }
                     }
                    }
+                }
+                echo '<tr>
+                                  <td>No Results found</td> 
+                              </tr>';
               ?>   
         </tbody> 
          </table> 

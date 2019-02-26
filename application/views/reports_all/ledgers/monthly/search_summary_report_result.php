@@ -11,8 +11,8 @@ $html .='<table id="example1" class="table  dataTable table-bordered table-strip
         </tr>
     </thead>
         <tbody>';
-              if(isset($trans_class_list) && !empty($trans_class_list)){
                 $fin_open_bal = $fin_period = $fin_close_bal = 0; 
+              if(isset($trans_class_list) && !empty($trans_class_list)){
                    foreach ($trans_class_list as $glcm_id => $search){
 //                      $html .='<pre>';                       print_r($search); die;
                        

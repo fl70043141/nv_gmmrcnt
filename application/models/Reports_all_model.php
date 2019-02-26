@@ -128,7 +128,7 @@ class Reports_all_model extends CI_Model
         $result = $this->db->get()->result_array();   
 //echo $this->db->last_query(); die;
 
-//        echo '<pre>';        print_r($result); die;
+//        echo '<pre>';        print_r($result);  
         return $result;
         
     }
