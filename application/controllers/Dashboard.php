@@ -35,8 +35,8 @@ class Dashboard extends CI_Controller {
             $item_pnl_data = $this->Dashboard_model->get_sales_profit(); //PNL CALCULATIION
             
             $pnl_amount = 0; 
-            $cur_left_synbol = $cur_left_synbol ='';
-            if( !empty($item_pnl_data)){
+            $cur_left_synbol = $cur_right_synbol ='';
+            if(!empty($item_pnl_data)){
                 foreach ($item_pnl_data as $pnl_info){
                     $pnl_amount += $pnl_info['item_sale_amount'] - ($pnl_info['purch_standard_cost']-$pnl_info['total_lapidary_cost']);
                     $cur_left_synbol = $pnl_info['cur_left_symbol'];
