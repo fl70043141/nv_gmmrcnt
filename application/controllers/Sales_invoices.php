@@ -735,7 +735,7 @@ class Sales_invoices extends CI_Controller {
             $this->load->model('Item_stock_model');
             $inputs = $this->input->post(); 
             $data = $this->Sales_invoices_model->get_single_item($inputs['item_code'],$inputs['price_type_id']); 
-            $data['stock'] = $this->Item_stock_model->get_stock_by_code($inputs['item_code'],'');
+            $data['stock'] = $this->Item_stock_model->get_stock_by_code($inputs['item_code'],$inputs['location_id']);
 //            echo '<pre>';            print_r($data); die;
             echo json_encode($data);
         }

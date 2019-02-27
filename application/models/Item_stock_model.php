@@ -43,7 +43,7 @@ class Item_stock_model extends CI_Model
 	}
         
          public function get_stock_by_code($item_code='',$location_id='',$where=''){ 
-            $this->db->select('is.*');
+            $this->db->select('itm.item_code,is.*');
             $this->db->select('is.*,SUM(is.units_available) as tot_units_1, SUM(is.units_available_2) as tot_units_2');
             $this->db->join(ITEMS.' itm','itm.id = is.item_id'); 
             $this->db->from(ITEM_STOCK.' is'); 
@@ -51,8 +51,9 @@ class Item_stock_model extends CI_Model
             if($item_code!='')$this->db->where('itm.item_code',$item_code);
             if($where!='')$this->db->where($where);
             $this->db->where('is.deleted',0);
+            $this->db->group_by('is.item_id',0);
             $result = $this->db->get()->result_array();   
-            
+//echo $this->db->last_query(); die;
             return $result[0];
 	}
                          

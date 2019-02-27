@@ -520,6 +520,10 @@ $(document).ready(function(){
          get_branch_drpdwn();
     });
     
+    $("#location_id").change(function(){ 
+	 $('#item_code').trigger('keyup'); 
+    });
+    
     $('#checkout_modal').on('shown.bs.modal', function () {
         $('#amount_tendered').focus();
     })    
@@ -578,7 +582,7 @@ $(document).ready(function(){
             $.ajax({
 			url: "<?php echo site_url('Sales_invoices/fl_ajax?function_name=get_single_item');?>",
 			type: 'post',
-			data : {function_name:'get_single_item', item_code:$('#item_code').val(), price_type_id:$('#price_type_id').val()},
+			data : {function_name:'get_single_item', item_code:$('#item_code').val(), location_id:$('#location_id').val(), price_type_id:$('#price_type_id').val()},
 			success: function(result){
 //                            alert(result)
 //                            $("#search_result_1").html(result);
