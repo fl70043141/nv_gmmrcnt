@@ -161,9 +161,10 @@ endswitch;
                                     <table id="invoice_list_tbl" class="table table-bordered table-striped">
                                         <thead>
                                            <tr> 
-                                               <th width="10%"  style="text-align: center;">Item Code</th> 
-                                               <th width="20%" style="text-align: center;">Item Description</th> 
-                                               <th width="10%" style="text-align: center;">Quantity</th>  
+                                               <th width="5%"  style="text-align: center;">#</th> 
+                                               <th width="15%"  style="text-align: center;">Item Code</th> 
+                                               <th width="40%" style="text-align: center;">Item Description</th> 
+                                               <th width="20%" style="text-align: center;">Quantity</th>  
                                                <th width="5%" style="text-align: center;">Action</th>
                                            </tr>
                                        </thead>
@@ -262,10 +263,10 @@ $(document).ready(function(){
     });
     $("#confirm_transfer").click(function(){
         if($('#from_location_id').val() == $('#to_location_id').val()){
-            fl_alert('info',"Detinations should be differ from from Location!");
+            fl_alert('info',"Destinations should be differ from from Location!");
             return false;
         }
-        fl_alert('info',)
+//        fl_alert('info',)
         if($('input[name^="inv_items"]').length<=0){
             fl_alert('info',"Atleast one item need to create an invoice!")
             return false;
@@ -315,14 +316,14 @@ $(document).ready(function(){
                             $('#first_col_form').removeClass('col-md-offset-3');
                             var div_str = '<div class="col-md-2">'+
                                                     '<div class="form-group pad">'+
-                                                        '<label for="item_quantity">Quantity <span id="unit_abbr">[Each]<span></label>'+
+                                                        '<label for="item_quantity">Units <span id="unit_abbr">[Each]<span></label>'+
                                                         '<input type="number" min="0"  step=".001" name="item_quantity" class="form-control add_item_inpt" id="item_quantity" placeholder="Enter Quantity">'+
                                                     '</div>'+
                                                 '</div>';
                             if(res1.item_uom_id_2!=0){
                                     div_str = div_str + '<div class="col-md-2">'+
                                                             '<div class="form-group pad">'+
-                                                                '<label for="item_quantity_2">Quantity <span id="unit_abbr_2">[Each]<span></label>'+
+                                                                '<label for="item_quantity_2">Units 2 <span id="unit_abbr_2">[Each]<span></label>'+
                                                                 '<input type="number" min="0"  step=".001" name="item_quantity_2" class="form-control add_item_inpt" value="1" id="item_quantity_2" placeholder="Enter Quantity">'+
                                                             '</div>'+
                                                         '</div>';
@@ -338,8 +339,11 @@ $(document).ready(function(){
                                 $('#unit_abbr').text('['+res1.stock.units_available+' '+res1.unit_abbreviation+']');
                                 $('#unit_abbr_2').text('['+res1.stock.units_available_2+' '+res1.unit_abbreviation_2+']');
 //                                $('#item_discount').val(0);
-                                $('#item_quantity').val(1);
-
+                                $('#item_quantity').val(res1.stock.units_available);
+                                $('#item_quantity_2').val(res1.stock.units_available_2);
+                                if(parseFloat(res1.stock.units_available)<=0){
+                                    fl_alert("warning","This item has not in stock at current location!");
+                                }
                                 $("#result_search").html(result);
                             }
                         }
@@ -371,7 +375,8 @@ $(document).ready(function(){
                                 
                                 
                                 var row_str = '<tr style="padding:10px" id="tr_'+rowCount+'">'+ 
-                                                        '<td><input hidden name="inv_items['+rowCount+'][item_code]" value="'+item_code1+'">'+item_code1+'</td>'+
+                                                        '<td><span id="'+rowCount+'_row_cntr" class="row_counter_cls"></span></td>'+
+                                                        '<td><input class="itemcode_cls" hidden name="inv_items['+rowCount+'][item_code]" value="'+item_code1+'">'+item_code1+'</td>'+
                                                         '<td><input hidden name="inv_items['+rowCount+'][item_desc]" value="'+res2.item_name+'"><input hidden name="inv_items['+rowCount+'][item_id]" value="'+res2.id+'">'+res2.item_name+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_quantity]" value="'+item_qty1+'"><input hidden name="inv_items['+rowCount+'][item_quantity_2]" value="'+((item_qty2==null)?0:item_qty2)+'">'+
                                                         '<input hidden name="inv_items['+rowCount+'][unit_abbreviation]" value="'+res2.unit_abbreviation+'"><input hidden name="inv_items['+rowCount+'][item_quantity_uom_id]" value="'+res2.item_uom_id+'"><input hidden name="inv_items['+rowCount+'][item_quantity_uom_id_2]" value="'+res2.item_uom_id_2+'">'+
@@ -382,7 +387,23 @@ $(document).ready(function(){
                                 row_str = row_str + '</td><td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
                                                     '</tr>';
                                 var newRow = $(row_str);
-                                jQuery('table#invoice_list_tbl ').append(newRow); 
+                                
+                                var exist_item=0;
+                                $('.itemcode_cls').each(function(){
+                                    if(this.value == item_code1){
+                                        fl_alert('warning',"This Item already added to list!")
+                                        exist_item = 1;
+                                    }
+                                });
+                                if(exist_item==0){
+                                    jQuery('table#invoice_list_tbl ').prepend(newRow);
+                                }
+                                
+                                //set row sew no
+                                var seq_no=1;
+                                $($('.row_counter_cls').get().reverse()).each(function(){
+                                  $('#'+(this.id)).text(seq_no); seq_no++;
+                                }); 
 
                                 //delete row
                                 $('.del_btn_inv_row').click(function(){ 

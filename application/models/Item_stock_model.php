@@ -54,7 +54,8 @@ class Item_stock_model extends CI_Model
             $this->db->group_by('is.item_id',0);
             $result = $this->db->get()->result_array();   
 //echo $this->db->last_query(); die;
-            return $result[0];
+            
+            return (!empty($result[0])?$result[0]:'');
 	}
                          
         public function add_db($data){       

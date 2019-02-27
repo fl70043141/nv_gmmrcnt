@@ -533,7 +533,7 @@ $(document).ready(function(){
          $.ajax({
 			url: "<?php echo site_url('Sales_invoices/fl_ajax?function_name=get_single_item');?>",
 			type: 'post',
-			data : {function_name:'get_single_item', item_code:$('#item_code').val(), price_type_id:$('#price_type_id').val()},
+			data : {function_name:'get_single_item', item_code:$('#item_code').val(), location_id:$('#location_id').val(), price_type_id:$('#price_type_id').val()},
 			success: function(result){
                             set_list_items(result);
                         }
@@ -623,16 +623,17 @@ $(document).ready(function(){
                                 }
                                 if(id1!='item_code'){ $('#item_code').val(res1.item_code);}
                                 $('#item_unit_cost').val(price_converted.toFixed());
-                                $('#unit_abbr').text('['+res1.stock.units_available+' '+res1.unit_abbreviation+']');
+                                $('#unit_abbr').text('['+((res1.stock!="")?res1.stock.units_available:0)+' '+res1.unit_abbreviation+']');
                                 $('#prce_unit_name').text(res1.unit_abbreviation);
                                 
-                                
-                                if(res1.stock.units_available_2=='1'){
-                                    $('#item_quantity').val(res1.stock.units_available);
-                                }else{
-                                    $('#item_quantity').val(1);
-                                }
-                                $('#unit_abbr_2').text('['+res1.stock.units_available_2+' '+res1.unit_abbreviation_2+']');
+                                $('#item_quantity').val(((res1.stock!="")?res1.stock.units_available:0));
+                                $('#item_quantity_2').val(((res1.stock!="")?res1.stock.units_available_2:0));
+//                                if(res1.stock.units_available_2=='1'){
+//                                    $('#item_quantity').val(res1.stock.units_available);
+//                                }else{
+//                                    $('#item_quantity').val(1);
+//                                }
+                                $('#unit_abbr_2').text('['+((res1.stock!="")?res1.stock.units_available_2:0)+' '+res1.unit_abbreviation_2+']');
 //                                $('#item_discount').val(0);
 
                                 $("#result_search").html(result);
