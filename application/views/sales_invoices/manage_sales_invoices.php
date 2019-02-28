@@ -225,6 +225,7 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                     <table id="invoice_list_tbl" class="table table-bordered table-striped">
                                         <thead>
                                            <tr> 
+                                               <th width="5%"  style="text-align: center;">#</th> 
                                                <th width="10%"  style="text-align: center;">Item Code</th> 
                                                <th width="20%" style="text-align: center;">Item Description</th> 
                                                <th width="10%" style="text-align: center;">Quantity</th> 
@@ -268,7 +269,7 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                        </tfoot>
                                        <tfoot>
                                             <tr>
-                                                <th colspan="4"></th>
+                                                <th colspan="5"></th>
                                                 <th  style="text-align: right;">Sub Total</th>
                                                 <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_sub_total"><span id="inv_sub_total">0.00</span></th>
                                                 
@@ -279,7 +280,7 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                        </tfoot>
                                        <tfoot>
                                             <tr>
-                                                <th colspan="4"></th>
+                                                <th colspan="5"></th>
                                                 <th  style="text-align: right;">Total</th>
                                                 <th  style="text-align: right;"><input hidden value="<?php echo (isset($so_total)?$so_total:0);?>" name="invoice_total"  id="invoice_total"><span id="inv_total"><?php echo number_format($so_total,2);?></span></th>
                                             </tr> 
@@ -714,7 +715,8 @@ $(document).ready(function(){
                                 
                                 
                                 var row_str = '<tr style="padding:10px" id="tr_'+rowCount+'">'+ 
-                                                        '<td><input hidden name="inv_items['+rowCount+'][item_code]" value="'+item_code1+'">'+item_code1+'</td>'+
+                                                        '<td><span id="'+rowCount+'_row_cntr" class="row_counter_cls"></span></td>'+
+                                                        '<td><input class="itemcode_cls"  hidden name="inv_items['+rowCount+'][item_code]" value="'+item_code1+'">'+item_code1+'</td>'+
                                                         '<td><input hidden name="inv_items['+rowCount+'][item_desc]" value="'+res2.item_name+'"><input hidden name="inv_items['+rowCount+'][item_id]" value="'+res2.id+'">'+res2.item_name+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_quantity]" value="'+item_qty1+'"><input hidden name="inv_items['+rowCount+'][item_quantity_2]" value="'+((item_qty2==null)?0:item_qty2)+'">'+
                                                         '<input hidden name="inv_items['+rowCount+'][unit_abbreviation]" value="'+res2.unit_abbreviation+'"><input hidden name="inv_items['+rowCount+'][item_quantity_uom_id]" value="'+res2.item_uom_id+'"><input hidden name="inv_items['+rowCount+'][item_quantity_uom_id_2]" value="'+res2.item_uom_id_2+'">'+
@@ -727,8 +729,23 @@ $(document).ready(function(){
                                                         '<td id="td_to_'+rowCount+'" align="right"><input class="cell_cur_value" hidden name="inv_items['+rowCount+'][item_cur_value]" value="'+$('#currency_value').val()+'"><input class="item_tots cell_price" hidden name="inv_items['+rowCount+'][item_total]" value="'+item_total+'"><span class="cell_price_text">'+item_total.toFixed(2)+'</span></td>'+
                                                         '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
                                                     '</tr>';
-                                var newRow = $(row_str);
-                                jQuery('table#invoice_list_tbl').append(newRow);
+                                var newRow = $(row_str);var exist_item=0;
+                                $('.itemcode_cls').each(function(){
+                                    if(this.value == item_code1){
+                                        fl_alert('warning',"This Item already added to list!")
+                                        exist_item = 1;
+                                    }
+                                });
+                                if(exist_item==0){
+                                    jQuery('table#invoice_list_tbl ').prepend(newRow);
+                                }
+                                
+                                //set row sew no
+                                var seq_no=1;
+                                $($('.row_counter_cls').get().reverse()).each(function(){
+                                  $('#'+(this.id)).text(seq_no); seq_no++;
+                                }); 
+//                                jQuery('table#invoice_list_tbl').append(newRow);
                                 var inv_total = parseFloat(invs_total1) + ((set_cookie_data=='')?item_total:0);
                                 $('#invoice_total').val(inv_total.toFixed(2));
                                 $('#total_amount').val(inv_total.toFixed(2));

@@ -1109,7 +1109,7 @@ class Sales_invoices extends CI_Controller {
 
                                                         <tr>
                                                         <td width="7%">&nbsp;</td>
-                                                        <td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">Interline Gems</td>
+                                                        <td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold">'.SYSTEM_NAME.'</td>
                                                         </tr>
                                                         <td width="7%">&nbsp;</td>
                                                         <td colspan="2" style="font:Verdana; color:#A8A8A8; font-weight:bold"></td>
