@@ -10,8 +10,11 @@ class Sales_invoices_model extends CI_Model
 //            echo '<pre>';            print_r($data); die;
             $this->db->select('i.*');
             $this->db->select('(select concat(first_name," ",last_name) from '.USER.' where auth_id = i.added_by) as sales_person');
+            $this->db->select('(select location_name from '.INV_LOCATION.' where id = i.location_id) as location_name');
             $this->db->select('c.customer_name,c.address,c.city,c.phone,pt.payment_term_name,pt.days_after');
             $this->db->from(INVOICES.' i'); 
+            $this->db->join(INVOICE_DESC.' ind','ind.invoice_id = i.id'); 
+            $this->db->join(ITEMS.' itm','itm.id = ind.item_id'); 
             $this->db->join(CUSTOMERS.' c','c.id = i.customer_id'); 
             $this->db->join(PAYMENT_TERMS.' pt','pt.id = i.payement_term_id');  
             $this->db->where('i.deleted',0); 
@@ -20,9 +23,11 @@ class Sales_invoices_model extends CI_Model
             
             if(isset($data['invoice_no'])) $this->db->like('i.invoice_no',$data['invoice_no']);
             if(isset($data['customer_id']) && $data['customer_id']!='') $this->db->where('i.customer_id',$data['customer_id']);
+            if(isset($data['item_code']) && $data['item_code']!='') $this->db->like('itm.item_code',$data['item_code']);
             
             if($this->session->userdata(SYSTEM_CODE)['user_group_id']!=0) $this->db->where('i.inv_group_id',$this->session->userdata(SYSTEM_CODE)['user_group_id']); 
             
+            $this->db->group_by('i.id');
             $this->db->order_by('i.id','desc'); 
             $result = $this->db->get()->result_array();  
 //            echo $this->db->last_query();die;

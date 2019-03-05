@@ -3,7 +3,15 @@
     
 $(document).ready(function(){  
 	get_results();
+    $("#search_btn").click(function(){ 
+		event.preventDefault();
+		get_results();
+    }); 
     $("#ledger_name").keyup(function(){ 
+		event.preventDefault();
+		get_results();
+    }); 
+    $("#gl_acc_type_id").change(function(){ 
 		event.preventDefault();
 		get_results();
     }); 
@@ -71,7 +79,7 @@ $(document).ready(function(){
    
                     <div class="box-body">
                         <div class="row"> 
-                            <div class="col-md-6"> 
+                            <div class="col-md-4"> 
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">Ledger Name<span style="color: red"></span></label>
                                         <div class="col-md-9">                                            
@@ -84,8 +92,21 @@ $(document).ready(function(){
                                         </div>
                                     </div> 
                             </div> 
+                            <div class="col-md-4"> 
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Ledger Type<span style="color: red"></span></label>
+                                        <div class="col-md-9">                                            
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                                                 <?php echo form_dropdown('gl_acc_type_id',$gl_acc_type_list,set_value('gl_acc_type_id'),' class="form-control select2" id="gl_acc_type_id"');?>
+                                                
+                                            </div>                                            
+                                            <span class="help-block"><?php echo form_error('ledger_name');?></span>
+                                        </div>
+                                    </div> 
+                            </div> 
                             
-                                         <div class="col-md-6">
+                                         <div class="col-md-4">
                                              <div class="form-group">
                                                     <label class="col-md-3 control-label">Active</label>
                                                     <div class="col-md-9">                                            

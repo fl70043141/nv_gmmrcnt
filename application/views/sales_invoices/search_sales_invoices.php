@@ -12,10 +12,10 @@ $(document).ready(function(){
 		event.preventDefault();
 		get_results();
     });
-//    $("#status").change(function(){
-//		event.preventDefault();
-//		get_results();
-//    });
+    $("#search_btn").click(function(){
+		event.preventDefault();
+		get_results();
+    });
 	
 	
 	function get_results(){
@@ -80,7 +80,7 @@ $(document).ready(function(){
    
                     <div class="box-body">
                         <div class="row"> 
-                            <div class="col-md-6"> 
+                            <div class="col-md-4"> 
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">Invoice No:<span style="color: red">*</span></label>
                                         <div class="col-md-9">                                            
@@ -90,6 +90,19 @@ $(document).ready(function(){
 
                                             </div>                                            
                                             <span class="help-block"><?php echo form_error('invoice_no');?></span>
+                                        </div>
+                                    </div> 
+                            </div>
+                            <div class="col-md-4"> 
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Item Code:<span style="color: red">*</span></label>
+                                        <div class="col-md-9">                                            
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                                <?php echo form_input('item_code', set_value('item_code'), 'id="item_code" class="form-control" placeholder="Search by Item Code"'); ?>
+
+                                            </div>                                            
+                                            <span class="help-block"><?php echo form_error('item_code');?></span>
                                         </div>
                                     </div> 
                             </div>
@@ -108,7 +121,7 @@ $(document).ready(function(){
                                        </div>
                                    </div> 
                             </div>-->
-                            <div class="col-md-6"> 
+                            <div class="col-md-4"> 
                                 <div class="form-group">
                                        <label class="col-md-3 control-label">Customer</label>
                                            <div class="col-md-9">                                            

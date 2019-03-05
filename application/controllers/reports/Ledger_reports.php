@@ -30,7 +30,6 @@ class Ledger_reports extends CI_Controller {
         }
         
         public function expenses(){
-            
 //            $this->add();
 //            $data['search_list'] = $this->Sales_invoices_model->search_result();
             $data['main_content']='reports_all/ledgers/expenses/search_summary_report'; 
@@ -392,7 +391,7 @@ class Ledger_reports extends CI_Controller {
             $expense_data = $this->load_expensess_data(); 
             $inputs = $this->input->get();
             
-//                    echo '<pre>';            print_r($inputs); die;
+//                    echo '<pre>';            print_r($expense_data); die;
             $this->load->library('Pdf'); 
             $this->load->model('Items_model');
             $def_cur = get_single_row_helper(CURRENCY,'code="'.$this->session->userdata(SYSTEM_CODE)['default_currency'].'"');

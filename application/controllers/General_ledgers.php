@@ -16,6 +16,7 @@ class General_ledgers extends CI_Controller {
         function view_search($datas=''){
             $data['search_list'] = $this->General_ledgers_model->search_result();
             $data['form_setup'] = $this->input->get();
+            $data['gl_acc_type_list'] = get_dropdown_data(GL_CHART_TYPE,'type_name','id','No Ledger Type');  
 //            $data['vehicle_owner_list'] = get_dropdown_data(VEHICLE_OWNERS,'owner_name','id','All Owners');
             $data['main_content']='general_ledgers/search_general_ledgers';  
             $this->load->view('includes/template',$data);
@@ -207,11 +208,12 @@ class General_ledgers extends CI_Controller {
         
         function search(){
             $input = $this->input->post();
-		$search_data=array( 'account_name' => $this->input->post('account_name'), 
+		$search_data=array( 'ledger_name' => $this->input->post('ledger_name'), 
+                                    'gl_acc_type_id' => $this->input->post('gl_acc_type_id'),
                                     'status' => (isset($input['status']))?1:0 
                                 ); 
 		$data_view['search_list'] = $this->General_ledgers_model->search_result($search_data);
-                                        
+                
 		$this->load->view('general_ledgers/search_general_ledgers_result',$data_view);
 	}
                                         

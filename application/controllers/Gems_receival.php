@@ -146,20 +146,19 @@ class Gems_receival extends CI_Controller {
             $tot_lapidary_cost = 0;
             foreach ($inputs['inv_items_btm'] as $gmi_item_id => $gmr_rec){
                 
-//            echo '<pre>';            print_r($gmr_rec); die;
                 $data['gmr_records'][] = array(
                                             'gem_receive_id' => $gmr_id,
                                             'gem_issue_id' => $gmr_rec['gem_issue_id'],
                                             'item_id' => $gmr_rec['item_id'],
                                             'item_category_id' => $gmr_rec['category_id'],
-                                            'certification' => $gmr_rec['certification'],
+                                            'certification' => $gmr_rec['certification_select'],
                                             'record_type' => 20, //gem Receive 20
                                             'progress_stats' => 1, 
                                             'certification_no' => $gmr_rec['certification_no'],
                                             'color' => $gmr_rec['color_dd_id'],
-                                            'treatment' => $gmr_rec['treatment'],
-                                            'shape' => $gmr_rec['shape_dd_id'],
-                                            'origin' => $gmr_rec['origin_id'],
+                                            'treatment' => $gmr_rec['treatment_select'],
+                                            'shape' => $gmr_rec['shape_select'],
+                                            'origin' => $gmr_rec['origin_select'],
                                             'length' => $gmr_rec['length'],
                                             'width' => $gmr_rec['width'],
                                             'height' => $gmr_rec['height'],
@@ -244,7 +243,7 @@ class Gems_receival extends CI_Controller {
                                             'status' => 1,
                                     );
             
-//            echo '<pre>';            print_r($inputs); die;
+//            echo '<pre>';            print_r($data); die;
 		$add_stat = $this->gems_receival_model->add_db($data);
                 
 		if($add_stat[0]){ 

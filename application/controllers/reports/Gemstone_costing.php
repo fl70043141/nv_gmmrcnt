@@ -107,9 +107,8 @@ class Gemstone_costing extends CI_Controller {
                                 <tr style=""> 
                                     <th width="6%" style="text-align: left;"><u><b>#</b></u></th>  
                                     <th width="10%" style="text-align: left;"><u><b>Code</b></u></th>  
-                                    <th width="10%" style="text-align: left;"><u><b>Desc</b></u></th>  
-                                    <th width="8%" style="text-align: center;"><u><b>Weight</b></u></th> 
-                                    <th width="7%" style="text-align: center;" ><u><b>Pieces</b></u></th>  
+                                    <th width="13%" style="text-align: left;"><u><b>Desc</b></u></th>  
+                                    <th width="12%" style="text-align: center;"><u><b>Weight</b></u></th> 
                                     <th width="17%" style="text-align: left;" ><u><b>Type</b></u></th>  
                                     <th width="14%" style="text-align: left;" ><u><b>Person</b></u></th>  
                                     <th width="14%" style="text-align: right;"><u><b>Cost</b></u></th> 
@@ -142,9 +141,8 @@ class Gemstone_costing extends CI_Controller {
                        <tr>
                            <td style="width:6%;">'.$i.'</td> 
                            <td style="width:10%;" align="left">'.$item['item_code'].'</td>
-                           <td style="width:10%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
-                           <td style="width:8%;" align="center">'.$item['units_available'].' '.$item['uom_name'].'</td>
-                           <td style="width:7%;" align="center">'.(($item['uom_id_2']!=0)?$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
+                           <td style="width:13%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                           <td style="width:12%;" align="center">'.$item['units_available'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
                            <td style="width:17%;" align="left">Purchase</td>
                            <td style="width:14%;" align="left">Supplier</td> 
                            <td style="width:14%;" align="right">'. number_format($purch_cost,2).'</td>
@@ -153,7 +151,7 @@ class Gemstone_costing extends CI_Controller {
                    if(!empty($item['lapidary_costs'])){
                        foreach ($item['lapidary_costs'] as $lcost){
                           $html .= '<tr>
-                                              <td colspan="5"></td> 
+                                              <td colspan="4"></td> 
                                               <td align="left">'.$lcost['dropdown_list_name'].'</td>
                                               <td align="left">'.$lcost['dropdown_value'].'</td> 
                                               <td align="right">'. number_format($lcost['amount_cost'],2).'</td>

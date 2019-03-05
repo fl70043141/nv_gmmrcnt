@@ -169,7 +169,9 @@ class Sales_invoices extends CI_Controller {
                 $standard_price_info = $this->Sales_invoices_model->get_item_standard_prices($inv_item['item_id']);
                 $standard_price = (!empty($standard_price_info))?$standard_price_info[0]['price_amount']:'';
            
-//            echo '<pre>';            print_r($data); die;
+                //convert to invoice currency 
+                $standard_price = ($standard_price/$standard_price_info[0]['currency_value'])*$cur_det['value'];
+//            echo '<pre>';            print_r($standard_price); die;
                 $total += $inv_item['item_quantity']*$inv_item['item_unit_cost']*(100-$inv_item['item_line_discount'])*0.01;
                 $item_total = $total; 
                 $total_stnd += $inv_item['item_quantity']*$standard_price;
@@ -723,7 +725,7 @@ class Sales_invoices extends CI_Controller {
             $search_data=array( 
                                 'invoice_no' => $this->input->post('invoice_no'),
                                 'customer_id' => $input['customer_id'],  
-//                                    'category' => $this->input->post('category'), 
+                                'item_code' => $this->input->post('item_code'), 
                                 ); 
             $invoices['search_list'] = $this->Sales_invoices_model->search_result($search_data);
             
@@ -960,7 +962,7 @@ class Sales_invoices extends CI_Controller {
                                                         <tr style=""> 
                                                             <th width="16%" style="text-align: left;"><u><b>Gemstone</b></u></th>  
                                                             <th width="10%" style="text-align: left;"><u><b>Item Code</b></u></th>  
-                                                            <th width="10%" style="text-align: left;"><u><b>NH/H</b></u></th> 
+                                                            <th width="10%" style="text-align: left;"><u><b>CDC</b></u></th> 
                                                             <th  width="10%" style="text-align: left;" ><u><b>Shape</b></u></th>  
                                                             <th  width="12%" style="text-align: left;" ><u><b>Color</b></u></th>  
                                                             <th  width="12%" style="text-align: left;" ><u><b>Origin</b></u></th>  

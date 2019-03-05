@@ -13,11 +13,11 @@ class General_ledgers_model extends CI_Model
             $this->db->select('(select type_name from '.GL_CHART_TYPE.' where id = ic.account_type_id) as account_type_name');
             $this->db->from(GL_CHART_MASTER." ic");  
             $this->db->where('ic.deleted',0);
-            if($data!=''){
-                $this->db->where('ic.status',$data['status']);
-                $this->db->like('ic.account_name',$data['account_name']);
-            }
             
+            if(isset($data['ledger_name']) && $data['ledger_name'] !='') $this->db->like('ic.account_name',$data['ledger_name']);
+            if(isset($data['gl_acc_type_id']) && $data['gl_acc_type_id'] !='') $this->db->where('ic.account_type_id',$data['gl_acc_type_id']);
+            if(isset($data['status'])) $this->db->where('ic.status',$data['status']);
+        
             $result = $this->db->get()->result_array();  
 //            echo $this->db->last_query(); die;
             return $result;

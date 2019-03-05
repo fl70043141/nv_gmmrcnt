@@ -4,6 +4,8 @@
                 <th>#</th>
                 <th>Sales Inv No</th> 
                 <th>Customer</th>  
+                <th>Currency</th>  
+                <th>Location</th>  
                 <th>Date</th> 
                 <th>Due Date</th> 
                 <th>Action</th>
@@ -23,6 +25,8 @@
                                <td>'.($i+1).'</td> 
                                <td>'.$search['invoice_no'].'</td>
                                <td>'.$search['customer_name'].'</td> 
+                               <td>'.$search['currency_code'].'</td> 
+                               <td>'.$search['location_name'].'</td> 
                                <td>'.(($search['invoice_date']>0)?date('d M Y',$search['invoice_date']):'').'</td>
                                <td>'.(($search['days_after']>0)?$inv_date:'').'</td>
                                
