@@ -95,6 +95,7 @@ class Quick_entries extends CI_Controller {
 	function create(){  
             
             $inputs = $this->input->post(); 
+//            echo '<pre>';            print_r($inputs); die; 
             $this->load->model('GL_quick_entry_accounts_model');
             $entry_id = get_autoincrement_no(GL_QUICK_ENTRY);
             $data = array();
@@ -107,6 +108,7 @@ class Quick_entries extends CI_Controller {
                                                 'id' => $entry_id,
                                                 'quick_entry_account_id' => $entry['quick_entry_account_id'],
                                                 'amount' => $entry['amount'],
+                                                'memo' => $entry['memo'], 
                                                 'currency_code' => $entry['currency_code'], 
                                                 'currency_value' => $cur_det['value'], 
                                                 'entry_date' => strtotime($entry['entry_date']),  

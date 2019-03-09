@@ -4,6 +4,7 @@
                         'id'=>"",
                         'entry_date'=>date('m/d/Y'),
                         'quick_entry_account_id'=>'',
+                        'memo'=>'', 
                         'amount'=>0, 
                         'currency_code'=>$this->session->userdata(SYSTEM_CODE)['default_currency'], 
                         'status'=>1,
@@ -123,6 +124,14 @@ endswitch;
                                                <td>
                                                     <div class="col-md-12">
                                                     <div class="form-group">
+                                                        <label for="memo">Memo</label>
+                                                        <?php  echo form_input('memo',set_value('memo',$result['memo']),' class="form-control  add_item_inpt"  id="memo" placeholder="Have any note"');?>
+                                                    </div>
+                                                    </div>
+                                               </td>
+                                               <td>
+                                                    <div class="col-md-12">
+                                                    <div class="form-group">
                                                         <label for="currency_code">Currency</label>
                                                         <?php  echo form_dropdown('currency_code',$currency_list,set_value('currency_code',$result['currency_code']),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="currency_code"');?>
                                                     </div>
@@ -155,6 +164,7 @@ endswitch;
                                                <th width="5%">#</th>
                                                <th width="10%"  style="text-align: center;">Date</th> 
                                                <th width="20%" style="text-align: left;">Entry Account</th>  
+                                               <th width="15%" style="text-align: left;">Memo</th> 
                                                <th width="15%" style="text-align: center;">Currency</th> 
                                                <th width="15%" style="text-align: right;">Amount</th> 
                                                <th width="5%" style="text-align: center;">Action</th>
@@ -269,6 +279,7 @@ $(document).ready(function(){
                             '<td>'+(rowCount)+'</td>'+
                             '<td><input hidden name="inv_items['+rowCount+'_'+qe_id+'][entry_date]" value="'+$('#entry_date').val()+'">'+$('#entry_date').val()+'</td>'+
                             '<td><input hidden name="inv_items['+rowCount+'_'+qe_id+'][quick_entry_account_id]" value="'+$('#quick_entry_account_id').val()+'">'+$('#quick_entry_account_id option:selected').text()+'</td>'+
+                            '<td><input hidden name="inv_items['+rowCount+'_'+qe_id+'][memo]" value="'+$('#memo').val()+'">'+$('#memo').val()+'</td>'+
                             '<td align="center"><input  hidden name="inv_items['+rowCount+'_'+qe_id+'][currency_code]" value="'+$('#currency_code').val()+'">'+$('#currency_code').val()+'</td>'+
                             '<td align="right"><input class="item_tots" hidden name="inv_items['+rowCount+'_'+qe_id+'][amount]" value="'+$('#amount').val()+'">'+parseFloat($('#amount').val()).toFixed(2)+'</td>'+
                             '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+

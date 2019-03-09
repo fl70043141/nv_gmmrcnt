@@ -551,7 +551,7 @@ class Items extends CI_Controller {
                                     'item_code' => $this->input->post('item_code'),
                                     'status' => (isset($input['status']))?1:0 
                                 ); 
-		$data_view['search_list'] = $this->Items_model->search_result($search_data,50);
+		$data_view['search_list'] = $this->Items_model->search_result($search_data,(isset($input['row_limit']) && is_numeric($input['row_limit']))?$input['row_limit']:50);
                                         
 		$this->load->view('items/search_items_result',$data_view);
 	}

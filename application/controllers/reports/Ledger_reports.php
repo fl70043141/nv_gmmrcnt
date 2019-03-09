@@ -114,7 +114,8 @@ class Ledger_reports extends CI_Controller {
                         $expenses_group['expenses_group'][$expenses['account_type_id']]['data'][$expenses['id']]=$expenses; 
                     }
                 }
-//                echo '<pre>';            print_r($expenses_group); die;
+//                sort($expenses_group['expenses_group']);
+//                echo '<pre>';            print_r($expenses_list); die;
             return $expenses_group;
         }
         public function  search_ledger_month(){ // view month ledger
@@ -467,7 +468,7 @@ class Ledger_reports extends CI_Controller {
                        $html .= '
                            <tr>
                                <td style="width:8%;">'.$i.'</td> 
-                               <td style="width:40%;" align="left">'.$expense['account_name'].'</td>
+                               <td style="width:40%;" align="left">'.$expense['account_name'].' '.(($expense['memo']!='')?'('.$expense['memo'].')':'').'</td>
                                <td style="width:12%;" align="center">'. date(SYS_DATE_FORMAT, $expense['entry_date']).'</td>
                                <td style="width:20%;" align="right">'.$expense['currency_code'].' '. number_format($expense['amount'],2).'</td>
                                <td style="width:20%;" align="right">'. number_format($expense['expense_amount'],2).'</td>

@@ -187,6 +187,7 @@ class Reports_all_model extends CI_Model
         $this->db->from(GL_QUICK_ENTRY.' q');
         $this->db->where('qa.deleted',0);
         $this->db->group_by('q.id');
+//        $this->db->order_by('q.entry_date');
         
         
         if(isset($data['quick_entry_acc_id']) && $data['quick_entry_acc_id']!='') $this->db->where("q.quick_entry_account_id",$data['quick_entry_acc_id']);

@@ -122,6 +122,24 @@ endswitch;
                                                     </div> 
                                                 </div> 
                                             </div> 
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">Currency<span style="color: red"></span></label>
+                                                    <div class="col-md-9">    
+                                                        <?php echo form_input('currency_code', set_value('currency_code', $result['currency_code']), 'id="currency_code" class="form-control" placeholder="Eg Currency Code"'.$dis.' '.$o_dis.' '); ?>
+                                                        <span class="help-block"><?php echo form_error('currency_code');?>&nbsp;</span>
+                                                    </div> 
+                                                </div> 
+                                            </div> 
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">Memo<span style="color: red"></span></label>
+                                                    <div class="col-md-9">    
+                                                        <?php echo form_input('memo', set_value('memo', $result['memo']), 'id="currency_code" class="form-control" placeholder="-"'.$dis.' '.$o_dis.' '); ?>
+                                                        <span class="help-block"><?php echo form_error('memo');?>&nbsp;</span>
+                                                    </div> 
+                                                </div> 
+                                            </div> 
                             
                                             <div class="col-md-12">
                                                 <div class="form-group">

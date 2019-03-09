@@ -8,7 +8,7 @@ class Purchasing_returns_model extends CI_Model
         
         
         public function search_purchased_invoice($inv_no='',$from='',$to=''){
-            $this->db->select("si.supplier_invoice_no,si.invoice_date,si.currency_code"); 
+            $this->db->select("si.supplier_invoice_no,si.invoice_date,si.currency_code, si.currency_value"); 
             $this->db->select("sd.id as sd_id,sd.item_id,sd.supplier_item_desc,sd.purchasing_unit,sd.secondary_unit,sd.purchasing_unit_uom_id,sd.secondary_unit_uom_id,sd.purchasing_unit_price");
             
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = sd.purchasing_unit_uom_id)  as unit_abbreviation');
@@ -115,6 +115,18 @@ class Purchasing_returns_model extends CI_Model
             $this->db->where('deleted',0);
             $result = $this->db->get()->result_array();  
             
+            return $result;
+	}
+         public function get_item_standard_prices($item_id,$where=''){ 
+            $this->db->select('ip.*');  
+            $this->db->from(ITEM_PRICES." ip");    
+            $this->db->where('ip.item_id',$item_id);
+            $this->db->where('ip.deleted',0);
+            $this->db->where('ip.status',1);
+            $this->db->where('ip.item_price_type',3); //3 for standard price
+            if($where!='') $this->db->where($where);
+            $result = $this->db->get()->result_array();  
+//            echo $this->db->last_query(); die;
             return $result;
 	}
         

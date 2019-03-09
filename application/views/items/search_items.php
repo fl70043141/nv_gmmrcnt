@@ -28,6 +28,7 @@ $(document).ready(function(){
 //        fl_alert('info',)
     }); 
 	function get_results(){
+        $("#result_search").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Retrieving Data..');  
         $.ajax({
 			url: "<?php echo site_url('Items/search');?>",
 			type: 'post',
@@ -87,10 +88,10 @@ $(document).ready(function(){
    
                     <div class="box-body">
                         <div class="row"> 
-                            <div class="col-md-6"> 
+                            <div class="col-md-4"> 
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Search by Name<span style="color: red"></span></label>
-                                        <div class="col-md-9">                                            
+                                        <label class="col-md-5 control-label">Search by Name<span style="color: red"></span></label>
+                                        <div class="col-md-7">                                            
                                             <div class="input-group">
                                                 <span class="input-group-addon"><span class="fa fa-search"></span></span>
                                                 <?php echo form_input('item_name', set_value('item_name'), 'id="item_name" class="form-control" placeholder="Search by Item Name"'); ?>
@@ -98,9 +99,12 @@ $(document).ready(function(){
                                             </div>                                            
                                         </div>
                                     </div> 
+                                </div> 
+                            
+                                <div class="col-md-4"> 
                                     <div class="form-group">
-                                        <label class="col-md-3 control-label">Search by Code<span style="color: red"></span></label>
-                                        <div class="col-md-9">                                            
+                                        <label class="col-md-5 control-label">Search by Code<span style="color: red"></span></label>
+                                        <div class="col-md-7">                                            
                                             <div class="input-group">
                                                 <span class="input-group-addon"><span class="fa fa-search"></span></span>
                                                 <?php echo form_input('item_code', set_value('item_code'), 'id="item_code" class="form-control" placeholder="Search by Item Code"'); ?>
@@ -108,22 +112,37 @@ $(document).ready(function(){
                                             </div>                                             
                                         </div>
                                     </div> 
-                            </div> 
+                                </div>  
                             
-                                         <div class="col-md-6">
-                                            <div class="form-group">
-                                            <label class="col-md-3 control-label">Category<span style="color: red"></span></label>
-                                                <div class="col-md-9">                                            
+                                <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label">Category<span style="color: red"></span></label>
+                                                <div class="col-md-7">                                            
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-search"></span></span>
                                                           <?php  echo form_dropdown('item_category_id',$item_category_list,set_value('item_category_id'),' class="form-control select2" data-live-search="true" id="item_category_id"');?> 
 
                                                     </div>                                            
                                                 </div>
-                                            </div>  
+                                        </div>  
+                                    </div>
+                            <div class="col-md-4"> 
+                                    <div class="form-group">
+                                        <label class="col-md-5 control-label">Rows<span style="color: red"></span></label>
+                                        <div class="col-md-7">                                            
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                                                <?php echo form_input('row_limit', set_value('row_limit',50), 'id="row_limit" class="form-control" placeholder="row_limit"'); ?>
+
+                                            </div>                                             
+                                        </div>
+                                    </div> 
+                                </div>
+                            
+                                <div class="col-md-4"> 
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Active</label>
-                                                <div class="col-md-9">                                            
+                                                <label class="col-md-5 control-label">Active</label>
+                                                <div class="col-md-7">                                            
                                                     <div class="input-group">
                                                          <label class="switch  switch-small">
                                                             <!--<input type="checkbox"  value="0">-->

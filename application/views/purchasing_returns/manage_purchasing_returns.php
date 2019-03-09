@@ -309,7 +309,14 @@ function get_inv_items_res(){
 //                                    fl_alert('info',elment.stock_info.units_available)
                                     var inv_date = timeConverter(elment.invoice_date);
                                     var sub_tot = parseFloat(elment.purchasing_unit)* parseFloat(elment.purchasing_unit_price);
-                                    var newRow = '<tr id="rowb_'+elment.sd_id+'">'+
+                                    
+                                    var exist_check = $("[name='inv_items_btm["+elment.sd_id+"][item_code]']").val();
+                                    var hid_var = ' ';
+                                    if(typeof(exist_check) != "undefined"){
+                                       hid_var = 'hidden'; 
+                                    }
+                                    
+                                    var newRow = '<tr '+hid_var+' id="rowb_'+elment.sd_id+'">'+
                                                         '<td style="text-align: center;">'+elment.supplier_invoice_no+'<input hidden id="'+elment.sd_id+'_supplier_invoice_no" value="'+elment.supplier_invoice_no+'"></td>'+
                                                         '<td style="text-align: center;">'+elment.item_code+'<input hidden id="'+elment.sd_id+'_item_code" value="'+elment.item_code+'"><input hidden id="'+elment.sd_id+'_item_id" value="'+elment.item_id+'"></td>'+
                                                         '<td style="text-align: center;">'+elment.supplier_item_desc+'<input hidden id="'+elment.sd_id+'_supplier_item_desc" value="'+elment.supplier_item_desc+'"></td>'+
@@ -321,13 +328,24 @@ function get_inv_items_res(){
                                         }else{
                                              newRow +=   '<td style="text-align: left;" colspan="2">'+elment.unit_abbreviation+'<br><input  step="0.01" max="'+elment.stock_info.units_available+'" type="number" min="0" max="'+elment.stock_info.units_available_1+'" id="'+elment.sd_id+'_unit_to_credit"  step=".001"  value="'+elment.stock_info.units_available+'"><input hidden  id="'+elment.sd_id+'_uom_abr" value="'+elment.unit_abbreviation+'"><input hidden  id="'+elment.sd_id+'_uom_id" value="'+elment.purchasing_unit_uom_id+'"></td>';
                                         }
-                                            newRow +=  '<td style="text-align: left;">'+elment.currency_code+'<input  step=".001"  type="number" id="'+elment.sd_id+'_purchasing_unit_price"  value="'+parseFloat(elment.purchasing_unit_price).toFixed(2)+'"></td>'+
-                                                       '<td style="text-align: right;"><b>'+sub_tot.toFixed(2)+'<input hidden id="'+elment.sd_id+'_sub_tot" value="'+sub_tot+'"></b></td>'+
+                                            newRow +=  '<td style="text-align: left;">'+elment.currency_code+'<input readonlyc step=".001" class="prc_txt"  type="number" id="'+elment.sd_id+'_purchasing_unit_price"  value="'+parseFloat(elment.purchasing_unit_price).toFixed(2)+'"></td>'+
+                                                       '<td style="text-align: right;"><b>'+elment.currency_code+' '+sub_tot.toFixed(2)+'<input readonly class="prc_txt" id="'+elment.sd_id+'_sub_tot" value="'+parseFloat(sub_tot).toFixed(2)+'"> </b><input hidden class="prc_txt" id="'+elment.sd_id+'_curr_code" value="'+elment.currency_code+'"><input hidden class="prc_txt" id="'+elment.sd_id+'_curr_value" value="'+elment.currency_value+'"></td>'+
                                                        '<td><span  id="'+elment.sd_id+'" class="btn btn-success fa fa-plus add_res_row"></span></td>'+
                                                   '</tr>';
                                     jQuery('#bottom_rows_restbl').append(newRow); 
                              });
                              
+                                    $('.prc_txt').keyup(function(){
+                                        var tmpid = (this.id).split("_")[0];
+                                        if(this.id == tmpid+'_sub_tot'){
+                                            var new_prc_unit = parseFloat(this.value) / parseFloat($('#'+tmpid+'_purchasing_unit').val());
+                                            $('#'+tmpid+'_purchasing_unit_price').val(new_prc_unit.toFixed(2));
+                                        }
+                                        if(this.id == tmpid+'_purchasing_unit_price'){
+                                            var new_prc_tot = parseFloat(this.value) * parseFloat($('#'+tmpid+'_purchasing_unit').val());
+                                            $('#'+tmpid+'_sub_tot').val(new_prc_tot.toFixed(2));
+                                        }
+                                    });
                                     $('.add_res_row').click(function(){
                                         
                                         var add_id = this.id;
@@ -337,25 +355,32 @@ function get_inv_items_res(){
                                         var add_item_id = $("#"+add_id+"_item_id").val()
                                         var add_supplier_item_desc = $("#"+add_id+"_supplier_item_desc").val()
                                         var add_purchasing_unit_price = $("#"+add_id+"_purchasing_unit_price").val()
+                                        var add_sub_tot = parseFloat($("#"+add_id+"_sub_tot").val());
                                         var add_purchasing_unit = $("#"+add_id+"_purchasing_unit").val()
                                         var add_unit_to_credit = $("#"+add_id+"_unit_to_credit").val();
                                         var add_unit_to_credit_2 =(typeof $("#"+add_id+"_unit_to_credit_2").val()!== 'undefined')?$("#"+add_id+"_unit_to_credit_2").val():0;
                                         var add_supplier_inv_date =  timeConverter($("#"+add_id+"_supplier_inv_date").val());
-
+                                        var add_curr_code =  $("#"+add_id+"_curr_code").val();
+                                        var add_curr_value =  parseFloat($("#"+add_id+"_curr_value").val());
+                                        
                                         var add_uom_id = $("#"+add_id+"_uom_id").val();
                                         var add_uom_id_2 = (typeof $("#"+add_id+"_uom_id_2").val()!== 'undefined')?$("#"+add_id+"_uom_id_2").val():0;
 
                                         var add_uom_abr =  $("#"+add_id+"_uom_abr").val();
                                         var add_uom_abr_2 =  (typeof $("#"+add_id+"_uom_abr_2").val()!== 'undefined')?$("#"+add_id+"_uom_abr_2").val():0;
 //                                       fl_alert('info',add_uom_abr_2)
-                                        var add_sub_tot = parseFloat(add_unit_to_credit)* parseFloat(add_purchasing_unit_price);
-//                                     
+//                                        var add_sub_tot = parseFloat(add_unit_to_credit)* parseFloat(add_purchasing_unit_price);
+                                        if(isNaN(add_sub_tot)){
+                                            fl_alert('warning', "Please recheck the amount!");
+                                            return false;
+                                        }
+
                                         var newRow = '<tr id="rowt_'+add_id+'">'+
                                                         '<td style="text-align: center;">'+add_supplier_invoice_no+'<input hidden name="inv_items_btm['+add_id+'][invoice_no]" value="'+add_supplier_invoice_no+'"></td>'+
                                                         '<td style="text-align: center;">'+add_item_code+'<input hidden name="inv_items_btm['+add_id+'][item_code]" value="'+add_item_code+'"><input hidden name="inv_items_btm['+add_id+'][item_id]" value="'+add_item_id+'"></td>'+
                                                         '<td style="text-align: center;">'+add_supplier_item_desc+'<input hidden name="inv_items_btm['+add_id+'][supplier_item_desc]" value="'+add_supplier_item_desc+'"></td>'+
                                                         '<td style="text-align: center;">'+add_supplier_inv_date+'<input hidden name="inv_items_btm['+add_id+'][supplier_inv_date]" value="'+add_invoice_date+'"></td>'+
-                                                        '<td style="text-align: right;">'+add_purchasing_unit+' '+add_uom_abr+'<input hidden name="inv_items_btm['+add_id+'][purchasing_unit]" value="'+add_purchasing_unit_price+'"></td>'+
+                                                        '<td style="text-align: right;">'+add_purchasing_unit+' '+add_uom_abr+'<input hidden name="inv_items_btm['+add_id+'][purchasing_unit]" value="'+add_purchasing_unit_price+'"> <input hidden name="inv_items_btm['+add_id+'][currency_code]" value="'+add_curr_code+'"> <input hidden name="inv_items_btm['+add_id+'][currency_value]" value="'+add_curr_value+'"></td>'+
                                                         '<td style="text-align: right;" colspan="2">'+parseFloat(add_unit_to_credit).toFixed(2)+' '+add_uom_abr+((add_uom_abr_2!=0)?'| '+add_unit_to_credit_2+' '+add_uom_abr_2:'')+'<input hidden name="inv_items_btm['+add_id+'][purchasing_unit]" value="'+add_unit_to_credit+'"><input hidden name="inv_items_btm['+add_id+'][secondary_unit]" value="'+add_unit_to_credit_2+'"><input hidden name="inv_items_btm['+add_id+'][uom_id]" value="'+add_uom_id+'"><input hidden name="inv_items_btm['+add_id+'][uom_id_2]" value="'+add_uom_id_2+'"></td>'+
                                                         '<td style="text-align: right;">'+parseFloat(add_purchasing_unit_price).toFixed(2)+'<input hidden name="inv_items_btm['+add_id+'][purchasing_unit_price]" value="'+parseFloat(add_purchasing_unit_price).toFixed(2)+'"></td>'+
                                                         '<td style="text-align: right;"><b>'+add_sub_tot.toFixed(2)+'<input hidden name="inv_items_btm['+add_id+'][sub_tot]" id="remove_subtot_'+add_id+'" value="'+add_sub_tot+'"></b></td>'+

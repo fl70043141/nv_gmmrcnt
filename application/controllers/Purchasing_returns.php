@@ -127,8 +127,26 @@ class Purchasing_returns extends CI_Controller {
                                 );
             $data['cn_desc'] = array(); 
             $data['item_stock_transection'] = array(); //stock transection purchasing
-            
+            $total_stnd = 0; $cn_total=0;$total_cost =0;
             foreach ($inputs['inv_items_btm'] as $inv_item){
+                
+                $standard_price_info = $this->Purchasing_returns_model->get_item_standard_prices($inv_item['item_id']);
+                $standard_price = (!empty($standard_price_info))?$standard_price_info[0]['price_amount']:'';
+           
+//            echo '<pre>';            print_r($standard_price_info); 
+            
+                //convert to invoice currency 
+                $standard_price_trx = ($standard_price/$standard_price_info[0]['currency_value']); //default valuation for trx date rate
+                $standard_price_value = ($standard_price_trx * $cur_det['value']); //de   fault valuation today date rate
+                $total_stnd += ($inv_item['purchasing_unit']*$standard_price_value); 
+                
+                $cn_total += $inv_item['purchasing_unit'] * ($inv_item['purchasing_unit_price']/$inv_item['currency_value'])*$cur_det['value'];
+//                 $total_cost += $standard_price*$inv_item['purchasing_unit']/$standard_price_info[0]['currency_value'];
+//                 echo 'calculated: '.$standard_price.' | Old_rate ($'.$standard_price.'); '.($standard_price/$standard_price_info[0]['currency_value']).' || new raate:('.$standard_price_value.') '.($standard_price/$cur_det['value']);
+//                 echo '<br> tot stand: '.$standard_price_trx.'<br>';
+//                 echo '<br> tot stand: '.$total_stnd.'<br>';
+//                 echo '<br> tot $cn_total: '.$cn_total.'<br>';
+                 
                 $data['cn_desc'][] = array(
                                             'cn_id' => $cn_id,
                                             'invoice_no' => $inv_item['invoice_no'],
@@ -179,7 +197,7 @@ class Purchasing_returns extends CI_Controller {
                                             'account' => 5, //5 inventory GL
                                             'account_code' => 1510, 
                                             'memo' => 'CN',
-                                            'amount' => (-$inputs['invoice_total']),
+                                            'amount' => (-$total_stnd),
                                             'currency_code' => $inputs['currency_code'], 
                                             'currency_value' => $cur_det['value'], 
                                             'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
@@ -199,7 +217,40 @@ class Purchasing_returns extends CI_Controller {
                                             'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
                                             'status' => 1,
                                     );
-//            echo '<pre>';            print_r($data); die;
+//                                    echo ' Tot stand trx: '. $total_stnd.' - '.($inputs['invoice_total']);
+            $ret_price_dif = $total_stnd - $inputs['invoice_total'];
+            if($ret_price_dif>0){
+                $data['gl_trans'][] = array(
+                                            'person_type' => 20,
+                                            'person_id' => $inputs['supplier_id'],
+                                            'trans_ref' => $cn_id,
+                                            'trans_date' => strtotime("now"),
+                                            'account' => 82, //82 For.ex losss
+                                            'account_code' => 5510,
+                                            'memo' => 'CN-ForEx Losss',
+                                            'amount' => abs($ret_price_dif),
+                                            'currency_code' => $inputs['currency_code'], 
+                                            'currency_value' => $cur_det['value'], 
+                                            'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                            'status' => 1,
+                                    );
+            }
+            if($ret_price_dif<0){
+                $data['gl_trans'][] = array(
+                                            'person_type' => 20,
+                                            'person_id' => $inputs['supplier_id'],
+                                            'trans_ref' => $cn_id,
+                                            'trans_date' => strtotime("now"),
+                                            'account' => 81, //81 //82 For.ex Gain
+                                            'account_code' => 4450,
+                                            'memo' => 'CN-ForEx Gain',
+                                            'amount' => abs($ret_price_dif),
+                                            'currency_code' => $inputs['currency_code'], 
+                                            'currency_value' => $cur_det['value'], 
+                                            'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                            'status' => 1,
+                                    );
+            }
                     
 		$add_stat = $this->Purchasing_returns_model->add_db($data);
                 

@@ -7,6 +7,7 @@
                 <th>Supplier Reference</th> 
                 <th>Date</th> 
                 <th>Due Date</th> 
+                <th>Currency</th> 
                 <th>Memo</th> 
                 <th>Action</th>
             </tr>
@@ -28,6 +29,7 @@
                                <td>'.$search['reference'].'</td>
                                <td>'.(($search['invoice_date']>0)?date('d M Y',$search['invoice_date']):'').'</td>
                                <td>'.(($search['days_after']>0)?$inv_date:'').'</td>
+                               <td>'.$search['currency_code'].'</td>
                                <td>'.$search['comments'].'</td>
                                
                                <td>';

@@ -39,10 +39,10 @@ class Pdf extends TCPDF
          
         $this->SetTextColor(0,0,0);
         $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Light.ttf', 'TrueTypeUnicode', '', 96);
-        $this->SetFont($fontname, 'I', 9);
+        $this->SetFont($fontname, 'I', 8.2);
         $html = '<table> 
                     <tr  align="center" style="line-height:20px;"><td  colspan="4"><br><br>Thank you for your Support! </td></tr>
-                    <tr><td width="100%" colspan="2" align="center">All items made with 22kt and 18kt gold carry a life time guarantee. However, any damage caused due to misuse is not included in this guarantee. Jewellery set with stones needs to be handled with extra care. Stones that fall due to rough or careless handling do not fall under this guarantee</td></tr>
+                    <tr><td width="100%" colspan="2" align="center">Acknowledges sales receipt describes above in items & fair condition; and is liable for payment in full, for any loss or damage whilst in their care/procession. The merchandise dscribed above are consigned on trust & approval for viewing and shall remain the property of '.SYSTEM_NAME.', Except & until paid for, in full.</td></tr>
                 </table>  '; 
         if($this->fl_footer_text ==1){
             $this->SetY(-30);

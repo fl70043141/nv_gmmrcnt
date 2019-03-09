@@ -1034,27 +1034,27 @@ class Sales_invoices extends CI_Controller {
                         
                         
             $html .= $payment.$old_gold;
-            $html .= '<table border="0">
-                            <tr style="line-height:80px;"><td  colspan="4"><br></td></tr>
-                            <tr>
-                                <td  align="center"></td> 
-                                <td align="center"></td> 
-                                <td  align="center">'.$this->session->userdata(SYSTEM_CODE)['user_last_name'].'</td> 
-                                <td align="center"></td> 
-                            </tr>  
-                            <tr style="line-height:5px;">
-                                <td  align="center">...............................................</td> 
-                                <td align="center">...............................................</td> 
-                                <td  align="center">...............................................</td> 
-                                <td align="center">...............................................</td> 
-                            </tr>  
-                            <tr>
-                                <td align="center">Sales Person</td> 
-                                <td align="center">Checked by</td> 
-                                <td align="center">Approved by</td>  
-                                <td align="center">Customer Signature</td> 
-                            </tr>  
-                           </table>  ';            
+//            $html .= '<table border="0">
+//                            <tr style="line-height:80px;"><td  colspan="4"><br></td></tr>
+//                            <tr>
+//                                <td  align="center"></td> 
+//                                <td align="center"></td> 
+//                                <td  align="center">'.$this->session->userdata(SYSTEM_CODE)['user_last_name'].'</td> 
+//                                <td align="center"></td> 
+//                            </tr>  
+//                            <tr style="line-height:5px;">
+//                                <td  align="center">...............................................</td> 
+//                                <td align="center">...............................................</td> 
+//                                <td  align="center">...............................................</td> 
+//                                <td align="center">...............................................</td> 
+//                            </tr>  
+//                            <tr>
+//                                <td align="center">Sales Person</td> 
+//                                <td align="center">Checked by</td> 
+//                                <td align="center">Approved by</td>  
+//                                <td align="center">Customer Signature</td> 
+//                            </tr>  
+//                           </table>  ';            
             
             $html .= '
             <style>
