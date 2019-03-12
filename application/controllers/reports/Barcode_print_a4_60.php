@@ -50,41 +50,41 @@ class Barcode_print_a4_60 extends CI_Controller {
             // create new PDF document
             $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-// set document information
-$pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('FAHRY LAFIR');
-$pdf->SetTitle('NVELOOP SOLUTION');
-$pdf->SetSubject('BARCODE PRINT');
-$pdf->SetKeywords('BARCODE');
+            // set document information
+            $pdf->SetCreator(PDF_CREATOR);
+            $pdf->SetAuthor('FAHRY LAFIR');
+            $pdf->SetTitle('NVELOOP SOLUTION');
+            $pdf->SetSubject('BARCODE PRINT');
+            $pdf->SetKeywords('BARCODE');
 
-// remove default header/footer
-$pdf->setPrintHeader(false);
-$pdf->setPrintFooter(false);
+            // remove default header/footer
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
 
-// set default monospaced font
-$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+            // set default monospaced font
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
-// set margins
-//$pdf->SetMargins(0,0,0);
+            // set margins
+            //$pdf->SetMargins(0,0,0);
 
-// set auto page breaks
-$pdf->SetAutoPageBreak(TRUE);
+            // set auto page breaks
+            $pdf->SetAutoPageBreak(TRUE);
 
-// set image scale factor
-$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+            // set image scale factor
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-// set some language-dependent strings (optional)
-if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-	require_once(dirname(__FILE__).'/lang/eng.php');
-	$pdf->setLanguageArray($l);
-}
+            // set some language-dependent strings (optional)
+            if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+                    require_once(dirname(__FILE__).'/lang/eng.php');
+                    $pdf->setLanguageArray($l);
+            }
 
-// ---------------------------------------------------------
+            // ---------------------------------------------------------
 
-// set font
-//$pdf->SetFont('times', 'BI', 20);
+            // set font
+            //$pdf->SetFont('times', 'BI', 20);
 
-$pdf->AddPage('P',array('297','210')); 
+            $pdf->AddPage('P',array('297','210')); 
             
             // define barcode style
                 $style = array(
@@ -108,7 +108,7 @@ $pdf->AddPage('P',array('297','210'));
                 $bc_arr = array(); 
                 $count=1;
                 
-                require_once dirname(__FILE__) . '\..\..\libraries\tcpdf\tcpdf_barcodes_1d.php';
+                require_once dirname(__FILE__) . '/../../libraries/tcpdf/tcpdf_barcodes_1d.php';
                 $barcodeobj = new TCPDFBarcode($inputs['item_code'], 'C128');
                 $img =  $barcodeobj->getBarcodePngData(2,35); 
                 $base64 = 'data:image/png;base64,' . base64_encode($img);  
