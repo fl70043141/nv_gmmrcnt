@@ -123,7 +123,7 @@ $pdf->AddPage('P',array('297','210'));
                 }
 //                echo '<pre>';            print_r($inputs); die;  
                 //if($rows < 1){$rows=1;}
-                $html = '<table border="0.2" cellpadding="2" ><tbody>
+                $html = '<table border="0.0" cellpadding="2" ><tbody>
                     <tr>
                         <td width="1.5%"></td>
                         <td width="97%" colspan="5" style="line-height:5.3mm;"></td>
@@ -152,10 +152,10 @@ $pdf->AddPage('P',array('297','210'));
                                                              <td colspan="4" style="line-height:2mm;"><span style="font-size:7.5px;text-align:center">'.$inputs['item_code'].(($inputs['supp_code']!='')?'-'.$inputs['supp_code']:'').(($inputs['cost_code']!='')?'-'.$inputs['cost_code']:'').'</span></td>
                                                          </tr>
                                                          <tr>
-                                                             <td colspan="4" style="line-height:2.15mm;"><span style="font-size:7px;text-align:center">'.((isset($inputs['item_name']))?$inputs['item_name']:'').'</span></td> 
+                                                             <td colspan="4" style="line-height:2mm;"><span style="font-size:7px;text-align:center">'.((isset($inputs['item_name']))?$inputs['item_name']:'').'</span></td> 
                                                          </tr>
                                                          <tr>
-                                                             <td colspan="4"  style="line-height:2mm;padding-top: 2px;"></td> 
+                                                             <td colspan="4"  style="line-height:1mm;padding-top: 2px;"></td> 
                                                          </tr>
                                                      </table>
                                                      </td>  '; 
