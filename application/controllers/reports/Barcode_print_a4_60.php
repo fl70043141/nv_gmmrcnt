@@ -138,10 +138,13 @@ class Barcode_print_a4_60 extends CI_Controller {
                                            if($sticker_count>=$from & $sticker_count<=$to){
                                             $html .= '<td style="padding:10px; overflow:hidden;"><table border="0.0" >
                                                          <tr>
-                                                             <td colspan="4"  style="line-height:1.8mm;padding-top: 2px;"></td> 
+                                                             <td colspan="4"  style="line-height:2.0mm;padding-top: 2px;"></td> 
                                                          </tr>
                                                          <tr>
-                                                             <td colspan="4"  style="line-height:5.80mm;padding-top: 10px;padding-bottom: 10px;"><span style="text-align:center;font-size:12px;">'.(($inputs['company_name']!='')?strtoupper($inputs['company_name']):SYSTEM_NAME).'</span></td> 
+                                                             <td colspan="4"  style="line-height:3.80mm;padding-top: 10px;padding-bottom: 10px;"><span style="text-align:center;font-size:12px;">'.(($inputs['company_name']!='')?strtoupper($inputs['company_name']):SYSTEM_NAME).'</span></td> 
+                                                         </tr>
+                                                         <tr>
+                                                             <td colspan="4"  style="line-height:1.8mm;padding-top: 2px;"><span style="text-align:center;font-size:8px;">'.((isset($inputs['city_name']) && $inputs['city_name']!="")?$inputs['city_name']:'').'</span></td> 
                                                          </tr>
                                                          <tr>
                                                              <td width="5%" style="line-height:1mm;"></td> 
@@ -149,13 +152,13 @@ class Barcode_print_a4_60 extends CI_Controller {
                                                              <td width="3%" style="line-height:6mm;"></td>
                                                          </tr>
                                                          <tr>
-                                                             <td colspan="4" style="line-height:2mm;"><span style="font-size:7.5px;text-align:center">'.$inputs['item_code'].(($inputs['supp_code']!='')?'-'.$inputs['supp_code']:'').(($inputs['cost_code']!='')?'-'.$inputs['cost_code']:'').'</span></td>
+                                                             <td colspan="4" style="line-height:2mm;"><span style="font-size:7.5px;text-align:center">'.$inputs['item_code'].(($inputs['supp_code']!='')?'-'.$inputs['supp_code']:'').(($inputs['cost_code']!='')?'-'.$inputs['cost_code']:'').((isset($inputs['pric_fixed']) && $inputs['pric_fixed']==1)?'- X':'').'</span></td>
                                                          </tr>
                                                          <tr>
                                                              <td colspan="4" style="line-height:2mm;"><span style="font-size:7px;text-align:center">'.((isset($inputs['item_name']))?$inputs['item_name']:'').'</span></td> 
                                                          </tr>
                                                          <tr>
-                                                             <td colspan="4"  style="line-height:1mm;padding-top: 2px;"></td> 
+                                                             <td colspan="4"  style="line-height:2.34mm;padding-top: 2px;"></td> 
                                                          </tr>
                                                      </table>
                                                      </td>  '; 
@@ -179,7 +182,7 @@ class Barcode_print_a4_60 extends CI_Controller {
                                                              <td colspan="4" style="line-height:2.15mm;"><span style="font-size:7px;text-align:center"> </span></td> 
                                                          </tr>
                                                          <tr>
-                                                             <td colspan="4"  style="line-height:2mm;padding-top: 2px;"></td> 
+                                                             <td colspan="4"  style="line-height:2.3mm;padding-top: 2px;"></td> 
                                                          </tr>
                                                      </table>
                                                      </td>  '; 

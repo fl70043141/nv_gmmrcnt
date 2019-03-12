@@ -77,10 +77,16 @@ $(document).ready(function(){
                                          
                                         <div class="col-md-3">  
                                                 <div class="form-group pad">
+                                                    <label for="city_name">City Name</label>
+                                                    <?php  echo form_input('city_name',set_value('city_name'),' class="form-control" id="city_name" placeholder="Enter City Name"');?>
+                                                </div> 
+                                        </div> 
+                                        <div class="col-md-3">  
+                                                <div class="form-group pad">
                                                     <label for="item_name">Item Name</label>
                                                     <?php  echo form_input('item_name',set_value('item_name'),' class="form-control" id="item_name" placeholder="Enter Item  Name"');?>
                                                 </div> 
-                                        </div>  
+                                        </div>   
                             </div>
                             <div class="row col-md-12 "> <hr></div>
                             <div class="row col-md-12 ">  
