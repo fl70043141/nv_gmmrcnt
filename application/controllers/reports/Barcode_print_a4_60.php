@@ -123,7 +123,7 @@ class Barcode_print_a4_60 extends CI_Controller {
                 }
 //                echo '<pre>';            print_r($inputs); die;  
                 //if($rows < 1){$rows=1;}
-                $html = '<table border="0.2" cellpadding="2" ><tbody>
+                $html = '<table border="0.0" cellpadding="2" ><tbody>
                     <tr>
                         <td width="2%" style="line-height:0.8mm;"></td>
                         <td width="96%" colspan="5" style="line-height:0.8mm;"></td>
