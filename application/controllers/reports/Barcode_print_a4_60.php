@@ -110,7 +110,7 @@ class Barcode_print_a4_60 extends CI_Controller {
                 
                 require_once dirname(__FILE__) . '/../../libraries/tcpdf/tcpdf_barcodes_1d.php';
                 $barcodeobj = new TCPDFBarcode($inputs['item_code'], 'C128');
-                $img =  $barcodeobj->getBarcodePngData(2,35); 
+                $img =  $barcodeobj->getBarcodePngData(2,20); 
                 $base64 = 'data:image/png;base64,' . base64_encode($img);  
                     
                 $bc_count = ($inputs['start_from']+$inputs['units'])-1;
@@ -123,17 +123,17 @@ class Barcode_print_a4_60 extends CI_Controller {
                 }
 //                echo '<pre>';            print_r($inputs); die;  
                 //if($rows < 1){$rows=1;}
-                $html = '<table border="0.0" cellpadding="2" ><tbody>
+                $html = '<table border="0.2" cellpadding="2" ><tbody>
                     <tr>
-                        <td width="1.5%"></td>
-                        <td width="97%" colspan="5" style="line-height:5.3mm;"></td>
-                        <td width="1.5%"></td>
+                        <td width="2%" style="line-height:0.8mm;"></td>
+                        <td width="96%" colspan="5" style="line-height:0.8mm;"></td>
+                        <td width="2%" style="line-height:0.8mm;"></td>
                     </tr>';
                 $sticker_count = 1;
                 //$rows =18;
                 for($i=0;$i<$rows;$i++){
                  $html .= '<tr> 
-                                       <td width="1.5%"></td>';
+                                       <td width="2%"></td>';
                                        for($k=0;$k<5;$k++){
                                            if($sticker_count>=$from & $sticker_count<=$to){
                                             $html .= '<td style="padding:10px; overflow:hidden;"><table border="0.0" >
@@ -148,24 +148,27 @@ class Barcode_print_a4_60 extends CI_Controller {
                                                          </tr>
                                                          <tr>
                                                              <td width="5%" style="line-height:1mm;"></td> 
-                                                             <td colspan="2" width="87%" style="line-height:6mm;"><img src="'.$base64.'"></td>
-                                                             <td width="3%" style="line-height:6mm;"></td>
+                                                             <td colspan="2" width="87%" style="line-height:4mm;"><img src="'.$base64.'"></td>
+                                                             <td width="3%" style="line-height:4mm;"></td>
                                                          </tr>
                                                          <tr>
-                                                             <td colspan="4" style="line-height:2mm;"><span style="font-size:7.5px;text-align:center">'.$inputs['item_code'].(($inputs['supp_code']!='')?'-'.$inputs['supp_code']:'').(($inputs['cost_code']!='')?'-'.$inputs['cost_code']:'').((isset($inputs['pric_fixed']) && $inputs['pric_fixed']==1)?'- X':'').'</span></td>
+                                                             <td width="5%" style="line-height:2mm;"></td> 
+                                                             <td width="60%"  style="line-height:2mm;"><span style="font-size:7.5px;text-align:left">'.$inputs['item_code'].(($inputs['supp_code']!='')?'-'.$inputs['supp_code']:'').(($inputs['cost_code']!='')?'-'.$inputs['cost_code']:'').((isset($inputs['pric_fixed']) && $inputs['pric_fixed']==1)?'- X':'').'</span></td>
+                                                             <td width="30%" style="line-height:2mm;"><span style="font-size:7.5px;text-align:right">'.(($inputs['other_entry']!='')?$inputs['other_entry']:'').'</span></td> 
+                                                             <td width="5%" style="line-height:2mm;"></td> 
                                                          </tr>
                                                          <tr>
-                                                             <td colspan="4" style="line-height:2mm;"><span style="font-size:7px;text-align:center">'.((isset($inputs['item_name']))?$inputs['item_name']:'').'</span></td> 
+                                                             <td colspan="4" style="line-height:4mm;"><span style="font-size:11px;text-align:center"><b>'.(($inputs['sales_price']>0)?'Rs. '.number_format($inputs['sales_price'],2):'').'</b></span></td> 
                                                          </tr>
                                                          <tr>
-                                                             <td colspan="4"  style="line-height:2.34mm;padding-top: 2px;"></td> 
+                                                             <td colspan="4"  style="line-height:3.3mm;padding-top: 2px;"><span style="font-size:7.5px;text-align:center">'.(($inputs['item_name']!='')?$inputs['item_name']:'').'</span></td> 
                                                          </tr>
                                                      </table>
                                                      </td>  '; 
                                             }else{
                                                 $html .= '<td style="padding:10px; overflow:hidden;"><table border="0" >
                                                          <tr>
-                                                             <td colspan="4"  style="line-height:1.8mm;padding-top: 2px;"> </td> 
+                                                             <td colspan="4"  style="line-height:1.7mm;padding-top: 2px;"> </td> 
                                                          </tr>
                                                          <tr>
                                                              <td colspan="4"  style="line-height:5.8mm;padding-top: 2px;"><span style="text-align:center;font-size:9px;"> </span></td> 
@@ -190,7 +193,7 @@ class Barcode_print_a4_60 extends CI_Controller {
                                            $sticker_count++;
                                        }
 
-                                     $html .= '   <td width="1.5%"></td>
+                                     $html .= '   <td width="2%"></td>
                                 </tr> ';
                         }
                          $html .= '</tbody></table>'; 

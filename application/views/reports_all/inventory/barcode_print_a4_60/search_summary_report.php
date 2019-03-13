@@ -108,7 +108,31 @@ $(document).ready(function(){
                                                     <label for="cost_code">Cost Code</label>
                                                     <?php  echo form_input('cost_code',set_value('cost_code'),' class="form-control"  id="cost_code"');?>
                                                 </div> 
-                                        </div>      
+                                        </div>        
+                                        <div class="col-md-2">  
+                                                <div class="form-group pad">
+                                                    <label for="sales_price">Sales Price</label>
+                                                    <?php  echo form_input('sales_price',set_value('sales_price'),' class="form-control"  id="sales_price"');?>
+                                                </div> 
+                                        </div>        
+                                        <div class="col-md-2">  
+                                                <div class="form-group pad">
+                                                    <label for="other_entry">Other</label>
+                                                    <?php  echo form_input('other_entry',set_value('other_entry'),' class="form-control"  id="other_entry"');?>
+                                                </div> 
+                                        </div>        
+                                        <div class="col-md-2">  
+                                                <div class="form-group pad">
+                                                    <label for="cost_code">Price Fixed</label>
+                                                    <input type="checkbox" id="pric_fixed" name="pric_fixed" value="1" class="checkout_form" checked>
+                                                </div> 
+                                        </div>  
+                                        
+                                    </div>
+                            
+                            <div class="row col-md-12 "> <hr></div>
+                                <div class="col-md-12">
+                                       
                                         <div class="col-md-2">  
                                                 <div class="form-group pad">
                                                     <label for="start_from">Start from</label>
@@ -120,14 +144,8 @@ $(document).ready(function(){
                                                     <label for="units">Units</label>
                                                     <?php  echo form_input('units',set_value('units',10),' class="form-control"  id="units"');?>
                                                 </div> 
-                                        </div>      
-                                        <div class="col-md-2">  
-                                                <div class="form-group pad">
-                                                    <label for="cost_code">Price Fixed</label>
-                                                    <input type="checkbox" id="pric_fixed" name="pric_fixed" value="1" class="checkout_form" checked>
-                                                </div> 
-                                        </div>      
-                                    </div>
+                                        </div> 
+                                </div>
                               
                         </div>
                     </div>

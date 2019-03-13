@@ -930,7 +930,7 @@ class Sales_invoices extends CI_Controller {
                                                            <td width="10%">'. (($item_info['color']>0)?get_dropdown_value($item_info['treatment']):'-').'</td>  
                                                            <td width="10%">'. (($item_info['color']>0)?get_dropdown_value($item_info['shape']):'-').'</td>  
                                                            <td width="12%">'. (($item_info['color']>0)?get_dropdown_value($item_info['color']):'-').'</td>  
-                                                           <td width="12%">'. (($item_info['color']>0)?get_dropdown_value($item_info['origin']):'-').'</td>  
+                                                           <td width="12%">'. (($item_info['color']>0 && get_dropdown_value($item_info['origin'])!='0')?get_dropdown_value($item_info['origin']):'-').'</td>  
                                                            <td width="18%" style="text-align: center;">'.$inv_itm['item_quantity'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['item_quantity_uom_id_2']>0)?' / '.$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
                                                            <td width="12%" style="text-align: right;"> '. number_format($inv_itm['sub_total'],2).'</td> 
                                                        </tr> ';

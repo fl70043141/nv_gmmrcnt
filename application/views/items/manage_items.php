@@ -300,7 +300,15 @@ endswitch;
                                                     <?php echo form_input('certification_no', set_value('certification_no', $result['certification_no']), 'id="certification_no" class="form-control" style=" text-transform:capitalize;"  placeholder="Enter Certification Number"'.$dis.' '.$o_dis.' '); ?>
                                                     <?php echo form_error('certification_no');?>&nbsp;
                                                 </div> 
-                                            </div> 
+                                            </div>
+                                             			
+                                                <div  <?php echo $show_gem;?> class="form-group gem_field">
+                                                    <label class="col-md-3 control-label">Origin<span style="color: red"></span></label>
+                                                    <div class="col-md-9">    
+                                                       	 <?php  echo form_dropdown('origin',$origin_list,set_value('origin',$result['origin']),' class="form-control select2" data-live-search="true" id="origin" '.$o_dis.'');?> 
+														<?php echo form_error('origin');?>&nbsp;
+                                                    </div> 
+                                                </div>
                                              <div class="form-group">
                                                     <label class="col-md-3 control-label">Exclude from Purchase</label>
                                                     <div class="col-md-9">                                            

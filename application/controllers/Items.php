@@ -170,6 +170,7 @@ class Items extends CI_Controller {
                                     'certification' => $inputs['certification'],
                                     'certification_no' => $inputs['certification_no'],
                                     'color' => $inputs['color'],
+                                    'origin' => $inputs['origin'],
                                     'length' => $inputs['length'],
                                     'width' => $inputs['width'],
                                     'height' => $inputs['height'],
@@ -311,6 +312,7 @@ class Items extends CI_Controller {
                             'certification' => $inputs['certification'],
                             'certification_no' => $inputs['certification_no'],
                             'color' => $inputs['color'],
+                            'origin' => $inputs['origin'],
                             'length' => $inputs['length'],
                             'width' => $inputs['width'],
                             'height' => $inputs['height'],
@@ -532,10 +534,11 @@ class Items extends CI_Controller {
             $data['item_uom_list'] = get_dropdown_data(ITEM_UOM,'unit_abbreviation','id',''); 
             $data['item_uom_list_2'] = get_dropdown_data(ITEM_UOM,'unit_abbreviation','id','No Secondory UOM'); 
             $data['sales_type_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 14'); //14 for sales type
-              $data['certification_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','Certification','dropdown_id = 4'); //4 for certification
-            $data['color_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','Colors','dropdown_id = 17'); //4 for certification
-            $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','Shapes','dropdown_id = 16'); //4 for certification
-            $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','Treatment','dropdown_id = 5'); //14 for treatments
+            $data['certification_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','Certification','dropdown_id = 4'); //4 for certification
+            $data['color_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Colors','dropdown_id = 17'); //18 Origin
+            $data['origin_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Origin','dropdown_id = 18'); //4 for certification
+            $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shapes','dropdown_id = 16'); //4 for certification
+            $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
             $data['supplier_list'] = get_dropdown_data(SUPPLIERS,'supplier_name','id',''); 
             $data['currency_list'] = get_dropdown_data(CURRENCY,'title','code',''); 
             $data['addon_type_list'] = array(0=>'Default');
