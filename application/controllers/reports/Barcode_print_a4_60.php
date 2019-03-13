@@ -161,7 +161,7 @@ class Barcode_print_a4_60 extends CI_Controller {
                                                              <td colspan="4" style="line-height:4mm;"><span style="font-size:11px;text-align:center"><b>'.(($inputs['sales_price']>0)?'Rs. '.number_format($inputs['sales_price'],2):'').'</b></span></td> 
                                                          </tr>
                                                          <tr>
-                                                             <td colspan="4"  style="line-height:3.3mm;padding-top: 2px;"><span style="font-size:7.5px;text-align:center">'.(($inputs['item_name']!='')?$inputs['item_name']:'').'</span></td> 
+                                                             <td colspan="4"  style="line-height:4mm;padding-top: 2px;"><span style="font-size:7.5px;text-align:center">'.(($inputs['item_name']!='')?$inputs['item_name']:'').'</span></td> 
                                                          </tr>
                                                      </table>
                                                      </td>  '; 
