@@ -1,6 +1,6 @@
 
  
-<?php // echo '<pre>'; print_r($facility_list); die;?>
+<?php // echo '<pre>'; print_r($_GET); die;?>
 
 <div class="row">
 <div class="col-md-12">
@@ -37,6 +37,7 @@
 
                         <?php echo form_open("", 'id="form_search" class="form-horizontal"')?>  
                         <?php echo form_hidden('price_type_id', set_value('price_type_id', '16'));?>  
+                        <?php echo form_hidden('curr_page_no',$page_no,'id="form_search" class="form-horizontal"')?>  
                         <?php echo form_hidden('order_id')?>  
                         <div class="row"> 
                             <div class="col-md-6"> 

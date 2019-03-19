@@ -23,7 +23,7 @@ class Order_ecataog_modal extends CI_Model
             return $result;
         }
         
-        public function search_items($data='',$limit=''){
+        public function search_items($data='',$limit='',$limit_from=''){
 //            echo '<pre>';            print_r($data); die;
             $this->db->select('i.*');
             $this->db->join(ITEM_CAT.' ic', 'ic.id = i.item_category_id','left');
@@ -33,7 +33,7 @@ class Order_ecataog_modal extends CI_Model
             
             if(isset($data['category_id']) && $data['category_id']!='') $this->db->where('i.item_category_id',$data['category_id']);
             if(isset($data['item_code']) && $data['item_code']!='') $this->db->like('i.item_code',$data['item_code']);
-            if($limit!='') $this->db->limit($limit);
+            if($limit!='') $this->db->limit($limit,$limit_from);
             $this->db->group_by('i.id');
             $result = $this->db->get()->result_array();  
 //            echo $this->db->last_query();die;

@@ -15,10 +15,17 @@ class Order_ecatalog extends CI_Controller {
             $this->load->view('includes/template',$data);
 	}
         
-        public function item_list($cat_id=""){  
+        public function item_list($page_no='1',$cat_id=""){ 
             $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories');
             $data['category_id'] = $cat_id;
+            $data['page_no'] = $page_no;
             $data['main_content']='sales/order_ecatalog/item_grid';  
+            $this->load->view('includes/template',$data);
+	}
+        public function image_loader($page_no=1){  
+//            $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories');
+            $data['page_no'] = $page_no;
+            $data['main_content']='sales/order_ecatalog/item_grid_img_loader';  
             $this->load->view('includes/template',$data);
 	}
         
@@ -39,8 +46,11 @@ class Order_ecatalog extends CI_Controller {
                                 'category_id' => $input['item_category_id'],  
                                 'item_code' => $input['item_code'],   
                                 'price_type_id' => $input['price_type_id'],   
-                                ); 
-            $item_res = $this->Order_ecataog_modal->search_items($search_data,9); 
+                                );
+            $cur_page = (isset($input['curr_page_no']) && $input['curr_page_no']>0)?$input['curr_page_no']:1 ;
+            $page_limit_from = 9*($cur_page-1);
+            $item_res = $this->Order_ecataog_modal->search_items($search_data,9,$page_limit_from); 
+//                    echo '<pre>';            print_r($item_res); die;
             $data = array();
             if(!empty($item_res)){
                 foreach ($item_res as $item){ 
@@ -50,6 +60,8 @@ class Order_ecatalog extends CI_Controller {
                     
                 }
             }
+            $data['category_id1'] = $input['item_category_id'];
+            $data['cur_page1'] = $cur_page;
 //            echo '<pre>';            print_r($data); die;
             $this->load->view('sales/order_ecatalog/item_grid_result',$data);
 	}
