@@ -6,12 +6,74 @@ class Order_ecatalog extends CI_Controller {
 	
         function __construct() {
             parent::__construct();
-            $this->load->model('Sales_orders_model'); 
+            $this->load->model('Order_ecataog_modal'); 
         }
 
-        public function index(){
-            $this->view_search();
+        public function index(){  
+            $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories');
+            $data['main_content']='sales/order_ecatalog/category_grid';  
+            $this->load->view('includes/template',$data);
 	}
+        
+        public function item_list($cat_id=""){  
+            $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories');
+            $data['category_id'] = $cat_id;
+            $data['main_content']='sales/order_ecatalog/item_grid';  
+            $this->load->view('includes/template',$data);
+	}
+        
+        function search_cats($ret_arr=0){
+            $input = $this->input->post();
+            $search_data=array(  
+                                'category_id' => $input['category_id'],  
+                                'item_code' => $input['item_code'],  
+//                                    'category' => $this->input->post('category'), 
+                                ); 
+            $data['categories_res'] = $this->Order_ecataog_modal->search_categories($search_data); 
+//		$data_view['search_list'] = $this->Order_ecataog_modal->search_result();
+            $this->load->view('sales/order_ecatalog/category_grid_result',$data);
+	}
+        function search_items_for_cats(){
+            $input = $this->input->post();
+            $search_data=array(  
+                                'category_id' => $input['item_category_id'],  
+                                'item_code' => $input['item_code'],   
+                                'price_type_id' => $input['price_type_id'],   
+                                ); 
+            $item_res = $this->Order_ecataog_modal->search_items($search_data,9); 
+            $data = array();
+            if(!empty($item_res)){
+                foreach ($item_res as $item){ 
+//                    echo '<pre>';            print_r($input); die;
+                    $data['item_res'][$item['id']] = $item; 
+                    $data['item_res'][$item['id']]['price_info'] = $this->Order_ecataog_modal->get_item_price($item['id'],$input['price_type_id']); 
+                    
+                }
+            }
+//            echo '<pre>';            print_r($data); die;
+            $this->load->view('sales/order_ecatalog/item_grid_result',$data);
+	}
+                    
+        
+        function fl_ajax(){ 
+            $func = $this->input->post('function_name');
+            $param = $this->input->post();
+            
+            if(method_exists($this, $func)){ 
+                (!empty($param))?$this->$func($param):$this->$func();
+            }else{
+                return false;
+            } 
+        
+        } 
+        
+                    
+        
+        
+//        ***************************************************
+        
+        
+        
         
         function view_search($datas=''){
             
@@ -21,7 +83,7 @@ class Order_ecatalog extends CI_Controller {
                 
 //            $this->add();
             $this->load->model('Item_categories_model'); 
-            $data['search_list'] = $this->Sales_orders_model->search_result();
+            $data['search_list'] = $this->Order_ecataog_modal->search_result();
             $data['main_content']='sales_orders/search_sales_orders'; 
             $data['customer_list'] = get_dropdown_data(CUSTOMERS,'customer_name','id','Customer','customer_type_id = 1');
             $this->load->view('includes/template',$data);
@@ -29,8 +91,8 @@ class Order_ecatalog extends CI_Controller {
         function add_item_by_cat($order_id){
 //            $this->add();
             $this->load->model('Item_categories_model'); 
-            $data['search_list'] = $this->Sales_orders_model->search_result();
-//            $data['sales_order_det'] = $this->Sales_orders_model->get_single_row($order_id);
+            $data['search_list'] = $this->Order_ecataog_modal->search_result();
+//            $data['sales_order_det'] = $this->Order_ecataog_modal->get_single_row($order_id);
             $data['order_id'] = $order_id;
             $data['main_content']='sales_orders/add_sales_order_items'; 
             $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','Categories');
@@ -40,7 +102,7 @@ class Order_ecatalog extends CI_Controller {
 //        
 //        function view_search($datas=''){
 ////            $this->add();
-//            $data['search_list'] = $this->Sales_orders_model->search_result();
+//            $data['search_list'] = $this->Order_ecataog_modal->search_result();
 //            $data['main_content']='sales_orders/search_sales_orders'; 
 //            $data['supplier_list'] = get_dropdown_data(SUPPLIERS,'supplier_name','id','Suppliers');
 //            $this->load->view('includes/template',$data);
@@ -143,7 +205,7 @@ class Order_ecatalog extends CI_Controller {
             $order_no = gen_id(SALE_ORDER_NO_PREFIX, SALES_ORDERS, 'id');
             $inputs['currency_code'] = (isset($inputs['currency_code']))?$inputs['currency_code']:$this->session->userdata(SYSTEM_CODE)['default_currency']; 
             
-            $cur_det = $this->Sales_orders_model->get_currency_for_code($inputs['currency_code']);
+            $cur_det = $this->Order_ecataog_modal->get_currency_for_code($inputs['currency_code']);
             if(isset($inputs['status'])){
                 $inputs['status'] = 1;
             } else{
@@ -311,11 +373,11 @@ class Order_ecatalog extends CI_Controller {
             
 //            echo '<pre>';            print_r($data); die;
                     
-		$add_stat = $this->Sales_orders_model->add_db($data);
+		$add_stat = $this->Order_ecataog_modal->add_db($data);
                 
 		if($add_stat[0]){ 
                     //update log data
-                    $new_data = $this->Sales_orders_model->get_single_row($add_stat[1]);
+                    $new_data = $this->Order_ecataog_modal->get_single_row($add_stat[1]);
                     add_system_log(SALES_ORDERS, $this->router->fetch_class(), __FUNCTION__, '', $new_data);
                     $this->session->set_flashdata('warn',RECORD_ADD);
                     redirect(base_url($this->router->fetch_class().'/edit/'.$sale_order_id)); 
@@ -403,7 +465,7 @@ class Order_ecatalog extends CI_Controller {
             $inputs = $this->input->post();
             $sale_order_id = $inputs['id']; 
             
-            $cur_det = $this->Sales_orders_model->get_currency_for_code($inputs['currency_code']);
+            $cur_det = $this->Order_ecataog_modal->get_currency_for_code($inputs['currency_code']);
             if(isset($inputs['status'])){
                 $inputs['status'] = 1;
             } else{
@@ -486,17 +548,17 @@ class Order_ecatalog extends CI_Controller {
             
 //            echo '<pre>';            print_r($data); die;
             //old data for log update
-            $existing_data = $this->Sales_orders_model->get_single_row($inputs['id']);
+            $existing_data = $this->Order_ecataog_modal->get_single_row($inputs['id']);
             $data['pre_update_check'] = $this->stock_status_updatecheck($inputs['id']);
 //            echo '<pre>';            print_r($data); die;
-            $edit_stat = $this->Sales_orders_model->edit_db($inputs['id'],$data);
+            $edit_stat = $this->Order_ecataog_modal->edit_db($inputs['id'],$data);
             
             if($edit_stat){
                 //update log data
-                $del_res = $this->Sales_orders_model->delete_temp_so_item($this->session->userdata(SYSTEM_CODE)['ID'].'_so_'.$inputs['id']);
+                $del_res = $this->Order_ecataog_modal->delete_temp_so_item($this->session->userdata(SYSTEM_CODE)['ID'].'_so_'.$inputs['id']);
             
 //                delete_cookie($this->session->userdata(SYSTEM_CODE)['ID'].'_so_'.$inputs['id']);
-                $new_data = $this->Sales_orders_model->get_single_row($inputs['id']);
+                $new_data = $this->Order_ecataog_modal->get_single_row($inputs['id']);
                 add_system_log(SALES_ORDERS, $this->router->fetch_class(), __FUNCTION__, $new_data, $existing_data);
                 $this->session->set_flashdata('warn',RECORD_UPDATE);
                     
@@ -514,7 +576,7 @@ class Order_ecatalog extends CI_Controller {
             $trans_data = $this->Payments_model->get_transections(11,$inputs['id'],'t.transection_type_id = 1'); //11 for SO customer type 1 for payments
 //           
 //            echo '<pre>';            print_r($trans_data); die;
-//            $trans_data = $this->Sales_orders_model->get_transections($inputs['id']);
+//            $trans_data = $this->Order_ecataog_modal->get_transections($inputs['id']);
             if(!empty($trans_data)){
                 $this->session->set_flashdata('error','You need to remove the Payments transections before delete Invoice!');
                 redirect(base_url($this->router->fetch_class().'/delete/'.$inputs['id']));
@@ -526,8 +588,8 @@ class Order_ecatalog extends CI_Controller {
                             'deleted_by' => $this->session->userdata(SYSTEM_CODE)['ID']
                          ); 
                 
-            $existing_data = $this->Sales_orders_model->get_single_row($inputs['id']);  
-            $delete_stat = $this->Sales_orders_model->delete_db($inputs['id'],$data);
+            $existing_data = $this->Order_ecataog_modal->get_single_row($inputs['id']);  
+            $delete_stat = $this->Order_ecataog_modal->delete_db($inputs['id'],$data);
                     
             if($delete_stat){
                 //update log data
@@ -544,8 +606,8 @@ class Order_ecatalog extends CI_Controller {
 	function remove2(){
             $id  = $this->input->post('id'); 
             
-            $existing_data = $this->Sales_orders_model->get_single_row($inputs['id']);
-            if($this->Sales_orders_model->delete2_db($id)){
+            $existing_data = $this->Order_ecataog_modal->get_single_row($inputs['id']);
+            if($this->Order_ecataog_modal->delete2_db($id)){
                 //update log data
                 add_system_log(HOTELS, $this->router->fetch_class(), __FUNCTION__, '', $existing_data);
                 
@@ -560,9 +622,9 @@ class Order_ecatalog extends CI_Controller {
         
         function load_data($id=''){
             if($id!=''){
-                $data['so_data'] = $this->Sales_orders_model->get_single_row($id); 
+                $data['so_data'] = $this->Order_ecataog_modal->get_single_row($id); 
                 
-                $data['so_order_items'] = $this->Sales_orders_model->get_so_desc($id); 
+                $data['so_order_items'] = $this->Order_ecataog_modal->get_so_desc($id); 
                 if(empty($data['so_data'])){
                     $this->session->set_flashdata('error','INVALID! Please use the System Navigation');
                     redirect(base_url($this->router->fetch_class()));
@@ -593,38 +655,18 @@ class Order_ecatalog extends CI_Controller {
                                 'order_no' => $input['order_no'],  
 //                                    'category' => $this->input->post('category'), 
                                 ); 
-            $data['search_list'] = $this->Sales_orders_model->so_search_result($search_data);  
+            $data['search_list'] = $this->Order_ecataog_modal->so_search_result($search_data);  
             $this->load->view('sales_orders/search_sales_orders_result',$data);
-	}
-        function search_cats($ret_arr=0){ 
-            $input = $this->input->post();
-            $search_data=array(  
-                                'category_id' => $input['category_id'],  
-                                'item_code' => $input['item_code'],  
-//                                    'category' => $this->input->post('category'), 
-                                ); 
-            $data['search_list_items'] = $this->Sales_orders_model->search_result($search_data);
-            $data['search_list_cats'] = $data['search_list_items_chunks'] = array();
-            foreach ($data['search_list_items'] as $item){
-                $data['search_list_cats'][$item['cat_id']]=$item;
-            }
-            if(!empty($data['search_list_items'])){
-                $search_list_items_chunks = array_chunk ($data['search_list_items'], 12);
-                $data['search_list_items_chunks'] = $search_list_items_chunks[(0)];
-                $data['res_page_count'] = count($search_list_items_chunks);
-            }
-//		$data_view['search_list'] = $this->Sales_orders_model->search_result();
-            $this->load->view('sales_orders/add_so_items_cat_result',$data);
 	}
         function pagination_dets($ret_arr=0){ 
             $input = $this->input->post();
-            $data['sales_order_det'] = $this->Sales_orders_model->get_single_row($input['order_id']);
+            $data['sales_order_det'] = $this->Order_ecataog_modal->get_single_row($input['order_id']);
             $search_data=array(  
                                 'category_id' => $input['category_id'],  
                                 'item_code' => $input['item_code'],  
                                 'price_type_id' => $data['sales_order_det']['price_type_id'],  
                                 ); 
-            $data['search_list_items'] = $this->Sales_orders_model->search_result($search_data);
+            $data['search_list_items'] = $this->Order_ecataog_modal->search_result($search_data);
                     
             if(!empty($data['search_list_items'])){
                 $search_list_items_chunks = array_chunk ($data['search_list_items'], 12);
@@ -636,13 +678,13 @@ class Order_ecatalog extends CI_Controller {
 	}
         function search_items(){ 
             $input = $this->input->post();
-            $data['sales_order_det'] = $this->Sales_orders_model->get_single_row($input['order_id']);
+            $data['sales_order_det'] = $this->Order_ecataog_modal->get_single_row($input['order_id']);
             $search_data=array(  
                                 'category_id' => $input['category_id'],  
                                 'item_code' => $input['item_code'],  
                                 'price_type_id' => $data['sales_order_det']['price_type_id'], 
                                 ); 
-            $data['search_list_items'] = $this->Sales_orders_model->search_result($search_data,'i.status = 1');
+            $data['search_list_items'] = $this->Order_ecataog_modal->search_result($search_data,'i.status = 1');
             $data['search_list_cats'] = $data['search_list_items_chunks'] = array();
             $data['order_id'] = $input['order_id'];
             foreach ($data['search_list_items'] as $item){
@@ -653,14 +695,14 @@ class Order_ecatalog extends CI_Controller {
                 $data['search_list_items_chunks'] = $search_list_items_chunks[($input['page_no']-1)];
                 $data['res_page_count'] = count($search_list_items_chunks);
             }
-//		$data_view['search_list'] = $this->Sales_orders_model->search_result();
+//		$data_view['search_list'] = $this->Order_ecataog_modal->search_result();
             $this->load->view('sales_orders/add_so_items_itm_result',$data);
 	}
         
         function get_single_item(){
             $inputs = $this->input->post(); 
 //            echo '<pre>';            print_r($inputs); die;
-            $data = $this->Sales_orders_model->get_single_item($inputs['item_code'],$inputs['customer_id'],$inputs['price_type_id']); 
+            $data = $this->Order_ecataog_modal->get_single_item($inputs['item_code'],$inputs['customer_id'],$inputs['price_type_id']); 
             echo json_encode($data);
         }
         function test(){
@@ -669,7 +711,7 @@ class Order_ecatalog extends CI_Controller {
             $this->load->view('includes/template',$data); 
             die;
 //            $this->load->view('invoices/sales_invoices');
-            $data = $this->Sales_orders_model->get_single_item(1002,15);
+            $data = $this->Order_ecataog_modal->get_single_item(1002,15);
             echo '<pre>' ; print_r($data);die;
 //            log_message('error', 'Some variable did not contain a value.');
         }
@@ -974,7 +1016,7 @@ class Order_ecatalog extends CI_Controller {
         
         function get_salesorder_info($order_id){
             if($order_id!=''){
-                 $data['order_dets'] = $this->Sales_orders_model->get_single_row($order_id); 
+                 $data['order_dets'] = $this->Order_ecataog_modal->get_single_row($order_id); 
                 if(empty($data['order_dets'])){
                     $this->session->set_flashdata('error','INVALID! Please use the System Navigation');
                     redirect(base_url($this->router->fetch_class()));
@@ -982,7 +1024,7 @@ class Order_ecatalog extends CI_Controller {
             }
            
             $data['order_desc'] = array();
-            $order_desc = $this->Sales_orders_model->get_so_desc($order_id); 
+            $order_desc = $this->Order_ecataog_modal->get_so_desc($order_id); 
             
             $data['item_cats'] = get_dropdown_data(ITEM_CAT, 'category_name','id');
             $item_cats = get_dropdown_data(ITEM_CAT, 'category_name','id');
@@ -1000,7 +1042,7 @@ class Order_ecatalog extends CI_Controller {
             $data['order_total'] = $data['order_desc_total'];
             
             //og data
-            $data['so_og_info'] = $this->Sales_orders_model->get_og_for_so($order_id); 
+            $data['so_og_info'] = $this->Order_ecataog_modal->get_og_for_so($order_id); 
             
             $data['order_total'] = $data['order_desc_total'];
             $data['transection_total']=0;
@@ -1028,10 +1070,10 @@ class Order_ecatalog extends CI_Controller {
             } 
             
             //get Invoice paymnts for order
-            $data['so_inv_trans'] = $this->Sales_orders_model->get_transections_so_invoice($order_id); 
+            $data['so_inv_trans'] = $this->Order_ecataog_modal->get_transections_so_invoice($order_id); 
             
             //get Released Order Payments 
-            $data['so_inv_redeem_pay'] = $this->Sales_orders_model->get_so_redeem_inv(11,$order_id,'t.transection_type_id = 5'); //11 for SO customer type 5 for Redeemed payments
+            $data['so_inv_redeem_pay'] = $this->Order_ecataog_modal->get_so_redeem_inv(11,$order_id,'t.transection_type_id = 5'); //11 for SO customer type 5 for Redeemed payments
 //            echo '<pre>';            print_r($data['so_inv_redeem_pay']); die;
         $this->load->model('Sales_invoices_model');
             $so_invoices = $this->Sales_invoices_model->get_invc_desc_for_so($order_id,'','i.id'); //11 for SO customer type 5 for Redeemed payments
@@ -1042,20 +1084,10 @@ class Order_ecatalog extends CI_Controller {
             return $data;
         }
         
-        function fl_ajax(){  
-//            echo '<pre>';            print_r($this->input->post()); die;
-            $func = $this->input->post('function_name');
-            $param = $this->input->post();
-            
-            if(method_exists($this, $func)){ 
-                (!empty($param))?$this->$func($param):$this->$func();
-            }else{
-                return false;
-            }
-        }
+        
         function add_so_payments(){
             $inputs = $this->input->post();
-            $order_det = $this->Sales_orders_model->get_single_row($inputs['order_id']);
+            $order_det = $this->Order_ecataog_modal->get_single_row($inputs['order_id']);
             $cur_det = get_currency_for_code($order_det['currency_code']);
                 $trans_id = get_autoincrement_no(TRANSECTION); 
                 $p_method=1;
@@ -1134,7 +1166,7 @@ class Order_ecatalog extends CI_Controller {
         }
         function remove_so_payments(){
             $inputs = $this->input->post();
-            $order_det = $this->Sales_orders_model->get_single_row($inputs['order_id']);
+            $order_det = $this->Order_ecataog_modal->get_single_row($inputs['order_id']);
             $cur_det = get_currency_for_code($order_det['currency_code']);
                 $trans_id = get_autoincrement_no(TRANSECTION); 
                 $p_method=1;
@@ -1215,7 +1247,7 @@ class Order_ecatalog extends CI_Controller {
             $inputs = $this->input->post();
             unset($inputs['function_name']);       
             
-            $list_data_jsn = $this->Sales_orders_model->get_temp_so_item($inputs['order_id'])['value'];
+            $list_data_jsn = $this->Order_ecataog_modal->get_temp_so_item($inputs['order_id'])['value'];
             if(!empty($list_data_jsn))$temp_data = json_decode($list_data_jsn);
             $temp_data[]=$inputs; 
              
@@ -1224,9 +1256,9 @@ class Order_ecatalog extends CI_Controller {
                             'value'  => json_encode($temp_data),
                             );
             
-            $del_res = $this->Sales_orders_model->delete_temp_so_item($this->session->userdata(SYSTEM_CODE)['ID'].'_so_'.$inputs['order_id']);
-            $add_res = $this->Sales_orders_model->insert_temp_item($data);
-            $list_data_jsn = $this->Sales_orders_model->get_temp_so_item($inputs['order_id']);
+            $del_res = $this->Order_ecataog_modal->delete_temp_so_item($this->session->userdata(SYSTEM_CODE)['ID'].'_so_'.$inputs['order_id']);
+            $add_res = $this->Order_ecataog_modal->insert_temp_item($data);
+            $list_data_jsn = $this->Order_ecataog_modal->get_temp_so_item($inputs['order_id']);
             if(!empty($list_data_jsn)) 
                 echo '1';
             else
@@ -1235,7 +1267,7 @@ class Order_ecatalog extends CI_Controller {
 //            echo '<pre>';            print_r(json_decode($this->input->cookie('sale_inv_list',true))); die;
         }
          function get_cookie_data_itms(){ 
-            $list_data_jsn = $this->Sales_orders_model->get_temp_so_item($this->input->post('order_id'))['value'];
+            $list_data_jsn = $this->Order_ecataog_modal->get_temp_so_item($this->input->post('order_id'))['value'];
             echo $list_data_jsn;
 //            echo '<pre>';            print_r($list_data_jsn); die;
 //            return $list_data_jsn;
@@ -1245,7 +1277,7 @@ class Order_ecatalog extends CI_Controller {
              $data = array();
              
              //OG Data
-            $og_data = $this->Sales_orders_model->get_og_for_so($inputs['order_id']); 
+            $og_data = $this->Order_ecataog_modal->get_og_for_so($inputs['order_id']); 
             if(!empty($og_data)) $data['og_data']  = $og_data;
             
             //So Payment
@@ -1263,7 +1295,7 @@ class Order_ecatalog extends CI_Controller {
         function add_items_order(){
             $inputs = $this->input->post();
             
-            $sale_order_dets = $this->Sales_orders_model->get_single_row($inputs['order_id']); 
+            $sale_order_dets = $this->Order_ecataog_modal->get_single_row($inputs['order_id']); 
              $data['so_desc'] =            array(
                                                             'sales_order_id' => $inputs['order_id'],
                                                             'item_id' => $inputs['item_dets']['id'],
@@ -1296,7 +1328,7 @@ class Order_ecatalog extends CI_Controller {
             if(!empty($item_stock_data)){
                 $data['item_stock'] = $item_stock_data;
             }
-            $res = $this->Sales_orders_model->add_item_for_order($data);
+            $res = $this->Order_ecataog_modal->add_item_for_order($data);
             if($res){
                 echo '1';
             }else

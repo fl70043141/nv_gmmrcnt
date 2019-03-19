@@ -275,8 +275,8 @@ class Ledger_reports extends CI_Controller {
                     }
                     </style>';
             $bal_html = "";
-            $fin_open_tot = $fin_close_tot = $fin_period_tot = 0;
-            foreach ($data['trans_class_list'] as $class_data){
+            $fin_open_tot = $fin_close_tot = $fin_period_tot = 0; $tot_class_array = array();
+            foreach ($data['trans_class_list'] as $cls_id => $class_data){
                 $all_open_tot = $all_close_tot = $all_period_tot = 0;
                 $class_tot = 0;
                 $bal_html .= '<br><h2>'. strtoupper($class_data['class_name']).'</h2> <table border="0" class="table-line"> 
@@ -291,7 +291,7 @@ class Ledger_reports extends CI_Controller {
                   if(isset($class_data['class_data']) && !empty($class_data['class_data'])){
                                          foreach ($class_data['class_data'] as $glcm_id => $search){
 
-                      //echo '<pre>';print_r($search); die;
+//                      echo '<pre>';print_r($data); die;
 
                                               $bal_html .= '<tr>
                                                                   <td colspan="5"><b>'.$search[0]['type_name'].'</b></td> 
@@ -301,7 +301,8 @@ class Ledger_reports extends CI_Controller {
                                                                         $i = 0; $type_tot = $open_tot = $period_tot = $close_tot = 0;
                                                                         if(!empty($search)){
                                                                             foreach ($search as $trans){
-                                                                                $amnt_clr = ($trans['glcm_tot_amount']>=0)?'':'#F1948A'; 
+//                                                                                $amnt_clr = ($trans['glcm_tot_amount']>=0)?'':'#F1948A'; 
+                                                                                $amnt_clr = ''; 
                                                                                 $bal_html .= '
                                                                                     <tr> 
                                                                                         <td width="10%" align="left">'.$trans['account_code'].'</td>
@@ -338,7 +339,11 @@ class Ledger_reports extends CI_Controller {
                                                        }
                                                        
                                                   }
-                                                  
+                    $tot_class_array[$cls_id] = array(
+                                                'class_tot_open' => $all_open_tot,
+                                                'class_tot_period' => $all_period_tot,
+                                                'class_tot_close' => $all_close_tot,
+                                            );                              
                     $bal_html .= '<tr>
                                       <td colspan="2" align="left"><h3>Total '.$class_data['class_name'].': </h3></td> 
                                       <td align="right"><h3>'.number_format(($all_open_tot),2).'</h3></td> 
@@ -352,10 +357,20 @@ class Ledger_reports extends CI_Controller {
             }
                     $bal_html .= '<table><tbody><tr><td colspan="5"></td></tr>';
                     $bal_html .= '<tr>
-                                      <td colspan="2" align="left"><h3>Total Liabilities and Equities: </h3></td> 
+                                      <td colspan="2" align="left"><h3>Calculated Return: </h3></td> 
                                       <td align="right"><h3>'.number_format(abs($fin_open_tot),2).'</h3></td> 
                                       <td align="right"><h3>'.number_format(abs($fin_period_tot),2).'</h3></td> 
                                       <td align="right"><h3>'.number_format(abs($fin_close_tot),2).'</h3></td> 
+                                  </tr>';
+                    
+                    $tot_liablit_arr = $tot_class_array[2]; //2 array liabliltes class id
+                    
+                    $bal_html .= '<table><tbody><tr><td colspan="5"></td></tr>';
+                    $bal_html .= '<tr>
+                                      <td colspan="2" align="left"><h3>Total Liabilities and Equities: </h3></td> 
+                                      <td align="right"><h3>'.number_format(abs($fin_open_tot-$tot_liablit_arr['class_tot_open']),2).'</h3></td> 
+                                      <td align="right"><h3>'.number_format(abs($fin_period_tot-$tot_liablit_arr['class_tot_period']),2).'</h3></td> 
+                                      <td align="right"><h3>'.number_format(abs($fin_close_tot-$tot_liablit_arr['class_tot_close']),2).'</h3></td> 
                                   </tr>';
                   $bal_html .= '</tbody> 
                                  </table> ';
@@ -374,7 +389,7 @@ class Ledger_reports extends CI_Controller {
                         </tr> 
                         
                     </table> ';
-            
+//            echo '<pre>';            print_r($tot_class_array);
             $html .= $bal_html;
             $pdf->writeHTMLCell(190,'',10,'',$html);
             
