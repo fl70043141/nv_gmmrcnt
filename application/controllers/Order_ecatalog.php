@@ -22,9 +22,29 @@ class Order_ecatalog extends CI_Controller {
             $data['main_content']='sales/order_ecatalog/item_grid';  
             $this->load->view('includes/template',$data);
 	}
-        public function image_loader($page_no=1){  
+        public function image_loader($page_no=1,$cat_id=""){  
 //            $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories');
-            $data['page_no'] = $page_no;
+            
+            $cur_page = (isset($page_no) && $page_no>0)?$page_no:1 ;
+            $page_limit_from = 9*($cur_page-1);
+            
+            $search_data=array(  
+                                'category_id' => $cat_id, 
+                                );
+            
+            $item_res = $this->Order_ecataog_modal->search_items($search_data,9,$page_limit_from);  
+//                    echo '<pre>';            print_r($item_res); die;
+            $data = array();
+            if(!empty($item_res)){
+                foreach ($item_res as $item){ 
+//                    echo '<pre>';            print_r($input); die;
+                    $data['item_res'][$item['id']] = $item; 
+                    $data['item_res'][$item['id']]['price_info'] = $this->Order_ecataog_modal->get_item_price($item['id'],16); 
+                    
+                }
+            }
+            $data['category_id'] = $cat_id;
+            $data['page_no'] = $cur_page;
             $data['main_content']='sales/order_ecatalog/item_grid_img_loader';  
             $this->load->view('includes/template',$data);
 	}

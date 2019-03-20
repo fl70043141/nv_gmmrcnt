@@ -434,11 +434,14 @@ function send_backup_helper(){
                 }
 }
 
-function fl_image_resizer($file_name,$target_width,$target_height,$resized_name='', $source_dir='',$destn_dir=''){
+function fl_image_resizer($file_name,$target_width,$target_height='',$resized_name='', $source_dir='',$destn_dir=''){
     $file = $source_dir.$file_name;
+    $source_properties = getimagesize($file);
+    
+    $target_height = ($target_height=='')?(($source_properties[1]/$source_properties[0])*$target_width):$target_height;
     $destn_dir = ($destn_dir=='')?$source_dir:$destn_dir;
     $resized_name = ($resized_name=='')?$target_width.'X'.$target_height.'_'.$file_name:$resized_name;
-    $source_properties = getimagesize($file);
+    
     $image_type = $source_properties[2]; 
     $resized = false;
     
