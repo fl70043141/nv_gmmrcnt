@@ -1,3 +1,10 @@
+<style>
+    
+@media only screen and (max-width: 600px) {
+    .caption a{
+    font-size: 10px;
+}
+</style>
 <div class="row">        
     <?php
     

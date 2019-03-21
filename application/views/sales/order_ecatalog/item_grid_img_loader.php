@@ -6,7 +6,7 @@
     
 .container--wide {
   max-width: 1370px;
-  padding: 20px;
+  padding-left: 10px;
 }
 
 /* loader-ellips
@@ -129,7 +129,7 @@
 
 .image-grid__item,
 .image-grid__col-sizer {
-  width: 30%;
+  width: 26.5%;
 }
 
 .image-grid__gutter-sizer { width: 2%; }
@@ -140,29 +140,41 @@
 }
 
 .image-grid__item {
-  margin-bottom: 20px;
-  margin-left: 20px;
+/*  margin-bottom: 20px;
+  margin-left: 20px;*/
   float: left;
 }
 
 .image-grid__image {
-  display: block;
+  /*display: block;*/
   max-width: 100%;
 }
+@media only screen and (max-width: 600px) {
+    .thumbnail h2, .thumbnail h4, .thumbnail span , .thumbnail p{
+    font-size: 10px;
+}
+
+@media only screen and (min-width: 800px) {
+    .image-grid__item,
+    .image-grid__col-sizer {
+      width: 30.5%;
+    }
+}
 </style>
-<div class="main">
-  <div class="container container--wide">
+<div class="main no-padding">
+  <div class=" container--wide">
  
 
     <div class="image-grid are-images-unloaded" data-js="image-grid">
-      <div class="image-grid__col-sizer"></div>
-      <div class="image-grid__gutter-sizer"></div>
+      <div class="image-grid__col-sizer col-md-12"></div>
+      <div class="image-grid__gutter-sizer col-md-12"></div> 
+      <div class="row no-padding">
       <?php
                                     if(!empty($item_res)){
                                         foreach ($item_res as $item){
 //                                            echo '<pre>';print_r($item); die;
                                             echo '
-                                                    <div class="item image-grid__item">
+                                                    <div class="item image-grid__item no-padding">
                                                         <div class="thumbnail">
                                                             <img class="group list-group-image img-bordered-sm" style="width:400px;" src="'.base_url(ITEM_IMAGES.(($item['image']!='')?$item['id'].'/'.$item['image']:'../default/default.jpg')).'" alt="" />
                                                             <div class="caption" >
@@ -172,7 +184,7 @@
                                                                         <p class=""  style="text-align:center;">Price '.((!empty($item['price_info']))?$item['price_info']['currency_code'].' '.$item['price_info']['price_amount']:'-').'</p>
                                                                     </div>
                                                                     <div class="col-xs-12 col-md-12 ">
-                                                                        <a id="'.$item['id'].'_btn_view" class="itm_btn_view btn btn-default center-block " data-toggle="modal" data-target="#item_view_modal" ><span class="fa fa-eye"></span> View</a>
+                                                                        <a id="'.$item['id'].'_btn_view" class="itm_btn_view btn btn-default center-block "  >View</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -181,6 +193,7 @@
                                         }
                                     }
                                 ?> 
+
     </div>
 
     <div class="scroller-status">
@@ -197,8 +210,7 @@
       <p class="pagination">
           <a class="pagination__next" href="<?php echo base_url($this->router->fetch_class().'/image_loader/'.($page_no+1).'/'.$category_id);?>">Next page</a>
       </p>
-
-    <footer class="full-page-demo-footer"></footer>
+ 
 
   </div> 
 </div> 
