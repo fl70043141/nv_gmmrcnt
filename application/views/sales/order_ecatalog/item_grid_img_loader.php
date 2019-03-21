@@ -184,7 +184,7 @@
                                                                         <p class=""  style="text-align:center;">Price '.((!empty($item['price_info']))?$item['price_info']['currency_code'].' '.$item['price_info']['price_amount']:'-').'</p>
                                                                     </div>
                                                                     <div class="col-xs-12 col-md-12 ">
-                                                                        <a id="'.$item['id'].'_btn_view" class="itm_btn_view btn btn-default center-block "  >View</a>
+                                                                        <a id="'.$item['id'].'_btn_view" class="itm_btn_view btn btn-default center-block "  data-toggle="modal" data-target="#item_view_modal"  >View</a>
                                                                     </div>
                                                                 </div>
                                                             </div>

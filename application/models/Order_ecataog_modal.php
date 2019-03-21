@@ -26,7 +26,10 @@ class Order_ecataog_modal extends CI_Model
         public function search_items($data='',$limit='',$limit_from=''){
 //            echo '<pre>';            print_r($data); die;
             $this->db->select('i.*');
+            
+            $this->db->select('is.*,SUM(is.units_available) as tot_units_1, SUM(is.units_available_2) as tot_units_2');
             $this->db->join(ITEM_CAT.' ic', 'ic.id = i.item_category_id','left');
+            $this->db->join(ITEM_STOCK.' is', 'is.item_id = i.id','left');
             $this->db->from(ITEMS.' i');
             $this->db->where('i.deleted',0); 
             $this->db->where('i.status',1); 
@@ -52,6 +55,55 @@ class Order_ecataog_modal extends CI_Model
                 return $result[0];
             return $result;
 	}
+        
+        public function get_single_item_info($item_id,$price_type_id,$where=''){ 
+            $this->db->select('i.*'); 
+            $this->db->select('ic.category_name, ic.category_code, ic.is_gem'); 
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.color)  as color_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.shape)  as shape_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.treatment)  as treatment_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.certification)  as certification_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.origin)  as origin_name');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id)  as unit_abbreviation');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id_2)  as unit_abbreviation_2');
+            $this->db->from(ITEMS.' i');  
+            $this->db->join(ITEM_CAT.' ic', 'ic.id = i.item_category_id');  
+            $this->db->where('i.status',1);
+            $this->db->where('i.deleted',0);
+            $this->db->where('i.id',$item_id);
+            if($where!='')$this->db->where($where);
+            $result = $this->db->get()->result_array();  
+//        echo  $this->db->last_query(); die;
+//        echo '<pre>';        print_r($result);die;
+            if(!empty($result[0])){
+                $item_price = $this->get_item_price($item_id, $price_type_id);
+                $result[0]['item_price_info'] = $item_price;
+                $result[0]['item_stock_info'] = $this->get_item_stock($item_id);
+//        echo '<pre>';        print_r($result);die;
+                return $result[0];
+            }
+            return $result;
+	}
+        
+        public function get_item_stock($item_id='',$location_id='',$where=''){ 
+            $this->db->select('itm.item_code,is.*');
+            $this->db->select('is.*,SUM(is.units_available) as tot_units_1, SUM(is.units_available_2) as tot_units_2');
+            $this->db->join(ITEMS.' itm','itm.id = is.item_id'); 
+            $this->db->from(ITEM_STOCK.' is'); 
+            if($location_id!='')$this->db->where('is.location_id',$location_id);
+            if($item_id!='')$this->db->where('itm.id',$item_id);
+            if($where!='')$this->db->where($where);
+            $this->db->where('is.deleted',0);
+            $this->db->group_by('is.item_id',0);
+            $result = $this->db->get()->result_array();   
+//echo $this->db->last_query(); die;
+            
+            return (!empty($result[0])?$result[0]:'');
+	}
+        
+        
+        
+        
         
         
         

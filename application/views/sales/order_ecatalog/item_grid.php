@@ -36,7 +36,7 @@
                             <!-- form start -->
 
                         <?php echo form_open("", 'id="form_search" class="form-horizontal"')?>  
-                        <?php echo form_hidden('price_type_id', set_value('price_type_id', '16'));?>  
+                        <?php echo form_input('price_type_id', set_value('price_type_id', '16'),'id="price_type_id" hidden');?>  
                         <?php echo form_hidden('curr_page_no',$page_no,'id="form_search" class="form-horizontal"')?>  
                         <?php echo form_hidden('order_id')?>  
                         <div class="row"> 

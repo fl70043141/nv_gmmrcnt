@@ -74,10 +74,11 @@ class Order_ecatalog extends CI_Controller {
             $data = array();
             if(!empty($item_res)){
                 foreach ($item_res as $item){ 
-//                    echo '<pre>';            print_r($input); die;
-                    $data['item_res'][$item['id']] = $item; 
-                    $data['item_res'][$item['id']]['price_info'] = $this->Order_ecataog_modal->get_item_price($item['id'],$input['price_type_id']); 
-                    
+//                    echo '<pre>';            print_r($item); die;
+                    if($item['tot_units_1'] > 0){
+                        $data['item_res'][$item['id']] = $item; 
+                        $data['item_res'][$item['id']]['price_info'] = $this->Order_ecataog_modal->get_item_price($item['id'],$input['price_type_id']); 
+                    }
                 }
             }
             $data['category_id1'] = $input['item_category_id'];
@@ -98,6 +99,12 @@ class Order_ecatalog extends CI_Controller {
             } 
         
         } 
+         function get_single_item_info(){
+            $inputs = $this->input->post(); 
+//            echo '<pre>';            print_r($inputs); die;
+            $data = $this->Order_ecataog_modal->get_single_item_info($inputs['item_id'],$inputs['price_type_id']); 
+            echo json_encode($data);
+        }
         
                     
         
