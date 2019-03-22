@@ -32,7 +32,7 @@ class Sales_pos extends CI_Controller {
 //            echo '<pre>';            print_r($data); die;
             $data['action']		= 'Add';
             $data['main_content']='sales_pos/manage_sales_pos';    
-            $this->load->view('includes/template_pos',$data);
+            $this->load->view('includes/template_rep',$data);
 	}
 	
 	function edit($id){ 

@@ -29,7 +29,7 @@ class Order_ecataog_modal extends CI_Model
             
             $this->db->select('is.*,SUM(is.units_available) as tot_units_1, SUM(is.units_available_2) as tot_units_2');
             $this->db->join(ITEM_CAT.' ic', 'ic.id = i.item_category_id','left');
-            $this->db->join(ITEM_STOCK.' is', 'is.item_id = i.id','left');
+            $this->db->join(ITEM_STOCK.' is', 'is.item_id = i.id and is.units_available > 0','right');
             $this->db->from(ITEMS.' i');
             $this->db->where('i.deleted',0); 
             $this->db->where('i.status',1); 

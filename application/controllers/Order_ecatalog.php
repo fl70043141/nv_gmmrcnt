@@ -106,10 +106,19 @@ class Order_ecatalog extends CI_Controller {
             echo json_encode($data);
         }
         
+        function view_item(){
+//            $this->load->view('sales/order_ecatalog/item_single_view');
                     
-        
-        
-//        ***************************************************
+            $data['main_content']='sales/order_ecatalog/item_single_view';  
+            $this->load->view('includes/template_rep',$data);
+        }
+
+
+
+
+
+
+// ***************************************************
         
         
         
