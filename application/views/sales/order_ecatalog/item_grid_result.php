@@ -184,7 +184,7 @@
                                                                         <p class=""  style="text-align:center;">Price '.((!empty($item['price_info']))?$item['price_info']['currency_code'].' '.$item['price_info']['price_amount']:'-').'</p>
                                                                     </div>
                                                                     <div class="col-xs-12 col-md-12 ">
-                                                                        <a id="'.$item['id'].'_btn_view" class="itm_btn_view btn btn-default center-block "  >View</a>
+                                                                        <a id="'.$item['id'].'_btn_view" href="'.base_url($this->router->fetch_class().'/view_item/'.$item['id'].'/'.$item['item_category_id'].'/'.$cur_page1).'" class="itm_btn_view btn btn-default center-block "  >View</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -219,4 +219,4 @@
 
 <script src="<?php echo base_url('templates/plugins/infinite_scroll/infinite-scroll-docs.min.js?3');?>"></script>
 
-<?php $this->load->view('sales/order_ecatalog/e-catelog-modals/item_pop'); ?>
+<?php // $this->load->view('sales/order_ecatalog/e-catelog-modals/item_pop'); ?>

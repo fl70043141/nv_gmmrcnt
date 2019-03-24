@@ -76,8 +76,8 @@ class Order_ecatalog extends CI_Controller {
                 foreach ($item_res as $item){ 
 //                    echo '<pre>';            print_r($item); die;
                     if($item['tot_units_1'] > 0){
-                        $data['item_res'][$item['id']] = $item; 
-                        $data['item_res'][$item['id']]['price_info'] = $this->Order_ecataog_modal->get_item_price($item['id'],$input['price_type_id']); 
+                        $data['item_res'][$item['item_id']] = $item; 
+                        $data['item_res'][$item['item_id']]['price_info'] = $this->Order_ecataog_modal->get_item_price($item['id'],$input['price_type_id']); 
                     }
                 }
             }
@@ -106,11 +106,45 @@ class Order_ecatalog extends CI_Controller {
             echo json_encode($data);
         }
         
-        function view_item(){
+         function get_items_for_view(){
+            $data = $this->search_items_page();
+            echo json_encode($data);
+        }
+        
+        function view_item($item_id, $item_categorty_id='',$page_no=''){
 //            $this->load->view('sales/order_ecatalog/item_single_view');
-                    
+            $data['item_id'] = $item_id;
+            $data['item_cat_id'] = $item_categorty_id;
+            $data['item_list_page_no'] = $page_no;
             $data['main_content']='sales/order_ecatalog/item_single_view';  
             $this->load->view('includes/template_rep',$data);
+        }
+        
+        function search_items_page(){
+             $input = $this->input->post();
+            $search_data=array(  
+                                'category_id' => $input['item_category_id'],  
+                                'item_code' => (isset($input['item_code']))?$input['item_code']:'',   
+                                'price_type_id' => $input['price_type_id'],   
+                                );
+            $cur_page = (isset($input['curr_page_no']) && $input['curr_page_no']>0)?$input['curr_page_no']:1 ;
+            $page_limit_from = 9*($cur_page-1);
+            $item_res = $this->Order_ecataog_modal->search_items($search_data,9,$page_limit_from); 
+            $data = array();
+            if(!empty($item_res)){
+                foreach ($item_res as $item){ 
+//                    echo '<pre>';            print_r($item); die;
+                    if($item['tot_units_1'] > 0){
+                        $data['item_res'][$item['item_id']] = $item; 
+                        $data['item_res'][$item['item_id']]['item_price_info'] = $this->Order_ecataog_modal->get_item_price($item['id'],$input['price_type_id']); 
+                        $data['item_res'][$item['item_id']]['stock_info'] = $this->Order_ecataog_modal->get_item_stock($item['id']); 
+                    }
+                }
+            }
+//                    echo '<pre>';            print_r($data); die;
+            $data['category_id1'] = $input['item_category_id'];
+            $data['cur_page1'] = $cur_page;
+            return $data;
         }
 
 
