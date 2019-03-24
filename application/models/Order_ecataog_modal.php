@@ -28,6 +28,14 @@ class Order_ecataog_modal extends CI_Model
             $this->db->select('i.*');
             
             $this->db->select('is.*,SUM(is.units_available) as tot_units_1, SUM(is.units_available_2) as tot_units_2');
+            $this->db->select('ic.category_name, ic.category_code, ic.is_gem'); 
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.color)  as color_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.shape)  as shape_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.treatment)  as treatment_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.certification)  as certification_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.origin)  as origin_name');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id)  as unit_abbreviation');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id_2)  as unit_abbreviation_2');
             $this->db->join(ITEM_CAT.' ic', 'ic.id = i.item_category_id','left');
             $this->db->join(ITEM_STOCK.' is', 'is.item_id = i.id and is.units_available > 0','right');
             $this->db->from(ITEMS.' i');

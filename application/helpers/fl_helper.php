@@ -454,14 +454,14 @@ function fl_image_resizer($file_name,$target_width,$target_height='',$resized_na
             $resized = imagejpeg($target_layer, $destn_dir.$resized_name);
             break;
         case IMAGETYPE_GIF:  
-            $image_resource_id = imagecreatefromjpeg($file);  
+            $image_resource_id = imagecreatefromgif($file);  
     //                            $target_layer = fn_resize($image_resource_id,$source_properties[0],$source_properties[1]);
             $target_layer = imagecreatetruecolor($target_width,$target_height);
             imagecopyresampled($target_layer,$image_resource_id,0,0,0,0,$target_width,$target_height, $source_properties[0],$source_properties[1]);
             $resized = imagegif($target_layer, $destn_dir.$resized_name);
             break;
         case IMAGETYPE_PNG:  
-            $image_resource_id = imagecreatefromjpeg($file);  
+            $image_resource_id = imagecreatefrompng($file);  
     //                            $target_layer = fn_resize($image_resource_id,$source_properties[0],$source_properties[1]);
             $target_layer = imagecreatetruecolor($target_width,$target_height);
             imagecopyresampled($target_layer,$image_resource_id,0,0,0,0,$target_width,$target_height, $source_properties[0],$source_properties[1]);

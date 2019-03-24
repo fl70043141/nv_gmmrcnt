@@ -43,20 +43,18 @@
   <div id="item_res1"> </div>
   <form id="form_item_view" method="post">
   <div class="swiper-container">
-      <input type="text" name="item_id_clicked" id="item_id_clicked" value="<?php echo $item_id;?>">
-      <input type="text" name="item_category_id" id="item_category_id" value="<?php echo $item_cat_id;?>">
-      <input type="text" name="curr_page_no" id="curr_page_no" value="<?php echo $item_list_page_no;?>">
-      <input type="text" name="price_type_id" id="price_type_id" value="16">
+      <input hidden type="text" name="item_id_clicked" id="item_id_clicked" value="<?php echo $item_id;?>">
+      <input hidden  type="text" name="item_category_id" id="item_category_id" value="<?php echo $item_cat_id;?>">
+      <input hidden  type="text" name="curr_page_no" id="curr_page_no" value="<?php echo $item_list_page_no;?>">
+      <input hidden  type="text" name="price_type_id" id="price_type_id" value="16">
     <div id="item_info_contents" class="swiper-wrapper">
-        
+      
     </div>
  
   </div>
   </form>
 
     
-  <!-- Swiper JS -->
-  <script src="https://idangero.us/swiper/dist/js/swiper.min.js"></script>
 
     <script>
         
@@ -84,15 +82,18 @@
                     b && "" !== b && "NaN" !== b || (b = 0), "" !== c && "NaN" !== c || (c = ""), "" !== d && "NaN" !== d || (d = 0), "any" !== e && "" !== e && void 0 !== e && "NaN" !== parseFloat(e) || (e = 1), jQuery(this).is(".plus") ? c && b >= c ? a.val(c) : a.val((b + parseFloat(e)).toFixed(e.getDecimals())) : d && b <= d ? a.val(d) : b > 0 && a.val((b - parseFloat(e)).toFixed(e.getDecimals())), a.trigger("change")
                 });
     </script>
+  <!-- Swiper JS -->
+  <script src="https://idangero.us/swiper/dist/js/swiper.min.js"></script>
 
   <!-- Initialize Swiper -->
   <script>
     
     $(document).ready(function(){
-       load_item_info(); 
+        var item_id = parseFloat("<?php echo $item_id;?>"); 
+       load_item_info(item_id); 
     });
     
-function load_item_info(){
+function load_item_info(item_id){
     
 //    $("#result_search_itm").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Retrieving Data..');    
     var post_data = jQuery('#form_item_view').serializeArray(); 
@@ -102,141 +103,93 @@ function load_item_info(){
                     type: 'post',
                     data : post_data,
                     success: function(result){  
-                        var content = '';
+                        var content = ''; var count = 0; var init_id = 0;
 //                         $("#item_res1").html(result); return  false;
                         var img_dir = '<?php echo base_url().ITEM_IMAGES;?>';
                         var item_list_obj = JSON.parse(result);  
                         var item_list = item_list_obj.item_res; 
                         $.each(item_list, function (key, item_obj) {
-                            content += '<div class="swiper-slide">'+
+                            if(item_id == item_obj.item_id){
+                                init_id = count;
+                            }
+                            var otr_images = JSON.parse(item_obj.images); 
+//                            console.log(item_obj);
+                            content += '<div class="swiper-slide '+((item_obj.item_id == item_id)?'swiper-slide-active':'')+'">'+
                                             '<div class="box-body bg-gray-light">'+
                                                   '<div class="container-fliud">'+
                                                                  '<div class=" row">'+
-                                                                  '<div class="col-md-12 bg-gray " style="padding: 20px 0 20px;">';
-                                                          
-                                                                    var otr_images = JSON.parse(item_obj.images);  
-//                                                                    alert(otr_images.length)
-                                                                     var content = '<div class="preview col-md-6">'+
-                                                                                                '<div class="preview-pic tab-content">'+
-                                                                                                  '<div class="tab-pane active" id="pic-1"><img src="'+img_dir+item_obj.id+'/'+((item_obj.image!="")?item_obj.image:'../../default/default.jpg')+'" /></div>';
-
-                                                                                var i=2;
-                                                                                if(otr_images.length>0){
-                                                                                    $.each(otr_images, function (key, otr_img_name) { 
-                                                                                        content +=   '<div class="tab-pane" id="pic-'+i+'"><img src="'+img_dir+item_obj.id+'/other/'+otr_img_name+'" /></div>';
-                                                                                        i++;
-                                                                                    });
-                                                                                }
-                                                                                content +=   '</div>'+
-                                                                                                '<ul class="preview-thumbnail nav nav-tabs">'+
-                                                                                                  '<li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="'+img_dir+item_obj.id+'/'+((item_obj.image!="")?item_obj.image:'../../default/default.jpg')+'" /></a></li>';
-                                                                                var j=2;
-                                                                                if(otr_images.length > 0){
-                                                                                    $.each(otr_images, function (key, otr_img_name_tmb) {
-                                                                                        content +=   '<li><a data-target="#pic-'+j+'" data-toggle="tab"><img src="'+img_dir+item_obj.id+'/other/'+otr_img_name_tmb+'" /></a></li>';
-                                                                                        j++;
-                                                                                    });
-                                                                                    }
-
-                                                                                content += '</ul>'+
-
-                                                                                        '</div>'+
-                                                                                        '<div class="details col-md-6">'+
-                                                                                                '<h3 class="product-title">Code: '+item_obj.item_code+'</h3> '+
-                                                                                                '<h4 class="product-title">Name: '+item_obj.item_name+'</h4> ';
-                                                                                    if(item_obj.is_gem == 1){
-                                                                                        content += (item_obj.treatment_name != null)?'<text> CDC: '+item_obj.treatment_name+' </text>':'';
-                                                                                        content += (item_obj.color_name != null)?'<text> Color: '+item_obj.color_name+' </text>':'';
-                                                                                        content += (item_obj.shape_name != null)?'<text> Shape: '+item_obj.shape_name+' </text>':'';
-                                                                                        content += (item_obj.certification_name != null)?'<text> Certification: '+item_obj.certification_name+' </text>':'';
-                                                                                        content += (item_obj.certification_no != "")?'<text> Certification ID/No: '+item_obj.certification_no+' </text>':'';
-                                                                                        content += (item_obj.origin_name != "")?'<text> Origin: '+item_obj.origin_name+' </text>':'';
-                                                                                    }
-                                                                                    content += '<h4 class="price">Price: <span>'+((typeof(item_obj.item_price_info.currency_code) != 'undefined')?item_obj.item_price_info.currency_code:'')+' '+ ((typeof(item_obj.item_price_info.price_amount) != 'undefined')?item_obj.item_price_info.price_amount:'--')+'</span></h4>';
+                                                                  '<div class="col-md-12 bg-gray " style="padding: 20px 0 20px; ">';
+                                                                     
+                                                                    content += '<div class="preview col-md-6">'+
+                                                                                              '<div class="preview-pic tab-content">'+
+                                                                                                '<div class="tab-pane active" id="'+item_obj.item_id+'-pic-1"><img style="width:'+(window.innerWidth)+'px;"  src="'+img_dir+item_obj.item_id+'/'+((item_obj.image!="")?item_obj.image:'../../default/default.jpg')+'" /></div>';
+                                                                            var i=2;
+                                                                            if(otr_images.length>0){
+                                                                                $.each(otr_images, function (key, otr_img_name) {
+                                                                                    content +=   '<div class="tab-pane" id="'+item_obj.item_id+'-pic-'+i+'"><img src="'+img_dir+item_obj.item_id+'/other/'+otr_img_name+'" /></div>';
+                                                                                    i++;
+                                                                                });
+                                                                            } 
+                                                                        content +=   '</div>'+
+                                                                                        '<ul class="preview-thumbnail nav nav-tabs">'+
+                                                                                          '<li class="active"><a data-target="#'+item_obj.item_id+'-pic-1" data-toggle="tab"><img src="'+img_dir+item_obj.item_id+'/'+((item_obj.image!="")?item_obj.image:'../../default/default.jpg')+'" /></a></li>';
+                                                                        var j=2;
+                                                                        if(otr_images.length > 0){
+                                                                            $.each(otr_images, function (key, otr_img_name_tmb) {
+                                                                                content +=   '<li><a data-target="#'+item_obj.item_id+'-pic-'+j+'" data-toggle="tab"><img src="'+img_dir+item_obj.item_id+'/other/'+otr_img_name_tmb+'" /></a></li>';
+                                                                                j++;
+                                                                            });
+                                                                            }
 
 
-                                                                                    content += '<h5 class="price">Available: <span>'+item_obj.item_stock_info.tot_units_1+' '+item_obj.unit_abbreviation+((parseFloat(item_obj.item_stock_info.tot_units_2)>0)?'  |  '+item_obj.item_stock_info.tot_units_2+' '+item_obj.unit_abbreviation_2:'')+'</span></h5>';
-                                                                                    content += '<div class="quantity buttons_added">'+
-                                                                                                        '<input type="button" value="-" class="minus">'+
-                                                                                                        '<input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="input-text qty text form-group" size="6" pattern="" inputmode="">'+
-                                                                                                        '<input type="button" value="+" class="plus">'+
-                                                                                                '</div>';
+                                                                    content += '</ul>'+
 
-                                                                                    content +=    '<div class="action">'+
-                                                                                                        '<button class="add-to-cart btn btn-default" type="button">add to cart</button>'+
-                                                                                                        '<button class="like btn btn-default" type="button"><span class="fa fa-heart"></span></button>'+
-                                                                                                '</div>'+
-                                                                                        '</div>'+
-
-                                                                    '</div>'+
-                                                               '</div>'+
-                                                       '</div>'+ 
-                                                '</div>'+ 
-                                        '</div>';
-
-                        }); 
-                        
-                             $("#item_info_contents").html(content);
-                             
-                    var swiper = new Swiper('.swiper-container');
-                        return false;
-                        
-                        var otr_images = JSON.parse(item_obj.images);  
-//                        alert(otr_images.length)
-                         var content = '<div class="preview col-md-6">'+
-                                                    '<div class="preview-pic tab-content">'+
-                                                      '<div class="tab-pane active" id="pic-1"><img src="'+img_dir+item_obj.id+'/'+((item_obj.image!="")?item_obj.image:'../../default/default.jpg')+'" /></div>';
-                                    
-                                    var i=2;
-                                    if(otr_images.length>0){
-                                        $.each(otr_images, function (key, otr_img_name) { 
-                                            content +=   '<div class="tab-pane" id="pic-'+i+'"><img src="'+img_dir+item_obj.id+'/other/'+otr_img_name+'" /></div>';
-                                            i++;
-                                        });
-                                    }
-                                    content +=   '</div>'+
-                                                    '<ul class="preview-thumbnail nav nav-tabs">'+
-                                                      '<li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="'+img_dir+item_obj.id+'/'+((item_obj.image!="")?item_obj.image:'../../default/default.jpg')+'" /></a></li>';
-                                    var j=2;
-                                    if(otr_images.length > 0){
-                                        $.each(otr_images, function (key, otr_img_name_tmb) {
-                                            content +=   '<li><a data-target="#pic-'+j+'" data-toggle="tab"><img src="'+img_dir+item_obj.id+'/other/'+otr_img_name_tmb+'" /></a></li>';
-                                            j++;
-                                        });
-                                        }
-                                        
-                                    content += '</ul>'+
-
-                                            '</div>'+
-                                            '<div class="details col-md-6">'+
-                                                    '<h3 class="product-title">Code: '+item_obj.item_code+'</h3> '+
-                                                    '<h4 class="product-title">Name: '+item_obj.item_name+'</h4> ';
-                                        if(item_obj.is_gem == 1){
-                                            content += (item_obj.treatment_name != null)?'<text> CDC: '+item_obj.treatment_name+' </text>':'';
-                                            content += (item_obj.color_name != null)?'<text> Color: '+item_obj.color_name+' </text>':'';
-                                            content += (item_obj.shape_name != null)?'<text> Shape: '+item_obj.shape_name+' </text>':'';
-                                            content += (item_obj.certification_name != null)?'<text> Certification: '+item_obj.certification_name+' </text>':'';
-                                            content += (item_obj.certification_no != "")?'<text> Certification ID/No: '+item_obj.certification_no+' </text>':'';
-                                            content += (item_obj.origin_name != "")?'<text> Origin: '+item_obj.origin_name+' </text>':'';
-                                        }
-                                        content += '<h4 class="price">Price: <span>'+((typeof(item_obj.item_price_info.currency_code) != 'undefined')?item_obj.item_price_info.currency_code:'')+' '+ ((typeof(item_obj.item_price_info.price_amount) != 'undefined')?item_obj.item_price_info.price_amount:'--')+'</span></h4>';
+                                                                            '</div>'+
+                                                                            '<div class="details col-md-6">'+
+                                                                                    '<h3 class="product-title">Code: '+item_obj.item_code+'</h3> '+
+                                                                                    '<h4 class="product-title">Name: '+item_obj.item_name+'</h4>';
+                                                                    if(item_obj.is_gem == 1){
+                                                                        content += (item_obj.treatment_name != null)?'<text> CDC: '+item_obj.treatment_name+' </text>':'';
+                                                                        content += (item_obj.color_name != null)?'<text> Color: '+item_obj.color_name+' </text>':'';
+                                                                        content += (item_obj.shape_name != null)?'<text> Shape: '+item_obj.shape_name+' </text>':'';
+                                                                        content += (item_obj.certification_name != null)?'<text> Certification: '+item_obj.certification_name+' </text>':'';
+                                                                        content += (item_obj.certification_no != "")?'<text> Certification ID/No: '+item_obj.certification_no+' </text>':'';
+                                                                        content += (item_obj.origin_name != "")?'<text> Origin: '+item_obj.origin_name+' </text>':'';
+                                                                    }
                                        
-            
-                                        content += '<h5 class="price">Available: <span>'+item_obj.item_stock_info.tot_units_1+' '+item_obj.unit_abbreviation+((parseFloat(item_obj.item_stock_info.tot_units_2)>0)?'  |  '+item_obj.item_stock_info.tot_units_2+' '+item_obj.unit_abbreviation_2:'')+'</span></h5>';
-                                        content += '<div class="quantity buttons_added">'+
-                                                            '<input type="button" value="-" class="minus">'+
-                                                            '<input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="input-text qty text form-group" size="6" pattern="" inputmode="">'+
-                                                            '<input type="button" value="+" class="plus">'+
-                                                    '</div>';
-                                     
-                                        content +=    '<div class="action">'+
-                                                            '<button class="add-to-cart btn btn-default" type="button">add to cart</button>'+
-                                                            '<button class="like btn btn-default" type="button"><span class="fa fa-heart"></span></button>'+
-                                                    '</div>'+
-                                            '</div>';
-                                            
-                                        
-                             $("#itm_modal_content").html(content);
+                                                                        content +=  '<h3 class="price">Price: <span>'+((typeof(item_obj.item_price_info.currency_code) != 'undefined')?item_obj.item_price_info.currency_code:'')+' '+ ((typeof(item_obj.item_price_info.price_amount) != 'undefined')?item_obj.item_price_info.price_amount:'--')+'</span></h3>'+
+                                                                                     '<input type="number" min="0" value="'+((typeof(item_obj.item_price_info.price_amount) != 'undefined')?item_obj.item_price_info.price_amount:'0')+'" class="form-group input-lg col-sm-8 col-xs-8 amount_inpt">'+
+                                                                                     '<h4 class="price">Available: <span>'+item_obj.item_stock_info.tot_units_1+' '+item_obj.unit_abbreviation+((parseFloat(item_obj.item_stock_info.tot_units_2)>0)?'  |  '+item_obj.item_stock_info.tot_units_2+' '+item_obj.unit_abbreviation_2:'')+'</span></h4>'+
+
+                                                                                     '<div class="quantity buttons_added row pad" >'+
+                                                                                              '<input type="button" value="-" class="minus btn btn-lg bg-red-gradient col-sm-2 col-xs-2">'+
+                                                                                              '<input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="col-xs-4 col-sm-4 input-text qty text form-group input-lg" size="6" pattern="" inputmode="">'+
+                                                                                              '<input type="button" value="+" class="plus btn btn-lg bg-green-gradient col-sm-2 col-xs-2">'+
+                                                                                      '</div>'+
+                                                                                     '<div class="action">'+
+                                                                                             '<button class="like btn btn-default " type="button"><span class="fa fa-backward"></span> Back</button>'+
+                                                                                             '<button class="add-to-cart btn btn-default" type="button"><span class="fa fa-plus"></span> add to order</button>'+
+                                                                                     '</div>'+
+                                                                             '</div>'+
+                                                                          '</div>'+
+                                                                     '</div>'+
+                                                             '</div>'+ 
+                                                      '</div>'+ 
+                                        '</div>';
+                                count++;
+                                
+                        }); 
+                            
+                             $("#item_info_contents").html(content);  
+                            var swiper = new Swiper('.swiper-container',{initialSlide:init_id});
+                            
+                            swiper.slideTo(index, speed, runCallbacks);
+                            $('.add-to-cart').click(function(){
+                                
+                            var aa = $('.swiper-slide-active .amount_inpt').val();
+                        alert(aa)
+                            });
+                         
                              
                         
                 }

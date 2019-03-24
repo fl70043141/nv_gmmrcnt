@@ -137,7 +137,7 @@ class Order_ecatalog extends CI_Controller {
                     if($item['tot_units_1'] > 0){
                         $data['item_res'][$item['item_id']] = $item; 
                         $data['item_res'][$item['item_id']]['item_price_info'] = $this->Order_ecataog_modal->get_item_price($item['id'],$input['price_type_id']); 
-                        $data['item_res'][$item['item_id']]['stock_info'] = $this->Order_ecataog_modal->get_item_stock($item['id']); 
+                        $data['item_res'][$item['item_id']]['item_stock_info'] = $this->Order_ecataog_modal->get_item_stock($item['id']); 
                     }
                 }
             }
