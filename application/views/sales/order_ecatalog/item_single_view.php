@@ -195,6 +195,13 @@ function load_item_info(item_id,init_id = 0){
                                 var next_page = parseFloat($('#curr_page_no').val()) + 1;
                                 window.location = "<?php echo base_url($this->router->fetch_class().'/view_item/0/');?>/"+$('#item_category_id').val()+'/'+next_page;
                             });
+                            swiper.on('reachBeginning', function () { 
+//                                alert($('#curr_page_no').val()) 
+                                var prev_page = parseFloat($('#curr_page_no').val()) - 1;
+                                if(prev_page>0){
+                                    window.location = "<?php echo base_url($this->router->fetch_class().'/view_item/8/');?>/"+$('#item_category_id').val()+'/'+prev_page;
+                                }
+                            });
                             
                             swiper.slideTo(index, speed, runCallbacks);
 //                            $('.add-to-cart').click(function(){
