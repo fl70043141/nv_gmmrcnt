@@ -111,7 +111,7 @@ class Order_ecatalog extends CI_Controller {
             echo json_encode($data);
         }
         
-        function view_item($item_id, $item_categorty_id='',$page_no=''){
+        function view_item($item_id, $item_categorty_id=0,$page_no=''){
 //            $this->load->view('sales/order_ecatalog/item_single_view');
             $data['item_id'] = $item_id;
             $data['item_cat_id'] = $item_categorty_id;
@@ -121,9 +121,10 @@ class Order_ecatalog extends CI_Controller {
         }
         
         function search_items_page(){
-             $input = $this->input->post();
+            $input = $this->input->post();
+//            echo '<pre>';            print_r($input); die;
             $search_data=array(  
-                                'category_id' => $input['item_category_id'],  
+                                'category_id' => ($input['item_category_id']==0)?'':$input['item_category_id'],  
                                 'item_code' => (isset($input['item_code']))?$input['item_code']:'',   
                                 'price_type_id' => $input['price_type_id'],   
                                 );
@@ -133,7 +134,6 @@ class Order_ecatalog extends CI_Controller {
             $data = array();
             if(!empty($item_res)){
                 foreach ($item_res as $item){ 
-//                    echo '<pre>';            print_r($item); die;
                     if($item['tot_units_1'] > 0){
                         $data['item_res'][$item['item_id']] = $item; 
                         $data['item_res'][$item['item_id']]['item_price_info'] = $this->Order_ecataog_modal->get_item_price($item['id'],$input['price_type_id']); 
