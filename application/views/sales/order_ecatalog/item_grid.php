@@ -1,6 +1,6 @@
 
  
-<?php // echo '<pre>'; print_r($_GET); die;?>
+<?php // echo '<pre>'; print_r($category_id); die;?>
 
 <div class="row">
 <div class="col-md-12">
@@ -110,8 +110,7 @@ function get_item_results(){
                             type: 'post',
                             data : post_data,
                             success: function(result){  
-                                 $("#result_search_itm").html(result);
-    //                             $(".dataTable").DataTable();
+                                 $("#result_search_itm").html(result); 
                         }
                     });
             }

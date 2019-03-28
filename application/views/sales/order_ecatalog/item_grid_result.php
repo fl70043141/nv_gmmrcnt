@@ -176,7 +176,7 @@
                                             echo '
                                                     <div class="item image-grid__item no-padding">
                                                         <div class="thumbnail">
-                                                            <img class="group list-group-image img-bordered-sm" style="width:400px;" src="'.base_url(ITEM_IMAGES.(($item['image']!='')?$item['id'].'/'.$item['image']:'../default/default.jpg')).'" alt="" />
+                                                            <img class="group list-group-image img-bordered-sm" style="width:400px;" src="'.base_url(ITEM_IMAGES.(($item['image']!='')?$item['item_id'].'/'.$item['image']:'../default/default.jpg')).'" alt="" />
                                                             <div class="caption" >
                                                                 <h4 class="group inner list-group-item-heading" style="text-align:center;"> '.$item['item_code'].' |  '.$item['item_name'].'</h4>
                                                                 <div class="row">
@@ -184,7 +184,7 @@
                                                                         <p class=""  style="text-align:center;">Price '.((!empty($item['price_info']))?$item['price_info']['currency_code'].' '.$item['price_info']['price_amount']:'-').'</p>
                                                                     </div>
                                                                     <div class="col-xs-12 col-md-12 ">
-                                                                        <a id="'.$item['id'].'_btn_view" href="'.base_url($this->router->fetch_class().'/view_item/'.$item['id'].'/'.(($category_id1!='')?$category_id1:0).'/'.$cur_page1).'" class="itm_btn_view btn btn-default center-block "  >View</a>
+                                                                        <a id="'.$item['item_id'].'_btn_view" target="_blank" href="'.base_url($this->router->fetch_class().'/view_item/'.$item['item_id'].'/'.(($category_id1!='')?$category_id1:0).'/'.$cur_page1).'" class="itm_btn_view btn btn-default center-block "  >View</a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -209,7 +209,7 @@
     </div>
 
       <p class="pagination">
-          <a class="pagination__next" href="<?php echo base_url($this->router->fetch_class().'/image_loader/'.($cur_page1+1).'/'.$category_id1);?>">Next page</a>
+          <a class="pagination__next" href="<?php echo base_url($this->router->fetch_class().'/image_loader/'.$category_id1.'/'.($cur_page1+1));?>">Next page</a>
       </p>
  
 

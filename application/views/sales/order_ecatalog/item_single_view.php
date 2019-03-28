@@ -92,13 +92,13 @@
         swiper.on('reachEnd', function () {  
             var next_page = parseFloat($('#curr_page_no').val()) + 1;
             $('#curr_page_no').val(next_page); 
-            load_item_info(0,(swiper.activeIndex+1)); 
+            load_item_info(0,(swiper.activeIndex+1),'A',false); 
         });
-        swiper.on('reachBeginning', function () {  
+        swiper.on('reachBeginning', function () { 
             var prev_page = parseFloat($('#curr_page_no').val()) - 1; 
             if(prev_page>0){
                 $('#curr_page_no').val(prev_page); 
-                load_item_info(0,(swiper.activeIndex-1),'P'); 
+                load_item_info(0,(swiper.activeIndex-1),'P',false); 
             }
         });
     $(document).ready(function(){
@@ -107,7 +107,7 @@
         
     });
     
-function load_item_info(item_id,init_id = 0,type='A'){ // A: append, P:prepend
+function load_item_info(item_id,init_id = 0,type='A',slideTo=true){ // A: append, P:prepend
     
 //    $("#result_search_itm").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Retrieving Data..');    
     var post_data = jQuery('#form_item_view').serializeArray(); 
@@ -122,19 +122,13 @@ function load_item_info(item_id,init_id = 0,type='A'){ // A: append, P:prepend
                         var img_dir = '<?php echo base_url().ITEM_IMAGES;?>';
                         var item_list_obj = JSON.parse(result);  
                         var item_list = item_list_obj.item_res; 
-                         
-//                        console.log(item_list); 
-//                        if(typeof(item_list) == 'undefined'){
-//                            fl_alert("warning", "No Available items to load!");
-//                            return false;
-//                        }
+                        
                         $.each(item_list, function (key, item_obj) {
                             if(item_id == item_obj.item_id){
                                 init_id = count;
                             }
                             var otr_images = JSON.parse(item_obj.images); 
                             var cur_page = $('#curr_page_no').val();
-//                            console.log(item_obj);
                             content += '<div id="'+item_obj.item_id+'_itemdiv" class="page_'+cur_page+' swiper-slide '+((item_obj.item_id == item_id)?'swiper-slide-active':'')+'">'+
                                             '<div class="box-body bg-gray-light">'+
                                                   '<div class="container-fliud">'+
@@ -168,7 +162,8 @@ function load_item_info(item_id,init_id = 0,type='A'){ // A: append, P:prepend
                                                                             '</div>'+
                                                                             '<div class="details col-md-6">'+
                                                                                     '<h3 class="product-title">Code: '+item_obj.item_code+'</h3> '+
-                                                                                    '<h4 class="product-title">Name: '+item_obj.item_name+'</h4>';
+                                                                                    '<h4 class="product-title">Name: '+item_obj.item_name+'</h4>'+
+                                                                                    ((item_obj.is_gem == 0)?'<h5 class="product-title">Category: '+item_obj.category_name+'</h5>':'')+'';
                                                                     if(item_obj.is_gem == 1){
                                                                         content += (item_obj.treatment_name != null)?'<text> CDC: '+item_obj.treatment_name+' </text>':'';
                                                                         content += (item_obj.color_name != null)?'<text> Color: '+item_obj.color_name+' </text>':'';
@@ -187,9 +182,9 @@ function load_item_info(item_id,init_id = 0,type='A'){ // A: append, P:prepend
                                                                                               '<input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="col-xs-4 col-sm-4 input-text qty text form-group input-lg" size="6" pattern="" inputmode="">'+
                                                                                               '<input type="button" value="+" class="plus btn btn-lg bg-green-gradient col-sm-2 col-xs-2">'+
                                                                                       '</div>'+
-                                                                                     '<div class="action">'+
-                                                                                             '<button class="like btn btn-default " type="button"><span class="fa fa-backward"></span> Back</button>'+
-                                                                                             '<button class="add-to-cart btn btn-default" type="button"><span class="fa fa-plus"></span> add to order</button>'+
+                                                                                     '<div class="action row">'+
+                                                                                                '<div class="col-md-6 col-xs-6 col-sm-6"> <a onclick="window.close()"class="like btn btn-default  btn-block" type="button"><span class="fa fa-backward"></span> Back</a> </div>'+
+                                                                                                '<div class="col-md-6  col-xs-6 col-sm-6"> <button class="add-to-cart btn btn-default pull-right  btn-block bg-blue" type="button"><span class="fa fa-plus"></span> add to order</button> </div>'+
                                                                                      '</div>'+
                                                                              '</div>'+
                                                                           '</div>'+
@@ -201,11 +196,13 @@ function load_item_info(item_id,init_id = 0,type='A'){ // A: append, P:prepend
                                 
                         }); 
                             if(type == 'P'){
-                                swiper.prependSlide(content);    
-                                swiper.slideTo(8, 100, false);
+                                swiper.prependSlide(content); 
+                                if(slideTo)
+                                    swiper.slideTo(8, 100, false);
                             }else{
                                 swiper.appendSlide(content);
-                                swiper.slideTo(init_id, 100, false);
+                                if(slideTo)
+                                    swiper.slideTo(init_id, 100, false);
                             }
 //                             $("#item_info_contents").append(content); 
 

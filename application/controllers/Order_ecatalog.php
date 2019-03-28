@@ -15,14 +15,14 @@ class Order_ecatalog extends CI_Controller {
             $this->load->view('includes/template',$data);
 	}
         
-        public function item_list($page_no='1',$cat_id=""){ 
+        public function item_list($cat_id="", $page_no='1'){ 
             $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories');
             $data['category_id'] = $cat_id;
             $data['page_no'] = $page_no;
             $data['main_content']='sales/order_ecatalog/item_grid';  
             $this->load->view('includes/template',$data);
 	}
-        public function image_loader($page_no=1,$cat_id=""){  
+        public function image_loader($cat_id="", $page_no='1'){  
 //            $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories');
             
             $cur_page = (isset($page_no) && $page_no>0)?$page_no:1 ;
