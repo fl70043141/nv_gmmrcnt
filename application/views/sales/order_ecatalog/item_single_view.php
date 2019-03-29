@@ -98,7 +98,7 @@
             var prev_page = parseFloat($('#curr_page_no').val()) - 1; 
             if(prev_page>0){
                 $('#curr_page_no').val(prev_page); 
-                load_item_info(0,(swiper.activeIndex-1),'P',false); 
+                load_item_info(0,(swiper.activeIndex-1),'P',true); 
             }
         });
     $(document).ready(function(){
@@ -197,8 +197,10 @@ function load_item_info(item_id,init_id = 0,type='A',slideTo=true){ // A: append
                         }); 
                             if(type == 'P'){
                                 swiper.prependSlide(content); 
-                                if(slideTo)
-                                    swiper.slideTo(8, 100, false);
+                                if(slideTo){
+                                    swiper.slideTo(9, 100, false);
+//                                    alert(8)
+                                }
                             }else{
                                 swiper.appendSlide(content);
                                 if(slideTo)
