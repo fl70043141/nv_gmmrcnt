@@ -174,17 +174,17 @@ function load_item_info(item_id,init_id = 0,type='A',slideTo=true){ // A: append
                                                                     }
                                        
                                                                         content +=  '<h3 class="price">Price: <span>'+((typeof(item_obj.item_price_info.currency_code) != 'undefined')?item_obj.item_price_info.currency_code:'')+' '+ ((typeof(item_obj.item_price_info.price_amount) != 'undefined')?item_obj.item_price_info.price_amount:'--')+'</span></h3>'+
-                                                                                     '<input type="number" min="0" value="'+((typeof(item_obj.item_price_info.price_amount) != 'undefined')?item_obj.item_price_info.price_amount:'0')+'" class="form-group input-lg col-sm-8 col-xs-8 amount_inpt">'+
+                                                                                     '<input  id="'+item_obj.item_id+'_amountinpt" type="number" min="0" value="'+((typeof(item_obj.item_price_info.price_amount) != 'undefined')?item_obj.item_price_info.price_amount:'0')+'" class="form-group input-lg col-sm-8 col-xs-8 amount_inpt">'+
                                                                                      '<h4 class="price">Available: <span>'+item_obj.item_stock_info.tot_units_1+' '+item_obj.unit_abbreviation+((parseFloat(item_obj.item_stock_info.tot_units_2)>0)?'  |  '+item_obj.item_stock_info.tot_units_2+' '+item_obj.unit_abbreviation_2:'')+'</span></h4>'+
 
                                                                                      '<div class="quantity buttons_added row pad" >'+
                                                                                               '<input type="button" value="-" class="minus btn btn-lg bg-red-gradient col-sm-2 col-xs-2">'+
-                                                                                              '<input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="col-xs-4 col-sm-4 input-text qty text form-group input-lg" size="6" pattern="" inputmode="">'+
+                                                                                              '<input id="'+item_obj.item_id+'_qtyinpt" type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="col-xs-4 col-sm-4 input-text qty text form-group input-lg" size="6" pattern="" inputmode="">'+
                                                                                               '<input type="button" value="+" class="plus btn btn-lg bg-green-gradient col-sm-2 col-xs-2">'+
                                                                                       '</div>'+
                                                                                      '<div class="action row">'+
                                                                                                 '<div class="col-md-6 col-xs-6 col-sm-6"> <a onclick="window.close()"class="like btn btn-default  btn-block" type="button"><span class="fa fa-backward"></span> Back</a> </div>'+
-                                                                                                '<div class="col-md-6  col-xs-6 col-sm-6"> <button class="add-to-cart btn btn-default pull-right  btn-block bg-blue" type="button"><span class="fa fa-plus"></span> add to order</button> </div>'+
+                                                                                                '<div class="col-md-6  col-xs-6 col-sm-6"> <a  id="'+item_obj.item_id+'_addcartbtn"  class="add-to-cart btn btn-default pull-right  btn-block bg-blue" type="button"><span class="fa fa-plus"></span> add to order</a> </div>'+
                                                                                      '</div>'+
                                                                              '</div>'+
                                                                           '</div>'+
@@ -210,12 +210,26 @@ function load_item_info(item_id,init_id = 0,type='A',slideTo=true){ // A: append
 
                              
                              //tmb pic resize
-                             $('.tmb-img').each(function(){
-                                var cw = $('#'+(this.id)).width();
-                                $('#'+this.id).css({'height':(cw*0.75)+'px'});
-                             }); 
+//                             $('.tmb-img').each(function(){
+//                                var cw = $('#'+(this.id)).width();
+//                                $('#'+this.id).css({'height':(cw*0.75)+'px'});
+//                             }); 
                             
-                             
+                             $('.add-to-cart').click(function(){
+                                 var add_item_id = (this.id).split("_")[0];
+                                 
+                                 var unit_price = parseFloat($('#'+add_item_id+'_amountinpt').val());
+                                 var units = parseFloat($('#'+add_item_id+'_qtyinpt').val()); 
+                                  
+                                 if(units <=0 || isNaN(units)){
+                                     fl_alert('warning','Item Units invalid! Please Check bfore add.');
+                                     return false;
+                                 }
+                                 if(unit_price <=0 || isNaN(unit_price)){
+                                     fl_alert('warning','Item Unit Price invalid!');
+                                     return false;
+                                 } 
+                             });
                         
                 }
             });

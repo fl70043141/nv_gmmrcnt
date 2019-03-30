@@ -157,14 +157,14 @@ class Quick_entries extends CI_Controller {
                     
 		$add_stat = $this->Quick_entries_model->add_db($data);
                 
-		if($add_stat[0]){ 
+		if($add_stat){ 
                     //update log data
                     $new_data = $this->Quick_entries_model->get_single_row($add_stat[1]);
                     add_system_log(QUOTATIONS, $this->router->fetch_class(), __FUNCTION__, '', $new_data);
                     $this->session->set_flashdata('warn',RECORD_ADD);
-                    redirect(base_url($this->router->fetch_class().'/view/'.$quote_id)); 
+                    redirect(base_url($this->router->fetch_class().'/'.$quote_id)); 
                 }else{
-                    $this->session->set_flashdata('warn',ERROR);
+                    $this->session->set_flashdata('error',ERROR);
                     redirect(base_url($this->router->fetch_class()));
                 } 
 	}
