@@ -109,6 +109,42 @@ class Order_ecataog_modal extends CI_Model
             return (!empty($result[0])?$result[0]:'');
 	}
         
+        function get_tmp_order_open($user_id,$where=''){ 
+            $this->db->select('sot.*');
+            $this->db->from(SALES_ORDER_ITEM_TEMP.' sot');
+            $this->db->where('sot.user_id',$user_id);
+            $this->db->where('sot.deleted',0);
+            if($where !='') $this->db->where($where);
+            
+            $result = $this->db->get()->result_array();
+            
+            return (!empty($result[0])?$result[0]:'');
+        }
+        
+        public function insert_temp_item($data){    
+              $this->db->trans_start();
+              $this->db->insert(SALES_ORDER_ITEM_TEMP, $data);   
+              $status=$this->db->trans_complete();
+              return $status;
+	}
+        
+        public function update_temp_item($id,$data){   
+            
+              $this->db->trans_start();
+              $this->db->where('id',$id);   
+              $this->db->update(SALES_ORDER_ITEM_TEMP, $data);   
+              $status=$this->db->trans_complete();
+              return $status;
+	}
+        public function cancel_temp_opened_order(){   
+              $cur_user_id = $this->session->userdata(SYSTEM_CODE)['ID'];
+              
+              $this->db->trans_start();
+              $this->db->where('user_id',$cur_user_id);   
+              $this->db->delete(SALES_ORDER_ITEM_TEMP);   
+              $status=$this->db->trans_complete();
+              return $status;
+	}
         
         
         
@@ -288,12 +324,6 @@ class Order_ecataog_modal extends CI_Model
 //                echo '<pre>';                print_r($status);
                 return $status;	
 	} 
-        public function insert_temp_item($data){    
-              $this->db->trans_start();
-              $this->db->insert(SALES_ORDER_ITEM_TEMP, $data);   
-              $status=$this->db->trans_complete();
-              return $status;
-	}
                         
         public function add_db($data){    
 //            echo '<pre>';            print_r($data); die; 

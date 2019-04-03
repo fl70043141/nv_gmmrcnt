@@ -42,7 +42,7 @@ class Sales_order_items extends CI_Controller {
 //            $this->load->view('includes/template',$data);
 //	}
         
-	function add(){ 
+	function add($temp_id=''){ 
             $data  			= $this->load_data(); 
             $data['action']		= 'Add';
             $data['main_content']='sales_order_items/manage_sales_orders';    
@@ -132,7 +132,6 @@ class Sales_order_items extends CI_Controller {
         }
         
 	function create(){   
-//            echo '<pre>';            print_r($this->input->post()); die;
             
             $inputs = $this->input->post();
             $sale_order_id = get_autoincrement_no(SALES_ORDERS);
@@ -225,13 +224,14 @@ class Sales_order_items extends CI_Controller {
 		$add_stat = $this->Sales_order_items_model->add_db($data);
                 
 		if($add_stat[0]){ 
-                    
-                    $del_res = $this->Sales_order_items_model->delete_temp_so_item($this->session->userdata(SYSTEM_CODE)['ID'].'_so_0');
+                    $this->load->model('Order_ecataog_modal');
+                    $del_res = $this->Order_ecataog_modal->cancel_temp_opened_order();//remove temp opend order
+//                    $del_res = $this->Sales_order_items_model->delete_temp_so_item($this->session->userdata(SYSTEM_CODE)['ID'].'_so_0');
                     //update log data
                     $new_data = $this->Sales_order_items_model->get_single_row($add_stat[1]);
                     add_system_log(SALES_ORDERS, $this->router->fetch_class(), __FUNCTION__, '', $new_data);
                     $this->session->set_flashdata('warn',RECORD_ADD);
-                    redirect(base_url('Sales_orders/edit/'.$sale_order_id)); 
+                    redirect(base_url('Sales_order_items/edit/'.$sale_order_id)); 
                 }else{
                     $this->session->set_flashdata('warn',ERROR);
                     redirect(base_url($this->router->fetch_class()));

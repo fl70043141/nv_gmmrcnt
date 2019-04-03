@@ -85,11 +85,11 @@ endswitch;
     
         <div class="">
             <!--<a href="<?php // echo base_url($this->router->fetch_class().'/add');?>" class="btn btn-app "><i class="fa fa-plus"></i>New Order</a>-->
-            <a href="<?php echo base_url($this->router->fetch_class());?>" class="btn btn-app "><i class="fa fa-plus-circle"></i>Add Item</a>
-            <a href="#" id="add_old_gold" class="btn btn-app "><i class="fa fa-chain"></i>Old Gold</a>
+            <a href="<?php echo base_url('Order_ecatalog');?>" class="btn btn-app "><i class="fa fa-plus-circle"></i>Add Item</a>
+            <!--<a href="#" id="add_old_gold" class="btn btn-app "><i class="fa fa-chain"></i>Old Gold</a>-->
             <a href="<?php echo base_url($this->router->fetch_class().'/print_sales_order/'.$result['id']);?>" class=" <?php echo $add_hide; ?> btn btn-app "><i class="fa fa-print"></i>Print SO</a>
-            <a href="<?php echo base_url($this->router->fetch_class().'/add_item_by_cat/'.$result['id']);?>" class="pull-right btn btn-app success <?php echo $add_hide;?>"><i class="fa fa-list"></i>New Item</a>
-            <a href="<?php echo base_url('Sales_orders/add/?soid'.$result['id']);?>" class="pull-right btn btn-app success <?php echo $add_hide;?>"><i class="fa fa-truck"></i>Create Invoice</a>
+            <a href="<?php echo base_url('Order_ecatalog/index/'.$result['id']);?>" class="pull-right btn btn-app success <?php echo $add_hide;?>"><i class="fa fa-list"></i>New Item</a>
+            <a href="<?php echo base_url('Sales_orders/add/?soid='.$result['id']);?>" class="pull-right btn btn-app success <?php echo $add_hide;?>"><i class="fa fa-truck"></i>Create Invoice</a>
 
         </div>
     </div>
@@ -253,7 +253,7 @@ endswitch;
                                                <th width="5%" style="text-align: center;">Action</th>
                                            </tr>
                                        </thead>
-                                       <tbody>
+                                       <tbody  id="tbody_list">
                                            <?php
                                                 $row_count = 3;$i=1;
                                                 $so_total= 0;
@@ -352,7 +352,7 @@ endswitch;
                             </div>
                             <div class="col-md-12">
                                 <button id="place_invoice" class="btn btn-app pull-right  primary"><i class="fa fa-check"></i><?php echo constant($action);?> Order</button>
-                                <a href="<?php echo base_url("Sales_orders");?>" id="cancel_so" class="btn btn-app pull-right  primary"><i class="fa fa-times"></i>Cancel Order</a>
+                                <a id="cancel_so" class="btn btn-app pull-right  primary"><i class="fa fa-times"></i>Cancel Order</a>
                 
                             </div>
                         </div>
@@ -399,6 +399,7 @@ $(document).keypress(function(e) {
         }
     });
 $(document).ready(function(){
+    load_temp_order();
 //    $("#add_old_gold").click(function(){ 
 //        var cust_id = $('#customer_id').val();
 //        window.open("<?php // echo base_url("Buy_gold/add_POS");?>/"+cust_id+"?type=so_og", "popupWindow", "width=1300, height=600, scrollbars=yes");
@@ -429,6 +430,10 @@ $(document).ready(function(){
      $("#cancel_so").click(function(){
         if(!confirm("Click ok confirm Cancel the Order")){
             return false;
+        }
+        var res = cancel_open_temp_order();
+        if(res=='1'){
+            window.location.href = "<?php echo base_url('Sales_order_items');?>";
         }
     });
     get_branch_drpdwn();
@@ -487,9 +492,7 @@ $(document).ready(function(){
                                 var newRow = $(row_str);
                                 $('#description').val('');
                                 jQuery('table#invoice_list_tbl ').append(newRow);
-                                var inv_total = parseFloat($('#invoice_total').val()) + item_total;
-                                $('#invoice_total').val(inv_total.toFixed(2));
-                                $('#inv_total').text(inv_total.toFixed(2));
+                                calc_total();
 
                                 //delete row
                                 $('.del_btn_inv_row').click(function(){
@@ -497,13 +500,8 @@ $(document).ready(function(){
 //                                        return false;
 //                                    }
                                     var tot_amt = 0;
-                                    $(this).closest('tr').remove(); 
-                                    $('input[class^="item_tots"]').each(function() {
-//                                        console.log(this);
-                                        tot_amt = tot_amt + parseFloat($(this).val());
-                                    });
-                                    $('#invoice_total').val(tot_amt.toFixed(2));
-                                    $('#inv_total').text(tot_amt.toFixed(2)); 
+                                    $(this).closest('tr').remove();
+                                    calc_total();
                                 });
                         }
 		});
@@ -784,10 +782,8 @@ $(document).ready(function(){
                                                                '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
                                                            '</tr>';
                                        var newRow = $(row_str);
-                                       jQuery('table#invoice_list_tbl ').append(newRow);
-                                       var inv_total = parseFloat($('#invoice_total').val()) + item_total;
-                                       $('#invoice_total').val(inv_total.toFixed(2));
-                                       $('#inv_total').text(inv_total.toFixed(2));
+                                       jQuery('table#invoice_list_tbl ').append(newRow); 
+                                       calc_total();
 
                                        //delete row
                                        $('.del_btn_inv_row').click(function(){
@@ -796,12 +792,7 @@ $(document).ready(function(){
        //                                    }
                                            var tot_amt = 0;
                                            $(this).closest('tr').remove(); 
-                                           $('input[class^="item_tots"]').each(function() {
-       //                                        console.log(this);
-                                               tot_amt = tot_amt + parseFloat($(this).val());
-                                           });
-                                           $('#invoice_total').val(tot_amt.toFixed(2));
-                                           $('#inv_total').text(tot_amt.toFixed(2)); 
+                                           calc_total()
                                             calc_tots_og(); 
                                        });
                                         
@@ -831,5 +822,88 @@ $(document).ready(function(){
         $('#invoice_total_fin').val(fin_tot);
         $('#inv_total_fin').text(fin_tot.toFixed(2));
     } 
+    
+    function load_temp_order(){
+         $.ajax({
+                           url: "<?php echo site_url('Order_ecatalog/fl_ajax');?>",
+                           type: 'post',
+                           data : {function_name:'get_temp_so_open'},
+                           success: function(result){
+//                                       $("#search_result_1").html(result);;
+                                       var temp_res = JSON.parse(result);
+                                       var apnd_html = "";
+                                       var rowCount = $('#invoice_list_tbl tr').length;
+                                       
+//                                       console.log(temp_res);
+                                        $.each(temp_res,function(itm_id,itm_obj){
+                                                var item_total = parseFloat(itm_obj.temp_info.unit_price) * parseFloat(itm_obj.temp_info.units);
+                                                
+                                               
+                                                 apnd_html = apnd_html + '<tr style="padding:10px" id="tr_'+itm_id+rowCount+'">'+ 
+                                                                         '<td><input hidden name="inv_items['+itm_id+rowCount+'][item_code]" value="'+itm_obj.item_code+'">'+itm_obj.item_code+'</td>'+
+                                                                         '<td><input hidden name="inv_items['+itm_id+rowCount+'][item_desc]" value="'+itm_obj.item_name+'"><input hidden name="inv_items['+itm_id+rowCount+'][item_id]" value="'+itm_id+'">'+itm_obj.item_name+'</td>'+
+                                                                         '<td><input hidden name="inv_items['+itm_id+rowCount+'][description]" value="'+itm_obj.description+'">'+itm_obj.description+'</td>'+
+                                                                         '<td align="right"><input hidden name="inv_items['+itm_id+rowCount+'][item_quantity]" value="'+itm_obj.temp_info.units+'"><input hidden name="inv_items['+itm_id+rowCount+'][item_quantity_2]" value="'+((itm_obj.temp_info.units==null)?0:itm_obj.temp_info.units)+'">'+
+                                                                         '<input hidden name="inv_items['+itm_id+rowCount+'][item_quantity_uom_id]" value="'+itm_obj.item_uom_id+'"><input hidden name="inv_items['+itm_id+rowCount+'][item_quantity_uom_id_2]" value="'+itm_obj.item_uom_id_2+'">'+
+                                                                                                                                                                                                                                                                                                 itm_obj.temp_info.units+' '+itm_obj.unit_abbreviation;
+                                                 if(itm_obj.unit_abbreviation_2!=null && itm_obj.unit_abbreviation_2!=0){
+//                                                     apnd_html = apnd_html + ' | ' + $('#item_quantity_2').val()+' '+res2.unit_abbreviation_2;
+                                                 }                                                                                                                                                                                                                                                                        
+                                                 apnd_html = apnd_html + '</td> <td align="right"><input hidden name="inv_items['+itm_id+rowCount+'][item_unit_cost]" value="'+itm_obj.temp_info.unit_price+'">'+parseFloat(itm_obj.temp_info.unit_price).toFixed(2)+'</td>'+ 
+                                                                         '<td align="right"><input class="item_tots" hidden name="inv_items['+itm_id+rowCount+'][item_total]" value="'+item_total+'">'+item_total.toFixed(2)+'</td>'+
+                                                                         '<td width="5%"><button id="'+itm_id+'__'+'del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
+                                                                     '</tr>';
+//                                                             console.log(apnd_html);
+                                            });
+                                                $('#invoice_list_tbl #tbody_list').html(apnd_html);
+                                                //delete row
+                                                $('.del_btn_inv_row').click(function(){
+                                                    var del_itemid = (this.id).split('__')[0]; 
+                                                    remove_temp_so_item(del_itemid);
+                                                    $(this).closest('tr').remove();
+                                                    calc_total();
+                                                });
+                                                calc_total();
+                                        
+                           }
+               });
+    }
+    
+    function remove_temp_so_item(del_itemid){
+        $.ajax({
+                    url: "<?php echo site_url('Order_ecatalog/fl_ajax');?>",
+                    type: 'post',
+                    data : {function_name:'remove_temp_so_item',del_itemid:del_itemid},
+                    success: function(result){
+
+                    }
+               });
+    }
+    function cancel_open_temp_order(){
+        $.ajax({
+                    url: "<?php echo site_url('Order_ecatalog/fl_ajax');?>",
+                    type: 'post',
+                    data : {function_name:'cancel_open_temp_order'},
+                    success: function(result){
+                        alert(result);
+                    }
+               });
+    }
+    
+    function calc_total(){
+        var grand_total = 0;
+        
+        $('.item_tots').each(function(){
+            grand_total += parseFloat(this.value);
+        });
+        
+            //sub_total
+           $('#invoice_total').val(grand_total);
+           $('#inv_total').text(grand_total.toFixed(2));
+           
+            //Final_total
+           $('#invoice_total_fin').val(grand_total);
+           $('#inv_total_fin').text(grand_total.toFixed(2));
+    }
 </script>
  

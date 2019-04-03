@@ -1,19 +1,7 @@
- <!--Flash Error Msg-->
-        <?php  if($this->session->flashdata('error') != ''){ ?>
-        <div class='alert alert-danger ' id="msg2">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <i ></i>&nbsp;<?php echo $this->session->flashdata('error'); ?>
-        <script>jQuery(document).ready(function(){jQuery('#msg2').delay(1500).slideUp(1000);});</script>
-        </div>
-        <?php } ?>
-
-        <?php  if($this->session->flashdata('warn') != ''){ ?>
-        <div class='alert alert-success ' id="msg2">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <i ></i>&nbsp;<?php echo $this->session->flashdata('warn'); ?>
-        <script>jQuery(document).ready(function(){jQuery('#msg2').delay(1500).slideUp(1000);});</script>
-        </div>
-        <?php } ?>  
+ <!-- Error Msg-->
+ <div id="msgs"> 
+        
+ </div> 
  
 <link rel="stylesheet" href="<?php echo base_url('templates/plugins/item_grid/grid_style.css');?>">
   <link rel="stylesheet" href="https://idangero.us/swiper/dist/css/swiper.min.css">
@@ -41,6 +29,7 @@
     }
   </style>
   <div id="item_res1"> </div>
+  
   <form id="form_item_view" method="post">
   <div class="swiper-container">
       <input hidden type="text" name="item_id_clicked" id="item_id_clicked" value="<?php echo $item_id;?>">
@@ -174,12 +163,13 @@ function load_item_info(item_id,init_id = 0,type='A',slideTo=true){ // A: append
                                                                     }
                                        
                                                                         content +=  '<h3 class="price">Price: <span>'+((typeof(item_obj.item_price_info.currency_code) != 'undefined')?item_obj.item_price_info.currency_code:'')+' '+ ((typeof(item_obj.item_price_info.price_amount) != 'undefined')?item_obj.item_price_info.price_amount:'--')+'</span></h3>'+
-                                                                                     '<input  id="'+item_obj.item_id+'_amountinpt" type="number" min="0" value="'+((typeof(item_obj.item_price_info.price_amount) != 'undefined')?item_obj.item_price_info.price_amount:'0')+'" class="form-group input-lg col-sm-8 col-xs-8 amount_inpt">'+
+                                                                                     '<input  id="'+item_obj.item_id+'_amountinpt" name="item_tmp['+item_obj.item_id+'][unit_price]" type="number" min="0" value="'+((typeof(item_obj.item_price_info.price_amount) != 'undefined')?item_obj.item_price_info.price_amount:'0')+'" class="form-group input-lg col-sm-8 col-xs-8 amount_inpt">'+
                                                                                      '<h4 class="price">Available: <span>'+item_obj.item_stock_info.tot_units_1+' '+item_obj.unit_abbreviation+((parseFloat(item_obj.item_stock_info.tot_units_2)>0)?'  |  '+item_obj.item_stock_info.tot_units_2+' '+item_obj.unit_abbreviation_2:'')+'</span></h4>'+
 
                                                                                      '<div class="quantity buttons_added row pad" >'+
                                                                                               '<input type="button" value="-" class="minus btn btn-lg bg-red-gradient col-sm-2 col-xs-2">'+
-                                                                                              '<input id="'+item_obj.item_id+'_qtyinpt" type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="col-xs-4 col-sm-4 input-text qty text form-group input-lg" size="6" pattern="" inputmode="">'+
+                                                                                              '<input id="'+item_obj.item_id+'_qtyinpt" name="item_tmp['+item_obj.item_id+'][units]" type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="col-xs-4 col-sm-4 input-text qty text form-group input-lg" size="6" pattern="" inputmode="">'+
+                                                                                              '<input hidden id="'+item_obj.item_id+'_itemidinpt" type="text" name="item_tmp['+item_obj.item_id+'][item_id]" value="'+item_obj.item_id+'">'+
                                                                                               '<input type="button" value="+" class="plus btn btn-lg bg-green-gradient col-sm-2 col-xs-2">'+
                                                                                       '</div>'+
                                                                                      '<div class="action row">'+
@@ -216,22 +206,42 @@ function load_item_info(item_id,init_id = 0,type='A',slideTo=true){ // A: append
 //                             }); 
                             
                              $('.add-to-cart').click(function(){
-                                 var add_item_id = (this.id).split("_")[0];
-                                 
-                                 var unit_price = parseFloat($('#'+add_item_id+'_amountinpt').val());
-                                 var units = parseFloat($('#'+add_item_id+'_qtyinpt').val()); 
-                                  
-                                 if(units <=0 || isNaN(units)){
-                                     fl_alert('warning','Item Units invalid! Please Check bfore add.');
-                                     return false;
-                                 }
-                                 if(unit_price <=0 || isNaN(unit_price)){
-                                     fl_alert('warning','Item Unit Price invalid!');
-                                     return false;
-                                 } 
+                                var add_item_id = (this.id).split("_")[0];
+
+                                var unit_price = parseFloat($('#'+add_item_id+'_amountinpt').val());
+                                var units = parseFloat($('#'+add_item_id+'_qtyinpt').val()); 
+
+                                if(units <=0 || isNaN(units)){
+                                    fl_alert('warning','Item Units invalid! Please Check bfore add.');
+                                    return false;
+                                }
+                                if(unit_price <=0 || isNaN(unit_price)){
+                                    fl_alert('warning','Item Unit Price invalid!');
+                                    return false;
+                                }
+                                
+                                var post_data = jQuery('#form_item_view').serializeArray(); 
+                                post_data.push({name:"function_name",value:'add_to_tmp_order'}); 
+                                $.ajax({
+                                            url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>", 
+                                            type: 'post',
+                                            data : {function_name:'add_to_tmp_order', item_id:add_item_id, units: $('#'+add_item_id+'_qtyinpt').val(), unit_price: $('#'+add_item_id+'_amountinpt').val() },
+                                            success: function(result1){   
+                                                if(result1=='1'){
+                                                    $('#msgs').html('<div class="alert alert-success msg_err"> <a class="close" data-dismiss="alert" href="#">&times;</a>  <i class="fa fa-check-circle"></i>&nbsp; Item Successfully added to order  </div>')
+                                                }else{
+                                                    $('#msgs').html('<div class="alert alert-danger msg_err"> <a class="close" data-dismiss="alert" href="#">&times;</a>  <i class="fa fa-warning"></i>&nbsp;Error! Something went wrong!  </div>')
+                                                } 
+                                                
+                                                $('.msg_err').delay(1500).slideUp(1000);
+                                            }
+                                        });
+                                
                              });
                         
                 }
             });
 }
-  </script>
+
+
+</script>

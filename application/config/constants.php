@@ -35,6 +35,7 @@ define('INVOICE_NO_PREFIX', 'NI'. date('my'));
 define('TEMP_INVOICE_NO_PREFIX', 'TMP');
 define('SUP_INVOICE_NO_PREFIX', 'SI'. date('my'));
 define('SALE_ORDER_NO_PREFIX', 'SO'. date('my'));
+define('TEMP_SALE_ORDER_NO_PREFIX', 'TO'. date('my'));
 define('QUOTE_NO_PREFIX', 'NQ'. date('my')); //Quote
 define('CREDIT_NOTE_PREFIX', 'CN'. date('my')); //Credit Note
 define('CS_NO_PREFIX', 'CS'. date('my')); //consignee Submission

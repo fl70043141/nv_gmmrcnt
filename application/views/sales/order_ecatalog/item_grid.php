@@ -38,11 +38,12 @@
                         <?php echo form_open("", 'id="form_search" class="form-horizontal"')?>  
                         <?php echo form_input('price_type_id', set_value('price_type_id', '16'),'id="price_type_id" hidden');?>  
                         <?php echo form_hidden('curr_page_no',$page_no,'id="form_search" class="form-horizontal"')?>  
-                        <?php echo form_hidden('order_id')?>  
+                        <?php echo form_hidden('order_id',$order_id)?>  
                         <div class="row"> 
                             <div class="col-md-4">
                                     <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url($this->router->fetch_class()).'" class="btn btn-app "><i class="fa fa-backward"></i>Back</a>':''; ?>
-                                    <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url($this->router->fetch_class()).'" class="btn btn-app "><i class="fa fa-list"></i>Order List</a>':''; ?>
+                                    <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url('Sales_order_items').'" class="btn btn-app "><i class="fa fa-list"></i>Order List</a>':''; ?>
+                                    <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url('Sales_order_items/add').'" class="btn btn-app "><i class="fa fa-check"></i>Finalize Order</a>':''; ?>
             
                             </div>
                             <div class="col-md-4"> 
@@ -109,6 +110,7 @@ function get_item_results(){
 
             var post_data = jQuery('#form_search').serializeArray(); 
             post_data.push({name:"function_name",value:'search_items_for_cats'});
+            post_data.push({name:"order_id",value:"<?php echo $order_id;?>"});
     //        console.log(post_data); 
             $.ajax({
                             url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>", 
