@@ -448,7 +448,7 @@ $(document).ready(function(){
                                     return false;
                                 }else{
                                     if(res2.item_code != null){
-                                        fl_alert('info','Item code already exist in Database! Please Try with another code.');
+                                        fl_alert('warning','Item code already exist in Database! Please Try with another code.');
                                         return false;
                                     }
                                     var duplicate_code=0;
