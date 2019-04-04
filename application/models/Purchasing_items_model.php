@@ -95,15 +95,16 @@ class Purchasing_items_model extends CI_Model
             return $result;
 	}
         
-         public function get_single_category($cat_id,$where=''){ 
+         public function get_single_category($cat_id,$where='',$item_code=''){ 
             $this->db->select('ic.*');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = ic.item_uom_id)  as unit_abbreviation');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = ic.item_uom_id_2)  as unit_abbreviation_2');
+            if($item_code != '') $this->db->select("(select item_code from ".ITEMS." where item_code = '".$item_code."')  as item_code");
             $this->db->from(ITEM_CAT.' ic'); 
             $this->db->where('ic.status',1);
             $this->db->where('ic.deleted',0);
             $this->db->where('ic.id',$cat_id);
-//            $this->db->where('ip.sales_type_id',$sales_type);
+//            $this->db->where('ip.sales_type_id',$sales_type); 
             if($where!='')$this->db->where($where);
             $result = $this->db->get()->result_array();  
 //            echo  $this->db->last_query(); die;

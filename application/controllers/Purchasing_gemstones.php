@@ -96,6 +96,17 @@ class Purchasing_gemstones extends CI_Controller {
             $this->form_validation->set_rules('invoice_date','Invoice Date','required');
             $this->form_validation->set_rules('reference','Reference','required'); 
       }	
+      function check_unique_item_code($item_code=''){
+          $inputs = $this->input->post();
+          if(isset($inputs['itemcode']))
+              $item_code = $inputs['itemcode'];
+          
+          $res = get_single_row_helper(ITEMS, "item_code = '".$item_code."'");
+          if(empty($res))
+              echo '1';
+          else
+              echo '0';
+      }
       function check_unique_vehicle(){
           $res = array();
           if($this->input->post('id')!=''){
@@ -911,7 +922,8 @@ class Purchasing_gemstones extends CI_Controller {
         function get_single_category(){
             $inputs = $this->input ->post();
 //            echo '<pre>';            print_r($inputs); die;
-            $data = $this->Purchasing_items_model->get_single_category($inputs['item_category_id']); 
+            $item_code = ((isset($inputs['item_code']))?$inputs['item_code']:'');
+            $data = $this->Purchasing_items_model->get_single_category($inputs['item_category_id'],'',$item_code); 
             echo json_encode($data);
         }
 }

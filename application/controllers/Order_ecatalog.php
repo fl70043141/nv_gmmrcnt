@@ -121,13 +121,13 @@ class Order_ecatalog extends CI_Controller {
         }
         
         function view_item($item_id, $item_categorty_id=0,$page_no=''){
-            
             $cat_arr = explode('_',$item_categorty_id); 
             $item_categorty_id = $cat_arr[0];
 //            $this->load->view('sales/order_ecatalog/item_single_view');
             $data['item_id'] = $item_id;
             $data['item_cat_id'] = $item_categorty_id;
             $data['item_list_page_no'] = $page_no;
+            $data['order_id'] = (isset($cat_arr[1]))?$cat_arr[1]:'';
             $data['main_content']='sales/order_ecatalog/item_single_view';  
             $this->load->view('includes/template_rep',$data);
         }
@@ -162,15 +162,18 @@ class Order_ecatalog extends CI_Controller {
         function add_to_tmp_order(){ 
             $inputs = $this->input->post();
             $cur_user_id = $this->session->userdata(SYSTEM_CODE)['ID'];
-            
             $update_arr = array(); 
-            $open_tmp_order = $this->Order_ecataog_modal->get_tmp_order_open($cur_user_id);
+            $reference_check = $cur_user_id.'_so_'.(($inputs['order_id']=='')?0:$inputs['order_id']);
+//            echo '<pre>';            print_r($reference_check); die;
+            $open_tmp_order = $this->Order_ecataog_modal->get_tmp_order_open($cur_user_id,"sot.reference = '".$reference_check."'");
+            
             $ret_res = 0;
             if($open_tmp_order == ""){
                 $tmp_id = get_autoincrement_no(SALES_ORDER_ITEM_TEMP);
                 $tmp_order_no = gen_id(TEMP_SALE_ORDER_NO_PREFIX, SALES_ORDER_ITEM_TEMP, 'id');
                 $insert_arr = array(
                                     'id' => $tmp_id, 
+                                    'reference' => $reference_check, 
                                     'temp_order_no' => $tmp_order_no,
                                     'value' => json_encode(array($inputs['item_id']=>array('item_id'=>$inputs['item_id'],'units'=>$inputs['units'],'unit_price'=>$inputs['unit_price']))),
                                     'user_id' => $cur_user_id,
@@ -179,6 +182,7 @@ class Order_ecatalog extends CI_Controller {
                                     'deleted' => 0,
                                 );
                 
+//            echo '<pre>';            print_r($insert_arr); die;
                 $ret_res = $this->Order_ecataog_modal->insert_temp_item($insert_arr);
             }else{
                 $open_curr_value = json_decode($open_tmp_order['value'],true);
@@ -230,7 +234,12 @@ class Order_ecatalog extends CI_Controller {
                 
         function get_temp_so_open($temp_id){
             $cur_user_id = $this->session->userdata(SYSTEM_CODE)['ID'];
-            $open_tmp_order = $this->Order_ecataog_modal->get_tmp_order_open($cur_user_id);
+            
+            $inputs = $this->input->post();
+            $reference_check = $cur_user_id.'_so_'.$inputs['order_id'];
+            $open_tmp_order = $this->Order_ecataog_modal->get_tmp_order_open($cur_user_id,"sot.reference = '".$reference_check."'");
+
+//            $open_tmp_order = $this->Order_ecataog_modal->get_tmp_order_open($cur_user_id);
             
             $ret_array = array();
             if(isset($open_tmp_order['value']) && !empty($open_tmp_order['value'])){

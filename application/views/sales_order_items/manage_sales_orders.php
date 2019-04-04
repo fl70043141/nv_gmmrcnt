@@ -442,7 +442,7 @@ $(document).ready(function(){
     }
      $("#customer_id").change(function(){ 
          get_branch_drpdwn();
-         set_temp_so_info();
+//         set_temp_so_info();
     });
     
      $("#price_type_id").change(function(){ 
@@ -528,7 +528,7 @@ $(document).ready(function(){
     });
     $("#item_code").val($('#item_desc').val());
     $('#item_code').trigger('keyup');
-         set_temp_so_info();
+//         set_temp_so_info();
         set_item_list_cookie()
 	function get_results(){
         $.ajax({
@@ -654,7 +654,6 @@ $(document).ready(function(){
             }
         
         function set_branch_info(){
-//                                fl_alert('info',)
                     $.ajax({
                            url: "<?php echo site_url('Sales_order_items/fl_ajax');?>",
                            type: 'post',
@@ -671,7 +670,7 @@ $(document).ready(function(){
                    
             }
         function set_temp_so_info(){
-                                
+//                                return false;
             var post_data = $('#form_search').find('select, textarea, input').serializeArray(); 
             post_data.push({name:"order_id",value:"<?php echo $result['id'];?>"}); 
             post_data.push({name:"function_name",value:'set_temp_order_info'}); 
@@ -827,9 +826,9 @@ $(document).ready(function(){
          $.ajax({
                            url: "<?php echo site_url('Order_ecatalog/fl_ajax');?>",
                            type: 'post',
-                           data : {function_name:'get_temp_so_open'},
+                           data : {function_name:'get_temp_so_open',order_id:"<?php echo $result['id'];?>"},
                            success: function(result){
-//                                       $("#search_result_1").html(result);;
+                                       $("#search_result_1").html(result);;
                                        var temp_res = JSON.parse(result);
                                        var apnd_html = "";
                                        var rowCount = $('#invoice_list_tbl tr').length;
@@ -875,7 +874,7 @@ $(document).ready(function(){
                     type: 'post',
                     data : {function_name:'remove_temp_so_item',del_itemid:del_itemid},
                     success: function(result){
-
+                        alert(result)
                     }
                });
     }
