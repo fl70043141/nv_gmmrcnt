@@ -174,7 +174,8 @@ class Sales_invoices_model extends CI_Model
 //                } 
                 if(!empty($data['so_desc_tbl'])){
                     foreach ($data['so_desc_tbl'] as $so_desc_itm){
-                        $this->db->where('new_item_id', $so_desc_itm['new_item_id']);
+                        if($data['gen_type'] != 'regular') //is required only for jewel order
+                            $this->db->where('new_item_id', $so_desc_itm['new_item_id']);
                         $this->db->where('sales_order_id', $data['so_ref']);
                         $this->db->update(SALES_ORDER_DESC,array('invoiced'=>1)); 
                     }

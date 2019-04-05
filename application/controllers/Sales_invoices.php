@@ -37,6 +37,22 @@ class Sales_invoices extends CI_Controller {
 //            echo '<pre>';            print_r($data); die;  
             $this->load->view('includes/template',$data);
 	}
+	function add_from_order(){ 
+            $data  			= $this->load_data();  
+            if(isset($_GET['soid'])){ //data from sale order
+                $this->load->model('Sales_orders_model');
+                $so_data = $this->get_salesorder_info($_GET['soid']);
+                $data['so_data'] = $so_data['order_dets']; 
+                $data['so_order_items'] = $so_data['order_desc']; 
+                $data['og_data'] = $so_data['so_og_info']; 
+                $data['so_transection_pay'] = $so_data['so_transection_pay']; 
+            }
+            
+            $data['action']		= 'Add';
+            $data['main_content']='sales_invoices/manage_sales_invoices_gen';  
+//            echo '<pre>';            print_r($data); die;  
+            $this->load->view('includes/template',$data);
+	}
 	
 	function edit($id){ 
             $data  			= $this->load_data($id); 
@@ -85,8 +101,13 @@ class Sales_invoices extends CI_Controller {
             else{
                 switch($this->input->post('action')){
                     case 'Add':
-                            $this->create();
-                    break;
+                        
+            $inputs = $this->input->post();
+                            if((isset($inputs['so_gen_type']) && $inputs['so_gen_type'] == 'regular'))
+                                $this->createfrom_order();
+                            else
+                                $this->create();
+                            break;
                     case 'Edit':
                         $this->update();
                     break;
@@ -437,6 +458,303 @@ class Sales_invoices extends CI_Controller {
                                             );
                 }
             }
+                  
+//            echo '<pre>';            print_r($tot_available_for_invoice);  
+//            echo '<pre>';            print_r($data); die;
+		$add_stat = $this->Sales_invoices_model->add_db($data);
+                
+		if($add_stat[0]){  
+//                    delete_cookie('sale_inv_list');
+                    //update log data
+                    $new_data = $this->Sales_invoices_model->get_single_row($add_stat[1]);
+                    add_system_log(INVOICES, $this->router->fetch_class(), __FUNCTION__, '', $new_data);
+                    $this->session->set_flashdata('warn',RECORD_ADD);
+                    redirect(base_url($this->router->fetch_class().'/view/'.$invoice_id)); 
+                }else{
+                    $this->session->set_flashdata('error',ERROR);
+                    redirect(base_url($this->router->fetch_class()));
+                } 
+	}
+	function createfrom_order(){
+            $inputs = $this->input->post();
+            
+            $invoice_id = get_autoincrement_no(INVOICES);
+            $invoice_no = gen_id(INVOICE_NO_PREFIX, INVOICES, 'id');
+            
+            $cur_det = $this->Sales_invoices_model->get_currency_for_code($inputs['currency_code']);
+            if(isset($inputs['status'])){
+                $inputs['status'] = 1;
+            } else{
+                $inputs['status'] = 0;
+            }
+            $data['inv_tbl'] = array(
+                                    'id' => $invoice_id,
+                                    'invoice_no' => $invoice_no,
+                                    'customer_id' => $inputs['customer_id'], 
+                                    'invoice_type_id' => 1, //direct
+                                    'reference' => $inputs['customer_reference'],  
+                                    'comments' => $inputs['memo'], 
+                                    'invoice_date' => strtotime($inputs['invoice_date']), 
+                                    'invoiced' => 1,   
+                                    'so_id' => $inputs['so_id'],   
+                                    'sales_type_id' => $inputs['sales_type_id'], 
+                                    'payement_term_id' => $inputs['payment_term_id'], 
+                                    'currency_code' => $inputs['currency_code'], 
+                                    'currency_value' => $cur_det['value'], 
+                                    'location_id' => $inputs['location_id'],
+                                    'payment_settled' => 0,
+                                    'status' => 1,
+                                    'added_on' => date('Y-m-d'),
+                                    'added_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
+                                );
+            if($this->session->userdata(SYSTEM_CODE)['user_group_id']!=0){
+                $data['inv_tbl']['inv_group_id'] = $this->session->userdata(SYSTEM_CODE)['user_group_id'];
+            }
+            
+            
+            $data['inv_desc'] = array(); 
+            $data['gl_trans'] = array(); 
+            $data['item_stock_transection'] = array(); //stock transection 
+            $data['transection'] = array(); //payments transection 
+            
+            $total_stnd = $total = 0;
+            foreach ($inputs['inv_items'] as $inv_item){
+                $standard_price_info = $this->Sales_invoices_model->get_item_standard_prices($inv_item['item_id']);
+                $standard_price = (!empty($standard_price_info))?$standard_price_info[0]['price_amount']:'';
+           
+                //convert to invoice currency 
+                $standard_price = ($standard_price/$standard_price_info[0]['currency_value'])*$cur_det['value'];
+//            echo '<pre>';            print_r($standard_price); die;
+                $total += $inv_item['item_quantity']*$inv_item['item_unit_cost']*(100-$inv_item['item_line_discount'])*0.01;
+                $item_total = $total; 
+                $total_stnd += $inv_item['item_quantity']*$standard_price;
+                $data['inv_desc'][] = array(
+                                            'invoice_id' => $invoice_id,
+                                            'item_id' => $inv_item['item_id'],
+                                            'item_description' => $inv_item['item_desc'],
+                                            'item_quantity' => $inv_item['item_quantity'],
+                                            'item_quantity_uom_id' => $inv_item['item_quantity_uom_id'],
+                                            'item_quantity_2' => $inv_item['item_quantity_2'],
+                                            'item_quantity_uom_id_2' => $inv_item['item_quantity_uom_id_2'],
+                                            'unit_price' => $inv_item['item_unit_cost'],
+                                            'discount_persent' => $inv_item['item_line_discount'],
+                                            'location_id' => $inputs['location_id'],
+                                            'status' => 1,
+                                            'deleted' => 0,
+                                        );
+                
+                
+                $data['item_stock_transection'][] = array(
+                                                            'transection_type'=>2, //2 for Sales transection
+                                                            'trans_ref'=>$invoice_id, 
+                                                            'item_id'=>$inv_item['item_id'], 
+                                                            'units'=>$inv_item['item_quantity'], 
+                                                            'uom_id'=>$inv_item['item_quantity_uom_id'], 
+                                                            'units_2'=>$inv_item['item_quantity_2'], 
+                                                            'uom_id_2'=>$inv_item['item_quantity_uom_id_2'], 
+                                                            'location_id'=>$inputs['location_id'], 
+                                                            'status'=>1, 
+                                                            'added_on' => date('Y-m-d'),
+                                                            'added_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
+                                                            );
+                
+                if($inv_item['item_quantity_uom_id_2']!=0)
+                    $item_stock_data = $this->stock_status_check($inv_item['item_id'],$inputs['location_id'],$inv_item['item_quantity_uom_id'],$inv_item['item_quantity'],$inv_item['item_quantity_uom_id_2'],$inv_item['item_quantity_2']);
+                else
+                    $item_stock_data = $this->stock_status_check($inv_item['item_id'],$inputs['location_id'],$inv_item['item_quantity_uom_id'],$inv_item['item_quantity']);
+                
+                if(!empty($item_stock_data)){
+                    $data['item_stock'][] = $item_stock_data;
+                }
+                 
+                $data['so_desc_tbl'][] = array('new_item_id'=>$inv_item['item_id'],'invoiced'=>1);
+           }
+           
+           
+            $addons_total = 0;
+            $data['addons'] = array();
+            if(!empty($inputs['addons']) && isset($inputs['addons'])){
+                $this->load->model('Addons_model');
+                foreach ($inputs['addons'] as $addn_key=>$addon){
+                    $addon_info_jsn='';
+                    $addon_info = $this->Addons_model->get_single_row($addn_key);
+                    
+                    if(!empty($addon_info)){
+                        $addon_info_jsn = json_encode($addon_info);
+                    }
+                    $addons_total+= $addon;
+                     $data['addons'][] = array(
+                                                'invoice_id'=>$invoice_id,
+                                                'addon_id'=>$addn_key,
+                                                'addon_amount'=>$addon,
+                                                'addon_info'=>$addon_info_jsn,
+                                                'status'=>1,
+                                               );
+                 
+                     
+                        $this->load->model('General_ledgers_model');
+                        $debit_gl = $this->General_ledgers_model->get_single_row_code($addon_info[0]['debit_gl_code'])[0];
+                        $data['gl_trans'][] = array(
+                                                       'person_type' => 10,
+                                                       'person_id' => $inputs['customer_id'],
+                                                       'trans_ref' => $invoice_id,
+                                                       'trans_date' => strtotime("now"),
+                                                       'account' => $debit_gl['id'], 
+                                                       'account_code' => $debit_gl['account_code'],
+                                                       'memo' => $addon_info[0]['addon_name'],
+                                                       'amount' => (+$addon), 
+                                                       'currency_code' => $cur_det['code'], 
+                                                       'currency_value' => $cur_det['value'], 
+                                                       'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                       'status' => 1,
+                                               );
+                        
+                        $credit_gl = $this->General_ledgers_model->get_single_row_code($addon_info[0]['credit_gl_code'])[0];
+                        $data['gl_trans'][] = array(
+                                                       'person_type' => 10,
+                                                       'person_id' => $inputs['customer_id'],
+                                                       'trans_ref' => $invoice_id,
+                                                       'trans_date' => strtotime("now"),
+                                                       'account' => $credit_gl['id'], 
+                                                       'account_code' => $credit_gl['account_code'],
+                                                       'memo' => $addon_info[0]['addon_name'],
+                                                       'amount' => (-abs($addon)),
+                                                       'currency_code' => $cur_det['code'], 
+                                                       'currency_value' => $cur_det['value'], 
+                                                       'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                       'status' => 1,
+                                               );
+                }
+            }
+            $total += $addons_total; 
+            
+            $data['so_ref'] = $inputs['so_id'];
+            if($inputs['so_id']!=''){
+                if(isset($inputs['so_gen_type'])=='regular') $data['gen_type'] = 'regular'; 
+                $data['inv_tbl']['invoice_type_id'] = 2; 
+            }
+                //payments
+                $this->load->model('Payments_model');
+                $payment_terms = $this->Payments_model->get_payment_term($inputs['payment_term_id']);
+                if($payment_terms['payment_done']==1){ //cash payment for invoice 
+                    $trans_id = get_autoincrement_no(TRANSECTION);
+                    $data['payment_transection'] = array(
+                                                    'id' =>$trans_id,
+                                                    'transection_type_id' =>1, //1 for customer payments
+                                                    'reference' =>'', 
+                                                    'person_type' =>10, //10 for customer 
+                                                    'person_id' =>$inputs['customer_id'],
+                                                    'transection_amount' =>$total,
+                                                    'currency_code' => $cur_det['code'], 
+                                                    'currency_value' => $cur_det['value'],
+                                                    'trans_date' => strtotime($inputs['invoice_date']),
+                                                    'trans_memo' => 'Cash Invoice',
+                                                    'status' => 1,
+                                                );
+
+                    $data['payment_transection_ref'] = array(
+                                                    'transection_id' =>$trans_id,
+                                                    'reference_id' =>$invoice_id,
+                                                    'trans_reference' =>$invoice_no,
+                                                    'transection_ref_amount' =>$total, 
+                                                    'person_type' =>10, //10 for customer 
+                                                    'status' =>1, 
+                                                );
+
+                    $data['inv_tbl']['payment_settled']=1;
+
+                }
+
+
+                $data['gl_trans'][] = array(
+                                                    'person_type' => 10,
+                                                    'person_id' => $inputs['customer_id'],
+                                                    'trans_ref' => $invoice_id,
+                                                    'trans_date' => strtotime("now"),
+                                                    'account' => 5, //5 inventory GL
+                                                    'account_code' => 1510, //5 inventory GL
+                                                    'memo' => '',
+                                                    'amount' => (-$total_stnd),
+                                                    'currency_code' => $cur_det['code'], 
+                                                    'currency_value' => $cur_det['value'], 
+                                                    'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                    'status' => 1,
+                                            );
+                $data['gl_trans'][] = array(
+                                                    'person_type' => 10,
+                                                    'person_id' => $inputs['customer_id'],
+                                                    'trans_ref' => $invoice_id,
+                                                    'trans_date' => strtotime("now"),
+                                                    'account' => 43, //43 COGS id
+                                                    'account_code' => 5010, //COGS GL
+                                                    'memo' => '',
+                                                    'amount' => ($total_stnd),
+                                                    'currency_code' => $cur_det['code'], 
+                                                    'currency_value' => $cur_det['value'], 
+                                                    'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                    'status' => 1,
+                                            );
+                
+                    $data['gl_trans'][] = array(
+                                                    'person_type' => 10,
+                                                    'person_id' => $inputs['customer_id'],
+                                                    'trans_ref' => $invoice_id,
+                                                    'trans_date' => strtotime("now"),
+                                                    'account' => 37, //37  SALES GL
+                                                    'account_code' => 4010, 
+                                                    'memo' => '',
+                                                    'amount' => (-$item_total),
+                                                    'currency_code' => $cur_det['code'], 
+                                                    'currency_value' => $cur_det['value'], 
+                                                    'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                    'status' => 1,
+                                            );
+                    $data['gl_trans'][] = array(
+                                                    'person_type' => 10,
+                                                    'person_id' => $inputs['customer_id'],
+                                                    'trans_ref' => $invoice_id,
+                                                    'trans_date' => strtotime("now"),
+                                                    'account' => 3, //3 AC RECEIVBLE
+                                                    'account_code' => 1200,
+                                                    'memo' => '',
+                                                    'amount' => (+$item_total),
+                                                    'currency_code' => $cur_det['code'], 
+                                                    'currency_value' => $cur_det['value'], 
+                                                    'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                    'status' => 1,
+                                            );
+                    
+                    
+                if($inputs['payment_term_id']==1){ //if cash payments
+                    $data['gl_trans'][] = array(
+                                                    'person_type' => 10,
+                                                    'person_id' => $inputs['customer_id'],
+                                                    'trans_ref' => $invoice_id,
+                                                    'trans_date' => strtotime("now"),
+                                                    'account' => 3, //14 AC Receivable GL
+                                                    'account_code' => 1200, 
+                                                    'memo' => '',
+                                                    'amount' => (-$total),
+                                                    'currency_code' => $cur_det['code'], 
+                                                    'currency_value' => $cur_det['value'], 
+                                                    'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                    'status' => 1,
+                                            );
+                    $data['gl_trans'][] = array(
+                                                    'person_type' => 10,
+                                                    'person_id' => $inputs['customer_id'],
+                                                    'trans_ref' => $invoice_id,
+                                                    'trans_date' => strtotime("now"),
+                                                    'account' => 1, //1  cash
+                                                    'account_code' => 1060,
+                                                    'memo' => '',
+                                                    'amount' => (+$total),
+                                                    'currency_code' => $cur_det['code'], 
+                                                    'currency_value' => $cur_det['value'], 
+                                                    'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                    'status' => 1,
+                                            );
+                } 
                   
 //            echo '<pre>';            print_r($tot_available_for_invoice);  
 //            echo '<pre>';            print_r($data); die;

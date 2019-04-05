@@ -90,7 +90,7 @@ endswitch;
             <!--<a href="#" id="add_old_gold" class="btn btn-app "><i class="fa fa-chain"></i>Old Gold</a>-->
             <a href="<?php echo base_url($this->router->fetch_class().'/print_sales_order/'.$result['id']);?>" class=" <?php echo $add_hide; ?> btn btn-app "><i class="fa fa-print"></i>Print SO</a>
             <a href="<?php echo base_url('Order_ecatalog/index/'.$result['id']);?>" class="pull-right btn btn-app success <?php echo $add_hide;?>"><i class="fa fa-list"></i>New Item</a>
-            <a href="<?php echo base_url('Sales_orders/add/?soid='.$result['id']);?>" class="pull-right btn btn-app success <?php echo $add_hide;?>"><i class="fa fa-truck"></i>Create Invoice</a>
+            <a href="<?php echo base_url('Sales_invoices/add_from_order/?soid='.$result['id']);?>" class="pull-right btn btn-app success <?php echo $add_hide;?>"><i class="fa fa-truck"></i>Create Invoice</a>
 
         </div>
     </div>
@@ -260,7 +260,7 @@ endswitch;
                                                 $so_total= 0;
                                                 if(isset($so_order_items)){
                                                     foreach ($so_order_items as $so_item){
-//                                                        echo '<pre>';                                                    print_r($so_item); die;
+//                                                        echo '<pre>';                                                    print_r($so_item); 
                                                         echo '
                                                             <tr style="padding:10px" id="tr_3">
                                                                 <td><input hidden="" name="inv_items['.$row_count.'][item_code]" value="'.$so_item['item_code'].'">'.$so_item['item_code'].'</td>
