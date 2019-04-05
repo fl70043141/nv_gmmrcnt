@@ -31,7 +31,8 @@ class Login extends CI_Controller {
 		if($this->User_default_model->login($data)){ 
                 //removing temp so items
                 $this->load->model('Sales_order_items_model');
-                $del_res = $this->Sales_order_items_model->delete_temp_so_item($this->session->userdata(SYSTEM_CODE)['ID'].'_so_0');
+//                $del_res = $this->Sales_order_items_model->delete_temp_so_item($this->session->userdata(SYSTEM_CODE)['ID'].'_so_0');
+                $del_res = $this->Sales_order_items_model->delete_temp_so_item('',$this->session->userdata(SYSTEM_CODE)['ID']);
                     
                 //user_role info
                 $user_role_info = $this->User_default_model->get_userrole_info($this->session->userdata(SYSTEM_CODE)['user_role_ID']);

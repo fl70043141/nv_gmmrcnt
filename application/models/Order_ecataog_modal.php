@@ -136,11 +136,10 @@ class Order_ecataog_modal extends CI_Model
               $status=$this->db->trans_complete();
               return $status;
 	}
-        public function cancel_temp_opened_order(){   
-              $cur_user_id = $this->session->userdata(SYSTEM_CODE)['ID'];
+        public function cancel_temp_opened_order($reference){   
               
               $this->db->trans_start();
-              $this->db->where('user_id',$cur_user_id);   
+              $this->db->where('reference',$reference);   
               $this->db->delete(SALES_ORDER_ITEM_TEMP);   
               $status=$this->db->trans_complete();
               return $status;

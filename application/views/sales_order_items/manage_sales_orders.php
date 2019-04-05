@@ -85,7 +85,8 @@ endswitch;
     
         <div class="">
             <!--<a href="<?php // echo base_url($this->router->fetch_class().'/add');?>" class="btn btn-app "><i class="fa fa-plus"></i>New Order</a>-->
-            <a href="<?php echo base_url('Order_ecatalog');?>" class="btn btn-app "><i class="fa fa-plus-circle"></i>Add Item</a>
+            <a href="<?php echo base_url('Sales_order_items');?>" class="btn btn-app "><i class="fa fa-list"></i>Order List</a>
+            <a href="<?php echo base_url('Order_ecatalog'.(($result['id']!='' && $result['id']!=0)?'/index/'.$result['id']:''));?>" class="btn btn-app "><i class="fa fa-plus-circle"></i>Add Item</a>
             <!--<a href="#" id="add_old_gold" class="btn btn-app "><i class="fa fa-chain"></i>Old Gold</a>-->
             <a href="<?php echo base_url($this->router->fetch_class().'/print_sales_order/'.$result['id']);?>" class=" <?php echo $add_hide; ?> btn btn-app "><i class="fa fa-print"></i>Print SO</a>
             <a href="<?php echo base_url('Order_ecatalog/index/'.$result['id']);?>" class="pull-right btn btn-app success <?php echo $add_hide;?>"><i class="fa fa-list"></i>New Item</a>
@@ -352,7 +353,7 @@ endswitch;
                             </div>
                             <div class="col-md-12">
                                 <button id="place_invoice" class="btn btn-app pull-right  primary"><i class="fa fa-check"></i><?php echo constant($action);?> Order</button>
-                                <a id="cancel_so" class="btn btn-app pull-right  primary"><i class="fa fa-times"></i>Cancel Order</a>
+                                <a id="cancel_so" class="btn btn-app pull-right  primary"><i class="fa fa-times"></i>Cancel Unsaved</a>
                 
                             </div>
                         </div>
@@ -431,10 +432,7 @@ $(document).ready(function(){
         if(!confirm("Click ok confirm Cancel the Order")){
             return false;
         }
-        var res = cancel_open_temp_order();
-        if(res=='1'){
-            window.location.href = "<?php echo base_url('Sales_order_items');?>";
-        }
+        cancel_open_temp_order();
     });
     get_branch_drpdwn();
     if($('[name="action"]').val()=="Add"){
@@ -529,7 +527,7 @@ $(document).ready(function(){
     $("#item_code").val($('#item_desc').val());
     $('#item_code').trigger('keyup');
 //         set_temp_so_info();
-        set_item_list_cookie()
+//        set_item_list_cookie()
 	function get_results(){
         $.ajax({
 			url: "<?php echo site_url('Sale_orders/search');?>",
@@ -828,7 +826,7 @@ $(document).ready(function(){
                            type: 'post',
                            data : {function_name:'get_temp_so_open',order_id:"<?php echo $result['id'];?>"},
                            success: function(result){
-                                       $("#search_result_1").html(result);;
+//                                       $("#search_result_1").html(result);;
                                        var temp_res = JSON.parse(result);
                                        var apnd_html = "";
                                        var rowCount = $('#invoice_list_tbl tr').length;
@@ -838,7 +836,7 @@ $(document).ready(function(){
                                                 var item_total = parseFloat(itm_obj.temp_info.unit_price) * parseFloat(itm_obj.temp_info.units);
                                                 
                                                
-                                                 apnd_html = apnd_html + '<tr style="padding:10px" id="tr_'+itm_id+rowCount+'">'+ 
+                                                 apnd_html = apnd_html + '<tr style="background:#ffc4c4;padding:10px" id="tr_'+itm_id+rowCount+'">'+ 
                                                                          '<td><input hidden name="inv_items['+itm_id+rowCount+'][item_code]" value="'+itm_obj.item_code+'">'+itm_obj.item_code+'</td>'+
                                                                          '<td><input hidden name="inv_items['+itm_id+rowCount+'][item_desc]" value="'+itm_obj.item_name+'"><input hidden name="inv_items['+itm_id+rowCount+'][item_id]" value="'+itm_id+'">'+itm_obj.item_name+'</td>'+
                                                                          '<td><input hidden name="inv_items['+itm_id+rowCount+'][description]" value="'+itm_obj.description+'">'+itm_obj.description+'</td>'+
@@ -854,7 +852,7 @@ $(document).ready(function(){
                                                                      '</tr>';
 //                                                             console.log(apnd_html);
                                             });
-                                                $('#invoice_list_tbl #tbody_list').html(apnd_html);
+                                                $('#invoice_list_tbl #tbody_list').append(apnd_html);
                                                 //delete row
                                                 $('.del_btn_inv_row').click(function(){
                                                     var del_itemid = (this.id).split('__')[0]; 
@@ -872,9 +870,9 @@ $(document).ready(function(){
         $.ajax({
                     url: "<?php echo site_url('Order_ecatalog/fl_ajax');?>",
                     type: 'post',
-                    data : {function_name:'remove_temp_so_item',del_itemid:del_itemid},
+                    data : {function_name:'remove_temp_so_item',del_itemid:del_itemid, order_id:'<?php echo $result['id'];?>'},
                     success: function(result){
-                        alert(result)
+//                        alert(result)
                     }
                });
     }
@@ -882,9 +880,12 @@ $(document).ready(function(){
         $.ajax({
                     url: "<?php echo site_url('Order_ecatalog/fl_ajax');?>",
                     type: 'post',
-                    data : {function_name:'cancel_open_temp_order'},
+                    data : {function_name:'cancel_open_temp_order',order_id:'<?php echo $result['id'];?>'},
                     success: function(result){
-                        alert(result);
+                        if(result=='1'){
+                            window.location.href = "<?php echo base_url('Sales_order_items');?>";
+                        }
+//                        alert(result);
                     }
                });
     }

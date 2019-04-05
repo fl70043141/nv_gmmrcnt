@@ -181,10 +181,11 @@ class Sales_order_items_model extends CI_Model
             return $result;
 	}
         
-        function delete_temp_so_item($reference){
+        function delete_temp_so_item($reference='',$user_id=''){
                 $this->db->trans_start();
 //                $this->db->where('reference',$reference);
-                $this->db->where('reference', $reference);
+                if($reference!='') $this->db->where('reference', $reference);
+                if($user_id!='') $this->db->where('user_id', $user_id);
                 $this->db->delete('sales_order_item_temp');    
                 $status = $this->db->trans_complete();  
 //                echo '<pre>';                print_r($status);

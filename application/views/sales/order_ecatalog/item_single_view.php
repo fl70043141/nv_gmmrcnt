@@ -238,7 +238,7 @@ function load_item_info(item_id,init_id = 0,type='A',slideTo=true){ // A: append
                                             type: 'post',
                                             data : {function_name:'add_to_tmp_order', item_id:add_item_id, units: $('#'+add_item_id+'_qtyinpt').val(), unit_price: $('#'+add_item_id+'_amountinpt').val(), order_id: $('#order_id').val() },
                                             success: function(result1){   
-                                                alert(result1)
+//                                                alert(result1)
                                                 if(result1=='1'){
                                                     fl_alert('success','Item Successfully added to order.');
 //                                                    $('#msgs').html('<div class="alert alert-success msg_err"> <a class="close" data-dismiss="alert" href="#">&times;</a>  <i class="fa fa-check-circle"></i>&nbsp; Item Successfully added to order  </div>')

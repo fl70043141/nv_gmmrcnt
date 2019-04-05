@@ -207,10 +207,11 @@ class Order_ecatalog extends CI_Controller {
         function remove_temp_so_item(){ 
             $inputs = $this->input->post();
             $cur_user_id = $this->session->userdata(SYSTEM_CODE)['ID'];
-                    
+            $reference = $cur_user_id.'_so_'.((isset($inputs['order_id']))?$inputs['order_id']:0);
             $update_arr = array(); 
-            $open_tmp_order = $this->Order_ecataog_modal->get_tmp_order_open($cur_user_id);
+            $open_tmp_order = $this->Order_ecataog_modal->get_tmp_order_open($cur_user_id,"sot.reference = '".$reference."'");
             
+//            echo '<pre>';            print_r($open_tmp_order); die;
             $open_curr_value = json_decode($open_tmp_order['value'],true);
             unset($open_curr_value[$inputs['del_itemid']]);
             
@@ -225,10 +226,14 @@ class Order_ecatalog extends CI_Controller {
         }
                 
         function cancel_open_temp_order(){ //remove from from  temp order
-            $cur_user_id = $this->session->userdata(SYSTEM_CODE)['ID'];
-            $ret_res = $this->Order_ecataog_modal->cancel_temp_opened_order();
             
-            $this->session->set_flashdata('warn','Your unsaved Order Canceled!');
+            $input = $this->input->post();
+//            echo '<pre>';            print_r($input); die;
+            $cur_user_id = $this->session->userdata(SYSTEM_CODE)['ID'];
+            $reference = $cur_user_id.'_so_'.((isset($input['order_id']))?$input['order_id']:0);
+            $ret_res = $this->Order_ecataog_modal->cancel_temp_opened_order($reference);
+            
+            $this->session->set_flashdata('warn','Your unsaved Order items Cancelled Successfully!');
             echo $ret_res;
         }
                 
