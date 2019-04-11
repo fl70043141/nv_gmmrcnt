@@ -10,9 +10,10 @@ class Order_ecatalog extends CI_Controller {
         }
 
         public function index($so_id=''){
-            $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories');
+            $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories','',0,'','order_by');
             $data['order_id'] = $so_id;
             $data['main_content']='sales/order_ecatalog/category_grid';  
+//                    echo '<pre>';            print_r($data); die;
             $this->load->view('includes/template',$data);
 	}
         

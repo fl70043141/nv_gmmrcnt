@@ -67,9 +67,8 @@ function get_results(){
                        <?php echo form_hidden('order_id',$order_id)?>  
                         <div class="row"> 
                             <div class="col-md-4">
-                                    <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url('Sales_order_items').'" class="btn btn-app "><i class="fa fa-backward"></i>Back</a>':''; ?>
-                                     <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url('Sales_order_items/add').'" class="btn btn-app "><i class="fa fa-check"></i>Finalize Order</a>':''; ?>
-            
+                                    <?php // echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url('Sales_order_items').'" class="btn btn-app "><i class="fa fa-backward"></i>Back</a>':''; ?>
+                                      
                             </div>
                             <div class="col-md-4"> 
                                     <div class="form-group">

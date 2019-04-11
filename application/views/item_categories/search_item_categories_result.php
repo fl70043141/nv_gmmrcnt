@@ -5,6 +5,7 @@
                 <th>Category Name</th> 
                 <th>Category Code</th> 
                 <th>Item type</th> 
+                <th>Order</th> 
                 <th>Unit of Measure</th>
                 <th>Action</th>
             </tr>
@@ -26,6 +27,7 @@
                                <td>'.$search['category_name'].'</td>
                                <td>'.$search['category_code'].'</td>
                                <td>'.$item_type.'</td>
+                               <td>'.$search['order_by'].'</td>
                                <td>'.$search['unit_abbreviation'].'</td>
                                <td>';
                                     echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'view'))?'<a href="'. base_url($this->router->fetch_class().'/view/'.$search['id']).'" title="View" class="btn btn-primary btn-xs"><span class="fa fa-eye"></span></a> ':'';
@@ -43,6 +45,7 @@
                 <th>Category Name</th> 
                 <th>Category Code</th> 
                 <th>Item type</th> 
+                <th>Order</th> 
                 <th>Unit of Measure</th>
                 <th>Action</th>
             </tr>

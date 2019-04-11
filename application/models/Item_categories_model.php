@@ -13,8 +13,9 @@ class Item_categories_model extends CI_Model
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = ic.item_uom_id)  as unit_abbreviation');
             $this->db->from(ITEM_CAT." ic");  
             $this->db->where('ic.deleted',0);
+            $this->db->order_by('ic.order_by');
             if($data!=''){
-                if(isset($data['status']) && $data['status']!='')$this->db->where('ic.status',$data['status']);
+                if(isset($data['status']))$this->db->where('ic.status',$data['status']);
                 if(isset($data['category_name']) && $data['category_name']!='') $this->db->like('ic.category_name',$data['cat_name']);
                 if(isset($data['category_code']) && $data['category_code']!='') $this->db->like('ic.category_code',$data['category_code']);
             }

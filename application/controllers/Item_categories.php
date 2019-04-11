@@ -28,7 +28,7 @@ class Item_categories extends CI_Controller {
             $this->load->view('includes/template',$data);
 	}
 	
-	function edit($id){ 
+	function edit($id){
             $data  			= $this->load_data($id);  
             $data['action']		= 'Edit';
             $data['main_content']='item_categories/manage_item_categories'; 
@@ -51,7 +51,7 @@ class Item_categories extends CI_Controller {
 	}
 	
         
-	function validate(){  
+	function validate(){
             $this->form_val_setrules(); 
             if($this->form_validation->run() == False){
                 switch($this->input->post('action')){
@@ -86,7 +86,7 @@ class Item_categories extends CI_Controller {
             }
 	}
         
-	function form_val_setrules(){ ;
+	function form_val_setrules(){ 
             $this->form_validation->set_error_delimiters('<p style="color:rgb(255, 115, 115);" class="help-block"><i class="glyphicon glyphicon-exclamation-sign"></i> ','</p>');
 
             $this->form_validation->set_rules('category_name','Category Name','required|min_length[2]');   

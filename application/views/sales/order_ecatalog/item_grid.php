@@ -42,8 +42,6 @@
                         <div class="row"> 
                             <div class="col-md-4">
                                     <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url($this->router->fetch_class()).'" class="btn btn-app "><i class="fa fa-backward"></i>Back</a>':''; ?>
-                                    <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url('Sales_order_items').'" class="btn btn-app "><i class="fa fa-list"></i>Order List</a>':''; ?>
-                                    <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url('Sales_order_items/'.(($order_id=="")?'add':'edit/'.$order_id)).'" class="btn btn-app "><i class="fa fa-check"></i>Finalize Order</a>':''; ?>
             
                             </div>
                             <div class="col-md-4"> 

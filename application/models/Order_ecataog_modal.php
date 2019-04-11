@@ -17,6 +17,8 @@ class Order_ecataog_modal extends CI_Model
             if(isset($data['item_code']) && $data['item_code']!='') $this->db->like('i.item_code',$data['item_code']);
             
             $this->db->where('ic.deleted',0);
+            $this->db->where('ic.status',1);
+            $this->db->order_by('ic.order_by');
             $this->db->group_by('ic.id');
             $result = $this->db->get()->result_array();  
 //            echo $this->db->last_query();die;
