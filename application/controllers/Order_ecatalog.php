@@ -11,6 +11,8 @@ class Order_ecatalog extends CI_Controller {
 
         public function index($so_id=''){
             $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories','',0,'','order_by');
+            $data['sales_type_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 14'); //14 for sales type
+            
             $data['order_id'] = $so_id;
             $data['main_content']='sales/order_ecatalog/category_grid';  
 //                    echo '<pre>';            print_r($data); die;
@@ -20,6 +22,8 @@ class Order_ecatalog extends CI_Controller {
         public function item_list($cat_id="", $page_no='1'){
             $cat_arr = explode('_',$cat_id); 
             $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories');
+            $data['sales_type_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 14'); //14 for sales type
+            
             $data['category_id'] = $cat_arr[0];
             $data['order_id'] = $cat_arr[1];
             $data['page_no'] = $page_no; 
@@ -66,6 +70,7 @@ class Order_ecatalog extends CI_Controller {
                                 ); 
             $data['categories_res'] = $this->Order_ecataog_modal->search_categories($search_data); 
             $data['order_id'] = $input['order_id'];
+            $data['price_type_id'] = $input['price_type_id'];
 //		$data_view['search_list'] = $this->Order_ecataog_modal->search_result();
             $this->load->view('sales/order_ecatalog/category_grid_result',$data);
 	}
@@ -91,6 +96,7 @@ class Order_ecatalog extends CI_Controller {
                 }
             }
             $data['category_id1'] = $input['item_category_id'];
+            $data['price_type_id1'] = $input['price_type_id'];
             $data['cur_page1'] = $cur_page;
             $data['order_id'] = $input['order_id'];
 //            echo '<pre>';            print_r($data); die;
@@ -129,6 +135,7 @@ class Order_ecatalog extends CI_Controller {
             $data['item_cat_id'] = $item_categorty_id;
             $data['item_list_page_no'] = $page_no;
             $data['order_id'] = (isset($cat_arr[1]))?$cat_arr[1]:'';
+            $data['price_type_id'] = (isset($cat_arr[2]))?$cat_arr[2]:'';
             $data['main_content']='sales/order_ecatalog/item_single_view';  
             $this->load->view('includes/template_rep',$data);
         }

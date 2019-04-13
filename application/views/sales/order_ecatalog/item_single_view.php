@@ -36,8 +36,7 @@
       <input hidden  type="text" name="item_category_id" id="item_category_id" value="<?php echo $item_cat_id;?>">
       <input hidden  type="text" name="curr_page_no" id="curr_page_no" value="<?php echo $item_list_page_no;?>">
       <input hidden  type="text" name="order_id" id="order_id" value="<?php echo $order_id;?>">
-      <input hidden  type="text" name="price_type_id" id="price_type_id" value="16">
-      <input hidden  type="text" name="price_type_id" id="price_type_id" value="16">
+      <input hidden  type="text" name="price_type_id" id="price_type_id" value="<?php echo $price_type_id;?>"> 
     <div id="item_info_contents" class="swiper-wrapper">
       
     </div>
