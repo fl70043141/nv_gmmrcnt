@@ -95,8 +95,8 @@ class Users extends CI_Controller {
 	function form_val_setrules(){
 		$this->form_validation->set_error_delimiters('<p style="color:rgb(255, 115, 115);" class="help-block"><i class="glyphicon glyphicon-exclamation-sign"></i> ','</p>');
 		
-		$this->form_validation->set_rules('first_name','First Name','required|min_length[5]');
-		$this->form_validation->set_rules('last_name','Last Name','required|min_length[5]');
+		$this->form_validation->set_rules('first_name','First Name','required|min_length[2]');
+		$this->form_validation->set_rules('last_name','Last Name','required|min_length[2]');
 //		$this->form_validation->set_rules('email','Email','required|valid_email|is_unique['.USER.'.email]');
 		$this->form_validation->set_rules('username','User Name','required');
 		$this->form_validation->set_rules('user_role','User Role','required');
