@@ -25,12 +25,12 @@ class Upload_csv extends CI_Controller {
                                         
 	 
         function validate(){
-//            echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
+            echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
             $file = $_FILES["file"]["tmp_name"];
             $file_open = fopen($file, "r");
 
             $data_arr = array(); 
-            $supplier_id = 1;
+            $supplier_id =1;
             $location_id = 1;
 
             $supplier_inv_id = get_autoincrement_no(SUPPLIER_INVOICE);
@@ -55,7 +55,7 @@ class Upload_csv extends CI_Controller {
                                     'added_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
                                 ); 
             $insert_stat = $this->Items_CSV_model->add_db_purch_invoice($sdata);
-//            $insert_stat = true;
+           // $insert_stat = true;
             
             $i=0;
 //            if(true){
@@ -96,25 +96,30 @@ class Upload_csv extends CI_Controller {
                             if(!is_dir(ITEM_IMAGES.$item_id.'/')) mkdir(ITEM_IMAGES.$item_id.'/', 0777, TRUE); 
                             if(!is_dir(ITEM_IMAGES.$item_id.'/other/')) mkdir(ITEM_IMAGES.$item_id.'/other/', 0777, TRUE);
 
-//                            $dir_path = "E:/xampp_zv/htdocs/nveloop_gems/storage/images/categories/".$cat_id;
-                            $dir_path = "E:/My Study/Project11/PROJECTS NVELOOP/NVELOOP/JWL_POS/CSV_UPLOAD/product_list/".$item_code;
+                            $dir_path = "F:/ZV_GEMS_CSV/images/".$cat_id.'/'.$shape;
+                            //$dir_path = "E:/My Study/Project11/PROJECTS NVELOOP/NVELOOP/JWL_POS/CSV_UPLOAD/product_list/".$item_code;
                             $file_in = $all_images = array();
                             if(is_dir($dir_path))
                                 $file_in = scandir($dir_path,1);
-
+ 
+							sort($file_in);
                             $first_img = '';
+							$count=0;
                             foreach ($file_in as $key => $img){
         //                        echo $key; die;
-                                if($key==0 & $img!='.' & $img!='..'){
+								
+                                if($count==0 & $img!='.' & $img!='..'){
                                     $first_img = $img; 
                                     copy($dir_path.'/'.$img, ITEM_IMAGES.$item_id.'/'.$img);
+									$count++;
                                 }
-                                if($img!='1.jpg' & $img!='.' & $img!='..'){
+                                else if($count!=0  & $img!='.' & $img!='..'){
                                     copy($dir_path.'/'.$img, ITEM_IMAGES.$item_id.'/other/'.$img);
                                     $all_images[]=$img;
+									$count++;
                                 }
                             }
-        //                        echo '<pre>';        print_r($all_images); die;
+                               // echo '<pre>';        print_r($all_images); die;
 
                             $data['item'] = array(
                                                     'id' => $item_id,
