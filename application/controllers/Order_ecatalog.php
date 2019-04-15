@@ -34,6 +34,7 @@ class Order_ecatalog extends CI_Controller {
         public function image_loader($cat_id="", $page_no='1'){
             $cat_arr = explode('_',$cat_id); 
             $cat_id = $cat_arr[0];
+            $price_type_id = (isset($cat_arr[2]))?$cat_arr[2]:'';
 //            $data['category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Categories');
             
             $cur_page = (isset($page_no) && $page_no>0)?$page_no:1 ;
@@ -54,9 +55,11 @@ class Order_ecatalog extends CI_Controller {
                     
                 }
             }
+//                    echo '<pre>';            print_r($input); die;
             $data['category_id'] = $cat_id;
             $data['order_id'] = $cat_arr[1];
             $data['page_no'] = $cur_page; 
+            $data['price_type_id'] = $price_type_id; 
             $data['main_content']='sales/order_ecatalog/item_grid_img_loader';  
             $this->load->view('includes/template',$data);
 	}
