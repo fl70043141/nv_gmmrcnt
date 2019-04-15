@@ -331,6 +331,7 @@ class Items extends CI_Controller {
                             'width' => $inputs['width'],
                             'height' => $inputs['height'],
                             'treatment' => $inputs['treatment'],
+                            'shape' => $inputs['shape'],
                             'item_type_id' => $inputs['item_type_id'],
                             'description' => $inputs['description'],
                             'addon_type_id' => $inputs['addon_type_id'],
