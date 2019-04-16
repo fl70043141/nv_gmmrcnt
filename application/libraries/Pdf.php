@@ -190,7 +190,10 @@ class Pdf extends TCPDF
          
         
         $image_file = COMPANY_LOGO.$company_dets[0]['logo'];
-        $this->Image($image_file, 9, 10, '', 35, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        
+        $source_properties = getimagesize($image_file); 
+        $image_file = COMPANY_LOGO.$company_dets[0]['logo'];
+        $this->Image($image_file, 9, 10, '', 35, (($source_properties[2]==IMAGETYPE_JPEG)?'JPG':'PNG'), '', 'T', false, 300, '', false, false, 0, false, false, false);
          
         
         $this->SetTextColor(48,75,105);
