@@ -86,7 +86,7 @@ endswitch;
                         $appendedFiles[] = array(
                                                 "name" => $file,
                                                 "type" => get_mime_by_extension(ITEM_IMAGES.$result['id'].'/other/'.$file),
-                                                "size" => filesize(ITEM_IMAGES.$result['id'].'/other/'.$file),
+                                                "size" => (file_exists(ITEM_IMAGES.$result['id'].'/other/'.$file))?filesize(ITEM_IMAGES.$result['id'].'/other/'.$file):'',
                                                 "file" => base_url(ITEM_IMAGES.$result['id'].'/other/'.$file),
                                                 "data" => array(  "url" => base_url(ITEM_IMAGES.$result['id'].'/other/'.$file)
                                             )
