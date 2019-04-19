@@ -106,10 +106,11 @@ class Consignee_stockcheck extends CI_Controller {
                                 <th align="left" colspan="6">'.$i.'. <u>'.$consignee_dets['consignee_info']['consignee_name'].' - '.(($consignee_dets['consignee_info']['consignee_short_name']!='')?' ['.$consignee_dets['consignee_info']['consignee_short_name'].']':'').'</u></th>
                             </tr>
                             <tr class="colored_bg">
-                                <th width="30%" align="left">Item Desc</th> 
-                                <th width="23%" align="center">Submitted</th> 
-                                <th width="23%" align="center">Received</th> 
-                                <th width="23%" align="center">On Consignee</th>  
+                                <th width="12%" align="left">Code</th> 
+                                <th width="28%" align="left">Item Desc</th> 
+                                <th width="20%" align="center">Submitted</th> 
+                                <th width="20%" align="center">Received</th> 
+                                <th width="20%" align="center">On Consignee</th>  
                             </tr>
                         </thead>
                         <tbody>
@@ -123,10 +124,11 @@ class Consignee_stockcheck extends CI_Controller {
 
 
                                                 $html .= '<tr>
-                                                            <td width="30%" align="left">'.$item_info['submitted_data']['item_description'].'</td>
-                                                            <td width="23%" align="center">'.$item_info['stock']['submitted'].'</td>
-                                                            <td width="23%" align="center">'.$item_info['stock']['recieved'].'</td>
-                                                            <td width="23%" align="center">'.$item_info['stock']['availabe'].'</td>
+                                                            <td width="12%" align="left">'.$item_info['submitted_data']['item_code'].'</td>
+                                                            <td width="28%" align="left">'.$item_info['submitted_data']['item_description'].'</td>
+                                                            <td width="20%" align="center">'.$item_info['stock']['submitted'].'</td>
+                                                            <td width="20%" align="center">'.$item_info['stock']['recieved'].'</td>
+                                                            <td width="20%" align="center">'.$item_info['stock']['availabe'].'</td>
                                                         </tr>';
                                             }
                                         } 
@@ -200,7 +202,7 @@ class Consignee_stockcheck extends CI_Controller {
                 $consignee_info = $this->Consignees_model->get_single_row($cs['consignee_id']);
                 $rep_data[$cs['consignee_id']]['consignee_info'] = $consignee_info[0];
             }
-//                echo '<pre>';            print_r($rep_data); die; 
+//                echo '<pre>';            print_r($consignee_subs); die; 
             return $rep_data;
         }
 }

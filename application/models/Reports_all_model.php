@@ -257,6 +257,7 @@ class Reports_all_model extends CI_Model
     public function get_consignee_submission_desc($data='',$where=''){ 
         $this->db->select('csd.*,sum(csd.item_quantity) as qty_1, sum(csd.item_quantity_2) as qty_2');
         $this->db->select('cs.consignee_id');
+        $this->db->select('(select item_code from '.ITEMS.' where id = csd.item_id)  as item_code');
         $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = csd.item_quantity_uom_id)  as uom_name');
         $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = csd.item_quantity_uom_id_2)  as uom_name_2');
         $this->db->join(CONSIGNEE_SUBMISSION.' cs', 'cs.id = csd.cs_id'); 
@@ -277,6 +278,7 @@ class Reports_all_model extends CI_Model
     public function get_consignee_recieve_desc($data='',$where=''){ 
         $this->db->select('crd.*,sum(crd.item_quantity) as qty_1, sum(crd.item_quantity_2) as qty_2');
         $this->db->select('cr.consignee_id');
+        $this->db->select('(select item_code from '.ITEMS.' where id = crd.item_id)  as item_code');
         $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = crd.item_quantity_uom_id)  as uom_name');
         $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = crd.item_quantity_uom_id_2)  as uom_name_2');
         $this->db->join(CONSIGNEE_RECIEVE.' cr', 'cr.id = crd.cr_id'); 

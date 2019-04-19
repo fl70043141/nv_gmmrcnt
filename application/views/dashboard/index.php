@@ -109,7 +109,7 @@
               </div>
             </div>
             <div class="box-body chart-responsive">
-              <div class="chart" id="sales-chart" style="height: 280px; position: relative;"></div>
+              <div class="chart" id="sales-chart" style="height: 300px; position: relative;"></div>
             </div>
             <!-- /.box-body -->
           </div> 
@@ -132,6 +132,58 @@
               <div id="area-chart" style="height: 338px;" class="full-width-chart"></div>
             </div>
             <!-- /.box-body-->
+          </div>
+        </section>
+        <section class="col-lg-6 connectedSortable">
+
+          <!-- MAP & BOX PANE -->
+          <div class="box box-success">
+            <div class="box-header with-border">
+              <h3 class="box-title">Visitors Report</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <div class="row">
+                <div class="col-md-9 col-sm-8">
+                  <div class="pad">
+                    <!-- Map will be created here -->
+                    <div id="world-map-markers" style="height: 300px;"></div>
+                  </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-4">
+                  <div class="pad box-pane-right bg-green" style="min-height: 280px">
+                    <div class="description-block margin-bottom"> 
+                      <h5>85.25 cts | 48 Pcs</h5>
+                      <span class="description-text">Sri Lanka</span>
+                      <hr>
+                    </div>
+                    <!-- /.description-block -->
+                    <div class="description-block margin-bottom"> 
+                      <h5>85.25 cts | 48 Pcs</h5>
+                      <span class="description-text">China</span>
+                      <hr>
+                    </div>
+                    <!-- /.description-block -->
+                    <div class="description-block">
+                      <h5>85.25 cts | 48 Pcs</h5>
+                      <span class="description-text">China</span>
+                      <hr>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- /.row -->
+            </div>
+            <!-- /.box-body -->
           </div>
         </section>
           <!-- /.box -->
@@ -225,6 +277,47 @@ $(function () {
     get_sales_info();
     get_purch_info();
 //    get_quick_entry_info();
+
+/* jVector Maps
+   * ------------
+   * Create a world map with markers
+   */
+  $('#world-map-markers').vectorMap({
+    map: 'world_mill_en',
+    normalizeFunction: 'polynomial',
+    hoverOpacity: 0.7,
+    hoverColor: false,
+    backgroundColor: 'transparent',
+    regionStyle: {
+      initial: {
+        fill: 'rgba(210, 214, 222, 1)',
+        "fill-opacity": 1,
+        stroke: 'none',
+        "stroke-width": 0,
+        "stroke-opacity": 1
+      },
+      hover: {
+        "fill-opacity": 0.7,
+        cursor: 'pointer'
+      },
+      selected: {
+        fill: 'yellow'
+      },
+      selectedHover: {}
+    },
+    markerStyle: {
+      initial: {
+        fill: '#00a65a',
+        stroke: '#111'
+      }
+    },
+    markers: [
+      {latLng: [6.9271,  79.8612], name: 'Colombo Office (85.25 cts | 48 Pcs)'},
+      {latLng: [39.9042, 116.4074], name: 'China (85.25 cts | 48 Pcs)'},
+      {latLng: [6.4738, 79.9920], name: 'Beruwela (85.25 cts | 48 Pcs)'},
+      {latLng: [13.7563, 100.5018], name: 'Bangkok (85.25 cts | 48 Pcs)'},
+    ]
+  });
     
 });
 
