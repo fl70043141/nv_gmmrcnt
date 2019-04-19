@@ -161,19 +161,19 @@
                   <div class="pad box-pane-right bg-green" style="min-height: 280px">
                     <div class="description-block margin-bottom"> 
                       <h5>85.25 cts | 48 Pcs</h5>
-                      <span class="description-text">Sri Lanka</span>
+                      <span class="description-text">Colombo Office</span>
                       <hr>
                     </div>
                     <!-- /.description-block -->
                     <div class="description-block margin-bottom"> 
-                      <h5>85.25 cts | 48 Pcs</h5>
+                      <h5>142.52 cts | 95 Pcs</h5>
                       <span class="description-text">China</span>
                       <hr>
                     </div>
                     <!-- /.description-block -->
                     <div class="description-block">
-                      <h5>85.25 cts | 48 Pcs</h5>
-                      <span class="description-text">China</span>
+                      <h5>70.25 cts | 24 Pcs</h5>
+                      <span class="description-text">Bangkok</span>
                       <hr>
                     </div>
                     <!-- /.description-block -->
@@ -313,9 +313,9 @@ $(function () {
     },
     markers: [
       {latLng: [6.9271,  79.8612], name: 'Colombo Office (85.25 cts | 48 Pcs)'},
-      {latLng: [39.9042, 116.4074], name: 'China (85.25 cts | 48 Pcs)'},
-      {latLng: [6.4738, 79.9920], name: 'Beruwela (85.25 cts | 48 Pcs)'},
-      {latLng: [13.7563, 100.5018], name: 'Bangkok (85.25 cts | 48 Pcs)'},
+      {latLng: [39.9042, 116.4074], name: 'China (142.52 cts | 95 Pcs)'},
+      {latLng: [6.4738, 79.9920], name: 'Beruwela (201.3 cts | 110 Pcs)'},
+      {latLng: [13.7563, 100.5018], name: 'Bangkok (70.25 cts | 24 Pcs)'},
     ]
   });
     
