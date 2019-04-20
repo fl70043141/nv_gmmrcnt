@@ -1,4 +1,4 @@
-<table id="example1" class="table dataTable table-bordered table-striped">
+<table id="example1" class="fl_scrollable_x table dataTable table-bordered table-striped">
          <thead>
             <tr>
                 <th>#</th>
