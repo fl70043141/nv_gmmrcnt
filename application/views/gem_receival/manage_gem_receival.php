@@ -249,7 +249,7 @@ endswitch;
                                 </div>
                                 
                                 <div class="box-body fl_scrollable_x_y"> 
-                                    <table id="invoice_list_tbl" class="table table-bordered table-striped fl_scrollable">
+                                    <table id="invoice_list_tbl" class="table table-bordered table-striped ">
                                         <thead>
                                            <tr> 
                                                <th width="5%"  style="text-align: center;">Issue#</th> 
