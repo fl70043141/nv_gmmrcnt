@@ -1,4 +1,4 @@
-<div id="result1"></div>
+<div id="result1"><?php // echo '<pre>'; print_r($map_data); die;?></div>
   <!-- Main content -->
     <section class="content">
       <!-- Small boxes (Stat box) -->
@@ -150,32 +150,32 @@
             <!-- /.box-header -->
             <div class="box-body no-padding">
               <div class="row">
-                <div class="col-md-9 col-sm-8">
+                <div class="col-md-8 col-sm-8">
                   <div class="pad">
                     <!-- Map will be created here -->
                     <div id="world-map-markers" style="height: 300px;"></div>
                   </div>
                 </div>
                 <!-- /.col -->
-                <div class="col-md-3 col-sm-4">
-                  <div class="pad box-pane-right bg-green" style="min-height: 280px">
-                    <div class="description-block margin-bottom"> 
-                      <h5>85.25 cts | 48 Pcs</h5>
-                      <span class="description-text">Colombo Office</span>
-                      <hr>
-                    </div>
-                    <!-- /.description-block -->
-                    <div class="description-block margin-bottom"> 
-                      <h5>142.52 cts | 95 Pcs</h5>
-                      <span class="description-text">China</span>
-                      <hr>
-                    </div>
-                    <!-- /.description-block -->
-                    <div class="description-block">
-                      <h5>70.25 cts | 24 Pcs</h5>
-                      <span class="description-text">Bangkok</span>
-                      <hr>
-                    </div>
+                <div class="col-md-4 col-sm-4">
+                    
+                  <div class="pad box-pane-right bg-green" style="min-height: 300px">
+                    <br
+                ><?php
+                    $i=1;
+                     foreach ($map_data as $map){
+                         echo '
+                                <div class="description-block margin-bottom"> 
+                                  <h4>'.$map['tot_available'].'</h4>
+                                  <span class="description-text">'.$map['location_code'].'</span>
+                                  '.(($i==3)?'':'<hr>').'
+                                </div>';
+                         if($i==3){
+                             break;
+                         }
+                         $i++;
+                     }
+                    ?>
                     <!-- /.description-block -->
                   </div>
                 </div>
@@ -312,10 +312,11 @@ $(function () {
       }
     },
     markers: [
-      {latLng: [6.9271,  79.8612], name: 'Colombo Office (85.25 cts | 48 Pcs)'},
-      {latLng: [39.9042, 116.4074], name: 'China (142.52 cts | 95 Pcs)'},
-      {latLng: [6.4738, 79.9920], name: 'Beruwela (201.3 cts | 110 Pcs)'},
-      {latLng: [13.7563, 100.5018], name: 'Bangkok (70.25 cts | 24 Pcs)'},
+        <?php
+            foreach ($map_data as $map){
+                echo "{latLng: [".$map['long'].",  ".$map['latt']."], name: '".$map['location_name']." (".$map['tot_available'].")'},";
+            }
+        ?> 
     ]
   });
     

@@ -28,6 +28,8 @@ class Dashboard extends CI_Controller {
             $data                 = $this->getData(); 
             $data['barchart']     = $this->get_barchart_data(); 
             $data['donut']     = $this->get_donut_data(); 
+            $data['map_data']     = $this->get_map_data(); 
+//            echo '<pre>';            print_r($data); die;
             $data['main_content'] = 'dashboard/index'; 
             $this->load->view('includes/template',$data);
 	}
@@ -38,7 +40,7 @@ class Dashboard extends CI_Controller {
             $cur_left_synbol = $cur_right_synbol ='';
             if(!empty($item_pnl_data)){
                 foreach ($item_pnl_data as $pnl_info){
-                    $pnl_amount += $pnl_info['item_sale_amount'] - ($pnl_info['purch_standard_cost']-$pnl_info['total_lapidary_cost']);
+                    $pnl_amount += $pnl_info['item_sale_amount'] - ($pnl_info['purch_standard_cost']+$pnl_info['total_lapidary_cost']);
                     $cur_left_synbol = $pnl_info['cur_left_symbol'];
                     $cur_right_synbol = $pnl_info['cur_right_symbol'];
     //                echo '<br>code_id: '.$pnl_info['item_id'].'  /  SALE_AMOUNT: '.$pnl_info['item_sale_amount'],'  / PYRCH: '.$pnl_info['purch_standard_cost'];
@@ -281,6 +283,38 @@ class Dashboard extends CI_Controller {
                 }else{
                     echo json_encode($expense_data);
                 }
+        }
+        function get_map_data(){
+            $this->load->model('Inventory_location_model');
+            
+            $locations = $this->Inventory_location_model->search_result();
+            $retdata = array();
+            foreach ($locations as $location){
+                 $tot_weight = $total_pcs = $tot_count =0;
+                $search_data = array('location_id' => $location['id']);
+                $available = $this->Dashboard_model->get_available_items('is.location_id = '.$location['id'],'',1); 
+//            echo '<pre>';            print_r($available);  die;
+    //            $tot_weight = $total_pcs = 0;
+                foreach ($available as $item){
+                    $tot_weight += $item['sum_unit_1'];
+                    $total_pcs += $item['sum_unit_2'];
+                }
+                $tot_count = $tot_weight.' cts | '.$total_pcs.' pcs';
+                $retdata[$location['id']] = array(
+                                                    'unit1' => $tot_weight,
+                                                    'unit2' => $total_pcs,
+                                                    'location_id' => $location['id'],
+                                                    'location_name' => $location['location_name'],
+                                                    'location_code' => $location['location_code'],
+                                                    'tot_available' => $tot_count,
+                                                    'long' => $location['long'],
+                                                    'latt' => $location['latt'],
+                                                );  
+            }
+            asort($retdata); 
+            $retdata = array_reverse($retdata); 
+//            echo '<pre>';            print_r($retdata); die;
+            return $retdata;
         }
 //        function get_sales_info(){
 //             $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
