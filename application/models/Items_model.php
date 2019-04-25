@@ -37,10 +37,25 @@ class Items_model extends CI_Model
             $result = $this->db->get()->result_array();  
             return $result;
 	}
-        public function get_item_prices($item_id,$where=''){ 
+        public function get_item_prices($item_id,$where=''){
             $this->db->select('ip.*');
             $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = ip.sales_type_id)  as sales_type_name');
             $this->db->select('(select supplier_name from '.SUPPLIERS.' where id = ip.supplier_id)  as supplier_name');
+            $this->db->from(ITEM_PRICES." ip");    
+            $this->db->where('ip.item_id',$item_id);
+            $this->db->where('ip.deleted',0);
+            $this->db->where('ip.status',1);
+            if($where!='') $this->db->where($where);
+            $result = $this->db->get()->result_array();  
+//            echo $this->db->last_query(); die;
+            return $result;
+	}
+        public function get_item_purch_prices($item_id,$where=''){
+            $this->db->select('ip.*');
+            $this->db->select('si.invoice_date,si.supplier_invoice_no');
+            $this->db->select('(select supplier_name from '.SUPPLIERS.' where id = ip.supplier_id)  as supplier_name');
+            $this->db->join(SUPPLIER_INVOICE_DESC." sd", 'sd.item_id = ip.item_id');    
+            $this->db->join(SUPPLIER_INVOICE." si", 'si.id = sd.supplier_invoice_id');    
             $this->db->from(ITEM_PRICES." ip");    
             $this->db->where('ip.item_id',$item_id);
             $this->db->where('ip.deleted',0);

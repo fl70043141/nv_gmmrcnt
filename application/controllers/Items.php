@@ -531,18 +531,23 @@ class Items extends CI_Controller {
 	}
         
          function load_data($id=''){
+             $this->load->model('Reports_all_model');
              $data = array(); 
             if($id!=''){
                 $data['user_data'] = $this->Items_model->get_single_row($id); 
                 $data['item_prices']['sales'] = $this->Items_model->get_item_prices($id,'item_price_type=2'); //2 for sales price
-                $data['item_prices']['purchasing'] = $this->Items_model->get_item_prices($id,'item_price_type=1'); //2 for sales price
+                $data['item_prices']['purchasing'] = $this->Items_model->get_item_purch_prices($id,'item_price_type=1'); //2 for purch price
+                $data['item_prices']['standard'] = $this->Items_model->get_item_prices($id,'item_price_type=3'); //3 for standard price
                 $data['stock_status'] = $this->Items_model->get_item_status($id);
+                $data['lapidary_cost'] = $this->Reports_all_model->get_gemstone_lapidary_costing($id);
+                
                 if(empty($data['user_data'])){
                     $this->session->set_flashdata('error','INVALID! Please use the System Navigation');
                     redirect(base_url($this->router->fetch_class()));
                 }
             }
             $data['new_item_code'] =  gen_id('1', ITEMS, 'id',4);
+            $data['default_currency']  = get_single_row_helper(CURRENCY,'code="'.$this->session->userdata(SYSTEM_CODE)['default_currency'].'"');
 //            echo '<pre>';            print_r($data); die;
             $data['item_category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id',''); 
             $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_name','id',''); 
@@ -558,6 +563,7 @@ class Items extends CI_Controller {
             $data['currency_list'] = get_dropdown_data(CURRENCY,'title','code',''); 
             $data['addon_type_list'] = array(0=>'Default');
             $data['item_type_list'] = get_dropdown_data(ITEM_TYPES,'item_type_name','id','');
+//            echo '<pre>';            print_r($data); die;
             return $data;
          }
         

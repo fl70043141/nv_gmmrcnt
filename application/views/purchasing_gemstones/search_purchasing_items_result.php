@@ -48,6 +48,8 @@
                 <th>Supplier Reference</th> 
                 <th>Date</th> 
                 <th>Due Date</th> 
+                <th>Currency</th> 
+                <th>Memo</th> 
                 <th>Action</th>
             </tr>
            </tfoot>

@@ -43,6 +43,8 @@
                 <th>#</th>
                 <th>Sales Inv No</th> 
                 <th>Customer</th>  
+                <th>Currency</th>  
+                <th>Location</th>  
                 <th>Date</th> 
                 <th>Due Date</th> 
                 <th>Action</th>

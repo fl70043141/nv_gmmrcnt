@@ -159,8 +159,9 @@ endswitch;
                                 <div class="nav-tabs-custom">
                                   <ul class="nav nav-tabs">
                                     <li class="active"><a href="#tab_1" data-toggle="tab">Information</a></li>  
-                                    <li><a href="#tab_2" data-toggle="tab">Sales Pricing</a></li> 
-                                    <li><a href="#tab_3" data-toggle="tab">Purchasing Pricing</a></li> 
+                                    <li><a href="#tab_2" data-toggle="tab">Sales Pricing</a></li>
+                                    <!--<li><a href="#tab_3" data-toggle="tab">Purchasing Pricing</a></li>--> 
+                                    <li><a href="#tab_31" data-toggle="tab">Costing</a></li> 
                                     <li><a href="#tab_4" data-toggle="tab">Images</a></li> 
                                     <!--<li><a href="#tab_5" data-toggle="tab">Transection</a></li>--> 
                                     <li><a href="#tab_6" data-toggle="tab">Status</a></li> 
@@ -483,6 +484,64 @@ endswitch;
                                               </div> 
                                           </div>
                                     </div>
+                                      <!-- /.tab-pane --> 
+                                      <!-- /.tab-pane -->
+                                      <div class="tab-pane" id="tab_31">
+                                          <div class="col-md-12">
+                                             <table class="table table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Date</th> 
+                                                        <th>Type</th> 
+                                                        <th>Person</th> 
+                                                        <th>Currency</th> 
+                                                        <th style="text-align: right;">Cost Amount</th> 
+                                                        <th style="text-align: right;">Cost(<?php echo $default_currency['code'];?>)</th> 
+                                                    </tr>
+                                                    <?php
+                                                    $tot_cost = 0;
+                                                        if(isset($item_prices['purchasing']) && !empty($item_prices['purchasing'])){
+                                                            $price_in_def = 0;
+                                                            foreach ($item_prices['purchasing'] as $purch_info){
+                                                                $price_in_def = $purch_info['price_amount'] * ($default_currency['value'] / $purch_info['currency_value']);
+                                                                echo   '<tr>
+                                                                            <td>'. date(SYS_DATE_FORMAT,$purch_info['invoice_date']).'</td>
+                                                                            <td>Purchased</td>
+                                                                            <td>'.$purch_info['supplier_name'].'</td>
+                                                                            <td>'.$purch_info['currency_code'].'</td>
+                                                                            <td align="right">'. number_format($purch_info['price_amount'],2).'</td>
+                                                                            <td align="right">'.$default_currency['symbol_left'].' '. number_format($price_in_def,2).'</td>
+                                                                        </tr>'; 
+                                                                $tot_cost +=$price_in_def;
+                                                            }
+                                                        }
+                                                        
+                                                        if(isset($lapidary_cost) && !empty($lapidary_cost)){
+                                                            $price_in_def = 0;
+                                                            foreach ($lapidary_cost as $lap_cost){
+                                                                $price_in_def = $lap_cost['amount_cost'] * ($default_currency['value'] / $lap_cost['currency_value']);
+                                                                echo   '<tr>
+                                                                        <td>'. date(SYS_DATE_FORMAT,$lap_cost['receive_date']).'</td>
+                                                                        <td>Lab / Lapidary</td>
+                                                                        <td>'.$lap_cost['dropdown_value'].'</td>
+                                                                        <td>'.$lap_cost['currency_code'].'</td>
+                                                                        <td align="right">'. number_format($lap_cost['amount_cost'],2).'</td>
+                                                                        <td align="right">'.$default_currency['symbol_left'].' '. number_format($price_in_def,2).'</td>
+                                                                    </tr>'; 
+                                                                $tot_cost +=$price_in_def;
+                                                            }
+                                                            }
+                                                    
+                                                    ?> 
+                                                    <tr>
+                                                        <td colspan="5" align="right"><b>Total Cost</b></td>
+                                                        <td align="right"><b><?php echo $default_currency['symbol_left'].' '.number_format($tot_cost,2);?></b></td>
+                                                    </tr>
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div> 
+                                      </div>
                                       <!-- /.tab-pane --> 
                                       <!-- /.tab-pane -->
                                       <div class="tab-pane" id="tab_4">

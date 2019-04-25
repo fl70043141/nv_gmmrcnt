@@ -62,6 +62,7 @@ class Reports_all_model extends CI_Model
         if(isset($data['item_category_id']) && $data['item_category_id'] !='')$this->db->where('itm.item_category_id',$data['item_category_id']);
         if(isset($data['treatment_id']) && $data['treatment_id'] !='')$this->db->where('itm.treatment',$data['treatment_id']);
         if(isset($data['item_code']) && $data['item_code'] !='')$this->db->like('itm.item_code',$data['item_code']);
+        if(isset($data['item_id']) && $data['item_id'] !='')$this->db->like('itm.id',$data['item_id']);
         if(isset($data['color_id']) && $data['color_id'] !='')$this->db->where('itm.color',$data['color_id']);
         if(isset($data['shape_id']) && $data['shape_id'] !='')$this->db->where('itm.shape',$data['shape_id']);
         
@@ -308,7 +309,7 @@ class Reports_all_model extends CI_Model
 	   
         
     public function get_gemstone_lapidary_costing($item_id='',$where=''){ 
-        $this->db->select('lc.*');
+        $this->db->select('lc.*,gr.receive_date');
         $this->db->select('drp.dropdown_value,drpln.dropdown_list_name');
         $this->db->join(GEM_RECEIVAL.' gr', 'gr.id = lc.gem_receival_id','LEFT'); 
         $this->db->join(DROPDOWN_LIST.' drp', 'drp.id = gr.lapidary_id','LEFT'); 
