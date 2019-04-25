@@ -249,9 +249,15 @@ $(function () {
      * FULL WIDTH STATIC AREA CHART
      * -----------------
      */
-    var areaData = [[2, 88.0], [3, 93.3], [4, 102.0], [5, 108.5], [6, 115.7], [7, 115.6],
-      [8, 124.6], [9, 130.3], [10, 134.3], [11, 141.4], [12, 146.5], [13, 151.7], [14, 159.9],
-      [15, 165.4], [16, 167.8], [17, 168.7], [18, 169.5], [19, 168.0]];
+    var areaData = [
+                        <?php
+                            if(!empty($sales_chart)){
+                                foreach ($sales_chart as $key=>$chartdata){
+                                    echo ' ['.$key.', '.$chartdata['total'].'],';
+                                }
+                            }
+                        ?> 
+                    ];
     $.plot("#area-chart", [areaData], {
       grid: {
         borderWidth: 0

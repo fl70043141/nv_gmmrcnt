@@ -23,12 +23,13 @@ class Dashboard extends CI_Controller {
             $this->load->model('Dashboard_model'); 
         }
 
-	public function index(){ 
-            
+	public function index(){  
             $data                 = $this->getData(); 
             $data['barchart']     = $this->get_barchart_data(); 
             $data['donut']     = $this->get_donut_data(); 
             $data['map_data']     = $this->get_map_data(); 
+            $data['sales_chart']     = $this->get_sales_chart_data();  
+            
 //            echo '<pre>';            print_r($data); die;
             $data['main_content'] = 'dashboard/index'; 
             $this->load->view('includes/template',$data);
@@ -315,6 +316,37 @@ class Dashboard extends CI_Controller {
             $retdata = array_reverse($retdata); 
 //            echo '<pre>';            print_r($retdata); die;
             return $retdata;
+        }
+        
+        function get_sales_chart_data(){
+            $ret_arr = array();
+            for ($i = 6; $i >= 0; $i--) {
+                $date_start = date('Y-m-1', strtotime("-$i month"));
+                $date_end = date('Y-m-t', strtotime("-$i month"));
+                
+                $data = array(
+                               'from_date' => strtotime($date_start),
+                               'to_date' => strtotime($date_end), 
+                             );
+             
+                $sales_info = $this->Dashboard_model->get_sales_amount($data);
+//                echo '<pre>';              print_r($sales_info); 
+                $sales_data = array();
+                $tot_sales = 0;
+                foreach ($sales_info as $sale){
+                    $sales_data[$sale['id']] = $sale;
+                    $tot_sales += $sale['inv_subtot'];
+                    $sales_data['symbol_left'] = $sale['cur_left_symbol'];
+                    $sales_data['symbol_right'] = $sale['cur_right_symbol'];
+                }
+                $sales_data1['month'] = $date_start;
+                $sales_data1['total'] = $tot_sales;
+                
+                $ret_arr[] = $sales_data1;
+                
+            }  
+//            echo '<pre>';            print_r($ret_arr); die;
+            return $ret_arr;
         }
 //        function get_sales_info(){
 //             $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
