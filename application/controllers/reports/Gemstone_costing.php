@@ -42,7 +42,11 @@ class Gemstone_costing extends CI_Controller {
         }
         
         public function search(){ //view the report
+            $inputs = $this->input->post();
+//            echo '<pre>';            print_r($inputs); die;
             $data['rep_data'] = $this->load_data(); 
+//            echo '<pre>';            print_r($data); die;
+            $data['stock_stat'] = (isset($inputs['stock_stat']))?$inputs['stock_stat']:1; 
             $this->load->view('reports_all/inventory/gemstone_costing/search_gemstone_costing_report_result',$data);
 	} 
         

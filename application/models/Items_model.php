@@ -53,6 +53,8 @@ class Items_model extends CI_Model
         public function get_item_purch_prices($item_id,$where=''){
             $this->db->select('ip.*');
             $this->db->select('si.invoice_date,si.supplier_invoice_no');
+            $this->db->select('(ip.price_amount * sd.purchasing_unit) as cost_amount');
+            $this->db->select('sd.purchasing_unit,sd.purchasing_unit_uom_id,sd.secondary_unit,sd.secondary_unit_uom_id');
             $this->db->select('(select supplier_name from '.SUPPLIERS.' where id = ip.supplier_id)  as supplier_name');
             $this->db->join(SUPPLIER_INVOICE_DESC." sd", 'sd.item_id = ip.item_id');    
             $this->db->join(SUPPLIER_INVOICE." si", 'si.id = sd.supplier_invoice_id');    

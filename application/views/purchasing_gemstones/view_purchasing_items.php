@@ -14,12 +14,16 @@ $inv_trans = $inv_data['inv_transection'];
         padding-bottom: 2px;
         border-bottom: 1px solid #ddd;
         text-align:center; 
+        padding-left: 10px;
+        padding-right: 10px;
     }
     .text-right,.table-line.text-right{
         text-align:right;
     }
     .table-line tr{
         line-height: 30px;
+    }
+    td{
     }
     </style>
 <div class="row">
@@ -135,16 +139,16 @@ $inv_trans = $inv_data['inv_transection'];
                                              <th colspan="10">'.$inv_data['item_cats'][$inv_itms[0]['item_category']].'</th> 
                                          </tr>
                                         <tr style="">
-                                            <th width="8%" style="text-align: left;"><u><b>Item Code</b></u></th>  
-                                            <th width="14%" style="text-align: left;"><u><b>Gemstone</b></u></th>  
-                                             <th width="8%" style="text-align: left;"><u><b>NH/H</b></u></th>  
-                                             <th width="8%" style="text-align: left;"><u><b>Shape</b></u></th>  
-                                             <th width="10%" style="text-align: left;"><u><b>Color</b></u></th>  
-                                             <th width="8%" style="text-align: left;"><u><b>Origin</b></u></th>  
-                                             <th width="10%" style="text-align: left;"><u><b>Certificate</b></u></th>  
-                                             <th  width="15%"><u><b>Qty</b></u></th> 
-                                             <th width="9%" style="text-align: right;"><u><b>Rate ('.$cur_det['symbol_left'].')</b></u></th>  
-                                             <th width="10%" style="text-align: right;"><u><b>Total('.$cur_det['symbol_left'].')</b></u></th> 
+                                            <th width="" style="text-align: left;"><u><b>Item Code</b></u></th>  
+                                            <th width="" style="text-align: left;"><u><b>Gemstone</b></u></th>  
+                                             <th width="" style="text-align: left;"><u><b>NH/H</b></u></th>  
+                                             <th width="" style="text-align: left;"><u><b>Shape</b></u></th>  
+                                             <th width="" style="text-align: left;"><u><b>Color</b></u></th>  
+                                             <th width="" style="text-align: left;"><u><b>Origin</b></u></th>  
+                                             <th width="" style="text-align: left;"><u><b>Certificate</b></u></th>  
+                                             <th  width=""><u><b>Qty</b></u></th> 
+                                             <th width="" style="text-align: right;"><u><b>Rate ('.$cur_det['symbol_left'].')</b></u></th>  
+                                             <th width="" style="text-align: right;"><u><b>Total('.$cur_det['symbol_left'].')</b></u></th> 
                                          </tr>
                                     </thead>
                                 <tbody>';
@@ -153,16 +157,16 @@ $inv_trans = $inv_data['inv_transection'];
                         $item_info = get_single_row_helper(ITEMS, 'id='.$inv_itm['item_id']);
 //echo '<pre>';print_r($item_info);  
                          echo     '<tr>
-                                        <td width="8%" style="text-align: left;">'.$inv_itm['item_code'].'</td> 
-                                        <td width="14%" style="text-align: left;">'.$inv_itm['supplier_item_desc'].'</td>   
-                                        <td width="8%" style="text-align: left;">'. (($item_info['treatment']>0)?get_dropdown_value($item_info['treatment']):'').'</td>   
-                                        <td width="8%" style="text-align: left;">'. (($item_info['shape']>0)?get_dropdown_value($item_info['shape']):'-').'</td>   
-                                        <td width="10%" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['color']):'-').'</td>   
-                                        <td width="8%" style="text-align: left;">'. (($item_info['origin']>0)?get_dropdown_value($item_info['origin']):'-').'</td>   
-                                        <td width="10%" style="text-align: left;">'. (($item_info['certification']>0)?get_dropdown_value($item_info['certification']):'-').'</td>   
-                                        <td width="15%">'.$inv_itm['purchasing_unit'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['secondary_unit_uom_id']>0)?' | '.$inv_itm['secondary_unit'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
-                                        <td width="9%" style="text-align: right;">'. number_format($inv_itm['purchasing_unit_price'],2).'</td> 
-                                        <td width="10%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
+                                        <td width="" style="text-align: left;">'.$inv_itm['item_code'].'</td> 
+                                        <td width="" style="text-align: left;">'.$inv_itm['supplier_item_desc'].'</td>   
+                                        <td width="" style="text-align: left;">'. (($item_info['treatment']>0)?get_dropdown_value($item_info['treatment']):'').'</td>   
+                                        <td width="" style="text-align: left;">'. (($item_info['shape']>0)?get_dropdown_value($item_info['shape']):'-').'</td>   
+                                        <td width="" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['color']):'-').'</td>   
+                                        <td width="" style="text-align: left;">'. (($item_info['origin']>0)?get_dropdown_value($item_info['origin']):'-').'</td>   
+                                        <td width="" style="text-align: left;">'. (($item_info['certification']>0)?get_dropdown_value($item_info['certification']):'-').'</td>   
+                                        <td width="">'.$inv_itm['purchasing_unit'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['secondary_unit_uom_id']>0)?' | '.$inv_itm['secondary_unit'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
+                                        <td width="" style="text-align: right;">'. number_format($inv_itm['purchasing_unit_price'],2).'</td> 
+                                        <td width="" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
                                     </tr> ';
                      }
                      echo       ' <tr><td  colspan="5"></td></tr></tbody></table>'; 

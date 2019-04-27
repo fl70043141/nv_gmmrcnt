@@ -50,7 +50,11 @@ class Reports_all_model extends CI_Model
         $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.treatment)  as treatment_name');
         $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.color)  as color_name');
         $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.shape)  as shape_name');
+        $this->db->select('(ip.price_amount * sd.purchasing_unit) as cost_amount, sd.purchasing_unit as supp_inits,sd.secondary_unit as supp_inits_2,si.invoice_date,si.supplier_invoice_no'); 
+        $this->db->select('(select supplier_name from '.SUPPLIERS.' where id = si.supplier_id)  as supplier_name');
         $this->db->join(ITEMS.' itm','itm.id = is.item_id'); 
+        $this->db->join(SUPPLIER_INVOICE_DESC.' sd','sd.item_id = is.item_id'); 
+        $this->db->join(SUPPLIER_INVOICE." si", 'si.id = sd.supplier_invoice_id');    
         $this->db->join(ITEM_TYPES.' ityp', 'ityp.id = itm.item_type_id');
         $this->db->join(ITEM_CAT.' itmc','itmc.id =  itm.item_category_id'); 
         $this->db->join(GEM_LAPIDARY_COSTING.' glc','glc.item_id = is.item_id', 'LEFT'); 
@@ -66,8 +70,10 @@ class Reports_all_model extends CI_Model
         if(isset($data['color_id']) && $data['color_id'] !='')$this->db->where('itm.color',$data['color_id']);
         if(isset($data['shape_id']) && $data['shape_id'] !='')$this->db->where('itm.shape',$data['shape_id']);
         
-        if(isset($data['min_weight']) && $data['min_weight'] >0)$this->db->where('is.units_available >',$data['min_weight']);
-        if(isset($data['max_weight_check']) && isset($data['max_weight']) && $data['max_weight'] >0)$this->db->where('is.units_available <',$data['max_weight']);
+        if(isset($data['stock_stat']) && $data['stock_stat']==1){
+            if(isset($data['min_weight']) && $data['min_weight'] >0)$this->db->where('is.units_available >',$data['min_weight']);
+            if(isset($data['max_weight_check']) && isset($data['max_weight']) && $data['max_weight'] >0)$this->db->where('is.units_available <',$data['max_weight']);
+        }
          if(isset($data['item_type_id']) && $data['item_type_id'] !='')$this->db->like('itm.item_type_id',$data['item_type_id']);
             
         

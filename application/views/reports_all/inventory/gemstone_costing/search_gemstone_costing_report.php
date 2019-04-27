@@ -136,7 +136,14 @@ $(document).ready(function(){
                                         <div class="col-md-3">  
                                                 <div class="form-group pad  no-pad-top">
                                                     <label for="item_type_id">Purchasing Type</label>
-                                                     <?php echo form_dropdown('item_type_id',$item_type_list,set_value('item_type_id'),' class="form-control select2" id="item_type_id"');?>
+                                                     <?php echo form_dropdown('item_type_id',$item_type_list,set_value('item_type_id'),' class="form-control " id="item_type_id"');?>
+                                              
+                                                </div> 
+                                        </div> 
+                                        <div class="col-md-3">  
+                                                <div class="form-group pad  no-pad-top">
+                                                    <label for="item_type_id">Stock Status</label>
+                                                     <?php echo form_dropdown('stock_stat',array(1=>'Only available',2=>'All Items'),set_value('stock_stat'),' class="form-control " id="stock_stat"');?>
                                               
                                                 </div> 
                                         </div> 

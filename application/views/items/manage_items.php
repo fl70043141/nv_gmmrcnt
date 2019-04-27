@@ -168,7 +168,7 @@ endswitch;
 
                                     <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
                                   </ul>
-                                  <div class="tab-content fl_scroll">
+                                  <div class="tab-content fl_scrollable_x_y">
                                       <div class="tab-pane active" id="tab_1"> 
                                               <div class="row"> 
                                                   <div class="col-md-6">
@@ -503,13 +503,13 @@ endswitch;
                                                         if(isset($item_prices['purchasing']) && !empty($item_prices['purchasing'])){
                                                             $price_in_def = 0;
                                                             foreach ($item_prices['purchasing'] as $purch_info){
-                                                                $price_in_def = $purch_info['price_amount'] * ($default_currency['value'] / $purch_info['currency_value']);
+                                                                $price_in_def = $purch_info['cost_amount'] * ($default_currency['value'] / $purch_info['currency_value']);
                                                                 echo   '<tr>
                                                                             <td>'. date(SYS_DATE_FORMAT,$purch_info['invoice_date']).'</td>
                                                                             <td>Purchased</td>
                                                                             <td>'.$purch_info['supplier_name'].'</td>
                                                                             <td>'.$purch_info['currency_code'].'</td>
-                                                                            <td align="right">'. number_format($purch_info['price_amount'],2).'</td>
+                                                                            <td align="right">'. number_format($purch_info['cost_amount'],2).'</td>
                                                                             <td align="right">'.$default_currency['symbol_left'].' '. number_format($price_in_def,2).'</td>
                                                                         </tr>'; 
                                                                 $tot_cost +=$price_in_def;

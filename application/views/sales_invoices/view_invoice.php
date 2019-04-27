@@ -15,6 +15,8 @@ $inv_trans = $inv_data['inv_transection'];
         padding-bottom: 2px;
         border-bottom: 1px solid #ddd;
         text-align:center; 
+        padding-left: 10px;
+        padding-right: 10px;
     }
     .text-right,.table-line.text-right{
         text-align:right;
