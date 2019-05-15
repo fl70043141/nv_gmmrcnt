@@ -155,12 +155,25 @@ class Order_ecatalog extends CI_Controller {
             $page_limit_from = 9*($cur_page-1);
             $item_res = $this->Order_ecataog_modal->search_items($search_data,9,$page_limit_from); 
             $data = array();
+            $exist_item = 0;
             if(!empty($item_res)){
-                foreach ($item_res as $item){ 
+                foreach ($item_res as $item){
+                    if(isset($input['itm_id']) && $item['item_id']==$input['itm_id']){
+                        $exist_item=1;
+                    } 
                     if($item['tot_units_1'] > 0){
                         $data['item_res'][$item['item_id']] = $item; 
                         $data['item_res'][$item['item_id']]['item_price_info'] = $this->Order_ecataog_modal->get_item_price($item['item_id'],$input['price_type_id']); 
                         $data['item_res'][$item['item_id']]['item_stock_info'] = $this->Order_ecataog_modal->get_item_stock($item['item_id']); 
+                    }
+                }
+                if(isset($input['itm_id']) && $input['itm_id']!='' && $exist_item==0){    
+                    $item_exist = $this->Order_ecataog_modal->search_items(array('item_id'=>$input['itm_id']));
+                    if(!empty($item_exist)){
+                        $item_exist = $item_exist[0];
+                        $data['item_res'][$item_exist['item_id']] = $item_exist; 
+                        $data['item_res'][$item_exist['item_id']]['item_price_info'] = $this->Order_ecataog_modal->get_item_price($item_exist['item_id'],$input['price_type_id']); 
+                        $data['item_res'][$item_exist['item_id']]['item_stock_info'] = $this->Order_ecataog_modal->get_item_stock($item_exist['item_id']); 
                     }
                 }
             }
