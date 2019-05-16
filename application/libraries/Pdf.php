@@ -95,7 +95,8 @@ class Pdf extends TCPDF
                         </table> '; 
         
         $image_file = COMPANY_LOGO.$company_dets[0]['logo'];
-        $this->Image($image_file, 10, 10, 25, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        $source_properties = getimagesize($image_file); 
+        $this->Image($image_file, 10, 10, 25, '', (($source_properties[2]==IMAGETYPE_JPEG)?'JPG':'PNG'), '', 'T', false, 300, '', false, false, 0, false, false, false);
         
         $this->writeHTMLCell(80,20,40,11,$header_info);
         $this->writeHTMLCell(80,20,120,11,$header_info2); 
@@ -234,7 +235,8 @@ class Pdf extends TCPDF
         $this->SetAutoPageBreak(false, 0);
         // set bacground image  
         $image_file = DEFAULT_IMAGE_LOC.'am_invoice_hp.jpg';
-        $this->Image($image_file, 5, 5,  200, '', 'JPG', '', 'T', false, 72, '', false, false, 0, false, false, false);
+        $source_properties = getimagesize($image_file); 
+        $this->Image($image_file, 5, 5,  200, '', (($source_properties[2]==IMAGETYPE_JPEG)?'JPG':'PNG'), '', 'T', false, 72, '', false, false, 0, false, false, false);
          
     }
     // EMPTY HEADER
