@@ -132,7 +132,9 @@ class Pdf extends TCPDF
                         </table> '; 
         
         $image_file = COMPANY_LOGO.$company_dets[0]['logo'];
-        $this->Image($image_file, 9, 7, '', 20, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        
+        $source_properties = getimagesize($image_file); 
+        $this->Image($image_file, 9, 7, '', 20, (($source_properties[2]==IMAGETYPE_JPEG)?'JPG':'PNG'), '', 'T', false, 300, '', false, false, 0, false, false, false);
         $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/CanelaBarkBold_PERSONAL.ttf', 'TrueTypeUnicode', '', 96);
         // use the font
         $this->SetFont($fontname, '', 15.5, '', false);
