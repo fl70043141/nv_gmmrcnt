@@ -47,7 +47,9 @@ class Consignee_stockcheck extends CI_Controller {
             
             // create new PDF document
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-            $pdf->fl_header='header_am';//invice bg
+            $pdf->fl_header='header_jewel';//invice bg
+            $pdf->fl_header_title='Report';//invice bg
+            $pdf->fl_header_title_RTOP='Consigngnee Stocks';//invice bg
             
             // set document information
             $pdf->SetCreator(PDF_CREATOR);
