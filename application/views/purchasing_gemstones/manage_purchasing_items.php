@@ -563,7 +563,7 @@ $(document).ready(function(){
                                 if(id1!='item_desc'){$('#item_desc').val(res1.item_code).trigger('change');}
                                 if(id1!='item_code'){ $('#item_code').val(res1.item_code);}
                                 (res1.price_amount==null)? $('#item_unit_cost').val(0):$('#item_unit_cost').val(res1.price_amount);
-                                $('#unit_abbr').text('Weight '+res1.unit_abbreviation);
+                                $('#unit_abbr').text(res1.unit_abbreviation);
                                 $('#prce_unit_name').text(res1.unit_abbreviation);
                                 $('#unit_abbr_2').text(res1.unit_abbreviation_2);
 //                                $('#item_discount').val(0);
