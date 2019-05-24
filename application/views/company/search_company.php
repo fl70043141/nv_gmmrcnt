@@ -110,7 +110,7 @@ $(document).ready(function(){
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="example1" class="table dataTable table-bordered table-striped">
+              <table id="example1" class="table dataTable12 table-bordered table-striped">
                <thead>
                         <tr>
                             <th>#</th>
@@ -141,6 +141,6 @@ $(document).ready(function(){
 </div> <script>
     $(document).ready(function() {
    
-  $(".dataTable").DataTable({"scrollX": true});
+  $(".dataTable12").DataTable({"scrollX": true});
 } );
 </script>

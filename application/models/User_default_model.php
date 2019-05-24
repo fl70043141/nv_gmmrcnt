@@ -32,7 +32,7 @@ class User_default_model extends CI_Model
 		$this->load->library('encryption'); 
 		/*$user_obj = $this->db->get_where(USER_TBL,array('user_name'=>$data['username']))->result();*/
 //		var_dump($data); die;
-		$this->db->select('usr.*,mst.first_name,mst.last_name,mst.pic,mst.company_id, ur.user_role, ur.group_id as user_group_id,c.company_name,c.currency_code');
+		$this->db->select('usr.*,mst.first_name,mst.last_name,mst.pic,mst.company_id, ur.user_role, ur.group_id as user_group_id,c.company_name,c.country,c.currency_code');
 		$this->db->select('crnc.value as currency_value');
 		$this->db->from(USER_TBL.' usr');
                 $this->db->join(USER.' mst','mst.auth_id = usr.id',"LEFT");
@@ -69,7 +69,7 @@ class User_default_model extends CI_Model
     function set_session_web($user_obj) //Add session data for web users
 	{
         $active_fiscal_yr = $this->get_active_fiscal_year();
-	  	
+        
         $session_data[SYSTEM_CODE] = array(
                               'system_code'     => SYSTEM_CODE,
                               'ID'              => $user_obj['0']->id,
@@ -83,6 +83,7 @@ class User_default_model extends CI_Model
                               'default_currency_value'=> $user_obj['0']->currency_value,
                               'company_id'      => $user_obj['0']->company_id,
                               'company_name'      => $user_obj['0']->company_name,
+                              'company_origin'      => $user_obj['0']->country,
                               'is_logged_in' 	=> TRUE,
                               'access_type'	=> 'web',
                               'active_fiscal_year_id'	=> ($active_fiscal_yr!=0)?$active_fiscal_yr['id']:0,

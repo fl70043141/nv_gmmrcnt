@@ -277,11 +277,11 @@ endswitch;
                                              
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label class="col-md-3 control-label">Company Grade</label>
+                                                    <label class="col-md-3 control-label">Gem License No</label>
                                                     <div class="col-md-9">                                            
                                                         <div class="input-group">
                                                             <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
-                                                             <?php echo form_input('company_grade', set_value('company_grade',$result['company_grade']), 'id="company_grade" class="form-control" placeholder="Eg: 3 Star" style="z-index: 1;"'.$dis.' '.$o_dis.' '); ?>
+                                                             <?php echo form_input('company_grade', set_value('company_grade',$result['company_grade']), 'id="company_grade" class="form-control" placeholder="Enter Gem License No" style="z-index: 1;"'.$dis.' '.$o_dis.' '); ?>
 
                                                         </div>                                            
                                                         <span class="help-block"><?php echo form_error('company_grade');?></span>

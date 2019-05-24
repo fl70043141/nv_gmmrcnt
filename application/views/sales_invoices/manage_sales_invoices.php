@@ -957,7 +957,7 @@ $(document).ready(function(){
                                     }
                                     
                                     var new_trns_row_str = '<tr class="addon_rows" id="addon_tr_'+addon['id']+'">'+
-                                                                '<td colspan="4"></td>'+
+                                                                '<td colspan="5"></td>'+
                                                                 '<td align="right">'+addon['addon_name']+' '+perc_txt+'</span></td>'+
                                                                 '<td id="addon_tdv_'+addon['id']+'" align="right"><input class="cell_cur_value"  value="'+$('#currency_value').val()+'" hidden><input class="addon_inputs cell_price" name="addons['+addon['id']+']" value="'+addon_amount+'" hidden><span class="cell_price_text">'+(addon_amount).toFixed(2)+'</span></td>'+
                                                              '</tr>';

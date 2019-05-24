@@ -155,7 +155,7 @@ class Addons extends CI_Controller {
                             'addon_value' => $inputs['addon_value'], 
                             'debit_gl_code' => $inputs['debit_gl_code'], 
                             'credit_gl_code' => $inputs['credit_gl_code'], 
-                            'currency_code' => $cur_det['code'], 
+                            'currency_code' => $inputs['currency_code'], 
                             'currency_value' => $cur_det['value'], 
                             'calculation_type' => $inputs['calculation_type'], 
                             'calculation_included' => (isset($inputs['calculation_included']))?json_encode($inputs['calculation_included']):'', 

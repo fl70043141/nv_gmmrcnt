@@ -39,6 +39,7 @@ class Sales_invoices_model extends CI_Model
             $this->db->select('i.*');
             $this->db->select('(select invoice_type_name from '.INVOICE_TYPE.' where id = i.invoice_type_id) as invoice_type');
             $this->db->select('(select concat(first_name," ",last_name) from '.USER.' where auth_id = i.added_by) as sales_person');
+            $this->db->select('(select country_name from  '.COUNTRY_LIST.' where country_code = c.country) as cust_country');
             $this->db->select('c.customer_name,c.short_name,c.address,c.city,c.phone,pt.payment_term_name,pt.days_after');
             $this->db->select('so.sales_order_no,so.order_date');
             $this->db->from(INVOICES.' i'); 
