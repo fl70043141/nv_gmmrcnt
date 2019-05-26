@@ -1051,6 +1051,24 @@ class Sales_invoices extends CI_Controller {
             $this->load->view('sales_invoices/search_sales_invoices_result',$invoices);
 	}
         
+        function get_item_search_modal(){ 
+                $inputs = $this->input->post();
+//                echo '<pre>';            print_r($inputs); die; 
+                $cat_qry_str = ($inputs['item_cat_id']!='')?"itm.item_category_id = ".$inputs['item_cat_id']." AND ":'';
+                $cat_qry_str .= ($inputs['treatment_id']!='')?"itm.treatment = ".$inputs['treatment_id']." AND ":'';
+                $cat_qry_str .= ($inputs['color_id']!='')?"itm.color = ".$inputs['color_id']." AND ":'';
+                $cat_qry_str .= ($inputs['shape_id']!='')?"itm.shape = ".$inputs['shape_id']." AND ":'';
+//                $item_res = $this->Items_model->get_available_items("itm.item_category_id = ".$inputs['item_cat_id']." AND itm.item_code like '%".$inputs['item_code']."%' AND itm.item_name LIKE '%".$inputs['item_desc']."'%");
+                
+                $cat_qry_str .= (isset($inputs['item_units']) && $inputs['item_units']!='')?"is.units_available = ".$inputs['item_units']." AND ":'';
+                    
+                $data['item_res'] = $this->Sales_invoices_model->get_available_items($cat_qry_str."itm.item_code like '%".$inputs['item_code']."%'",SELECT2_ROWS_LOAD);
+                
+//                echo '<pre>';            print_r($data); die;
+                $this->load->view('sales_invoices/inv_modals/item_search/item_search_modal_result',$data);
+//                echo '<pre>';            print_r($data); die;
+        }
+        
         function get_single_item(){
             $this->load->model('Item_stock_model');
             $inputs = $this->input->post(); 
@@ -1536,8 +1554,7 @@ class Sales_invoices extends CI_Controller {
         
         function fl_ajax(){
             
-//            echo '<pre>';            print_r($this->input->post()); die;
-            $func = $this->input->get('function_name');
+            $func = $this->input->post('function_name');
             $param = $this->input->post();
             
             if(method_exists($this, $func)){ 
@@ -1546,6 +1563,18 @@ class Sales_invoices extends CI_Controller {
                 return false;
             }
         }
+//        function fl_ajax(){
+//            
+////            echo '<pre>';            print_r($this->input->post()); die;
+//            $func = $this->input->get('function_name');
+//            $param = $this->input->post();
+//            
+//            if(method_exists($this, $func)){ 
+//                (!empty($param))?$this->$func($param):$this->$func();
+//            }else{
+//                return false;
+//            }
+//        }
         
         function get_calculate_required_payment(){
             $inputs = $this->input->post();

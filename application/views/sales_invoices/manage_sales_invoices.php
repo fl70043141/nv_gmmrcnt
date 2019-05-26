@@ -194,7 +194,7 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                         
                                         <div class="col-md-3">
                                             <div class="form-group pad">
-                                                <label for="item_desc">Item Description</label>
+                                                <label for="item_desc">Item &nbsp;<a id="itm-line-search"  style="color: white;"><span class="fa fa-search"></span> Search </a></label>
                                                 <?php echo form_dropdown('item_desc',$item_list,set_value('item_desc'),' class="form-control add_item_inpt js-example-templating select2" style="width:100%;" data-live-search="true" id="item_desc"');?>
                                             </div>
                                         </div>
@@ -433,6 +433,7 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
 </div>
     
 <?php $this->load->view('sales_invoices/inv_modals/add_new_customer_model'); ?>
+<?php $this->load->view('sales_invoices/inv_modals/item_search/item_search_modal'); ?>
     
 <script type="text/javascript">
   $('tbody').sortable();
