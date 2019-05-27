@@ -930,6 +930,7 @@ $(document).ready(function(){
                         type: 'post',
                         data : {function_name:"get_customer_addons",customer_id:$('#customer_id').val()},
                         success: function(result){ 
+//                            $('table #inv_tbl_footer_addons').html(result);  return false;
 //                            fl_alert('info',$('#customer_id').val())
                                 var obj1 = JSON.parse(result);
                                 $('.addon_rows').remove();
@@ -960,11 +961,24 @@ $(document).ready(function(){
                                     var new_trns_row_str = '<tr class="addon_rows" id="addon_tr_'+addon['id']+'">'+
                                                                 '<td colspan="5"></td>'+
                                                                 '<td align="right">'+addon['addon_name']+' '+perc_txt+'</span></td>'+
-                                                                '<td id="addon_tdv_'+addon['id']+'" align="right"><input class="cell_cur_value"  value="'+$('#currency_value').val()+'" hidden><input class="addon_inputs cell_price" name="addons['+addon['id']+']" value="'+addon_amount+'" hidden><span class="cell_price_text">'+(addon_amount).toFixed(2)+'</span></td>'+
+                                                                '<td class="input_addon_price_td" id="addon_tdv_'+addon['id']+'" align="right"><input class="cell_cur_value"  value="'+$('#currency_value').val()+'" hidden><input class="addon_inputs cell_price addon_cell_input_price" name="addons['+addon['id']+']" value="'+addon_amount+'" hidden><span class="cell_price_text">'+(addon_amount).toFixed(2)+'</span></td>'+
                                                              '</tr>';
 
                                     var new_trns_row = $(new_trns_row_str);
                                     $('table #inv_tbl_footer_addons').append(new_trns_row);  
+                                    
+                                    
+                                    $('.input_addon_price_td').click(function(){  
+                                        var tr_id = $(this).closest('tr').attr('id'); 
+                                        $('[name="addons['+addon['id']+']').addClass("form-control");
+                                        $('[name="addons['+addon['id']+']"]').show().focus().select();  
+                                    });
+                                    $('.addon_cell_input_price').focusout(function(){    
+                                        var tr_id = $(this).closest('tr').attr('id'); 
+                                        $('#'+tr_id+' .input_addon_price_td .cell_price_text').text(parseFloat($(this).val()).toFixed(2));
+                                        $(this).removeClass('form-control');
+                                        recalculate_totals();
+                                    });
 //                                    fl_alert('info',addon_amount)
 //                                    return false;
                                 });

@@ -57,7 +57,10 @@ class Sales_invoices_model extends CI_Model
             $this->db->select('ic.category_name as item_cat_name,ic.is_gem');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = id.item_quantity_uom_id)  as unit_abbreviation');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = id.item_quantity_uom_id_2)  as unit_abbreviation_2');
-            $this->db->select('itm.item_code,itm.item_category_id as item_category');
+            $this->db->select('itm.item_code,itm.item_category_id as item_category, itm.certificates_files');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.treatment)  as treatment_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.color)  as color_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.shape)  as shape_name');
             $this->db->join(ITEMS.' itm', 'itm.id = id.item_id'); 
             $this->db->join(ITEM_CAT." ic","ic.id = itm.item_category_id");  
             $this->db->from(INVOICE_DESC.' id'); 

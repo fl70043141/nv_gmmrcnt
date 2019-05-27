@@ -1215,8 +1215,8 @@ class Sales_pos extends CI_Controller {
                     foreach ($addon_ids as $addon_id){
                         $res2 = $this->Sales_pos_model->get_addon_info($addon_id);
                         if(!empty($res2)){ 
-                           $addon_cur_det = get_currency_for_code($res2[0]['currency_code']); //current time rate
-                            $res2[0]['currency_value'] = $addon_cur_det['value'];
+                           $addon_cur_det = get_currency_for_code($res2['currency_code']); //current time rate
+                            $res2['currency_value'] = $addon_cur_det['value'];
                         }
                         if(!empty($res2)){
                             $addons_infos[] = $res2;
@@ -1224,7 +1224,7 @@ class Sales_pos extends CI_Controller {
                     } 
                 }
             }
-            echo '<pre>';            print_r($addons_infos);die;
+//            echo '<pre>';            print_r($addons_infos);die;
             echo json_encode($addons_infos); 
         }
         

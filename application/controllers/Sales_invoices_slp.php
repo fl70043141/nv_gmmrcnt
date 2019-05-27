@@ -249,6 +249,7 @@ class Sales_invoices_slp extends CI_Controller {
                     if(!empty($addon_info)){
                         $addon_cur_det = $this->Sales_invoices_model->get_currency_for_code($addon_info[0]['currency_code']); //current time rate
                         $addon_info[0]['currency_value'] = $addon_cur_det['value'];
+                        $addon_info[0]['addon_value'] = $addon;
                     }
 //                    echo '<pre>';                    print_r($addon_info); die;
                     if(!empty($addon_info)){
@@ -300,6 +301,7 @@ class Sales_invoices_slp extends CI_Controller {
             }
             $total += $addons_total; 
             
+//                    echo '<pre>';                    print_r($data); die;
             $data['so_ref'] = $inputs['so_id'];
             if($inputs['so_id']!=''){
                 $data['inv_tbl']['invoice_type_id'] = 2; 
@@ -1024,6 +1026,7 @@ class Sales_invoices_slp extends CI_Controller {
             $data['item_list'] = $this->get_availale_items_dropdown(); 
             $data['sales_type_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 14'); //14 for sales type
             $data['currency_list'] = get_dropdown_data(CURRENCY,'code','code','Currency');
+            $data['currency_value_list'] = get_dropdown_data(CURRENCY,'code','value','Currency Value');
                     
             $data['item_category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Category');
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
@@ -1069,6 +1072,23 @@ class Sales_invoices_slp extends CI_Controller {
         
         function sales_invoice_print($inv_id,$tmp_mail=''){
             $this->load->model('Sales_orders_model');
+            
+            $print_option = $this->input->get();
+            $print_option = json_decode($print_option['prnt_optn']);
+            
+            $bank_info = $cert_info = 0;
+             if(isset($print_option) && !empty($print_option)){
+                 foreach ($print_option as $propt){
+                     if($propt == 'bank'){
+                         $bank_info = 1;
+                     }
+                     if($propt == 'cert'){
+                         $cert_info = 1;
+                     }
+                 }
+             }
+             
+//            echo '<pre>';            print_r($print_option); die;
 //            echo '<pre>';            print_r($this->get_invoice_info($inv_id)); die; 
             $inv_data = $this->get_invoice_info($inv_id);
             $inv_dets = $inv_data['invoice_dets'];
@@ -1088,6 +1108,7 @@ class Sales_invoices_slp extends CI_Controller {
             $cust_dets = get_single_row_helper(CUSTOMERS,'id='.$inv_dets['customer_id']);
             // create new PDF document
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+//            $pdf->fl_header='header_jewel_slp';//invice bg
             $pdf->fl_header='header_jewel_slp';//invice bg
             $pdf->fl_header_title='INVOICE';//invice bg
             $pdf->fl_header_title_RTOP='CUSTOMER COPY';//invice bg
@@ -1123,13 +1144,13 @@ class Sales_invoices_slp extends CI_Controller {
                     
             // set font 
             $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Regular.ttf', 'TrueTypeUnicode', '', 96);
-            $pdf->SetFont($fontname, 'I', 9);
+            $pdf->SetFont($fontname, 'I', 8.7);
 //            $pdf->SetFont('times', '', 11);
                         
             $pdf->AddPage();   
                         
 //            echo '<pre>';            print_r($cur_det['symbol_left']); die;
-            $payment = $old_gold = '';
+            $payment = $old_gold = $addone_note = '';
             $payment_tot = $old_gold_tot = 0;
             $pdf->SetTextColor(32,32,32);    
             if(isset($inv_data['inv_transection']) && !empty($inv_data['inv_transection'])){
@@ -1250,9 +1271,9 @@ class Sales_invoices_slp extends CI_Controller {
                      $html .= '<table border="0" style=""><tr><td>';
                                      $inv_tot = 0;
                                      $is_gem_stat = $is_item_stat = 0;
-                                     $item_list_html = $gem_list_html = '';
+                                     $item_list_html = $gem_list_html =  $html_certs = '';
 //            echo '<pre>';            print_r($inv_data['invoice_desc_list']); die; 
-                                     $gmcount=1;$gmqty1 =$gmqty2 =0;
+                                     $gmcount=1;$gmqty1 =$gmqty2 =0; 
                                 foreach ($inv_data['invoice_desc_list'] as $inv_itm){
                                     if($inv_itm['is_gem']==1){
                                         $is_gem_stat++;
@@ -1273,15 +1294,18 @@ class Sales_invoices_slp extends CI_Controller {
                                     if($inv_itm['is_gem']==1){
                                         $item_info = get_single_row_helper(ITEMS, 'id='.$inv_itm['item_id']);
                                         
-//                                echo '<pre>';         print_r($inv_dets); die;
+//                                echo '<pre>';         print_r($inv_itm); die;
                                         $gem_list_html .= '<tr>
-                                                           <td width="10%" style="text-align: center;">'.$gmcount.'</td> 
-                                                           <td width="10%" style="text-align: center;">'.(($inv_itm['item_quantity_uom_id_2']>0)?$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td>  
-                                                           <td width="16%" style="text-align: center;">'. $inv_itm['item_code'].'</td>  
-                                                           <td width="18%" style="text-align: left;">'. $inv_itm['item_description'].'</td>  
-                                                           <td width="10%" style="text-align: right;">'. $inv_itm['item_quantity'].'</td>  
-                                                           <td width="18%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td> 
-                                                           <td width="18%" style="text-align: right;"> '. number_format($inv_itm['sub_total'],2).'</td> 
+                                                           <td width="4%" style="text-align: center;">'.$gmcount.'</td> 
+                                                           <td width="7%" style="text-align: center;">'.(($inv_itm['item_quantity_uom_id_2']>0)?$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td>  
+                                                           <td width="10%" style="text-align: center;">'. $inv_itm['item_code'].'</td>  
+                                                           <td width="15%" style="text-align: left;">'. $inv_itm['item_description'].'</td>  
+                                                           <td width="9%" style="text-align: left;">'. $inv_itm['treatment_name'].'</td>  
+                                                           <td width="9%" style="text-align: left;">'. $inv_itm['shape_name'].'</td>  
+                                                           <td width="9%" style="text-align: left;">'. $inv_itm['color_name'].'</td>  
+                                                           <td width="7%" style="text-align: right;">'. $inv_itm['item_quantity'].'</td>  
+                                                           <td width="15%" style="text-align: right;">100000'. number_format($inv_itm['unit_price'],2).'</td> 
+                                                           <td width="15%" style="text-align: right;"> 100000'. number_format($inv_itm['sub_total'],2).'</td> 
                                                        </tr> ';
                                         $inv_tot+=$inv_itm['sub_total'];
                                         $gmqty1 +=$inv_itm['item_quantity'];
@@ -1289,7 +1313,25 @@ class Sales_invoices_slp extends CI_Controller {
                                         $gmcount++;
                                     }
                                     
+                                    //gen  array for cert images
+//                                    echo '<pre>';                                    print_r($inv_itm);
+                                    if($inv_itm['certificates_files'] !='' ){
+                                        $img_arr = json_decode($inv_itm['certificates_files']);
+                                        if(!empty($img_arr)){  
+                                                $html_certs .= '<tr>
+                                                                    <td width="10%">'.($gmcount-1).'</td>
+                                                                    <td width="20%">'.$inv_itm['item_code'].'</td>
+                                                                    <td width="70%">';
+                                                                        foreach ($img_arr as $imgcert){
+                                                                            $html_certs .= '<img src="'. base_url(ITEM_IMAGES.$inv_itm['item_id'].'/certificates_files/'.$imgcert).'"> <br><br>';
+                                                                        }
+                                                 $html_certs .='    </td>
+                                                                </tr> '; 
+                                        }
+                                    }
+                                    
                                 }
+                                
                                 if($gmqty1>0){
                                     $gem_list_html .= '<tr>
                                                         <td width="10%" style="text-align: center;"></td> 
@@ -1324,13 +1366,16 @@ class Sales_invoices_slp extends CI_Controller {
                                     $html .= '<table id="example2" class="table-line" border="0">
                                                     <thead> 
                                                         <tr style=""> 
-                                                            <th width="10%" style="text-align: center;"><u><b>No</b></u></th>  
-                                                            <th width="10%" style="text-align: center;"><u><b>PCS</b></u></th>  
-                                                            <th width="16%" style="text-align: center;"><u><b>Item No</b></u></th> 
-                                                            <th  width="18%" style="text-align: left;" ><u><b>Description</b></u></th>  
-                                                            <th  width="10%" style="text-align: right;" ><u><b>W/CT</b></u></th>  
-                                                            <th  width="18%" style="text-align: right;" ><u><b>R/P/CT ('.$cur_det['code'].')</b></u></th>   
-                                                            <th width="18%" style="text-align: right;"><u><b>Total ('.$cur_det['symbol_left'].')</b></u></th> 
+                                                            <th width="4%" style="text-align: center;"><u><b>No</b></u></th>  
+                                                            <th width="7%" style="text-align: center;"><u><b>PCS</b></u></th>  
+                                                            <th width="10%" style="text-align: center;"><u><b>Item No</b></u></th> 
+                                                            <th  width="15%" style="text-align: left;" ><u><b>Description</b></u></th>  
+                                                            <th  width="9%" style="text-align: left;" ><u><b>Treatment</b></u></th>  
+                                                            <th  width="9%" style="text-align: left;" ><u><b>Shape</b></u></th>  
+                                                            <th  width="9%" style="text-align: left;" ><u><b>Color</b></u></th>  
+                                                            <th  width="7%" style="text-align: right;" ><u><b>W/CT</b></u></th>  
+                                                            <th  width="15%" style="text-align: right;" ><u><b>R/P/CT ('.$cur_det['code'].')</b></u></th>   
+                                                            <th width="15%" style="text-align: right;"><u><b>Total ('.$cur_det['symbol_left'].')</b></u></th> 
                                                          </tr>
                                                     </thead>
                                                 <tbody>';
@@ -1360,6 +1405,7 @@ class Sales_invoices_slp extends CI_Controller {
                                             <td  style="text-align: right;" colspan="4"><b>'.$addon_info['addon_name'].' '.$percent.'</b></td> 
                                             <td width="20%"  style="text-align: right;"><b> '. number_format($inv_addon['addon_amount'],2).'</b></td> 
                                         </tr>';
+                                $addone_note .= '<li>'.$addon_info['addon_name'].' '.$percent.'  Charges Added: '. number_format($inv_addon['addon_amount'],2).' '.$cur_det['symbol_left'].' ('.$cur_det['code'].')</li>';
                             }
                             
                             $html .= '<tr>
@@ -1406,9 +1452,10 @@ class Sales_invoices_slp extends CI_Controller {
                         <tr>
                             <td style="text-align: left;">
                                 <ul>
-                                    <li>Certificate Copy Attached</li>
-                                    <li>Shipping  Charges Added: 75.00 $ (USD)</li>
-                                    <li>Bank Details Attached</li>
+                                    '.(($cert_info==1 && $html_certs!='')?'<li>Certificate Copy Attached</li>':'').'
+                                    '.$addone_note.'
+                                    '.(($bank_info==1)?'<li>Bank Details Attached</li>':'').'
+                                   
                                 </ul>
                             </td>  
                         </tr>
@@ -1465,8 +1512,8 @@ class Sales_invoices_slp extends CI_Controller {
             $pdf->writeHTML($html);
             
              $bank_details = '<table style="padding-left:20px;" border="0">
-                                    <tr><td colspan="1"></td></tr> 
-                                    <tr><td style="font-size:12px;" colspan="2">Bank Details:</td></tr> 
+                                    <tr><td style="line-height:24px;" colspan="1"></td></tr> 
+                                    <tr><td style="font-size:12px;" colspan="2"><h2>Bank Details:</h2></td></tr> 
                                     
                                     <tr><td colspan="1">Bank Name: Hatton National Bank (HNB)</td></tr> 
                                     <tr><td colspan="1">Bank Code: 7083</td></tr> 
@@ -1489,8 +1536,22 @@ class Sales_invoices_slp extends CI_Controller {
                                     <tr><td colspan="1">Mobile: +9477 777 3398</td></tr> 
                                 </table>';
             
-            $pdf->AddPage();   
-            $pdf->writeHTML($bank_details);
+            if($bank_info==1){
+                $pdf->AddPage();   
+                $pdf->writeHTML($bank_details);
+            }
+            if($cert_info==1 && $html_certs!=''){
+                $pdf->AddPage();
+                
+                $html_certs_top = '<table style="padding:20px;" class="table-line" border="0">
+                                    <tr>
+                                        <td colspan="3"><h2>Certificates</h2></td>
+                                    </tr> '; 
+                $pdf->writeHTML($html_certs_top.$html_certs.'</table>');
+            }
+            
+//            echo '<pre>';            print_r($inv_data['invoice_desc_list']); die;
+                     
             
             $pdf->SetFont('times', '', 12.5, '', true);
             $pdf->SetTextColor(255,125,125);           

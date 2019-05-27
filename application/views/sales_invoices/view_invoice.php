@@ -38,7 +38,7 @@ $inv_trans = $inv_data['inv_transection'];
             <a href="<?php echo base_url($this->router->fetch_class());?>" class="btn btn-app "><i class="fa fa-search"></i>Search</a>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], 'Payments', 'add'))?'<a id="add_payment_inv" href="#" class="btn btn-app "><i class="fa fa-money"></i>Payments</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'delete'))?'<a href="'.base_url($this->router->fetch_class().'/delete/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-trash"></i>Delete Invoice</a>':''; ?>
-            <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'sales_invoice_print'))?'<a target="_blank" href="'.base_url($this->router->fetch_class().'/sales_invoice_print/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-print"></i>Print Invoice</a>':''; ?>
+            <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'sales_invoice_print'))?'<a id="inv_print_btn"  class="btn btn-app "><i class="fa fa-print"></i>Print Invoice</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'send_mail'))?'<a  id="send_mail_btn" class="btn btn-app "><i class="fa fa-envelope"></i>Send Invoice</a>':''; ?>
 
         </div>
@@ -73,6 +73,11 @@ $inv_trans = $inv_data['inv_transection'];
                 <!-- /.box-header -->
                 <!-- form start -->
                <div class="row header_form_sales"> 
+                            <div class="col-md-12">
+                                Invoice  Print Options: 
+                                <label><input type="checkbox" name="item_cat_slct[]" value="bank"> Include Bank info</label> &nbsp;&nbsp;&nbsp;
+                                <label><input type="checkbox" name="item_cat_slct[]" value="cert">Include Certificates</label>
+                            </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">Customer <span style="color: red"></span></label>
@@ -138,25 +143,27 @@ $inv_trans = $inv_data['inv_transection'];
                         </div>
              
                     <div class="box-body fl_scrollable_x">
-                    <div class="col-md-10 col-md-offset-1">
+                    <div class="col-md-12 col-md-offset-0">
                         <table width="100%" border="1">
                             <tr><td>
                     <?php
                           
                     foreach ($inv_desc as $inv_itms){ 
+//                        echo '<pre>';                        print_r($inv_itms); 
                          echo '<table width="100%" id="example1" class="table-line" border="0">
                                     <thead>
                                         <tr class="colored_bg" style="background-color:#E0E0E0;">
-                                             <th colspan="6">'.$inv_data['item_cats'][$inv_itms[0]['item_category']].'</th> 
+                                             <th colspan="8">'.$inv_data['item_cats'][$inv_itms[0]['item_category']].'</th> 
                                          </tr>
                                         <tr style="">
-                                             <th width="15%" style="text-align: center;"><u><b>Code</b></u></th>  
-                                             <th width="25%" style="text-align: left;"><u><b>Description</b></u></th>
-                                             <th  width="20%"><u><b>Units</b></u></th>   
-                                             <th width="10%" style="text-align: right;"><u><b>Rate</b></u></th>  
-                                             <th width="10%" style="text-align: right;"><u><b>Discount</b></u></th>  
-                                             <th width="19%" style="text-align: right;"><u><b>Subtotal</b></u></th> 
-                                            <td width="4%" style="text-align: right;"></td> 
+                                             <th width="8%" style="text-align: center;"><u><b>Code</b></u></th>  
+                                             <th width="20%" style="text-align: left;"><u><b>Description</b></u></th>
+                                             <th  width="8%"><u><b>Treatment</b></u></th>   
+                                             <th  width="8%"><u><b>Shape</b></u></th>   
+                                             <th  width="8%"><u><b>Color</b></u></th>   
+                                             <th  width="15%"><u><b>Units</b></u></th>   
+                                             <th width="15%" style="text-align: right;"><u><b>Rate</b></u></th>    
+                                             <th width="15%" style="text-align: right;"><u><b>Subtotal</b></u></th> 
                                          </tr>
                                     </thead>
                                 <tbody>';
@@ -165,26 +172,27 @@ $inv_trans = $inv_data['inv_transection'];
 //            echo '<pre>';            print_r($inv_itm); 
                          
                          echo     '<tr>
-                                        <td width="15%" style="text-align: center;">'.$inv_itm['item_code'].'</td>  
-                                        <td width="25%" style="text-align: left;">'.$inv_itm['item_description'].'</td>  
-                                        <td width="20%">'.$inv_itm['item_quantity'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['item_quantity_uom_id_2']>0)?' | '.$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
-                                        <td width="10%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td> 
-                                        <td width="10%" style="text-align: right;">'. number_format($inv_itm['discount_fixed'],2).(($inv_itm['discount_persent']>0)?' | '.$inv_itm['discount_persent'].'%':'').'</td> 
-                                        <td width="19%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
-                                        <td width="4%" style="text-align: right;"></td> 
+                                        <td width="8%" style="text-align: center;">'.$inv_itm['item_code'].'</td>  
+                                        <td width="20%" style="text-align: left;">'.$inv_itm['item_description'].'</td>  
+                                        <td width="8%" style="text-align: left;">'.$inv_itm['treatment_name'].'</td>  
+                                        <td width="8%" style="text-align: left;">'.$inv_itm['shape_name'].'</td>  
+                                        <td width="8%" style="text-align: left;">'.$inv_itm['color_name'].'</td>  
+                                        <td width="15%">'.$inv_itm['item_quantity'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['item_quantity_uom_id_2']>0)?' | '.$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
+                                        <td width="15%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td> 
+                                        <td width="15%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
+                                       
                                     </tr> ';
                      }
-                     echo       ' <tr><td  colspan="6"> </td></tr></tbody></table>'; 
+                     echo       ' <tr><td  colspan="8"> </td></tr></tbody></table>'; 
             }
             echo '
                     <table id="example1" width="100%" class="table-line" border="0">
                         
                        <tbody>
-                                <tr><td  colspan="6"><br> </td></tr>
+                                <tr><td  colspan="8"><br> </td></tr>
                                 <tr class="td_ht">
                                     <td style="text-align: right;" colspan="4"><b>Subtotal</b></td> 
                                     <td  width="19%"  style="text-align: right;"><b>'. number_format($inv_data['invoice_desc_total'],2).'</b></td> 
-                                    <td width="1%" style="text-align: right;"></td> 
                                 </tr>'; 
                                 
                             $sub_total = $inv_data['invoice_desc_total'];
@@ -201,13 +209,13 @@ $inv_trans = $inv_data['inv_transection'];
                                         echo '<tr>
                                                     <td  style="text-align: right;" colspan="4">'.$addon_info['addon_name'].' '.$percent.'</td> 
                                                     <td  width="19%"  style="text-align: right;">'. number_format($inv_addon['addon_amount'],2).'</td> 
-                                                    <td width="1%" style="text-align: right;"></td> 
+                                                    
                                                 </tr> '; 
                                     } 
                                         echo '<tr>
                                                     <td  style="text-align: right;" colspan="4">Total</td> 
                                                     <td  width="19%"  style="text-align: right;">'. number_format($sub_total,2).'</td> 
-                                                    <td width="1%" style="text-align: right;"></td> 
+                                                    
                                                 </tr> '; 
                                 }
             
@@ -216,14 +224,14 @@ $inv_trans = $inv_data['inv_transection'];
                             echo '<tr>
                                         <td  style="text-align: right;" colspan="4">'.$inv_tran['trans_type_name'].(($inv_tran['payment_method']!='')?' ['.$inv_tran['payment_method'].']':'').'</td> 
                                         <td  width="19%"  style="text-align: right;">'. number_format($inv_tran['transection_ref_amount'],2).'</td> 
-                                        <td width="1%" style="text-align: right;"></td> 
+                                        
                                     </tr> ';
 
                         }
                         echo '<tr class="td_ht">
                                     <td style="text-align: right;" colspan="4"><b>Due Amount</b></td> 
                                     <td  width="19%"  style="text-align: right;"><input hidden id="due_amount" value="'.$inv_data['invoice_total'].'"><b>'. number_format($inv_data['invoice_total'],2).'</b></td> 
-                                    <td width="1%" style="text-align: right;"></td> 
+                                     
                                 </tr></tbody>
                     </table>
                                                                
@@ -289,6 +297,17 @@ $(document).ready(function(){
             if(confirm("Please click ok button to confirm send."))
                 send_mail_func();
         });
+        
+        $('#inv_print_btn').click(function(){
+            var selected_cats = new Array(); 
+            $.each($("input[name='item_cat_slct[]']:checked"), function() {
+                selected_cats.push($(this).val());
+            });
+            var get_var = JSON.stringify(selected_cats)  
+           window.open("<?php echo base_url($this->router->fetch_class().'/sales_invoice_print/'.$user_data['id']).'?prnt_optn=';?>"+get_var);
+           return false;
+        });
+        
 	function send_mail_func(){
             $(".content").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Sending...'); 
             $.ajax({

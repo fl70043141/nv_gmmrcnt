@@ -21,6 +21,7 @@
                         'purchases_excluded'=>0, 
                         'image' => 'default.jpg', 
                         'images' => array(), 
+                        'certificates_files' => array(), 
                         'status'=>"1",
             
                         'stock_unit'=>"0",
@@ -96,6 +97,28 @@ endswitch;
                 // convert our array into json string
                 if(isset($appendedFiles))$result['images'] = json_encode($appendedFiles);
             }
+            
+//            ///certificates files
+            if( isset($result['certificates_files']) && $result['certificates_files'] != null && $result['certificates_files'] != 'null'){
+                foreach(json_decode($result['certificates_files']) as $file) {
+                        // skip if directory
+                        if(is_dir($file))
+                                continue; 
+                        // add file to our array
+                        // !important please follow the structure below
+                        $appendedFiles_cert[] = array(
+                                                "name" => $file,
+                                                "type" => get_mime_by_extension(ITEM_IMAGES.$result['id'].'/certificates_files/'.$file),
+                                                "size" => (file_exists(ITEM_IMAGES.$result['id'].'/certificates_files/'.$file))?filesize(ITEM_IMAGES.$result['id'].'/certificates_files/'.$file):'',
+                                                "file" => base_url(ITEM_IMAGES.$result['id'].'/certificates_files/'.$file),
+                                                "data" => array(  "url" => base_url(ITEM_IMAGES.$result['id'].'/certificates_files/'.$file)
+                                            )
+                        ); 
+                }
+
+                // convert our array into json string
+                if(isset($appendedFiles_cert))$result['certificates_files'] = json_encode($appendedFiles_cert);
+            }
 //            echo '<pre>';            print_r($appendedFiles); die;
         
 ?> 
@@ -143,7 +166,7 @@ endswitch;
               <!-- general form elements -->
               <div class="box box-primary">
                 <div class="box-header with-border">
-                  <h3 class="box-title"><?php echo $action;?> </h3>
+                    <h3 class="box-title"><?php echo $action;?> Item <?php echo ($result['item_code']!='')?'['.$result['item_code'].']':'';?> </h3>
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
@@ -162,7 +185,7 @@ endswitch;
                                     <li><a href="#tab_2" data-toggle="tab">Sales Pricing</a></li>
                                     <!--<li><a href="#tab_3" data-toggle="tab">Purchasing Pricing</a></li>--> 
                                     <li><a href="#tab_31" data-toggle="tab">Costing</a></li> 
-                                    <li><a href="#tab_4" data-toggle="tab">Images</a></li> 
+                                    <li><a href="#tab_4" data-toggle="tab">Images/Certificates</a></li> 
                                     <!--<li><a href="#tab_5" data-toggle="tab">Transection</a></li>--> 
                                     <li><a href="#tab_6" data-toggle="tab">Status</a></li> 
 
@@ -555,6 +578,19 @@ endswitch;
                                                             <input type="file" name="item_images" class="fl_files" data-fileuploader-files='<?php echo $result['images'];?>'> 
                                                         </div> 
                                                         <span class="help-block"><?php echo form_error('item_images');?></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           <div class="col-md-12">
+                                               <br>
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">Certificates</label>
+                                                    <div class="col-md-9">                                            
+                                                           
+                                                        <div class="fl_file_uploader2">
+                                                            <input type="file" name="certificates_files" class="fl_files" data-fileuploader-files='<?php echo $result['certificates_files'];?>'> 
+                                                        </div> 
+                                                        <span class="help-block"><?php echo form_error('certificates_files');?></span>
                                                     </div>
                                                 </div>
                                             </div>

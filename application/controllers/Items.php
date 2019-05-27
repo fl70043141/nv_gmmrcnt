@@ -246,8 +246,157 @@ class Items extends CI_Controller {
                     redirect(base_url($this->router->fetch_class()));
                 } 
 	}
-	
+		
 	function update(){
+            $inputs = $this->input->post();   
+//            echo '<pre>';            print_r($_FILES); die;
+            $item_id = $this->input->post('id');   
+            $inputs['status'] = (isset($inputs['status']))?1:0;
+            $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
+            $inputs['purchases_excluded'] = (isset($inputs['purchases_excluded']))?1:0;
+              //create Dir if not exists for store necessary images   
+            if(!is_dir(ITEM_IMAGES.$item_id.'/')) mkdir(ITEM_IMAGES.$item_id.'/', 0777, TRUE); 
+            if(!is_dir(ITEM_IMAGES.$item_id.'/other/')) mkdir(ITEM_IMAGES.$item_id.'/other/', 0777, TRUE);
+            if(!is_dir(ITEM_IMAGES.$item_id.'/certificates_files/')) mkdir(ITEM_IMAGES.$item_id.'/certificates_files/', 0777, TRUE);
+            if(!is_dir(ITEM_IMAGES.$item_id.'/videos/')) mkdir(ITEM_IMAGES.$item_id.'/videos/', 0777, TRUE);
+            
+            $appendedFiles = $appendedVideos= $appendedCertificates = array();
+
+            // scan uploads directory for appended images
+            $uploadsFiles = array_diff(scandir(ITEM_IMAGES.$item_id.'/other/'), array('.', '..'));
+            foreach($uploadsFiles as $file) { 
+                    $file_type = explode('/', get_mime_by_extension(ITEM_IMAGES.$item_id.'/other/' . $file));
+                    if(is_dir($file))// skip if directory
+                            continue; 
+                                $file_array = array(
+                                                    "name" => $file,
+                                                    "type" => $file_type,
+                                                    "size" => filesize(ITEM_IMAGES.$item_id.'/other/' . $file),
+                                                    "file" => base_url(ITEM_IMAGES.$item_id.'/other/' . $file),
+                                                    "data" => array("url" => base_url(ITEM_IMAGES.$item_id.'/other/' . $file) )
+                                                     );
+                                
+                                if(isset($file_type[0]) && $file_type[0]=='image'){
+                                    $appendedFiles[] = $file_array;
+                                }
+            }       
+
+            // scan uploads directory for appended images --cert
+            $uploadsFilesCert = array_diff(scandir(ITEM_IMAGES.$item_id.'/certificates_files/'), array('.', '..'));
+            foreach($uploadsFilesCert as $file) { 
+                    $file_type = explode('/', get_mime_by_extension(ITEM_IMAGES.$item_id.'/certificates_files/' . $file));
+                    if(is_dir($file))// skip if directory
+                            continue; 
+                                $file_array_cert = array(
+                                                    "name" => $file,
+                                                    "type" => $file_type,
+                                                    "size" => filesize(ITEM_IMAGES.$item_id.'/certificates_files/' . $file),
+                                                    "file" => base_url(ITEM_IMAGES.$item_id.'/certificates_files/' . $file),
+                                                    "data" => array("url" => base_url(ITEM_IMAGES.$item_id.'/certificates_files/' . $file) )
+                                                     );
+                                
+                                if(isset($file_type[0]) && $file_type[0]=='image'){
+                                    $appendedCertificates[] = $file_array_cert;
+                                }
+            }       
+            
+            $this->load->library('fileuploads'); //file upoad library created by FL
+            $def_image = $this->fileuploads->upload_all('image',ITEM_IMAGES.$item_id.'/');
+            $res_itm_all_px = $this->fileuploads->upload_all('item_images',ITEM_IMAGES.$item_id.'/other/',$appendedFiles);
+            $res_itm_all_px_cert = $this->fileuploads->upload_all('certificates_files',ITEM_IMAGES.$item_id.'/certificates_files/',$appendedCertificates);
+            $res_itm_all_vdo = $this->fileuploads->upload_all('item_videos',ITEM_IMAGES.$item_id.'/videos/',$appendedVideos);
+            
+//            echo '<pre>';            print_r($res_itm_all_px); die;
+            //resize def image
+            if(!empty($def_image))
+                fl_image_resizer($def_image[0]['name'], 400, '',$def_image[0]['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/');
+                        
+                        
+            if(!empty($res_itm_all_px)){ //images
+                foreach ($res_itm_all_px as $itm_img){
+                    $all_images[]=$itm_img['name'];
+                    fl_image_resizer($itm_img['name'], 400, '',$itm_img['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/other/');
+                }
+            }; 
+                        
+            if(!empty($res_itm_all_px_cert)){ //Certificates
+                foreach ($res_itm_all_px_cert as $itm_img_cert){
+                    $all_images_cert[]=$itm_img_cert['name'];
+                    fl_image_resizer($itm_img_cert['name'], 800, '',$itm_img_cert['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/certificates_files/');
+                }
+            }; 
+            
+            if(!empty($res_itm_all_vdo)){//vdos
+                foreach ($res_itm_all_vdo as $itm_vdo){
+                    $all_videos[]=$itm_vdo['name'];
+                }
+            }; 
+            if(!empty($inputs['exist_vdos'])){//existing videos
+                foreach ($inputs['exist_vdos'] as $itm_vdo_exst){
+                    $all_videos[]=$itm_vdo_exst;
+                }
+            }; 
+            
+            //remove video file that was deleted
+            $dir_videos = array_diff(scandir(ITEM_IMAGES.$item_id.'/videos/'), array('.', '..'));
+            $arr_dif = array_diff($dir_videos, $all_videos);
+            if(!empty($arr_dif)){
+                foreach ($arr_dif as $remove_vdos){
+                    unlink(ITEM_IMAGES.$item_id.'/videos/'.$remove_vdos);
+                }
+            }
+            
+//            echo '<pre>';            print_r($all_images);
+//            echo '<pre>';            print_r($all_images_cert); die;
+            $data = array(
+                            'item_code' => $inputs['item_code'],
+                            'item_name' => $inputs['item_name'],
+                            'item_uom_id' => $inputs['item_uom_id'],
+                            'item_uom_id_2' => $inputs['item_uom_id_2'],
+                            'item_category_id' => $inputs['item_category_id'],
+                            'certification' => $inputs['certification'],
+                            'certification_no' => $inputs['certification_no'],
+                            'color' => $inputs['color'],
+                            'origin' => $inputs['origin'],
+                            'length' => $inputs['length'],
+                            'width' => $inputs['width'],
+                            'height' => $inputs['height'],
+                            'treatment' => $inputs['treatment'],
+                            'shape' => $inputs['shape'],
+                            'item_type_id' => $inputs['item_type_id'],
+                            'description' => $inputs['description'],
+                            'addon_type_id' => $inputs['addon_type_id'],
+                            'sales_excluded' => $inputs['sales_excluded'],
+                            'purchases_excluded' => $inputs['purchases_excluded'], 
+                            'status' => $inputs['status'], 
+                            'updated_on' => date('Y-m-d'),
+                            'images' => (isset($all_images))?json_encode($all_images):'',
+                            'certificates_files' => (isset($all_images_cert))?json_encode($all_images_cert):'',
+                            'videos' => (isset($all_videos))?json_encode($all_videos):'',
+                            'updated_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
+                        ); 
+                        if(!empty($def_image)) $data['image'] = $def_image[0]['name']; 
+                            
+                        
+//            echo '<pre>';            print_r($data); die;
+            //old data for log update
+            $existing_data = $this->Items_model->get_single_row($inputs['id']);
+
+            $edit_stat = $this->Items_model->edit_db($inputs['id'],$data);
+            
+            if($edit_stat){
+                //update log data
+                $new_data = $this->Items_model->get_single_row($inputs['id']);
+                add_system_log(ITEM_CAT, $this->router->fetch_class(), __FUNCTION__, $new_data, $existing_data);
+                $this->session->set_flashdata('warn',RECORD_UPDATE);
+                    
+                redirect(base_url($this->router->fetch_class().'/edit/'.$inputs['id']));
+            }else{
+                $this->session->set_flashdata('warn',ERROR);
+                redirect(base_url($this->router->fetch_class()));
+            } 
+	}	
+	function update2(){
             $inputs = $this->input->post();   
             $item_id = $this->input->post('id');   
             $inputs['status'] = (isset($inputs['status']))?1:0;

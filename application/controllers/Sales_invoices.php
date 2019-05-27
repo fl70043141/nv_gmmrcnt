@@ -246,7 +246,11 @@ class Sales_invoices extends CI_Controller {
                 foreach ($inputs['addons'] as $addn_key=>$addon){
                     $addon_info_jsn='';
                     $addon_info = $this->Addons_model->get_single_row($addn_key);
-                    
+                    if(!empty($addon_info)){
+                        $addon_cur_det = $this->Sales_invoices_model->get_currency_for_code($addon_info[0]['currency_code']); //current time rate
+                        $addon_info[0]['currency_value'] = $addon_cur_det['value'];
+                        $addon_info[0]['addon_value'] = $addon;
+                    }
                     if(!empty($addon_info)){
                         $addon_info_jsn = json_encode($addon_info);
                     }
@@ -1021,6 +1025,7 @@ class Sales_invoices extends CI_Controller {
             $data['sales_type_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 14'); //14 for sales type
 //            $data['category_list'] = get_dropdown_data(ADDON_CALC_INCLUDED,'name','id','Agent Type');
             $data['currency_list'] = get_dropdown_data(CURRENCY,'code','code','Currency');
+            $data['currency_value_list'] = get_dropdown_data(CURRENCY,'code','value','Currency Value');
                     
             $data['item_category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Category');
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
@@ -1084,7 +1089,9 @@ class Sales_invoices extends CI_Controller {
         
         function sales_invoice_print($inv_id,$tmp_mail=''){
             $this->load->model('Sales_orders_model');
-//            echo '<pre>';            print_r($this->get_invoice_info($inv_id)); die; 
+            $print_option = $this->input->get();
+            $print_option = json_decode($print_option['prnt_optn']);
+//            echo '<pre>';            print_r($print_option); die;
             $inv_data = $this->get_invoice_info($inv_id);
             $inv_dets = $inv_data['invoice_dets'];
             $inv_desc = $inv_data['invoice_desc'];
