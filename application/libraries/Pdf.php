@@ -250,7 +250,7 @@ class Pdf extends TCPDF
                                 <td style="height:40px;" align="right">'.$this->fl_header_title_RTOP.'</td>
                             </tr>   
                             <tr>
-                                <td style="height:35px;" align="right"><img src="'. base_url(DEFAULT_IMAGE_LOC.'slpl.png').'"></td>
+                                <td style="height:35px;" align="right"></td>
                             </tr>   
                             <tr>
                                 <td style="height:30px; font-size:25px;" align="right"><b>'.$this->fl_header_title.'</b></td>

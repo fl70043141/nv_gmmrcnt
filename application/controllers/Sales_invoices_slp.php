@@ -1304,8 +1304,8 @@ class Sales_invoices_slp extends CI_Controller {
                                                            <td width="9%" style="text-align: left;">'. $inv_itm['shape_name'].'</td>  
                                                            <td width="9%" style="text-align: left;">'. $inv_itm['color_name'].'</td>  
                                                            <td width="7%" style="text-align: right;">'. $inv_itm['item_quantity'].'</td>  
-                                                           <td width="15%" style="text-align: right;">100000'. number_format($inv_itm['unit_price'],2).'</td> 
-                                                           <td width="15%" style="text-align: right;"> 100000'. number_format($inv_itm['sub_total'],2).'</td> 
+                                                           <td width="15%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td> 
+                                                           <td width="15%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
                                                        </tr> ';
                                         $inv_tot+=$inv_itm['sub_total'];
                                         $gmqty1 +=$inv_itm['item_quantity'];
@@ -1334,13 +1334,16 @@ class Sales_invoices_slp extends CI_Controller {
                                 
                                 if($gmqty1>0){
                                     $gem_list_html .= '<tr>
-                                                        <td width="10%" style="text-align: center;"></td> 
-                                                        <td width="10%" style="text-align: center;">'.$gmqty2.' '.$inv_itm['unit_abbreviation_2'].'</td>  
-                                                        <td width="16%" style="text-align: center;"></td>  
-                                                        <td width="18%" style="text-align: left;"></td>  
-                                                        <td width="10%" style="text-align: right;">'. $gmqty1.'</td>  
-                                                        <td width="18%" style="text-align: right;"></td> 
-                                                        <td width="18%" style="text-align: right;"> '. number_format($inv_tot,2).'</td> 
+                                                        <td width="4%" style="text-align: center;"></td> 
+                                                        <td width="7%" style="text-align: center;">'.$gmqty2.' '.$inv_itm['unit_abbreviation_2'].'</td>  
+                                                        <td width="10%" style="text-align: center;"></td>  
+                                                        <td width="15%" style="text-align: left;"></td>  
+                                                        <td width="9%" style="text-align: left;"></td>  
+                                                        <td width="9%" style="text-align: left;"></td>  
+                                                        <td width="9%" style="text-align: left;"></td>  
+                                                        <td width="7%" style="text-align: right;">'. $gmqty1.'</td>  
+                                                        <td width="15%" style="text-align: right;"></td> 
+                                                        <td width="15%" style="text-align: right;"> '. number_format($inv_tot,2).'</td> 
                                                     </tr> ';
                                 }
                                 
@@ -1445,28 +1448,31 @@ class Sales_invoices_slp extends CI_Controller {
             $html .= $payment.$old_gold;
             
             //gem notes
-            $html .= '<table border="0">
-                        <tr>
-                            <th style="text-align: left;">Notes: </th>  
-                        </tr>
-                        <tr>
-                            <td style="text-align: left;">
-                                <ul>
-                                    '.(($cert_info==1 && $html_certs!='')?'<li>Certificate Copy Attached</li>':'').'
-                                    '.$addone_note.'
-                                    '.(($bank_info==1)?'<li>Bank Details Attached</li>':'').'
-                                   
-                                </ul>
-                            </td>  
-                        </tr>
-                    </table>';
+            
+            if($cert_info==1 || $bank_info==1 || $html_certs!=''){
+                $html .= '<table border="0">
+                            <tr>
+                                <th style="text-align: left;">Notes: </th>  
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">
+                                    <ul>
+                                        '.(($cert_info==1 && $html_certs!='')?'<li>Certificate Copy Attached</li>':'').'
+                                        '.$addone_note.'
+                                        '.(($bank_info==1)?'<li>Bank Details Attached</li>':'').'
+
+                                    </ul>
+                                </td>  
+                            </tr>
+                        </table>';
+            }
              $html .= '<table border="0">
                             <tr>
                                 <td colspan="2"></td>
                             </tr>
                             <tr>
                                 <td style="font-size:14px;">TOTAL F.O.B. VALUE  :    '.$cur_det['code'].' '. number_format($inv_tot,2).' '.$cur_det['symbol_left'].'</td>
-                                <td style="font-size:14px;"> @ '.number_format((1/$cur_det['value'])*$def_cur_det['value'],2).' = '.$def_cur_det['code'].' '.number_format(($inv_tot/$cur_det['value'])*$def_cur_det['value'],2).'</td>
+                                <td style="font-size:14px;"> '.(($def_cur_det['code']!=$cur_det['code'])?'@ '.number_format((1/$cur_det['value'])*$def_cur_det['value'],2).' = '.$def_cur_det['code'].' '.number_format(($inv_tot/$cur_det['value'])*$def_cur_det['value'],2):'').'</td>
                             </tr>
                         </table>';
 //            echo '<pre>';            print_r($fin_total); die;
