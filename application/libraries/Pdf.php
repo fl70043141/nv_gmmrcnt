@@ -230,7 +230,7 @@ class Pdf extends TCPDF
         $CI->load->model('Company_model');
         $company_dets = $CI->Company_model->get_single_row($_SESSION[SYSTEM_CODE]['company_id']);
 //        echo '<pre>'; print_r($company_dets); die;
-        $header_info = '<table border="0"> 
+        $header_info = '<table border="1"> 
                             <tr>
                                 <td align="center">'.$company_dets[0]['street_address'].', '.$company_dets[0]['city'].', '.$company_dets[0]['country_name'].'.</td>
                             </tr> 
@@ -239,10 +239,7 @@ class Pdf extends TCPDF
                             </tr>
                             <tr>
                                 <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').' |  Web: '.(($company_dets[0]['website']!='')?$company_dets[0]['website']:'').'</td>
-                            </tr>
-                            <tr>
-                                <td align="center">Website: '.(($company_dets[0]['website']!='')?$company_dets[0]['website']:'').'</td>
-                            </tr>
+                            </tr> 
                             
                         </table> ';
         $header_right_info = '<table border=""> 
@@ -276,7 +273,7 @@ class Pdf extends TCPDF
         $this->SetTextColor(96,96,96);
         $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Light.ttf', 'TrueTypeUnicode', '', 96);
         $this->SetFont($fontname, 'I', 10.5);
-        $this->writeHTMLCell(90,20,60,23,$header_info); 
+        $this->writeHTMLCell(130,20,40,23,$header_info); 
         
         $this->writeHTMLCell(45,20,155,9,$header_right_info); 
         
