@@ -1132,7 +1132,7 @@ class Sales_invoices_slp extends CI_Controller {
             $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
             // set margins
-            $pdf->SetMargins(5, 50, 5);
+            $pdf->SetMargins(5, 46, 5);
             $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
             $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -1206,24 +1206,24 @@ class Sales_invoices_slp extends CI_Controller {
                         
                         
 //            echo '<pre>';            print_r($inv_dets); die;
-            $html = '<u>Customer Details:</u><br>';
+            $html = '';
             $html .= '<table style="padding:2;" border="0.0"> 
                         <tr><td>
                             <table style="padding:0 0 2 0;">
                             <tr>
-                                <td style="padding:10px;">'.$inv_dets['customer_name'].' [Code:'.$inv_dets['short_name'].')</td> 
+                                <td style="padding:10px;"><u>Customer Details:</u></td> 
                                 <td align="right">Invoice Date '.date(SYS_DATE_FORMAT,$inv_dets['invoice_date']).'</td> 
                             </tr>    
                             <tr>
-                                <td style="padding:10px;">'.$inv_dets['address'].(($inv_dets['city']!='')?', '.$inv_dets['city']:'').(($inv_dets['cust_country']!='')?', '.$inv_dets['cust_country']:'').'</td> 
+                                <td style="padding:10px;">'.$inv_dets['customer_name'].' [Code:'.$inv_dets['short_name'].')</td> 
                                 <td align="right">Invoice  No: '.$inv_dets['invoice_no'].'</td> 
                             </tr>  
                             <tr>
-                                <td style="padding:10px;">Contact: '.$inv_dets['phone'].'</td> 
+                                <td style="padding:10px;">'.$inv_dets['address'].(($inv_dets['city']!='')?', '.$inv_dets['city']:'').(($inv_dets['cust_country']!='')?', '.$inv_dets['cust_country']:'').'</td> 
                                 <td align="right">Terms: Consigment Basis</td> 
                             </tr>   
                             <tr>
-                                <td style="padding:10px;"></td> 
+                                <td style="padding:10px;">Contact: '.$inv_dets['phone'].'</td> 
                                 <td align="right">Country of Origin: '.$company_origin['country_name'].'</td> 
                             </tr>   
                             <tr>

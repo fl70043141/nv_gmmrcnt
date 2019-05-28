@@ -238,7 +238,7 @@ class Pdf extends TCPDF
                                 <td align="center">Phone: '.$company_dets[0]['phone'].(($company_dets[0]['other_phone']!='')?', '.$company_dets[0]['other_phone']:'').'</td>
                             </tr>
                             <tr>
-                                <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').'</td>
+                                <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').' |  Web: '.(($company_dets[0]['website']!='')?$company_dets[0]['website']:'').'</td>
                             </tr>
                             <tr>
                                 <td align="center">Website: '.(($company_dets[0]['website']!='')?$company_dets[0]['website']:'').'</td>
@@ -285,7 +285,7 @@ class Pdf extends TCPDF
         $this->Image($image_file, 30, 95,  150, '', 'PNG', '', 'T', false, 72, '', false, false, 0, false, false, false);
         
         
-        $this->Line(10, 48, 200, 48); 
+        $this->Line(6, 44, 204, 44); 
         
         // Set font
         $this->SetFont('helvetica', 'B', 20); 
