@@ -266,9 +266,9 @@ class Pdf extends TCPDF
         $this->SetTextColor(48,75,105);
         $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/monotype.ttf', 'TrueTypeUnicode', '', 96);
         // use the font
-        $this->SetFont($fontname, '', 32, '', false);
+        $this->SetFont($fontname, '', 34, '', false);
         $this->SetTextColor(195,137,38);
-        $this->Text('55', 9, 'Srilankan Sapphires Ltd.', false, false, true, 0, 0, 'center', false,'',1);
+        $this->Text('53', 9, 'Srilankan Sapphires Ltd', false, false, true, 0, 0, 'center', false,'',1);
         
         $this->SetTextColor(96,96,96);
         $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Light.ttf', 'TrueTypeUnicode', '', 96);
