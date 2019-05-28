@@ -35,7 +35,7 @@ class Website_sync extends CI_Controller {
             $this->load->model('Items_model');
             
             $image_source_dir = ITEM_IMAGES;
-            $image_dest_dir = '../nextlook_site/image/catalog/products/';
+            $image_dest_dir = '../nveloop_gems_oc/image/catalog/products/';
 //            echo '<pre>';            print_r(scandir($image_dest_dir)); die;
             $all_items = $this->Items_model->search_result();
             $itm_data_oc = array();
