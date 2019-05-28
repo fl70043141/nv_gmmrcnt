@@ -100,12 +100,23 @@ class Website_sync extends CI_Controller {
                                                             'product_layout'=> $product_layout,
                                                      );
                     
+                
+                
                 $res_add = $this->WebsiteSync_model->add_item_data_website($itm_data_oc);
                 
                 if($res_add){ 
                     if(!is_dir($image_dest_dir.$item['item_code'].'/other/')) mkdir($image_dest_dir.$item['item_code'].'/other/', 0777, TRUE);
+                    //img copy;
+                    if($item['image']!=""){
+                        copy($image_source_dir.$item['id'].'/'.$item['image'], $image_dest_dir.$item['item_code'].'/'.$item['image']); 
+                    }
+                    foreach ($item_images as $itm_img){
+                        copy($image_source_dir.$item['id'].'/other/'.$itm_img, $image_dest_dir.$item['item_code'].'/other/'.$itm_img); 
+                    }
                 }
-                dir_recurse_copy($image_source_dir.$item['id'].'/', $image_dest_dir.$item['item_code'].'/');
+                
+//                echo '<pre>';                print_r($item_images); die;
+//                dir_recurse_copy($image_source_dir.$item['id'].'/', $image_dest_dir.$item['item_code'].'/');
                 
                 echo $item['item_code'].' ok<br>'; 
             }
