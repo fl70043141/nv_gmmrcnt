@@ -210,7 +210,8 @@ class Pdf extends TCPDF
         $this->SetTextColor(96,96,96);
         $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Light.ttf', 'TrueTypeUnicode', '', 96);
         $this->SetFont($fontname, 'I', 10.5);
-        $this->writeHTMLCell(90,20,60,23,$header_info); 
+        $this->writeHTMLCell(130,20,40,23,$header_info); 
+//        $this->writeHTMLCell(90,20,60,23,$header_info); 
         
         $this->writeHTMLCell(45,20,155,9,$header_right_info); 
         

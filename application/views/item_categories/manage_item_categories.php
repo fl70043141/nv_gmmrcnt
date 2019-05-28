@@ -16,7 +16,7 @@
                         'purchases_excluded'=>0, 
                         'cat_image' => 'default.jpg', 
                         'show_pos'=>0,
-                        'is_gem'=>0,
+                        'is_gem'=>1,
                         'status'=>"1",
                         );   		
 	
@@ -226,8 +226,8 @@ $result['cat_link_list'] = (isset($result['cat_link_list'])?$result['cat_link_li
                                                 </div>
                                             </div>
                                           
-                                         <div class="col-md-6">
-                                             <div class="form-group">
+                                         <div  class="col-md-6">
+                                             <div hidden class="form-group">
                                                     <label class="col-md-3 control-label">Exclude from sales</label>
                                                     <div class="col-md-9">                                            
                                                         <div class="input-group">
@@ -240,7 +240,7 @@ $result['cat_link_list'] = (isset($result['cat_link_list'])?$result['cat_link_li
                                                         <span class="help-block"><?php echo form_error('sales_excluded');?>&nbsp;</span>
                                                     </div>
                                                 </div> 
-                                             <div class="form-group">
+                                             <div hidden class="form-group">
                                                     <label class="col-md-3 control-label">Exclude from Purchases</label>
                                                     <div class="col-md-9">                                            
                                                         <div class="input-group">
@@ -268,7 +268,7 @@ $result['cat_link_list'] = (isset($result['cat_link_list'])?$result['cat_link_li
                                                </div>
                                            </div> 
                                              
-                                             <div class="form-group">
+                                             <div hidden class="form-group">
                                                     <label class="col-md-3 control-label">Show On POS</label>
                                                     <div class="col-md-9">                                            
                                                         <div class="input-group">
@@ -282,7 +282,7 @@ $result['cat_link_list'] = (isset($result['cat_link_list'])?$result['cat_link_li
                                                     </div>
                                                 </div> 
                                              
-                                             <div <?php echo (NO_GEM=='1')?'hidden':'';?> class="form-group">
+                                             <div hidden <?php echo (NO_GEM=='1')?'hidden':'';?> class="form-group">
                                                     <label class="col-md-3 control-label">Is Gem</label>
                                                     <div class="col-md-9">                                            
                                                         <div class="input-group">
