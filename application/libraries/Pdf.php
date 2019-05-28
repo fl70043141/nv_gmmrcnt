@@ -230,7 +230,7 @@ class Pdf extends TCPDF
         $CI->load->model('Company_model');
         $company_dets = $CI->Company_model->get_single_row($_SESSION[SYSTEM_CODE]['company_id']);
 //        echo '<pre>'; print_r($company_dets); die;
-        $header_info = '<table border="1"> 
+        $header_info = '<table border="0"> 
                             <tr>
                                 <td align="center">'.$company_dets[0]['street_address'].', '.$company_dets[0]['city'].', '.$company_dets[0]['country_name'].'.</td>
                             </tr> 
@@ -282,7 +282,7 @@ class Pdf extends TCPDF
         $this->Image($image_file, 30, 95,  150, '', 'PNG', '', 'T', false, 72, '', false, false, 0, false, false, false);
         
         
-        $this->Line(6, 44, 204, 44); 
+        $this->Line(6, 41, 204, 41); 
         
         // Set font
         $this->SetFont('helvetica', 'B', 20); 

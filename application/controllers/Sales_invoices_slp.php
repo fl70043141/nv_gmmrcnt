@@ -1132,7 +1132,7 @@ class Sales_invoices_slp extends CI_Controller {
             $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
             // set margins
-            $pdf->SetMargins(5, 46, 5);
+            $pdf->SetMargins(5, 43, 5);
             $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
             $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -1474,6 +1474,11 @@ class Sales_invoices_slp extends CI_Controller {
                                 <td style="font-size:14px;">TOTAL F.O.B. VALUE  :    '.$cur_det['code'].' '. number_format($inv_tot,2).' '.$cur_det['symbol_left'].'</td>
                                 <td style="font-size:14px;"> '.(($def_cur_det['code']!=$cur_det['code'])?'@ '.number_format((1/$cur_det['value'])*$def_cur_det['value'],2).' = '.$def_cur_det['code'].' '.number_format(($inv_tot/$cur_det['value'])*$def_cur_det['value'],2):'').'</td>
                             </tr>
+                        </table>';
+             
+             $html.= '<table border="0">
+                            <tr><td style="line-height: 30px;"></td></tr>
+                            <tr><td><img style="width:160px;" src="'.DEFAULT_IMAGE_LOC.'slpsign1.png"></td></tr>
                         </table>';
 //            echo '<pre>';            print_r($fin_total); die;
 //            $html .= '<table border="0">
