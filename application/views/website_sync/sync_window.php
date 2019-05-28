@@ -69,7 +69,7 @@ $(document).ready(function(){
  -->
                                         <center>
                                             <div hidden id='loading_display'><p>Please wait... &nbsp;&nbsp;&nbsp; <img class='fa-spin' src="<?php echo base_url().OTHER_IMAGES.'loading.png';?>"></p></div>
-                                            <div  id="success_msg"><p class="text-success">111</p></div>
+                                            <div  id="success_msg"><p class="text-success"></p></div>
                                             
                                             <button id="sync_btn" type="button" class="btn btn-default btn-lrg ajax " title="Ajax Request">   <i class="fa  fa-refresh"></i>&nbsp; Start Data Sync. </button>
                                             <!--<button id="cancel_sync_btn" type="button" class="btn btn-default btn-lrg ajax " title="Ajax Request">   <i class="fa  fa-stop"></i>&nbsp; Stop Sync. </button>-->
