@@ -1,5 +1,5 @@
 
-                 <table id="example1" class="table dataTable table-bordered table-striped">
+                 <table id="tbl_search_res1" class="table  table-bordered table-striped">
                         <thead>
                            <tr>
                                <th>#</th> 
@@ -29,6 +29,7 @@
                                                 <td><a id="item-search-pick_'.$item['item_code'].'" class="btn btn-success btn-xs "><span class="fa fa-cart-plus"></span></a></td>
                                            </tr> 
                                         ';
+                                    $i++;
                                 }
                            ?>
                             
@@ -45,4 +46,10 @@
                                <th>Action</th>
                            </tr>
                           </tfoot>
-                        </table> 
+                        </table>
+
+<script>
+    $(document).ready(function(){
+        $('#tbl_search_res1').DataTable();
+    });
+</script>

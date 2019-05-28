@@ -132,6 +132,8 @@
 //                                fl_alert('info',ism_item_code[1]) 
                                 $('#item_code').val(ism_item_code[1]);
                                 $('#item_code').trigger('keyup'); 
+                                
+                                $('#item_search_modal').modal('toggle'); 
                             });
                     }
                     
