@@ -1,8 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class WebsiteSync_model extends CI_Model
-{
-   
+{   
+    public function __construct()
+    {
+        parent::__construct(); 
+        $this->oc_website = $this->load->database('oc_website', TRUE);   
+    }
+            
     
     function get_report_data($idsString=''){
         $query = "select id,report_no from ".LAB_REPORT." WHERE sync_required = 1 ";
@@ -104,7 +109,35 @@ class WebsiteSync_model extends CI_Model
         return $result;
     }
     
-    
+    public function add_item_data_website($item_data){  
+        
+//            echo '<pre>';            print_r($item_data); die;
+       
+                $this->oc_website->trans_start(); 
+                    
+//                    echo '<pre>';            print_r($item_data); die;
+                    $this->oc_website->insert('oc_product', $item_data['product']); 
+                    $this->oc_website->insert('oc_product_description', $item_data['product_desc']); 
+                    
+                    if(!empty($item_data['product_images']))  
+                        $this->oc_website->insert_batch('oc_product_image', $item_data['product_images']); 
+                    
+                    $this->oc_website->insert('oc_product_to_category', $item_data['product_category']); 
+                    $this->oc_website->insert('oc_product_to_layout', $item_data['product_layout']);  
+                    $this->oc_website->insert('oc_product_to_store', $item_data['product_to_store']); 
+                
+                $status=$this->oc_website->trans_complete();
+
+		return $status;
+	}
+    public function test_db2(){  
+               $this->oc_website->select('*');
+               $this->oc_website->from('oc_product');
+               $res = $this->oc_website->get()->result_array();
+            echo '<pre>';            print_r($res); die;
+
+		return $res;
+	}
     
     
     

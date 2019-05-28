@@ -33,6 +33,10 @@ class Website_sync extends CI_Controller {
         
         function initial_item_upoad(){
             $this->load->model('Items_model');
+            
+            $image_source_dir = ITEM_IMAGES;
+            $image_dest_dir = '../nextlook_site/image/catalog/products/';
+//            echo '<pre>';            print_r(scandir($image_dest_dir)); die;
             $all_items = $this->Items_model->search_result();
             $itm_data_oc = array();
             foreach ($all_items as $item){
@@ -73,7 +77,7 @@ class Website_sync extends CI_Controller {
                     if(!empty($item['images'])){
                         $item_images = json_decode($item['images']);
                         foreach ($item_images as $itm_img){
-                            $product_images = array(    'product_id' => $item['id'],
+                            $product_images[] = array(    'product_id' => $item['id'],
                                                         'image' => 'catalog/products/'.$item['item_code'].'/other/'.$itm_img,
                                                         'sort_order' => '0'
                                                         );
@@ -87,7 +91,7 @@ class Website_sync extends CI_Controller {
 
                     $product_layout = array('product_id' => $item['id'],'store_id' => '0','layout_id' => '0');
                     
-                    $itm_data_oc[$item['id']] = array(
+                    $itm_data_oc = array(
                                                             'product'=> $product,
                                                             'product_desc'=> $product_desc,
                                                             'product_images'=> $product_images,
@@ -95,9 +99,19 @@ class Website_sync extends CI_Controller {
                                                             'product_category'=> $product_category,
                                                             'product_layout'=> $product_layout,
                                                      );
+                    
+                $res_add = $this->WebsiteSync_model->add_item_data_website($itm_data_oc);
+                
+                if($res_add){ 
+                    if(!is_dir($image_dest_dir.$item['item_code'].'/other/')) mkdir($image_dest_dir.$item['item_code'].'/other/', 0777, TRUE);
+                }
+                dir_recurse_copy($image_source_dir.$item['id'].'/', $image_dest_dir.$item['item_code'].'/');
+                
+                echo $item['item_code'].' ok<br>'; 
             }
-           
-            echo '<pre>';            print_r($itm_data_oc); die;
+            
+//            echo '<pre>';            print_r(); die;
+//            echo '<pre>';            print_r($itm_data_oc[34]['product_images']); die;
         }
         
         

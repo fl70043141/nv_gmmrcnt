@@ -12,7 +12,7 @@ $(document).ready(function(){
 	
 	
 	function data_sync(){
-            fl_alert('info',);              
+            alert();              
         $.ajax({
                     url: "<?php echo site_url('Website_sync/fl_ajax');?>",
 			type: 'post',
