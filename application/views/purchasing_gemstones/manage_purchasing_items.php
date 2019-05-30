@@ -173,7 +173,7 @@ endswitch;
                                                 <?php echo form_dropdown('item_category_id',$item_category_list,set_value('item_category_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="item_category_id"');?>
                                             </div>
                                         </div> 
-                                        <div  id="" class="col-md-2">
+                                        <div hidden id="" class="col-md-2">
                                             <div class="form-group pad1">
                                                 <label for="item_code">Item Code</label>
                                                 <?php echo form_input('item_code',set_value('item_code'),' class="form-control add_item_inpt " style="width:100%;" data-live-search="true" id="item_code"');?>
@@ -197,7 +197,7 @@ endswitch;
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group pad1">
-                                                <label for="item_unit_cost">price/<span id="prce_unit_name"></span> <input type="checkbox" name="is_price_per_unit" id="is_price_per_unit" value="1" checked></label>
+                                                <label for="item_unit_cost">price/<span id="prce_unit_name"></span> <input type="checkbox" name="is_price_per_unit" id="is_price_per_unit" value="1" ></label>
                                                 <input type="text" name="item_unit_cost" class="form-control add_item_inpt" id="item_unit_cost" placeholder="Unit Cost for item">
                                             </div>
                                         </div>
@@ -303,7 +303,7 @@ endswitch;
                                            <tr> 
                                                <th width="3%"  style="text-align: left;">#</th> 
                                                <th width="10%"  style="text-align: left;">Stone</th> 
-                                               <th width="7%"  style="text-align: left;">Code</th> 
+                                               <th hidden width="7%"  style="text-align: left;">Code</th> 
                                                <th width="6%" style="text-align: center;">N/H</th> 
                                                <th width="9%" style="text-align: center;">Shape</th> 
                                                <th width="9%" style="text-align: center;">Color</th> 
@@ -327,7 +327,7 @@ endswitch;
                                             </tr>-->
                                             
                                             <tr>
-                                                <th colspan="9"></th>
+                                                <th colspan="8"></th>
                                                 <th  style="text-align: right;">Total</th>
                                                 <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_total"><span id="inv_total">0</span></th>
                                             </tr> 
@@ -443,26 +443,26 @@ $(document).ready(function(){
 //                                var item_total = qtyXprice - (parseFloat($('#item_discount').val())* 0.01 * qtyXprice);
                                 var item_total = qtyXprice;
                                 
-                                if($('#item_code').val()==''){
-                                    fl_alert('info','Please enter item code!');
-                                    return false;
-                                }else{
-                                    if(res2.item_code != null){
-                                        fl_alert('warning','Item code already exist in Database! Please Try with another code.');
-                                        return false;
-                                    }
-                                    var duplicate_code=0;
-                                    $('.item_code_row').each(function(){
-                                        if($('#item_code').val() == this.value){
-                                            duplicate_code = 1;
-                                            fl_alert('warning','You are duplicated the Item Code.');
-                                            return false
-                                        }
-                                    });
-                                    if(duplicate_code==1){
-                                        return false;
-                                    }
-                                }
+//                                if($('#item_code').val()==''){
+//                                    fl_alert('info','Please enter item code!');
+//                                    return false;
+//                                }else{
+//                                    if(res2.item_code != null){
+//                                        fl_alert('warning','Item code already exist in Database! Please Try with another code.');
+//                                        return false;
+//                                    }
+//                                    var duplicate_code=0;
+//                                    $('.item_code_row').each(function(){
+//                                        if($('#item_code').val() == this.value){
+//                                            duplicate_code = 1;
+//                                            fl_alert('warning','You are duplicated the Item Code.');
+//                                            return false
+//                                        }
+//                                    });
+//                                    if(duplicate_code==1){
+//                                        return false;
+//                                    }
+//                                }
                                 if(item_total<=0){
                                     fl_alert('info','Item Weight or cost not valid! Please Recheck before add.');
                                     return false;
@@ -472,7 +472,7 @@ $(document).ready(function(){
                                 var row_str = '<tr style="pad1ding:10px" id="tr_'+rowCount+'">'+ 
                                                         '<td><span id="'+rowCount+'_row_cntr" class="row_counter_cls"></span></td>'+
                                                         '<td><input hidden name="inv_items['+rowCount+'][item_desc]" value="'+res2.item_name+'"><input hidden name="inv_items['+rowCount+'][cat_id]" value="'+res2.id+'">'+res2.item_name+'</td>'+
-                                                        '<td><input hidden name="inv_items['+rowCount+'][item_code]" class="item_code_row" value="'+$('#item_code').val()+'">'+$('#item_code').val()+'</td>'+
+                                                        '<td hidden><input hidden name="inv_items['+rowCount+'][item_code]" class="item_code_row" value="'+$('#item_code').val()+'">'+$('#item_code').val()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_treatments]" value="'+$('#treatments').val()+'">'+$("#treatments option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][shape]" value="'+$('#shape').val()+'">'+$("#shape option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][color]" value="'+$('#color').val()+'">'+$("#color option:selected" ).text()+'</td>'+
@@ -540,14 +540,14 @@ $(document).ready(function(){
                             var res1 = JSON.parse(result);
                             
 //                             $('#first_col_form').removeClass('col-md-offset-1');
-                            var div_str = '<div class="col-md-1">'+
+                            var div_str = '<div class="col-md-2">'+
                                                     '<div class="form-group pad1">'+
                                                         '<label for="item_quantity"> <span id="unit_abbr">[Each]<span></label>'+
                                                         '<input type="text" name="item_quantity" class="form-control add_item_inpt" id="item_quantity" placeholder="Enter Quantity">'+
                                                     '</div>'+
                                                 '</div>';
                             if(res1.item_uom_id_2!=0){
-                                    div_str = div_str + '<div class="col-md-1">'+
+                                    div_str = div_str + '<div class="col-md-2">'+
                                                             '<div class="form-group pad1">'+
                                                                 '<label for="item_quantity_2"> <span id="unit_abbr_2">[Each]<span></label>'+
                                                                 '<input type="text" name="item_quantity_2" class="form-control add_item_inpt" value="1" id="item_quantity_2" placeholder="Enter Quantity">'+

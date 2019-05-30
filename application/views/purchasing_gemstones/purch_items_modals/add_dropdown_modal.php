@@ -95,7 +95,7 @@
         }); 
         $('#confirm_add_dropdown').click(function(){  
             
-            if($('#dropdown_value').val()=='' || $('#dropdown_value').val().length<2){
+            if($('#dropdown_value').val()==''){
                 fl_alert('info',"Input Name Invalid!");
                 $('#dropdown_value').focus().select();
                 return false;

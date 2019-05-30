@@ -130,7 +130,7 @@ class Purchasing_gemstones extends CI_Controller {
             if(!empty($item)){ 
                     
                     $item_id = get_autoincrement_no(ITEMS); 
-                    $item_code = (isset($item['item_code']) && $item['item_code']!="")?$item['item_code']:gen_id('A', ITEMS, 'id',3);
+                    $item_code = (isset($item['item_code']) && $item['item_code']!="")?$item['item_code']:gen_id('SSL', ITEMS, 'id',4);
                     $inputs['status'] = (isset($inputs['status']))?1:0;
                     $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
                     $inputs['purchases_excluded'] = (isset($inputs['purchases_excluded']))?1:0;
@@ -566,7 +566,7 @@ class Purchasing_gemstones extends CI_Controller {
             $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_code','id',''); //14 for sales type
             $data['item_list'] = get_dropdown_data(ITEMS,array('item_name',"CONCAT(item_name,'-',item_code) as item_name"),'item_code','','item_type_id = 1'); 
             $data['item_category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','','is_gem = 1'); 
-            $data['currency_list'] = get_dropdown_data(CURRENCY,'code','code','Currency');
+            $data['currency_list'] = get_dropdown_data(CURRENCY,'code','code');
             $data['certification_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Certification','dropdown_id = 4'); //4 for certification
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
             $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
