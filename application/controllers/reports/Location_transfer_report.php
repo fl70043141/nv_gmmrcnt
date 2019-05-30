@@ -162,7 +162,9 @@ class Location_transfer_report extends CI_Controller {
         
         public function  load_data(){
             $invoices = array();
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post(); 
+            $input_post = $this->input->post();
+            $input_get = $this->input->get();
+            $input = (empty($input_post))? $input_get:$input_post; 
 //            echo '<pre>';            print_r($input); die; 
             $data = array(
                             'from_location_id' => $input['from_location_id'],

@@ -175,7 +175,9 @@ class Consignee_stockcheck extends CI_Controller {
         }
         
         public function  load_data(){ 
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post(); 
+            $input_post = $this->input->post();
+            $input_get = $this->input->get();
+            $input = (empty($input_post))? $input_get:$input_post; 
 //            echo '<pre>';            print_r($input); die; 
             
             $search_data = array(

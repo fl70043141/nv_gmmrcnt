@@ -221,7 +221,9 @@ class Purchase_summary extends CI_Controller {
         
         public function  load_data(){
             $invoices = array();
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post(); 
+            $input_post = $this->input->post();
+            $input_get = $this->input->get();
+            $input = (empty($input_post))? $input_get:$input_post; 
 //            echo '<pre>';            print_r($input); die; 
             $this->load->model("Payments_model");
             $cust_list = $this->Purchase_report_models->get_suppliers($input['supplier_id']);

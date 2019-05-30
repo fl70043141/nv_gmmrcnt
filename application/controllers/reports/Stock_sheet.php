@@ -184,7 +184,9 @@ class Stock_sheet extends CI_Controller {
         
         public function  load_data(){
             $invoices = array();
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post(); 
+            $input_post = $this->input->post();
+            $input_get = $this->input->get();
+            $input = (empty($input_post))? $input_get:$input_post;  
 //            echo '<pre>';            print_r($input); die; 
 //            $this->load->model("Reports_all_model");
             $item_stocks = $this->Reports_all_model->get_item_stocks($input['location_id'],$input['item_category_id']);
