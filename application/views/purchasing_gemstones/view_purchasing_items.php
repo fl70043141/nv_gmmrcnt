@@ -126,7 +126,7 @@ $inv_trans = $inv_data['inv_transection'];
                         </div>
              
                     <div class="box-body fl_scrollable_x">
-                    <div class="col-md-10 col-md-offset-1">
+                    <div class="col-md-12 col-md-offset-0">
                         <table width="100%" border="1">
                             <tr><td>
                     <?php
@@ -136,12 +136,13 @@ $inv_trans = $inv_data['inv_transection'];
                          echo '<table width="100%" id="example1" class="table-line" border="0">
                                     <thead>
                                         <tr class="colored_bg" style="background-color:#E0E0E0;">
-                                             <th colspan="10">'.$inv_data['item_cats'][$inv_itms[0]['item_category']].'</th> 
+                                             <th colspan="11">'.$inv_data['item_cats'][$inv_itms[0]['item_category']].'</th> 
                                          </tr>
                                         <tr style="">
                                             <th width="" style="text-align: left;"><u><b>Item Code</b></u></th>  
                                             <th width="" style="text-align: left;"><u><b>Gemstone</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>NH/H</b></u></th>  
+                                             <th width="" style="text-align: left;"><u><b>Dimesnion(LxWxH)</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>Shape</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>Color</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>Origin</b></u></th>  
@@ -160,6 +161,7 @@ $inv_trans = $inv_data['inv_transection'];
                                         <td width="" style="text-align: left;">'.$inv_itm['item_code'].'</td> 
                                         <td width="" style="text-align: left;">'.$inv_itm['supplier_item_desc'].'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['treatment']>0)?get_dropdown_value($item_info['treatment']):'').'</td>   
+                                        <td width="" style="text-align: left;">'.(($item_info['length']!='')?$item_info['length']:'-').' x '.(($item_info['width']!='')?$item_info['width']:'-').' x '.(($item_info['height']!='')?$item_info['height']:'-').' mm</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['shape']>0)?get_dropdown_value($item_info['shape']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['color']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['origin']>0)?get_dropdown_value($item_info['origin']):'-').'</td>   
@@ -177,18 +179,18 @@ $inv_trans = $inv_data['inv_transection'];
                        <tbody>
 
                                 <tr class="td_ht">
-                                    <td style="text-align: right;" colspan="4"><b> Total</b></td> 
+                                    <td style="text-align: right;" colspan="5"><b> Total</b></td> 
                                     <td  width="19%"  style="text-align: right;"><b>'. number_format($inv_data['invoice_desc_total'],2).'</b></td> 
                                 </tr>'; 
                         foreach ($inv_trans as $inv_tran){
                             echo '<tr>
-                                            <td  style="text-align: right;" colspan="4">'.$inv_tran['trans_type_name'].'</td> 
+                                            <td  style="text-align: right;" colspan="5">'.$inv_tran['trans_type_name'].'</td> 
                                             <td  width="19%"  style="text-align: right;">'. number_format($inv_tran['transection_ref_amount'],2).'</td> 
                                         </tr> ';
 
                         }
                         echo '<tr>
-                                    <td  style="text-align: right;" colspan="4"><b>Balance</b></td> 
+                                    <td  style="text-align: right;" colspan="5"><b>Balance</b></td> 
                                     <td width="19%"  style="text-align: right;"><b>'. number_format($inv_data['invoice_total'],2).'</b></td> 
                                 </tr> 
                         </tbody>

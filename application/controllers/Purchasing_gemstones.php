@@ -125,8 +125,7 @@ class Purchasing_gemstones extends CI_Controller {
             
             $cur_det = $this->Purchasing_items_model->get_currency_for_code($this->input->post('currency_code'));
             
-//                    echo '<pre>';            print_r($this->input->post()); die;
-//                    echo '<pre>';            print_r($item); die;
+//                    echo '<pre>';            print_r($this->input->post()); die; 
             if(!empty($item)){ 
                     
                     $item_id = get_autoincrement_no(ITEMS); 
@@ -134,6 +133,27 @@ class Purchasing_gemstones extends CI_Controller {
                     $inputs['status'] = (isset($inputs['status']))?1:0;
                     $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
                     $inputs['purchases_excluded'] = (isset($inputs['purchases_excluded']))?1:0;
+                    
+                    if($item['dimension'] !=''){
+                        $item['dimension'] = preg_replace('/\s+/', '', trim($item['dimension']));
+                        
+                        $devider_x = substr_count($item['dimension'],'x'); // simple x
+                        $devider_cx = substr_count($item['dimension'],'X'); //capitel X
+                        $devider_astr = substr_count($item['dimension'],'*'); // asterisk *
+
+                        if($devider_x == 2){
+                            $dim = explode('x', $item['dimension']);
+                        }
+                        if($devider_cx == 2){
+                            $dim = explode('X', $item['dimension']);
+                        }
+                        if($devider_astr == 2){
+                            $dim = explode('*', $item['dimension']);
+                        }
+                    }
+                    
+                    
+                    
                     $data['item']           =   array(
                                                     'id' => $item_id,
                                                     'item_code' => $item_code,
@@ -146,6 +166,9 @@ class Purchasing_gemstones extends CI_Controller {
                                                     'treatment' => $item['item_treatments'],
                                                     'shape' => $item['shape'],
                                                     'origin' => $item['origin'],
+                                                    'length' => (isset($dim) && is_array($dim) && count($dim)==3)?$dim[0]:'', 
+                                                    'width' => (isset($dim) && is_array($dim) && count($dim)==3)?$dim[1]:'', 
+                                                    'height' => (isset($dim) &&  is_array($dim) && count($dim)==3)?$dim[2]:'', 
                                                     'item_type_id' => 1, // 1 => for purchased item  
                                                     'sales_excluded' => 0,
                                                     'purchases_excluded' => 0,
