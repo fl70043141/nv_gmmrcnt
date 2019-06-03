@@ -39,8 +39,12 @@ class Reports_all_model extends CI_Model
         
     public function get_item_stocks_gemstones($data='',$where=''){ 
 //            echo '<pre>';            print_r('$data'); die;
+        
+        $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
+        $cur_det = get_currency_for_code($def_curcode);
+
         $this->db->select('is.*'); 
-        $this->db->select('sum((glc.amount_cost)) as total_lapidary_cost'); 
+        $this->db->select('sum((glc.amount_cost/glc.currency_value) * '.$cur_det['value'].') as total_lapidary_cost'); 
         $this->db->select('ip.item_price_type, ip.price_amount,ip.currency_code as ip_curr_code, ip.currency_value as ip_curr_value'); 
         $this->db->select('itm.item_name,itm.item_code,itm.item_category_id,ityp.item_type_name,ityp.type_short_name'); 
         $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
@@ -57,7 +61,7 @@ class Reports_all_model extends CI_Model
         $this->db->join(SUPPLIER_INVOICE." si", 'si.id = sd.supplier_invoice_id');    
         $this->db->join(ITEM_TYPES.' ityp', 'ityp.id = itm.item_type_id');
         $this->db->join(ITEM_CAT.' itmc','itmc.id =  itm.item_category_id'); 
-        $this->db->join(GEM_LAPIDARY_COSTING.' glc','glc.item_id = is.item_id', 'LEFT'); 
+        $this->db->join(GEM_LAPIDARY_COSTING.' glc','glc.item_id = is.item_id AND glc.deleted=0', 'LEFT'); 
         $this->db->join(ITEM_PRICES.' ip','ip.item_id = is.item_id and ip.item_price_type = 3 and ip.deleted=0'); //3 standard cost 
         $this->db->from(ITEM_STOCK.' is'); 
         $this->db->where('itmc.is_gem',1); 
@@ -316,10 +320,12 @@ class Reports_all_model extends CI_Model
         
     public function get_gemstone_lapidary_costing($item_id='',$where=''){ 
         $this->db->select('lc.*,gr.receive_date');
-        $this->db->select('drp.dropdown_value,drpln.dropdown_list_name');
+        $this->db->select('drp.dropdown_value,gmit.gem_issue_type_name');
+        $this->db->select('(SELECT dropdown_value from '.DROPDOWN_LIST.' where id = lc.lapidarist_id) as lapidary_name');
+        $this->db->select('(SELECT gem_issue_type_name from '.GEM_ISSUE_TYPES.' where id = lc.gem_issue_type_id) as lapidary_type');
         $this->db->join(GEM_RECEIVAL.' gr', 'gr.id = lc.gem_receival_id','LEFT'); 
         $this->db->join(DROPDOWN_LIST.' drp', 'drp.id = gr.lapidary_id','LEFT'); 
-        $this->db->join(DROPDOWN_LIST_NAMES.' drpln', 'drpln.id = drp.dropdown_id','LEFT'); 
+        $this->db->join(GEM_ISSUE_TYPES.' gmit', 'gmit.id = gr.gem_issue_type_id','LEFT'); 
         $this->db->from(GEM_LAPIDARY_COSTING.' lc'); 
         
         if($where!='')$this->db->where($where);
@@ -327,6 +333,7 @@ class Reports_all_model extends CI_Model
         if($item_id!='') $this->db->where('lc.item_id',$item_id); 
         
         $result = $this->db->get()->result_array();    
+//        echo $this->db->last_query();
 //            echo '<pre>';            print_r($result); die;
         return $result;
     } 

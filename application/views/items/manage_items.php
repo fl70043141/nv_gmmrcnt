@@ -181,13 +181,13 @@ endswitch;
                                  <!-- Custom Tabs -->
                                 <div class="nav-tabs-custom">
                                   <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#tab_1" data-toggle="tab">Information</a></li>  
-                                    <li><a href="#tab_2" data-toggle="tab">Sales Pricing</a></li>
-                                    <!--<li><a href="#tab_3" data-toggle="tab">Purchasing Pricing</a></li>--> 
-                                    <li><a href="#tab_31" data-toggle="tab">Costing</a></li> 
-                                    <li><a href="#tab_4" data-toggle="tab">Images/Certificates</a></li> 
+                                    <li id="nv_tab_1" class="active"><a href="#tab_1" data-toggle="tab">Information</a></li>  
+                                    <li id="nv_tab_2"><a href="#tab_2" data-toggle="tab">Sales Pricing</a></li>
+                                    <!--<li id="nv_tab_3"><a href="#tab_3" data-toggle="tab">Purchasing Pricing</a></li>--> 
+                                    <li id="nv_tab_4"><a href="#tab_31" data-toggle="tab">Costing</a></li> 
+                                    <li id="nv_tab_5"><a href="#tab_4" data-toggle="tab">Images/Certificates</a></li> 
                                     <!--<li><a href="#tab_5" data-toggle="tab">Transection</a></li>--> 
-                                    <li><a href="#tab_6" data-toggle="tab">Status</a></li> 
+                                    <li id="nv_tab_6"><a href="#tab_6" data-toggle="tab">Status</a></li> 
 
                                     <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
                                   </ul>
@@ -520,6 +520,7 @@ endswitch;
                                                         <th>Currency</th> 
                                                         <th style="text-align: right;">Cost Amount</th> 
                                                         <th style="text-align: right;">Cost(<?php echo $default_currency['code'];?>)</th> 
+                                                        <th>Action</th> 
                                                     </tr>
                                                     <?php
                                                     $tot_cost = 0;
@@ -534,6 +535,7 @@ endswitch;
                                                                             <td>'.$purch_info['currency_code'].'</td>
                                                                             <td align="right">'. number_format($purch_info['cost_amount'],2).'</td>
                                                                             <td align="right">'.$default_currency['symbol_left'].' '. number_format($price_in_def,2).'</td>
+                                                                            <td align="right"></td>
                                                                         </tr>'; 
                                                                 $tot_cost +=$price_in_def;
                                                             }
@@ -544,12 +546,13 @@ endswitch;
                                                             foreach ($lapidary_cost as $lap_cost){
                                                                 $price_in_def = $lap_cost['amount_cost'] * ($default_currency['value'] / $lap_cost['currency_value']);
                                                                 echo   '<tr>
-                                                                        <td>'. date(SYS_DATE_FORMAT,$lap_cost['receive_date']).'</td>
-                                                                        <td>Lab / Lapidary</td>
-                                                                        <td>'.$lap_cost['dropdown_value'].'</td>
+                                                                        <td>'. date(SYS_DATE_FORMAT,$lap_cost['receive_date']).'</td> 
+                                                                        <td>'.(($lap_cost['gem_issue_type_name']!='')?$lap_cost['gem_issue_type_name']:$lap_cost['lapidary_type']).'</td>
+                                                                        <td>'.(($lap_cost['dropdown_value']!='')?$lap_cost['dropdown_value']:$lap_cost['lapidary_name']).'</td>
                                                                         <td>'.$lap_cost['currency_code'].'</td>
                                                                         <td align="right">'. number_format($lap_cost['amount_cost'],2).'</td>
                                                                         <td align="right">'.$default_currency['symbol_left'].' '. number_format($price_in_def,2).'</td>
+                                                                        <td>'.(($lap_cost['gem_receival_id']==0)?'<a id="lcost_'.$lap_cost['id'].'" title="Delete" class="btn btn-danger btn-xs cost_remove"><span class="fa fa-remove"></span></a>':'').'</td>
                                                                     </tr>'; 
                                                                 $tot_cost +=$price_in_def;
                                                             }
@@ -563,7 +566,133 @@ endswitch;
                                                     
                                                 </tbody>
                                             </table>
-                                        </div> 
+                                              <div id="res_cost"></div>
+                                        </div>
+                                          <!--Expemses quick entry-->
+                                          <div class="col-lg-12"> 
+                                                <div class="row"> 
+                                                    <hr>
+                                                    <div class="">
+                                                        <div id='add_item_form' class="col-md-12">
+
+                                                            <h4 class="">Add quick cost entry</h4> 
+                                                            <div class="form-group col-md-3">
+                                                                <label for="paymen_trem_id">Payment Term</label>
+                                                                <?php  echo form_dropdown('paymen_trem_id',$payment_term_list,set_value('paymen_trem_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="paymen_trem_id"');?>
+                                                            </div>
+                                                            <table id="example1" class="table bg-gray-light table-bordered table-striped">
+                                                                <thead>
+                                                                   <tr>
+                                                                       <td>
+                                                                            <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="entry_date">Date</label>
+                                                                                <?php  echo form_input('entry_date',set_value('entry_date', date(SYS_DATE_FORMAT)),'readonly class="form-control datepicker add_item_inpt" data-live-search="true" id="entry_date"');?>
+                                                                            </div>
+                                                                            </div>
+                                                                       </td>
+                                                                       <td>
+                                                                            <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="gem_issue_type_id">Lapidary Type</label>
+                                                                                <?php  echo form_dropdown('gem_issue_type_id',$gem_issue_type_list,set_value('gem_issue_type_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_issue_type_id"');?>
+                                                                            </div>
+                                                                            </div>
+                                                                       </td> 
+                                                                       <td>
+                                                                            <div class="col-md-12">
+                                                                                <div hidden id="gem_cutter_div"  class="form-group">
+                                                                                    <label for="gem_cutter_id">Gem Cutter</label>
+                                                                                    <?php  echo form_dropdown('gem_cutter_id',$cutter_list,set_value('gem_cutter_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_cutter_id"');?>
+                                                                                </div>
+                                                                                <div hidden id="polishing_div"  class="form-group">
+                                                                                    <label for="gem_polishing_id">Polishing</label>
+                                                                                    <?php  echo form_dropdown('gem_polishing_id',$polishing_list,set_value('gem_polishing_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_polishing_id"');?>
+                                                                                </div>
+                                                                                <div hidden id="heater_div"  class="form-group">
+                                                                                    <label for="gem_heater_id">Heater</label>
+                                                                                    <?php  echo form_dropdown('gem_heater_id',$heater_list,set_value('gem_heater_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_heater_id"');?>
+                                                                                </div>
+                                                                                <div hidden id="lab_div"  class="form-group">
+                                                                                    <label for="gem_lab_id">Laboratory</label>
+                                                                                    <?php  echo form_dropdown('gem_lab_id',$lab_list,set_value('gem_lab_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_lab_id"');?>
+                                                                                </div>
+                                                                            </div>
+                                                                       </td> 
+
+                                                                       <td>
+                                                                            <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="memo">Memo</label>
+                                                                                <?php  echo form_input('memo',set_value('memo'),' class="form-control  add_item_inpt"  id="memo" placeholder="Have any note"');?>
+                                                                            </div>
+                                                                            </div>
+                                                                       </td>
+                                                                       <td>
+                                                                            <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="currency_code">Currency</label>
+                                                                                <?php  echo form_dropdown('currency_code',$currency_list,set_value('currency_code',$default_currency['code']),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="currency_code"');?>
+                                                                            </div>
+                                                                            </div>
+                                                                       </td> 
+                                                                       <td>
+                                                                            <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="amount">Amount</label>
+                                                                                <input type="number" min="0"  step=".001" name="amount" class="form-control add_item_inpt" id="amount" value="0" placeholder="Enter Amount ">
+                                                                            </div>
+                                                                            </div>
+                                                                       </td> 
+                                                                       <td>
+                                                                            <div class="col-md-12">
+                                                                            <div class="form-group"><br>
+                                                                                <span id="add_item_btn" class="btn-default btn add_item_inpt">Add</span>
+                                                                            </div>
+                                                                            </div>
+                                                                       </td>
+                                                                   </tr>
+                                                               </thead>
+                                                            </table>
+                                                        </div>
+
+                                                        <div class="box-body fl_scrollable"> 
+                                                            <table id="invoice_list_tbl" class="table table-bordered table-striped">
+                                                                <thead>
+                                                                   <tr>
+                                                                       <th width="5%">#</th>
+                                                                       <th width="10%"  style="text-align: center;">Date</th> 
+                                                                       <th width="20%" style="text-align: left;">Lapidary Type</th>  
+                                                                       <th width="15%" style="text-align: left;">Lapidarist</th> 
+                                                                       <th width="15%" style="text-align: left;">Memo</th> 
+                                                                       <th width="15%" style="text-align: center;">Currency</th> 
+                                                                       <th width="15%" style="text-align: right;">Amount</th> 
+                                                                       <th width="5%" style="text-align: center;">Action</th>
+                                                                   </tr>
+                                                               </thead>
+                                                               <tbody>
+
+                                                               </tbody>
+                                                               <tfoot>
+                                                                    <tr>
+                        <!--                                                <th colspan="5"></th>
+                                                                        <th  style="text-align: right;">Sub Total</th>
+                                                                        <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_total"><span id="inv_total">0</span></th>
+                                                                        <th  style="text-align: right;"></th>
+                                                                    </tr>-->
+
+                                                                    <tr hidden>
+                                                                        <th colspan="3"></th>
+                                                                        <th  style="text-align: right;">Total</th>
+                                                                        <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_total"><span id="inv_total">0</span></th>
+                                                                    </tr> 
+                                                               </tfoot>
+                                                                </table>
+                                                        </div>
+                                                        <div id="search_result_1"></div>
+                                                    </div>    
+                                                </div>
+                                          </div>
                                       </div>
                                       <!-- /.tab-pane --> 
                                       <!-- /.tab-pane -->
@@ -718,8 +847,17 @@ endswitch;
  
 <script>
     
-$(document).ready(function(){  
-     get_category();
+$(document).ready(function(){ 
+    
+    //    tab handler
+    var actv_tab_id = "<?php echo ((isset($_GET['tbs']))?$_GET['tbs']:'');?>";
+    if(actv_tab_id!=''){
+//        alert(actv_tab_id);
+        $('[href="#'+actv_tab_id+'"]').tab('show'); 
+    }
+    
+    
+    get_category();
     $("form").submit(function(){ 
         if(!confirm("Click Ok to Confirm form Submition.")){
                return false;
@@ -765,6 +903,114 @@ $(document).ready(function(){
     $('#item_category_id').change(function(){
         get_category();
     });
+    
+    $('#gem_issue_type_id').change(function(){ 
+        var gi_type = $('#gem_issue_type_id').val();
+        if(gi_type!=""){ $('#lapidrist_div').show() }
+        $('#gem_cutter_div').hide();
+        $('#heater_div').hide();
+        $('#polishing_div').hide();
+        $('#lab_div').hide();
+        switch(gi_type){
+            case '1': $('#gem_cutter_div').show(); break; //facetting
+            case '2': $('#lab_div').show(); break; //Verbal Check
+            case '3': $('#heater_div').show(); break; //Heat Process
+            case '4': $('#gem_cutter_div').show(); break; //Cut Process
+            case '5': $('#polishing_div').show(); break; //Polishing Process
+            case '6': $('#gem_cutter_div').show(); break; //Recut
+            case '7': $('#lab_div').show(); break; //Cert lab
+        }
+        
+        $('.select2').select2();
+        
+    });
+    
+    $("#add_item_btn").click(function(){
+        var rowCount = $('.itm_rows').length; 
+        
+        if(lapidarist_id==""){
+            fl_alert('info',"Please Select Quick Entry Account");
+            return false;
+        }
+        if(parseFloat($('#amount').val())<=0){
+            fl_alert('info',"Invalid amount");
+            return false;
+        } 
+        
+        var lapidarist_id = '';
+        var lapidarist_name = '';
+        switch($('#gem_issue_type_id').val()){
+            case '1': lapidarist_id = $('#gem_cutter_id').val(); lapidarist_name = $('#gem_cutter_id option:selected').text(); break; //facetting
+            case '2': lapidarist_id = $('#gem_lab_id').val(); lapidarist_name = $('#gem_lab_id option:selected').text(); break; //Verbal Check
+            case '3': lapidarist_id = $('#gem_heater_id').val(); lapidarist_name = $('#gem_heater_id option:selected').text(); break; //Heat Process
+            case '4': lapidarist_id = $('#gem_cutter_id').val(); lapidarist_name = $('#gem_cutter_id option:selected').text(); break; //Cut Process
+            case '5': lapidarist_id = $('#gem_polishing_id').val(); lapidarist_name = $('#gem_polishing_id option:selected').text(); break; //Polishing Process
+            case '6': lapidarist_id = $('#gem_cutter_id').val(); lapidarist_name = $('#gem_cutter_id option:selected').text(); break; //Recut
+            case '7': lapidarist_id = $('#gem_lab_id').val(); lapidarist_name = $('#gem_lab_id option:selected').text(); break; //Cert lab
+                
+        }
+        
+        var newRow = $('<tr class="itm_rows" style="padding:10px" id="tr_'+rowCount+'">'+
+                            '<td>'+(rowCount)+'</td>'+
+                            '<td><input hidden name="cost_entry['+rowCount+'_'+lapidarist_id+'][entry_date]" value="'+$('#entry_date').val()+'">'+$('#entry_date').val()+'</td>'+
+                            '<td><input hidden name="cost_entry['+rowCount+'_'+lapidarist_id+'][gem_issue_type_id]" value="'+$('#gem_issue_type_id').val()+'">'+$('#gem_issue_type_id option:selected').text()+'</td>'+
+                            '<td><input hidden name="cost_entry['+rowCount+'_'+lapidarist_id+'][lapiadrist_id]" value="'+lapidarist_id+'">'+lapidarist_name+'</td>'+
+                            '<td><input hidden name="cost_entry['+rowCount+'_'+lapidarist_id+'][memo]" value="'+$('#memo').val()+'">'+$('#memo').val()+'</td>'+
+                            '<td align="center"><input  hidden name="cost_entry['+rowCount+'_'+lapidarist_id+'][currency_code]" value="'+$('#currency_code').val()+'">'+$('#currency_code').val()+'</td>'+
+                            '<td align="right"><input class="item_tots" hidden name="cost_entry['+rowCount+'_'+lapidarist_id+'][amount]" value="'+$('#amount').val()+'">'+parseFloat($('#amount').val()).toFixed(2)+'</td>'+
+                            '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
+                        '</tr>'); 
+        jQuery('table#invoice_list_tbl ').append(newRow);
+        var inv_total = parseFloat($('#invoice_total').val()) + parseFloat($('#amount').val());
+        $('#amount').val(0);
+        $('#invoice_total').val(inv_total.toFixed(2));
+        $('#inv_total').text(inv_total.toFixed(2));
+        
+          
+        //delete row
+        $('.del_btn_inv_row').click(function(){
+//            if(!confirm("click ok Confirm remove this Entry.")){
+//                return false;
+//            }
+            var tot_amt = 0;
+            $(this).closest('tr').remove(); 
+            $('input[class^="item_tots"]').each(function() {
+//                                        console.log(this);
+                tot_amt = tot_amt + parseFloat($(this).val());
+            });
+            $('#invoice_total').val(tot_amt.toFixed(2));
+            $('#inv_total').text(tot_amt.toFixed(2)); 
+        }); 
+
+        
+        
+    });
+    
+    // remove the quick cost entry 
+    $('.cost_remove').click(function(){
+        var lcost_id =  (this.id).split('_')[1];
+        if(!confirm("Click Ok to remove the cost entry!")){
+            return false;
+        }
+        quick_cost_removal(lcost_id);
+    });     
+    
+    function quick_cost_removal(lcost_id){  
+            $.ajax({
+			url: "<?php echo site_url('Items/fl_ajax');?>",
+			type: 'post',
+			data : {function_name:'quick_cost_removal', lcost_id:lcost_id},
+			success: function(result){ 
+                            if(result=='1'){
+//                                alert($('input[name=id]').val());  
+                                window.location.href = "<?php echo base_url($this->router->fetch_class().'/edit/'.$result['id'].'?tbs=tab_31');?>";
+                            }
+//                            var res1 = JSON.parse(result);
+                            
+                        }
+		}); 
+    }
+    
     
     function update_sale_price(){
 //        fl_alert('info',)

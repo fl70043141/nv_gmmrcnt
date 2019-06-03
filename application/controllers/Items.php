@@ -249,7 +249,7 @@ class Items extends CI_Controller {
 		
 	function update(){
             $inputs = $this->input->post();   
-//            echo '<pre>';            print_r($_FILES); die;
+//            echo '<pre>';            print_r($inputs); die;
             $item_id = $this->input->post('id');   
             $inputs['status'] = (isset($inputs['status']))?1:0;
             $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
@@ -348,7 +348,7 @@ class Items extends CI_Controller {
             
 //            echo '<pre>';            print_r($all_images);
 //            echo '<pre>';            print_r($all_images_cert); die;
-            $data = array(
+            $data['itm_tbl'] = array(
                             'item_code' => $inputs['item_code'],
                             'item_name' => $inputs['item_name'],
                             'item_uom_id' => $inputs['item_uom_id'],
@@ -378,6 +378,63 @@ class Items extends CI_Controller {
                         if(!empty($def_image)) $data['image'] = $def_image[0]['name']; 
                             
                         
+                    //Quick entry Costing
+                        if(isset($inputs['cost_entry']) && !empty($inputs['cost_entry'])){
+                            $lapd_cost_id = get_autoincrement_no(GEM_LAPIDARY_COSTING); 
+                            foreach ($inputs['cost_entry'] as $cost_entry){ 
+                                
+                                $cur_det = $this->Items_model->get_currency_for_code($cost_entry['currency_code']);
+                                $data['lpd_costs'][] = array(
+                                                            'id' => $lapd_cost_id,
+                                                            'item_id' => $inputs['id'],
+                                                            'gem_issue_type_id' => $cost_entry['gem_issue_type_id'],
+                                                            'lapidarist_id' => $cost_entry['lapiadrist_id'],
+                                                            'amount_cost' =>($cost_entry['amount']>0)? $cost_entry['amount']:0,
+                                                            'currency_code' => $cur_det['code'],
+                                                            'currency_value' => $cur_det['value'],
+                                                            'status' => 1,
+                                                            'added_on' => strtotime("now"),
+                                                            'deleted' => 0,
+                                                            );
+                                //gl entry
+                                $gem_issue_type_info = get_single_row_helper(GEM_ISSUE_TYPES,'id = '.$cost_entry['gem_issue_type_id']);
+                                $gl_credit_acc_id = ($inputs['paymen_trem_id']==1)?$gem_issue_type_info['gl_credit']:$gem_issue_type_info['gl_credit_delay'];
+                                $gl_debit_acc_info = get_single_row_helper(GL_CHART_MASTER, 'id = '.$gem_issue_type_info['gl_debit']);
+                                $gl_credit_acc_info = get_single_row_helper(GL_CHART_MASTER, 'id = '.$gl_credit_acc_id);
+
+                                $data['gl_trans'][] = array(
+                                                                'person_type' => 51, //lapidarist item quick entry for costing
+                                                                'person_id' => $cost_entry['lapiadrist_id'],
+                                                                'trans_ref' => $lapd_cost_id, //lapidary_cost_id
+                                                                'trans_date' => strtotime("now"),
+                                                                'account' => $gl_debit_acc_info['id'], 
+                                                                'account_code' => $gl_debit_acc_info['account_code'], 
+                                                                'memo' => 'LAPIDARY_COST',
+                                                                'amount' => ($cost_entry['amount']),
+                                                                'currency_code' => $cur_det['code'], 
+                                                                'currency_value' => $cur_det['value'], 
+                                                                'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                                'status' => 1,
+                                                        );
+                                $data['gl_trans'][] = array(
+                                                                'person_type' => 51, //lapidarist
+                                                                'person_id' => $cost_entry['lapiadrist_id'],
+                                                                'trans_ref' => $lapd_cost_id,
+                                                                'trans_date' => strtotime("now"),
+                                                                'account' => $gl_credit_acc_info['id'], 
+                                                                'account_code' => $gl_credit_acc_info['account_code'], 
+                                                                'memo' => 'LAPIDARY_COST',
+                                                                'amount' => (-$cost_entry['amount']),
+                                                                'currency_code' => $cur_det['code'], 
+                                                                'currency_value' => $cur_det['value'], 
+                                                                'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                                'status' => 1,
+                                                        );
+                                $lapd_cost_id++;
+                            }
+
+                        }
+                    
 //            echo '<pre>';            print_r($data); die;
             //old data for log update
             $existing_data = $this->Items_model->get_single_row($inputs['id']);
@@ -710,8 +767,17 @@ class Items extends CI_Controller {
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
             $data['supplier_list'] = get_dropdown_data(SUPPLIERS,'supplier_name','id',''); 
             $data['currency_list'] = get_dropdown_data(CURRENCY,'title','code',''); 
+            $data['payment_term_list'] = get_dropdown_data(PAYMENT_TERMS, 'payment_term_name', 'id');
             $data['addon_type_list'] = array(0=>'Default');
             $data['item_type_list'] = get_dropdown_data(ITEM_TYPES,'item_type_name','id','');
+            
+            
+            $data['gem_issue_type_list'] = get_dropdown_data(GEM_ISSUE_TYPES,'gem_issue_type_name','id','No Gem Issue Type');
+            $data['lab_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 4'); //4 Labs / Certf
+            $data['cutter_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 19'); //19 Gem Cutter
+            $data['polishing_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 20'); //20 Polishing
+            $data['heater_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 21'); //21 Heater
+            
 //            echo '<pre>';            print_r($data); die;
             return $data;
          }
@@ -746,6 +812,26 @@ class Items extends CI_Controller {
             echo json_encode($item_vat_det[0]);
 //                        echo '<pre>';            print_r($item_vat_det);
 
+        }
+        function quick_cost_removal(){ //lapidary cost removal 
+            $inputs = $this->input->post();
+//                        echo '<pre>';            print_r($inputs);
+            $data['del'] =  array(
+                                'deleted' => 1, 
+                                'deleted_on' => date('Y-m-d'),
+                                'deleted_by' => $this->session->userdata(SYSTEM_CODE)['ID']
+                             ); 
+            $res = $this->Items_model->quick_lapd_cost_removal($inputs['lcost_id'],$data);
+            
+            if($res){ 
+                $this->session->set_flashdata('warn',"Cost Entry Removed Successfully"); 
+                echo '1';
+            }else{
+                
+                $this->session->set_flashdata('error',"Something Went Wrong! Please try againt."); 
+                echo '0';
+            }
+            
         }
                 
         function test(){ 

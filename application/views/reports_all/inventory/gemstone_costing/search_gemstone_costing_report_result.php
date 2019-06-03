@@ -26,13 +26,28 @@
                         foreach ($rep_data as $item){ 
 //                            echo '<pre>';                       print_r($item); die;
  
-
+                                    $tot_lapid_cost =0 ;
                                     if($stock_stat==2 || $item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
-                                         
+                                         $html_1 = $html_2 = '';
+                                        $bg_colr = ($i%2==0)?'#F5F5F5':'#FFFFFF';
+                                        if(!empty($item['lapidary_costs'])){
+                                            foreach ($item['lapidary_costs'] as $lcost){ 
+                                               $price_in_def = $lcost['amount_cost'] * ($def_cur['value'] / $lcost['currency_value']);
+                                               $tot_lapid_cost +=$price_in_def;
+                                               $html_2 .= '<tr style="background-color: '.$bg_colr.'">
+                                                                   <td colspan="5"></td> 
+                                                                   <td>'.(($lcost['gem_issue_type_name']!='')?$lcost['gem_issue_type_name']:$lcost['lapidary_type']).'</td>
+                                                                   <td>'.(($lcost['dropdown_value']!='')?$lcost['dropdown_value']:$lcost['lapidary_name']).'</td>
+                                                                   <td align="right">'. number_format($price_in_def,2).'</td>
+
+                                                              </tr>';
+                                           }
+                                        }
+                                        
                                         $tot_units = $item['units_available'] + $item['units_on_workshop'] + $item['units_on_consignee'];
                                         $tot_units_2 = $item['units_available_2'] + $item['units_on_workshop_2'] + $item['units_on_consignee_2'];
                                         $purch_cost = ($item['cost_amount'] / $item['ip_curr_value'])*$def_cur['value'];
-                                        $cost = $purch_cost + $item['total_lapidary_cost'];
+                                        $cost = $purch_cost + $tot_lapid_cost;
 
                                         $cat_tot_units += $tot_units;
                                         $cat_tot_units_2 += $tot_units_2;
@@ -41,8 +56,7 @@
                                         $all_tot_units += $tot_units;
                                         $all_tot_units_2 += $tot_units_2;
                                         $all_tot_amount += $cost;
-                                         $bg_colr = ($i%2==0)?'#F5F5F5':'#FFFFFF';
-                                         $html_row .= '
+                                         $html_1 = '
                                              <tr style="background-color: '.$bg_colr.'">
                                                  <td>'.($i+1).'</td> 
                                                  <td align="center">'.$item['item_code'].'</td>
@@ -54,19 +68,9 @@
                                                  <td align="right">'. number_format($purch_cost,2).'</td>
                                                  <td rowspan="'.(count($item['lapidary_costs'])+1).'" align="right" style="vertical-align: bottom;">'. number_format($cost,2).'</td>
                                             </tr>';
-                                         if(!empty($item['lapidary_costs'])){
-                                             foreach ($item['lapidary_costs'] as $lcost){
-                                                $html_row .= '<tr style="background-color: '.$bg_colr.'">
-                                                                    <td colspan="5"></td> 
-                                                                    <td align="left">'.$lcost['dropdown_list_name'].'</td>
-                                                                    <td align="left">'.$lcost['dropdown_value'].'</td> 
-                                                                    <td align="right">'. number_format($lcost['amount_cost'],2).'</td>
-                                                                    
-                                                               </tr>';
-                                            }
-                                         }
                                          $i++;
                                          $item_count++;
+                                         $html_row .= $html_1.$html_2;
                                      }
                                     
                         }

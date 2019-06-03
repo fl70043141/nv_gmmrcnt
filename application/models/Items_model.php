@@ -141,8 +141,12 @@ class Items_model extends CI_Model
 		$this->db->trans_start();
                 
 		$this->db->where('id', $id);
-		$this->db->update(ITEMS, $data); 
+		$this->db->update(ITEMS, $data['itm_tbl']); 
                         
+                
+		if(!empty($data['lpd_costs']))$this->db->insert_batch(GEM_LAPIDARY_COSTING, $data['lpd_costs']);
+		if(!empty($data['gl_trans']))$this->db->insert_batch(GL_TRANS, $data['gl_trans']);
+                
 		$status=$this->db->trans_complete(); 
 		return $status;
 	}
@@ -153,6 +157,22 @@ class Items_model extends CI_Model
                 
 		$this->db->where('id', $id);
 		$this->db->update($table, $data); 
+                
+		$status=$this->db->trans_complete();
+		return $status;
+	}
+        
+        public function quick_lapd_cost_removal($lcost_id,$data){
+            
+//        echo '<pre>';        print_r($data);die;
+		$this->db->trans_start();
+                
+		$this->db->where('id', $lcost_id);
+		$this->db->update(GEM_LAPIDARY_COSTING,$data['del']); 
+                
+		$this->db->where('trans_ref', $lcost_id);
+		$this->db->where('person_type', 51);
+		$this->db->update(GL_TRANS, $data['del']); 
                 
 		$status=$this->db->trans_complete();
 		return $status;
