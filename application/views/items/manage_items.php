@@ -552,7 +552,7 @@ endswitch;
                                                                         <td>'.$lap_cost['currency_code'].'</td>
                                                                         <td align="right">'. number_format($lap_cost['amount_cost'],2).'</td>
                                                                         <td align="right">'.$default_currency['symbol_left'].' '. number_format($price_in_def,2).'</td>
-                                                                        <td>'.(($lap_cost['gem_receival_id']==0)?'<a id="lcost_'.$lap_cost['id'].'" title="Delete" class="btn btn-danger btn-xs cost_remove"><span class="fa fa-remove"></span></a>':'').'</td>
+                                                                        <td>'.(($lap_cost['gem_receival_id']==0 && ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'remv_item_mng_cost')))?'<a id="lcost_'.$lap_cost['id'].'" title="Delete" class="btn btn-danger btn-xs cost_remove"><span class="fa fa-remove"></span></a>':'').'</td>
                                                                     </tr>'; 
                                                                 $tot_cost +=$price_in_def;
                                                             }
@@ -569,130 +569,144 @@ endswitch;
                                               <div id="res_cost"></div>
                                         </div>
                                           <!--Expemses quick entry-->
+                                          <?php if(($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'remv_item_mng_cost'))) { ?>
                                           <div class="col-lg-12"> 
-                                                <div class="row"> 
-                                                    <hr>
-                                                    <div class="">
-                                                        <div id='add_item_form' class="col-md-12">
-
-                                                            <h4 class="">Add quick cost entry</h4> 
-                                                            <div class="form-group col-md-3">
-                                                                <label for="paymen_trem_id">Payment Term</label>
-                                                                <?php  echo form_dropdown('paymen_trem_id',$payment_term_list,set_value('paymen_trem_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="paymen_trem_id"');?>
-                                                            </div>
-                                                            <table id="example1" class="table bg-gray-light table-bordered table-striped">
-                                                                <thead>
-                                                                   <tr>
-                                                                       <td>
-                                                                            <div class="col-md-12">
-                                                                            <div class="form-group">
-                                                                                <label for="entry_date">Date</label>
-                                                                                <?php  echo form_input('entry_date',set_value('entry_date', date(SYS_DATE_FORMAT)),'readonly class="form-control datepicker add_item_inpt" data-live-search="true" id="entry_date"');?>
-                                                                            </div>
-                                                                            </div>
-                                                                       </td>
-                                                                       <td>
-                                                                            <div class="col-md-12">
-                                                                            <div class="form-group">
-                                                                                <label for="gem_issue_type_id">Lapidary Type</label>
-                                                                                <?php  echo form_dropdown('gem_issue_type_id',$gem_issue_type_list,set_value('gem_issue_type_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_issue_type_id"');?>
-                                                                            </div>
-                                                                            </div>
-                                                                       </td> 
-                                                                       <td>
-                                                                            <div class="col-md-12">
-                                                                                <div hidden id="gem_cutter_div"  class="form-group">
-                                                                                    <label for="gem_cutter_id">Gem Cutter</label>
-                                                                                    <?php  echo form_dropdown('gem_cutter_id',$cutter_list,set_value('gem_cutter_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_cutter_id"');?>
-                                                                                </div>
-                                                                                <div hidden id="polishing_div"  class="form-group">
-                                                                                    <label for="gem_polishing_id">Polishing</label>
-                                                                                    <?php  echo form_dropdown('gem_polishing_id',$polishing_list,set_value('gem_polishing_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_polishing_id"');?>
-                                                                                </div>
-                                                                                <div hidden id="heater_div"  class="form-group">
-                                                                                    <label for="gem_heater_id">Heater</label>
-                                                                                    <?php  echo form_dropdown('gem_heater_id',$heater_list,set_value('gem_heater_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_heater_id"');?>
-                                                                                </div>
-                                                                                <div hidden id="lab_div"  class="form-group">
-                                                                                    <label for="gem_lab_id">Laboratory</label>
-                                                                                    <?php  echo form_dropdown('gem_lab_id',$lab_list,set_value('gem_lab_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_lab_id"');?>
-                                                                                </div>
-                                                                            </div>
-                                                                       </td> 
-
-                                                                       <td>
-                                                                            <div class="col-md-12">
-                                                                            <div class="form-group">
-                                                                                <label for="memo">Memo</label>
-                                                                                <?php  echo form_input('memo',set_value('memo'),' class="form-control  add_item_inpt"  id="memo" placeholder="Have any note"');?>
-                                                                            </div>
-                                                                            </div>
-                                                                       </td>
-                                                                       <td>
-                                                                            <div class="col-md-12">
-                                                                            <div class="form-group">
-                                                                                <label for="currency_code">Currency</label>
-                                                                                <?php  echo form_dropdown('currency_code',$currency_list,set_value('currency_code',$default_currency['code']),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="currency_code"');?>
-                                                                            </div>
-                                                                            </div>
-                                                                       </td> 
-                                                                       <td>
-                                                                            <div class="col-md-12">
-                                                                            <div class="form-group">
-                                                                                <label for="amount">Amount</label>
-                                                                                <input type="number" min="0"  step=".001" name="amount" class="form-control add_item_inpt" id="amount" value="0" placeholder="Enter Amount ">
-                                                                            </div>
-                                                                            </div>
-                                                                       </td> 
-                                                                       <td>
-                                                                            <div class="col-md-12">
-                                                                            <div class="form-group"><br>
-                                                                                <span id="add_item_btn" class="btn-default btn add_item_inpt">Add</span>
-                                                                            </div>
-                                                                            </div>
-                                                                       </td>
-                                                                   </tr>
-                                                               </thead>
-                                                            </table>
-                                                        </div>
-
-                                                        <div class="box-body fl_scrollable"> 
-                                                            <table id="invoice_list_tbl" class="table table-bordered table-striped">
-                                                                <thead>
-                                                                   <tr>
-                                                                       <th width="5%">#</th>
-                                                                       <th width="10%"  style="text-align: center;">Date</th> 
-                                                                       <th width="20%" style="text-align: left;">Lapidary Type</th>  
-                                                                       <th width="15%" style="text-align: left;">Lapidarist</th> 
-                                                                       <th width="15%" style="text-align: left;">Memo</th> 
-                                                                       <th width="15%" style="text-align: center;">Currency</th> 
-                                                                       <th width="15%" style="text-align: right;">Amount</th> 
-                                                                       <th width="5%" style="text-align: center;">Action</th>
-                                                                   </tr>
-                                                               </thead>
-                                                               <tbody>
-
-                                                               </tbody>
-                                                               <tfoot>
-                                                                    <tr>
-                        <!--                                                <th colspan="5"></th>
-                                                                        <th  style="text-align: right;">Sub Total</th>
-                                                                        <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_total"><span id="inv_total">0</span></th>
-                                                                        <th  style="text-align: right;"></th>
-                                                                    </tr>-->
-
-                                                                    <tr hidden>
-                                                                        <th colspan="3"></th>
-                                                                        <th  style="text-align: right;">Total</th>
-                                                                        <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_total"><span id="inv_total">0</span></th>
-                                                                    </tr> 
-                                                               </tfoot>
-                                                                </table>
-                                                        </div>
-                                                        <div id="search_result_1"></div>
-                                                    </div>    
+                                                                <hr>
+                                            <div class="panel box box-primary">
+                                                <div class="box-header with-border">
+                                                  <h4 class="box-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                                      Click Here to Add quick cost entry
+                                                    </a>
+                                                  </h4>
                                                 </div>
+                                                <div id="collapseOne" class="panel-collapse collapse ">
+                                                  <div class="box-body">
+                                                      <div class="row"> 
+                                                                <div class="">
+                                                                    <div id='add_item_form' class="col-md-12"> 
+                                                                        <div class="form-group col-md-3">
+                                                                            <label for="paymen_trem_id">Payment Term</label>
+                                                                            <?php  echo form_dropdown('paymen_trem_id',$payment_term_list,set_value('paymen_trem_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="paymen_trem_id"');?>
+                                                                        </div>
+                                                                        <table id="example1" class="table bg-gray-light table-bordered table-striped">
+                                                                            <thead>
+                                                                               <tr>
+                                                                                   <td>
+                                                                                        <div class="col-md-12">
+                                                                                        <div class="form-group">
+                                                                                            <label for="entry_date">Date</label>
+                                                                                            <?php  echo form_input('entry_date',set_value('entry_date', date(SYS_DATE_FORMAT)),'readonly class="form-control datepicker add_item_inpt" data-live-search="true" id="entry_date"');?>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                   </td>
+                                                                                   <td>
+                                                                                        <div class="col-md-12">
+                                                                                        <div class="form-group">
+                                                                                            <label for="gem_issue_type_id">Lapidary Type</label>
+                                                                                            <?php  echo form_dropdown('gem_issue_type_id',$gem_issue_type_list,set_value('gem_issue_type_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_issue_type_id"');?>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                   </td> 
+                                                                                   <td>
+                                                                                        <div class="col-md-12">
+                                                                                            <div hidden id="gem_cutter_div"  class="form-group">
+                                                                                                <label for="gem_cutter_id">Gem Cutter</label>
+                                                                                                <?php  echo form_dropdown('gem_cutter_id',$cutter_list,set_value('gem_cutter_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_cutter_id"');?>
+                                                                                            </div>
+                                                                                            <div hidden id="polishing_div"  class="form-group">
+                                                                                                <label for="gem_polishing_id">Polishing</label>
+                                                                                                <?php  echo form_dropdown('gem_polishing_id',$polishing_list,set_value('gem_polishing_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_polishing_id"');?>
+                                                                                            </div>
+                                                                                            <div hidden id="heater_div"  class="form-group">
+                                                                                                <label for="gem_heater_id">Heater</label>
+                                                                                                <?php  echo form_dropdown('gem_heater_id',$heater_list,set_value('gem_heater_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_heater_id"');?>
+                                                                                            </div>
+                                                                                            <div hidden id="lab_div"  class="form-group">
+                                                                                                <label for="gem_lab_id">Laboratory</label>
+                                                                                                <?php  echo form_dropdown('gem_lab_id',$lab_list,set_value('gem_lab_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_lab_id"');?>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                   </td> 
+
+                                                                                   <td>
+                                                                                        <div class="col-md-12">
+                                                                                        <div class="form-group">
+                                                                                            <label for="memo">Memo</label>
+                                                                                            <?php  echo form_input('memo',set_value('memo'),' class="form-control  add_item_inpt"  id="memo" placeholder="Have any note"');?>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                   </td>
+                                                                                   <td>
+                                                                                        <div class="col-md-12">
+                                                                                        <div class="form-group">
+                                                                                            <label for="currency_code">Currency</label>
+                                                                                            <?php  echo form_dropdown('currency_code',$currency_list,set_value('currency_code',$default_currency['code']),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="currency_code"');?>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                   </td> 
+                                                                                   <td>
+                                                                                        <div class="col-md-12">
+                                                                                        <div class="form-group">
+                                                                                            <label for="amount">Amount</label>
+                                                                                            <input type="number" min="0"  step=".001" name="amount" class="form-control add_item_inpt" id="amount" value="0" placeholder="Enter Amount ">
+                                                                                        </div>
+                                                                                        </div>
+                                                                                   </td> 
+                                                                                   <td>
+                                                                                        <div class="col-md-12">
+                                                                                        <div class="form-group"><br>
+                                                                                            <span id="add_item_btn" class="btn-default btn add_item_inpt">Add</span>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                   </td>
+                                                                               </tr>
+                                                                           </thead>
+                                                                        </table>
+                                                                    </div>
+
+                                                                    <div class="box-body fl_scrollable"> 
+                                                                        <table id="invoice_list_tbl" class="table table-bordered table-striped">
+                                                                            <thead>
+                                                                               <tr>
+                                                                                   <th width="5%">#</th>
+                                                                                   <th width="10%"  style="text-align: center;">Date</th> 
+                                                                                   <th width="20%" style="text-align: left;">Lapidary Type</th>  
+                                                                                   <th width="15%" style="text-align: left;">Lapidarist</th> 
+                                                                                   <th width="15%" style="text-align: left;">Memo</th> 
+                                                                                   <th width="15%" style="text-align: center;">Currency</th> 
+                                                                                   <th width="15%" style="text-align: right;">Amount</th> 
+                                                                                   <th width="5%" style="text-align: center;">Action</th>
+                                                                               </tr>
+                                                                           </thead>
+                                                                           <tbody>
+
+                                                                           </tbody>
+                                                                           <tfoot>
+                                                                                <tr>
+                                    <!--                                                <th colspan="5"></th>
+                                                                                    <th  style="text-align: right;">Sub Total</th>
+                                                                                    <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_total"><span id="inv_total">0</span></th>
+                                                                                    <th  style="text-align: right;"></th>
+                                                                                </tr>-->
+
+                                                                                <tr hidden>
+                                                                                    <th colspan="3"></th>
+                                                                                    <th  style="text-align: right;">Total</th>
+                                                                                    <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_total"><span id="inv_total">0</span></th>
+                                                                                </tr> 
+                                                                           </tfoot>
+                                                                            </table>
+                                                                    </div>
+                                                                    <div id="search_result_1"></div>
+                                                                </div>    
+                                                            </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                                
                                           </div>
+                                          <?php } ?>
                                       </div>
                                       <!-- /.tab-pane --> 
                                       <!-- /.tab-pane -->
