@@ -154,10 +154,11 @@ class Gemstone_costing extends CI_Controller {
                       </tr>';
                    if(!empty($item['lapidary_costs'])){
                        foreach ($item['lapidary_costs'] as $lcost){
+//                echo '<pre>';            print_r($item['lapidary_costs']); die;    
                           $html .= '<tr>
                                               <td colspan="4"></td> 
-                                              <td align="left">'.$lcost['dropdown_list_name'].'</td>
-                                              <td align="left">'.$lcost['dropdown_value'].'</td> 
+                                              <td align="left">'.((isset($lcost['dropdown_list_name']))?$lcost['dropdown_list_name']:$lcost['lapidary_type']).'</td>
+                                              <td align="left">'.((isset($lcost['dropdown_value']))?$lcost['dropdown_value']:$lcost['lapidary_name']).'</td>
                                               <td align="right">'. number_format($lcost['amount_cost'],2).'</td>
 
                                          </tr>';
