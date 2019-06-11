@@ -24,7 +24,7 @@
                     <td>'.$log['module_id'].'</td>
                     <td>'.$log['action_id'].'</td>
                     <td>'.$log['ip'].'</td>
-                    <td>'.date('Y-m-d',$log['date']).'</td>
+                    <td>'.date('Y-m-d H:i',$log['date']).'</td>
                     <td>
                         <a href="'.  base_url('AuditTrials/view/'.$log['id']).'"><span class="fa fa-eye"></span></a> 
 
