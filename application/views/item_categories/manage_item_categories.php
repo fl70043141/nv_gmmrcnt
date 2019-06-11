@@ -126,7 +126,7 @@ $result['cat_link_list'] = (isset($result['cat_link_list'])?$result['cat_link_li
             <div class="top_links">
                 <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'index'))?'<a href="'.base_url($this->router->fetch_class()).'" class="btn btn-app "><i class="fa fa-backward"></i>Back</a>':''; ?>
                 <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'add'))?'<a href="'.base_url($this->router->fetch_class().'/add').'" class="btn btn-app '.(($action=='Add')?'hide':'').'"><i class="fa fa-plus"></i>Create New</a>':''; ?>
-                <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'edit'))?'<a href="'.base_url($this->router->fetch_class().'/edit/'.$result['id']).'" class="btn btn-app '.(($action=='Edit')?'hide':'').'"><i class="fa fa-pencil"></i>Edit</a>':''; ?>
+                <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'edit'))?'<a href="'.base_url($this->router->fetch_class().'/edit/'.$result['id']).'" class="btn btn-app '.(($action=='Edit' || $action=='Add')?'hide':'').'"><i class="fa fa-pencil"></i>Edit</a>':''; ?>
                 <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'delete'))?'<a href="'.base_url($this->router->fetch_class().'/delete/'.$result['id']).'" class="btn btn-app  '.(($action=='Delete')?'hide ':'').' "><i class="fa fa-trash"></i>Delete</a>':''; ?>
                  
             </div>
@@ -196,7 +196,7 @@ $result['cat_link_list'] = (isset($result['cat_link_list'])?$result['cat_link_li
                                                     </div> 
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-md-3 control-label">Secondary UOM<span style="color: red"></span></label>
+                                                    <label class="col-md-3 control-label">Secondary UOM<span style="color: red">*</span></label>
                                                     <div class="col-md-9">    
                                                        <?php  echo form_dropdown('item_uom_id_2',$item_uom_list_2,set_value('item_uom_id_2',$result['item_uom_id_2']),' class="form-control " data-live-search="true" id="item_uom_id_2" '.$o_dis.'');?> 
                                                         <span class="help-block"><?php echo form_error('item_uom_id_2');?>&nbsp;</span>
