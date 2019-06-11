@@ -63,7 +63,7 @@
        	<?php echo form_close(); ?>
     <!-- /.social-auth-links -->
 
-    <a href="#">I forgot my password</a><br> 
+    <a href="mailto:support@nveloop.com?Subject=Support for <?php echo SYSTEM_NAME;?>" target="_top">Contact Support</a><br> 
     <!--error mdg-->
         <?php  if($this->session->flashdata('error') != ''){ ?>
                 <div class='alert alert-danger ' id="msg2">

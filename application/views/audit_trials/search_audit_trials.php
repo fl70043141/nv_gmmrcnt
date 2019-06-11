@@ -27,6 +27,7 @@ $(document).ready(function(){
 	
 	
 	function get_results(){
+        $("#result_search").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Retrieving Data..');    
         $.ajax({
 			url: "<?php echo site_url('AuditTrials/search_audit_trials');?>",
 			type: 'post',
@@ -123,7 +124,7 @@ $(document).ready(function(){
                                     <div class="col-md-9">                                            
                                         <div class="input-group">
                                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                                          <?php echo form_input(array('name'=>'date_from', 'readonly' => 'readonly', 'id' => 'date_from', 'class'=>'datepicker form-control','placeholder'=>'Select Start Date')); ?>
+                                          <?php echo form_input(array('name'=>'date_from', 'readonly' => 'readonly', 'id' => 'date_from', 'value'=>date(SYS_DATE_FORMAT, strtotime('-7 days')),'class'=>'datepicker form-control','placeholder'=>'Select Start Date')); ?>
                                         </div>                                             
                                     </div>
                                 </div>  
@@ -133,7 +134,7 @@ $(document).ready(function(){
                                         <div class="input-group">
                                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
 
-                                          <?php echo form_input(array('name'=>'date_to', 'id' => 'date_to', 'readonly' => 'readonly', 'class'=>'datepicker form-control','placeholder'=>'Select End Date ')); ?>
+                                          <?php echo form_input(array('name'=>'date_to', 'id' => 'date_to', 'readonly' => 'readonly', 'value'=>date(SYS_DATE_FORMAT), 'class'=>'datepicker form-control','placeholder'=>'Select End Date ')); ?>
                                         </div>                                            
                                         <!--<span class="help-block">This is sample of text field</span>-->
                                     </div>
