@@ -134,7 +134,7 @@ $(document).ready(function(){
                                         <div class="input-group">
                                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
 
-                                          <?php echo form_input(array('name'=>'date_to', 'id' => 'date_to', 'readonly' => 'readonly', 'value'=>date(SYS_DATE_FORMAT), 'class'=>'datepicker form-control','placeholder'=>'Select End Date ')); ?>
+                                          <?php echo form_input(array('name'=>'date_to', 'id' => 'date_to', 'readonly' => 'readonly', 'value'=>date(SYS_DATE_FORMAT,strtotime('+1 days')), 'class'=>'datepicker form-control','placeholder'=>'Select End Date ')); ?>
                                         </div>                                            
                                         <!--<span class="help-block">This is sample of text field</span>-->
                                     </div>
