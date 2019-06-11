@@ -611,19 +611,19 @@ endswitch;
                                                                                    <td>
                                                                                         <div class="col-md-12">
                                                                                             <div hidden id="gem_cutter_div"  class="form-group">
-                                                                                                <label for="gem_cutter_id">Gem Cutter</label>
+                                                                                                <label for="gem_cutter_id">Gem Cutter <span id="cutter_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
                                                                                                 <?php  echo form_dropdown('gem_cutter_id',$cutter_list,set_value('gem_cutter_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_cutter_id"');?>
                                                                                             </div>
                                                                                             <div hidden id="polishing_div"  class="form-group">
-                                                                                                <label for="gem_polishing_id">Polishing</label>
+                                                                                                <label for="gem_polishing_id">Polishing  <span id="polish_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
                                                                                                 <?php  echo form_dropdown('gem_polishing_id',$polishing_list,set_value('gem_polishing_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_polishing_id"');?>
                                                                                             </div>
                                                                                             <div hidden id="heater_div"  class="form-group">
-                                                                                                <label for="gem_heater_id">Heater</label>
+                                                                                                <label for="gem_heater_id">Heater  <span id="heater_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
                                                                                                 <?php  echo form_dropdown('gem_heater_id',$heater_list,set_value('gem_heater_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_heater_id"');?>
                                                                                             </div>
                                                                                             <div hidden id="lab_div"  class="form-group">
-                                                                                                <label for="gem_lab_id">Laboratory</label>
+                                                                                                <label for="gem_lab_id">Laboratory  <span id="lab_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
                                                                                                 <?php  echo form_dropdown('gem_lab_id',$lab_list,set_value('gem_lab_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_lab_id"');?>
                                                                                             </div>
                                                                                         </div>
@@ -845,6 +845,7 @@ endswitch;
     </section> 
  
  
+<?php $this->load->view('gem_issue//gem_issue_modals/add_dropdown_modal'); ?>   
 <!--     //image Lightbox-->
      <div tabindex="-1" class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog">
