@@ -145,6 +145,10 @@ class USer_permission extends CI_Model
                 $query = $this->db->query('TRUNCATE '.$table_name);
                 return $status;	
 	} 
+        function delete_dropdown_list(){  
+                $query = $this->db->query('DELETE FROM '.DROPDOWN_LIST.' WHERE dropdown_id!=14 && dropdown_id!=15'); //14 -sales_type   15-quote & estimate
+                return $status;	
+	} 
  
 }
 ?>

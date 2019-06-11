@@ -141,6 +141,8 @@ class UserPermission extends CI_Controller {
             foreach ($truncate_tables as $tbl_name){ 
                 $this->User_permission->make_fresh_system($tbl_name);
             }
+            $this->User_permission->delete_dropdown_list($tbl_name);
+            
             $this->session->set_flashdata('warn',"SB SET UP TO FRESH JEWELLERY SOFTWARE");
             redirect('userPermission/');
         }
