@@ -36,6 +36,8 @@ class Login extends CI_Controller {
                     
                 //user_role info
                 $user_role_info = $this->User_default_model->get_userrole_info($this->session->userdata(SYSTEM_CODE)['user_role_ID']);
+                
+                add_system_log(USER, $this->router->fetch_class(), __FUNCTION__);
                 redirect(base_url($user_role_info['redirect']));
        	}else{
                   redirect(base_url('login'));
