@@ -249,7 +249,7 @@ class Items extends CI_Controller {
 		
 	function update(){
             $inputs = $this->input->post();   
-//            echo '<pre>';            print_r($inputs); die;
+//                                echo '<pre>';                                print_r($inputs); die;
             $item_id = $this->input->post('id');   
             $inputs['status'] = (isset($inputs['status']))?1:0;
             $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
@@ -389,6 +389,7 @@ class Items extends CI_Controller {
                                                             'item_id' => $inputs['id'],
                                                             'gem_issue_type_id' => $cost_entry['gem_issue_type_id'],
                                                             'lapidarist_id' => $cost_entry['lapiadrist_id'],
+                                                            'cost_entry_date' => strtotime($cost_entry['entry_date']),
                                                             'amount_cost' =>($cost_entry['amount']>0)? $cost_entry['amount']:0,
                                                             'currency_code' => $cur_det['code'],
                                                             'currency_value' => $cur_det['value'],

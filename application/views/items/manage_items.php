@@ -540,13 +540,13 @@ endswitch;
                                                                 $tot_cost +=$price_in_def;
                                                             }
                                                         }
-                                                        
+//                                                        echo '<pre>';                                                        print_r($lapidary_cost);
                                                         if(isset($lapidary_cost) && !empty($lapidary_cost)){
                                                             $price_in_def = 0;
                                                             foreach ($lapidary_cost as $lap_cost){
                                                                 $price_in_def = $lap_cost['amount_cost'] * ($default_currency['value'] / $lap_cost['currency_value']);
                                                                 echo   '<tr>
-                                                                        <td>'. date(SYS_DATE_FORMAT,$lap_cost['receive_date']).'</td> 
+                                                                        <td>'. (($lap_cost['receive_date']=='')?date(SYS_DATE_FORMAT,$lap_cost['cost_entry_date']):date(SYS_DATE_FORMAT,$lap_cost['receive_date'])).'</td> 
                                                                         <td>'.(($lap_cost['gem_issue_type_name']!='')?$lap_cost['gem_issue_type_name']:$lap_cost['lapidary_type']).'</td>
                                                                         <td>'.(($lap_cost['dropdown_value']!='')?$lap_cost['dropdown_value']:$lap_cost['lapidary_name']).'</td>
                                                                         <td>'.$lap_cost['currency_code'].'</td>
