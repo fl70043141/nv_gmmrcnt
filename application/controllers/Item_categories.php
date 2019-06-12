@@ -93,7 +93,7 @@ class Item_categories extends CI_Controller {
             $this->form_validation->set_rules('category_code','Category Code','required|callback_check_unique_catcode');   
             $this->form_validation->set_rules('description','description','min_length[2]');   
             $this->form_validation->set_rules('item_uom_id','Unit of Measure','required');   
-            $this->form_validation->set_rules('item_uom_id_2','Secondary Unit of Measure','required');   
+//            $this->form_validation->set_rules('item_uom_id_2','Secondary Unit of Measure','required');   
       }	
       
        function check_unique_catcode(){
