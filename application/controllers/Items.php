@@ -772,11 +772,12 @@ class Items extends CI_Controller {
             $data['item_type_list'] = get_dropdown_data(ITEM_TYPES,'item_type_name','id','');
             
             
-            $data['gem_issue_type_list'] = get_dropdown_data(GEM_ISSUE_TYPES,'gem_issue_type_name','id','No Gem Issue Type');
+            $data['gem_issue_type_list'] = get_dropdown_data(GEM_ISSUE_TYPES,'gem_issue_type_name','id','No Cost Type');
             $data['lab_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 4'); //4 Labs / Certf
             $data['cutter_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 19'); //19 Gem Cutter
             $data['polishing_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 20'); //20 Polishing
             $data['heater_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 21'); //21 Heater
+            $data['misc_cost_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 22'); //22 Misc Costs
             
 //            echo '<pre>';            print_r($data); die;
             return $data;

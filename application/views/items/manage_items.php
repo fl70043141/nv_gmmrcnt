@@ -626,6 +626,10 @@ endswitch;
                                                                                                 <label for="gem_lab_id">Laboratory  <span id="lab_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
                                                                                                 <?php  echo form_dropdown('gem_lab_id',$lab_list,set_value('gem_lab_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="gem_lab_id"');?>
                                                                                             </div>
+                                                                                            <div hidden id="misc_cost_div"  class="form-group">
+                                                                                                <label for="misc_cost_id">Other Cost  <span id="misccost_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
+                                                                                                <?php  echo form_dropdown('misc_cost_id',$misc_cost_list,set_value('misc_cost_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="misc_cost_id"');?>
+                                                                                            </div>
                                                                                         </div>
                                                                                    </td> 
 
@@ -926,6 +930,7 @@ $(document).ready(function(){
         $('#heater_div').hide();
         $('#polishing_div').hide();
         $('#lab_div').hide();
+        $('#misc_cost_div').hide();
         switch(gi_type){
             case '1': $('#gem_cutter_div').show(); break; //facetting
             case '2': $('#lab_div').show(); break; //Verbal Check
@@ -934,6 +939,7 @@ $(document).ready(function(){
             case '5': $('#polishing_div').show(); break; //Polishing Process
             case '6': $('#gem_cutter_div').show(); break; //Recut
             case '7': $('#lab_div').show(); break; //Cert lab
+            case '8': $('#misc_cost_div').show(); break; //Cert lab
         }
         
         $('.select2').select2();
@@ -962,6 +968,7 @@ $(document).ready(function(){
             case '5': lapidarist_id = $('#gem_polishing_id').val(); lapidarist_name = $('#gem_polishing_id option:selected').text(); break; //Polishing Process
             case '6': lapidarist_id = $('#gem_cutter_id').val(); lapidarist_name = $('#gem_cutter_id option:selected').text(); break; //Recut
             case '7': lapidarist_id = $('#gem_lab_id').val(); lapidarist_name = $('#gem_lab_id option:selected').text(); break; //Cert lab
+            case '8': lapidarist_id = $('#misc_cost_id').val(); lapidarist_name = $('#misc_cost_id option:selected').text(); break; //Cert lab
                 
         }
         

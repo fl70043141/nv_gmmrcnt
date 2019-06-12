@@ -17,7 +17,7 @@ class Gems_issue extends CI_Controller {
 //            $this->add();
             $data['search_list'] = $this->Gems_issue_model->search_result();
             $data['main_content']='gem_issue/search_gem_issue'; 
-            $data['gem_issue_type_list'] = get_dropdown_data(GEM_ISSUE_TYPES,'gem_issue_type_name','id','No Issue Type');
+            $data['gem_issue_type_list'] = get_dropdown_data(GEM_ISSUE_TYPES,'gem_issue_type_name','id','No Issue Type','show_on_lapidary=1');
             $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_name','id','No Location');
             $data['lab_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Labs','dropdown_id=4');
             $data['cutter_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Cutter','dropdown_id=19');
@@ -366,7 +366,7 @@ class Gems_issue extends CI_Controller {
                     redirect(base_url($this->router->fetch_class()));
                 }
             }
-            $data['gem_issue_type_list'] = get_dropdown_data(GEM_ISSUE_TYPES,'gem_issue_type_name','id','No Gem Issue Type');
+            $data['gem_issue_type_list'] = get_dropdown_data(GEM_ISSUE_TYPES,'gem_issue_type_name','id','No Gem Issue Type','show_on_lapidary=1');
             $data['lab_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 4'); //4 Labs / Certf
             $data['cutter_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 19'); //19 Gem Cutter
             $data['polishing_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 20'); //20 Polishing
