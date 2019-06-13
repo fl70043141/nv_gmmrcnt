@@ -50,13 +50,33 @@ class Dashboard extends CI_Controller {
 //            echo '<pre>';            print_r($item_pnl_data); die;
             
             $available = $this->Dashboard_model->get_available_items('','',1);
+            
+            $tot_weight_arr=array();
             $tot_weight = $total_pcs = 0;
 //            $tot_weight = $total_pcs = 0;
             foreach ($available as $item){
-                $tot_weight += $item['sum_unit_1'];
-                $total_pcs += $item['sum_unit_2'];
+                if(!isset($tot_weight_arr[$item['uom_id']]['uom1_tot']))
+                    $tot_weight_arr[$item['uom_id']]['uom1_tot']=0;
+                
+                if(!isset($tot_weight_arr[$item['uom_id']]['uom2_tot']))
+                    $tot_weight_arr[$item['uom_id']]['uom2_tot']=0;
+                    
+                $tot_weight_arr[$item['uom_id']]['uom_name'] = $item['uom_name'];
+                $tot_weight_arr[$item['uom_id']]['uom_name_2'] = $item['uom_name_2'];
+                $tot_weight_arr[$item['uom_id']]['uom1_tot'] += $item['sum_unit_1'];
+                $tot_weight_arr[$item['uom_id']]['uom2_tot'] += $item['sum_unit_2']; 
+                
             }
-            $tot_count = $tot_weight.' cts | '.$total_pcs.' pcs';
+            $tot_count = ''; $j=1; $andvar=' & ';
+            foreach ($tot_weight_arr as $tot_unts){
+                if(count($tot_weight_arr)==$j){
+                    $andvar = "";
+                }
+                
+                $tot_count .= $tot_unts['uom1_tot'].' '.$tot_unts['uom_name'].' '.$tot_unts['uom2_tot'].' '.$tot_unts['uom_name_2'].$andvar;
+                $j++;
+            }
+//            echo '<pre>';            print_r($tot_count); die;
             $data['total_1']= array(
                                                 'label' =>'Sales Invoices',
                                                 'count' => $this->Dashboard_model->get_tbl_couts(INVOICES),
