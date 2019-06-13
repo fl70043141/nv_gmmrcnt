@@ -27,6 +27,8 @@ class Items_model extends CI_Model
 	
           public function get_single_row($id){
             $this->db->select('i.*');
+            $this->db->select('(select id from '.ITEMS.' where id = (select min(id) from '.ITEMS.' where id > i.id)) as next_id');
+            $this->db->select('(select id from '.ITEMS.' where id = (select max(id) from '.ITEMS.' where id < i.id)) as prev_id');
             $this->db->select('ic.is_gem');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id)  as unit_abbreviation');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id_2)  as unit_abbreviation_2');

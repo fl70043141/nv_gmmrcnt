@@ -158,6 +158,10 @@ endswitch;
                 <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'edit'))?'<a href="'.base_url($this->router->fetch_class().'/edit/'.$result['id']).'" class="btn btn-app "><i class="fa fa-pencil"></i>Edit</a>':''; ?>
                 <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'delete'))?'<a href="'.base_url($this->router->fetch_class().'/delete/'.$result['id']).'" class="btn btn-app  '.(($action=='Delete')?'hide ':'').' "><i class="fa fa-trash"></i>Delete</a>':''; ?>
                 <!--<a class="btn btn-app "><i class="fa fa-trash"></i>Delete</a>-->
+                
+                <?php if(isset($result['next_id']) && $result['next_id']!=NULL) echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'edit'))?'<a href="'.base_url($this->router->fetch_class().'/edit/'.$result['next_id']).'" class="btn btn-app pull-right"><i class="fa fa-angle-right"></i>Next</a>':''; ?>
+                <?php if(isset($result['prev_id']) && $result['prev_id']!=NULL) echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'edit'))?'<a href="'.base_url($this->router->fetch_class().'/edit/'.$result['prev_id']).'" class="btn btn-app pull-right"><i class="fa fa-angle-left"></i>Previous</a>':''; ?>
+                
             </div>
         </div>
  <br><hr>
