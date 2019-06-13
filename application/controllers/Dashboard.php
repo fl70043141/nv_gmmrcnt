@@ -73,10 +73,10 @@ class Dashboard extends CI_Controller {
                     $andvar = "";
                 }
                 
-                $tot_count .= $tot_unts['uom1_tot'].' '.$tot_unts['uom_name'].' '.$tot_unts['uom2_tot'].' '.$tot_unts['uom_name_2'].$andvar;
+                $tot_count .= $tot_unts['uom1_tot'].' '.$tot_unts['uom_name'].(($tot_unts['uom_name_2']!='')?' '.$tot_unts['uom2_tot'].' '.$tot_unts['uom_name_2']:'').$andvar;
                 $j++;
             }
-//            echo '<pre>';            print_r($tot_count); die;
+//            echo '<pre>';            print_r($tot_weight_arr); die;
             $data['total_1']= array(
                                                 'label' =>'Sales Invoices',
                                                 'count' => $this->Dashboard_model->get_tbl_couts(INVOICES),
