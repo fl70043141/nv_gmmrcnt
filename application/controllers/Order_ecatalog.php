@@ -32,7 +32,11 @@ class Order_ecatalog extends CI_Controller {
             $data['order_id'] = $cat_arr[1];
             $data['page_no'] = $page_no; 
             $data['main_content']='sales/order_ecatalog/item_grid';  
-            $this->load->view('includes/template',$data);
+            
+            if($user_data['user_role_ID']==8)
+                $this->load->view('includes/template_pos',$data);
+            else
+                $this->load->view('includes/template',$data); 
 	}
         
         public function image_loader($cat_id="", $page_no='1'){
