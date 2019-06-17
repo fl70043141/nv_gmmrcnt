@@ -15,8 +15,12 @@ class Order_ecatalog extends CI_Controller {
             
             $data['order_id'] = $so_id;
             $data['main_content']='sales/order_ecatalog/category_grid';  
-//                    echo '<pre>';            print_r($data); die;
-            $this->load->view('includes/template',$data);
+            $user_data = $this->session->userdata(SYSTEM_CODE);
+//                    echo '<pre>';            print_r($user_data); die;
+            if($user_data['user_role_ID']==8)
+                $this->load->view('includes/template_pos',$data);
+            else
+                $this->load->view('includes/template',$data);
 	}
         
         public function item_list($cat_id="", $page_no='1'){
