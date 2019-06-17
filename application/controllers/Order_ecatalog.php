@@ -33,6 +33,7 @@ class Order_ecatalog extends CI_Controller {
             $data['page_no'] = $page_no; 
             $data['main_content']='sales/order_ecatalog/item_grid';  
             
+            $user_data = $this->session->userdata(SYSTEM_CODE);
             if($user_data['user_role_ID']==8)
                 $this->load->view('includes/template_pos',$data);
             else
