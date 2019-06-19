@@ -93,7 +93,7 @@ class Pnl_gemstones extends CI_Controller {
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
                     
             // set font
-            $pdf->SetFont('times', '', 8.5);
+            $pdf->SetFont('times', '', 8);
         
         
             $pdf->AddPage();   
@@ -105,10 +105,10 @@ class Pnl_gemstones extends CI_Controller {
                                 <tr style=""> 
                                     <th width="4%" style="text-align: left;"><u><b>#</b></u></th>  
                                     <th width="8%" style="text-align: left;"><u><b>Code</b></u></th>  
-                                    <th width="15%" style="text-align: left;"><u><b>Desc</b></u></th>  
-                                    <th width="14%" style="text-align: center;"><u><b>Unit</b></u></th>    
+                                    <th width="14%" style="text-align: left;"><u><b>Desc</b></u></th>  
+                                    <th width="17%" style="text-align: center;"><u><b>Unit</b></u></th>    
                                     <th width="12%" style="text-align: right;"><u><b>Purch Cost</b></u></th> 
-                                    <th width="12%" style="text-align: right;"><u><b>Lapidary Cost</b></u></th> 
+                                    <th width="10%" style="text-align: right;"><u><b>Lapid-Cost</b></u></th> 
                                     <th width="12%" style="text-align: right;"><u><b>Total Cost</b></u></th> 
                                     <th width="12%" style="text-align: right;"><u><b>Sales</b></u></th>  
                                     <th width="12%" style="text-align: right;"><u><b>Profit</b></u></th> 
@@ -138,10 +138,14 @@ class Pnl_gemstones extends CI_Controller {
                        <tr>
                            <td style="width:4%;">'.$i.'</td> 
                            <td style="width:8%;" align="left">'.$item['item_code'].'</td>
-                           <td style="width:15%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
-                           <td style="width:14%;" align="center">'.$item['item_quantity'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['item_quantity_2'].' '.$item['uom_name_2']:'-').'</td>
+                           <td style="width:14%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                           <td style="width:17%;" align="center">'.$item['total_sold_qty'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['total_sold_qty_2'].' '.$item['uom_name_2']:'-');
+                           if(($item['units_available']) > 0){
+                                $html .= '<br>In Stock: '.$item['units_available'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'-');
+                            }
+                   $html.='</td>
                            <td style="width:12%;" align="right">'. number_format($item['purch_standard_cost'],2).'</td>
-                           <td style="width:12%;" align="right">'. number_format($item['total_lapidary_cost'],2).'</td>
+                           <td style="width:10%;" align="right">'. number_format($item['total_lapidary_cost'],2).'</td>
                            <td style="width:12%;" align="right">'. number_format($cost,2).'</td>
                            <td style="width:12%;" align="right">'. number_format($item['item_sale_amount'],2).'</td>
                             <td style="width:12%; text-align:right; color:'.(($pnl_amount<0)?'red':'').';" >'. number_format($pnl_amount,2).'</td>
