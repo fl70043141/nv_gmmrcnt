@@ -52,6 +52,36 @@ class Items_model extends CI_Model
 //            echo $this->db->last_query(); die;
             return $result;
 	}
+        public function get_item_sock_trx($item_id,$where=''){
+            $this->db->select('trx.*, l.location_name');
+            $this->db->select('sp.supplier_name,c.customer_name, dd.dropdown_value,dd2.dropdown_value as dropdown_value2,git.gem_issue_type_name');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = trx.uom_id)  as unit_abbreviation');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = trx.uom_id_2)  as unit_abbreviation_2');
+            
+            $this->db->join(SUPPLIER_INVOICE." si",'si.id = trx.trans_ref','left');    
+            $this->db->join(SUPPLIERS." sp",'sp.id = si.supplier_id','left');   
+            
+            $this->db->join(INVOICES." i",'i.id = trx.trans_ref','left');    
+            $this->db->join(CUSTOMERS." c",'c.id = i.customer_id','left');
+            
+            $this->db->join(GEM_ISSUES." gis",'gis.id = trx.trans_ref','left');    
+            $this->db->join(GEM_ISSUE_TYPES." git",'git.id = gis.gem_issue_type_id','left');    
+            $this->db->join(DROPDOWN_LIST." dd",'dd.id = gis.receiver_id','left');    
+            
+            $this->db->join(GEM_RECEIVAL." grs",'grs.id = trx.trans_ref','left');    
+            $this->db->join(DROPDOWN_LIST." dd2",'dd2.id = grs.lapidary_id','left');    
+            
+            $this->db->from(ITEM_STOCK_TRANS." trx");    
+            $this->db->join(INV_LOCATION." l", 'l.id = trx.location_id');    
+            $this->db->where('trx.item_id',$item_id);
+            $this->db->where('trx.deleted',0);
+            $this->db->where('trx.status',1);
+            $this->db->order_by('trx.id');
+            if($where!='') $this->db->where($where);
+            $result = $this->db->get()->result_array();  
+//            echo $this->db->last_query(); die;
+            return $result;
+	}
         public function get_item_purch_prices($item_id,$where=''){
             $this->db->select('ip.*');
             $this->db->select('si.invoice_date,si.supplier_invoice_no');

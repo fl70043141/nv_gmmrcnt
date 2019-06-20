@@ -746,6 +746,7 @@ class Items extends CI_Controller {
                 $data['item_prices']['purchasing'] = $this->Items_model->get_item_purch_prices($id,'item_price_type=1'); //2 for purch price
                 $data['item_prices']['standard'] = $this->Items_model->get_item_prices($id,'item_price_type=3'); //3 for standard price
                 $data['stock_status'] = $this->Items_model->get_item_status($id);
+                $data['stock_trans'] = $this->Items_model->get_item_sock_trx($id);
                 $data['lapidary_cost'] = $this->Reports_all_model->get_gemstone_lapidary_costing($id);
                 
                 if(empty($data['user_data'])){

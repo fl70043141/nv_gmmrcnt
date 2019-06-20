@@ -190,7 +190,7 @@ endswitch;
                                     <!--<li id="nv_tab_3"><a href="#tab_3" data-toggle="tab">Purchasing Pricing</a></li>--> 
                                     <li id="nv_tab_4"><a href="#tab_31" data-toggle="tab">Costing</a></li> 
                                     <li id="nv_tab_5"><a href="#tab_4" data-toggle="tab">Images/Certificates</a></li> 
-                                    <!--<li><a href="#tab_5" data-toggle="tab">Transection</a></li>--> 
+                                    <li><a href="#tab_5" data-toggle="tab">Transection</a></li> 
                                     <li id="nv_tab_6"><a href="#tab_6" data-toggle="tab">Status</a></li> 
 
                                     <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
@@ -784,7 +784,45 @@ endswitch;
                                       <!-- /.tab-pane -->
                                       <div class="tab-pane" id="tab_5">
                                           <div class="col-md-12">
-                                            
+                                             <table class="table table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Trans. Type</th>
+                                                        <th>Trans. Date</th> 
+                                                        <th>Person</th> 
+                                                        <th>Units</th> 
+                                                    </tr>
+                                                <?php
+//                                                    echo '<pre>';print_r($stock_trans); 
+                                                    if(isset($stock_trans) && !empty($stock_trans)){
+                                                        foreach ($stock_trans as $trnx){
+                                                            $type_name="-"; $person_name="-";$gi_type_name='';
+                                                            switch ($trnx['transection_type']){
+                                                                case 1: $type_name = 'Purchase'; $person_name = $trnx['supplier_name']; break;
+                                                                case 2: $type_name = 'Sales'; $person_name = $trnx['customer_name']; break;
+                                                                case 3: $type_name = 'Location Transfer'; break;
+                                                                case 4: $type_name = 'Return'; break;
+                                                                case 5: $type_name = 'Damaged'; break;
+                                                                case 6: $type_name = 'Sales Order'; break;
+                                                                case 20:$type_name = 'Purchase Return'; break;
+                                                                case 30:$type_name = 'Sales Return'; break;
+                                                                case 40:$type_name = 'Consignee Submission'; break;
+                                                                case 50:$type_name = 'Consignee Receive'; break;
+                                                                case 60:$type_name = 'Gem Issue to Lapidary';$person_name = $trnx['dropdown_value2']; $gi_type_name=$trnx['gem_issue_type_name']; break;
+                                                                case 65:$type_name = 'Gem receive from Lapidary';$person_name = $trnx['dropdown_value2']; break;
+                                                            }
+                                                            echo '<tr>
+                                                                        <td>'.$type_name.'</td>
+                                                                        <td>'.$trnx['added_on'].'</td> 
+                                                                        <td>'.$person_name.' '.(($gi_type_name!='')?'('.$gi_type_name.')':'').'</td> 
+                                                                        <td>'.$trnx['units'].' '.$trnx['unit_abbreviation'].' '.(($trnx['uom_id_2']>0)?$trnx['units_2'].' '.$trnx['unit_abbreviation_2']:'').'</td> 
+                                                                    </tr>';
+                                                        }
+                                                    }
+                                                ?>
+                                                </tbody>
+                                             </table>
+                                                    
                                         </div> 
                                       </div>
                                       <!-- /.tab-pane --> 
@@ -795,9 +833,10 @@ endswitch;
                                                 <tbody>
                                                     <tr>
                                                         <th>Location</th>
-                                                        <th>Quantity on Hand</th> 
-                                                        <th>On Order</th> 
+                                                        <th>In Stock</th> 
                                                         <th>Available</th> 
+                                                        <th>On Consignee</th> 
+                                                        <th>On Lapidary</th> 
                                                     </tr>
                                                     <?php
                                                         foreach ($stock_status as $stock_loc){
@@ -805,9 +844,10 @@ endswitch;
                                                             echo '<tr>
                                                                         <td>'.$stock_loc['location_name'].'</td>
                                                                         <td>'.$stock_loc['units_available'].' '.$stock_loc['uom_name'].(($stock_loc['uom_id_2']!=0)?' | '.$stock_loc['units_available_2'].' '.$stock_loc['uom_name_2']:'').'</td>
-                                                                        <td>'.$stock_loc['units_on_order'].' '.$stock_loc['uom_name'].'</td>
-                                                                        <td>'.($stock_loc['units_available']-$stock_loc['units_on_consignee'] - $stock_loc['units_on_order']).' '.$stock_loc['uom_name'].' | '.($stock_loc['units_available_2']-$stock_loc['units_on_consignee_2'] - $stock_loc['units_on_order_2']).' '.$stock_loc['uom_name_2'].'</td>
-                                                                      
+                                                                        <td>'.($stock_loc['units_available']+$stock_loc['units_on_workshop']+$stock_loc['units_on_consignee']).' '.$stock_loc['uom_name'].(($stock_loc['uom_id_2']!=0)?' | '.($stock_loc['units_available_2']+$stock_loc['units_on_workshop_2']+$stock_loc['units_on_consignee_2']).' '.$stock_loc['uom_name_2']:'').'</td>
+                                                                         <td>'.$stock_loc['units_on_consignee'].' '.$stock_loc['uom_name'].(($stock_loc['uom_id_2']!=0)?' | '.$stock_loc['units_on_consignee_2'].' '.$stock_loc['uom_name_2']:'').'</td>
+                                                                         <td>'.$stock_loc['units_on_workshop'].' '.$stock_loc['uom_name'].(($stock_loc['uom_id_2']!=0)?' | '.$stock_loc['units_on_workshop_2'].' '.$stock_loc['uom_name_2']:'').'</td>
+                                                                         
                                                                       </tr>  ';
                                                         }
                                                     ?> 
