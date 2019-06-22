@@ -25,7 +25,7 @@ class Upload_csv extends CI_Controller {
                                         
 	 
         function validate(){
-            echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
+//            echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
             $file = $_FILES["file"]["tmp_name"];
             $file_open = fopen($file, "r");
 
@@ -55,7 +55,7 @@ class Upload_csv extends CI_Controller {
                                     'added_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
                                 ); 
             $insert_stat = $this->Items_CSV_model->add_db_purch_invoice($sdata);
-           // $insert_stat = true;
+//            $insert_stat = true;
             
             $i=0;
 //            if(true){
@@ -85,6 +85,9 @@ class Upload_csv extends CI_Controller {
                             $origin = $csv[16];
                             $treatment = $csv[17];
                             $shape = $csv[18];
+                            
+                            $sales_price2 = $csv[19];
+                            $sales_price2_id = $csv[20];
 
                             $item_id = get_autoincrement_no(ITEMS); 
                 //            $item_code = gen_id('1', ITEMS, 'id',4);
@@ -219,10 +222,25 @@ class Upload_csv extends CI_Controller {
                                                                 'supplier_unit_conversation' =>0,
                                                                 'status' =>1,
                                                                 ); 
+                                if($sales_price2_id!=''){
+                                    $data['prices'][3] = array(
+                                                                    'item_id' => $item_id,
+                                                                    'item_price_type' => 2, //2 sales price
+                                                                    'price_amount' =>$sales_price2,
+                                                                    'currency_code' =>$cur_det['code'],
+                                                                    'currency_value' =>$cur_det['value'],
+                                                                    'sales_type_id' =>$sales_price2_id,//drop_down for retail sale
+                                                                    'supplier_id' =>0,
+                                                                    'supplier_unit_conversation' =>0,
+                                                                    'status' =>1,
+                                                                    ); 
+                                }
 
                                 
                                 $total += $purch_price*$qty;
-        //                        echo '<pre>';        print_r($data); die;
+//                                echo '<br>'.$item_code.'  => '.$qty.' x '.$purch_price.' = '.($purch_price*$qty) .' [total = '.$total.']';
+                
+//                                echo '<pre>';        print_r($data); die;
                 //            if(!empty($def_image)) $data['image'] = $def_image[0]['name'];
         //                                            echo '<pre>';                                print_r($data); die;
 
