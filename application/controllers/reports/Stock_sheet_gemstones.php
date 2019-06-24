@@ -49,16 +49,17 @@ class Stock_sheet_gemstones extends CI_Controller {
         public function print_report(){ 
 //            $this->input->post() = 'aa';
             $item_stocks_cat = $this->load_data(); 
-//            echo '<pre>';            print_r($item_stocks_cat); die; 
+            $input_get = $this->input->get();
+            $first_page_header_only = (isset($input_get['print_firs_header_only']) && $input_get['print_firs_header_only']==1)?1:0;
+//            echo '<pre>';            print_r($input_get); die; 
             $this->load->library('Pdf'); 
             $this->load->model('Items_model');
-            
             // create new PDF document
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-            $pdf->fl_header='header_jewel';//invice bg
+            $pdf->fl_header= ($first_page_header_only==1)?'header_empty':'header_jewel';//invice bg//invice bg
             $pdf->fl_header_title='Report';//invice bg
             $pdf->fl_header_title_RTOP='Stock Sheet';//invice bg
-            //
+            
             // set document information
             $pdf->SetCreator(PDF_CREATOR);
             $pdf->SetAuthor('Fahry Lafir');
@@ -77,7 +78,7 @@ class Stock_sheet_gemstones extends CI_Controller {
             $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
             // set margins
-            $pdf->SetMargins(PDF_MARGIN_LEFT, 50, PDF_MARGIN_RIGHT);
+            $pdf->SetMargins(PDF_MARGIN_LEFT, (($first_page_header_only==1)?10:50), PDF_MARGIN_RIGHT);
             $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
             $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -87,24 +88,83 @@ class Stock_sheet_gemstones extends CI_Controller {
             // set image scale factor
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
                     
-            // set font
-            $pdf->SetFont('times', '', 9.4);
         
         
             $pdf->AddPage();   
-            $pdf->SetTextColor(32,32,32);
+            $html = '';
              
-            $html = '<table id="example1" class="table-line" border="0">
+            if($first_page_header_only == 1){
+                $this->load->model('Company_model');
+                $company_dets = $this->Company_model->get_single_row($_SESSION[SYSTEM_CODE]['company_id']);
+        //        echo '<pre>'; print_r($company_dets); die;
+                $header_info = '<table border="0"> 
+                                    <tr>
+                                        <td align="center">'.$company_dets[0]['street_address'].', '.$company_dets[0]['city'].', '.$company_dets[0]['country_name'].'.</td>
+                                    </tr> 
+                                    <tr>
+                                        <td align="center">Phone: '.$company_dets[0]['phone'].(($company_dets[0]['other_phone']!='')?', '.$company_dets[0]['other_phone']:'').'</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').'</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">Website: '.(($company_dets[0]['website']!='')?$company_dets[0]['website']:'').'</td>
+                                    </tr>
+
+                                </table> ';
+                $header_right_info = '<table border=""> 
+                                    <tr>
+                                        <td style="height:50px;" align="right">'.$pdf->fl_header_title_RTOP.'</td>
+                                    </tr>   
+                                    <tr>
+                                        <td style="height:35px;" align="right"><img src="'. base_url(DEFAULT_IMAGE_LOC.'gema.png').'"></td>
+                                    </tr>   
+                                    <tr>
+                                        <td style="height:30px; font-size:25px;" align="right"><b>'.$pdf->fl_header_title.'</b></td>
+                                    </tr>   
+                                </table> ';
+
+
+                $image_file = COMPANY_LOGO.$company_dets[0]['logo'];
+
+                $source_properties = getimagesize($image_file); 
+                $image_file = COMPANY_LOGO.$company_dets[0]['logo'];
+                $pdf->Image($image_file, 9, 10, '', 35, (($source_properties[2]==IMAGETYPE_JPEG)?'JPG':'PNG'), '', 'T', false, 300, '', false, false, 0, false, false, false);
+
+
+                $pdf->SetTextColor(48,75,105);
+                $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/CanelaBarkBold_PERSONAL.ttf', 'TrueTypeUnicode', '', 96);
+                // use the font
+                $pdf->SetFont($fontname, '', 35, '', false);
+                $pdf->SetTextColor(48,75,105);
+                $pdf->Text('60', 9, $company_dets[0]['company_name'], false, false, true, 0, 0, 'center', false,'',1);
+
+                $pdf->SetTextColor(96,96,96);
+                $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Light.ttf', 'TrueTypeUnicode', '', 96);
+                $pdf->SetFont($fontname, 'I', 10.5);
+                $pdf->writeHTMLCell(130,20,40,23,$header_info); 
+        //        $this->writeHTMLCell(90,20,60,23,$header_info); 
+
+                $pdf->writeHTMLCell(45,20,155,9,$header_right_info); 
+  
+                $pdf->Line(10, 48, 200, 48); 
+
+            }
+                // set font
+                $pdf->SetFont('times', '', 9.4);
+                $pdf->SetTextColor(32,32,32);
+            
+            $html .= '<table id="example1" class="table-line" border="0">
                                                     <thead> 
                                                         <tr style=""> 
-                                <th width="12%" align="center">Code</th> 
-                                <th width="23%" align="center">Desc</th> 
-                                <th width="9%" align="center">Treatment</th> 
-                                <th width="9%" align="center">color</th> 
-                                <th width="9%" align="center">shape</th> 
-                                <th width="13%" align="right" colspan="1">In Stock</th> 
-                                <th width="13%" align="right" colspan="1">On Lapidary</th>  
-                                <th width="13%" align="right" colspan="1">On Consignee</th>
+                                <th width="12%" align="center"><b>Code</b></th> 
+                                <th width="23%" align="center"><b>Desc</b></th> 
+                                <th width="9%" align="center"><b>Treatment</b></th> 
+                                <th width="9%" align="center"><b>color</b></th> 
+                                <th width="9%" align="center"><b>shape</b></th> 
+                                <th width="13%" align="right" colspan="1"><b>In Stock</b></th> 
+                                <th width="13%" align="right" colspan="1"><b>On Lapidary</b></th>  
+                                <th width="13%" align="right" colspan="1"><b>On Consignee</b></th>
                             </tr> 
                         </thead>
                         <tbody>';  
@@ -149,7 +209,7 @@ class Stock_sheet_gemstones extends CI_Controller {
             </style>
                     ';
 //            echo '<pre>';            print_r($html); die;
-            $pdf->writeHTMLCell(190,'',10,'',$html);
+            $pdf->writeHTMLCell(190,'',10,(($first_page_header_only==1)?50:''),$html);
             
             $pdf->SetFont('times', '', 12.5, '', false);
             $pdf->SetTextColor(255,125,125);            
