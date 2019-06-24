@@ -50,6 +50,8 @@ class Stock_costing extends CI_Controller {
 //            $this->input->post() = 'aa';
             $item_stocks_cat = $this->load_data(); 
             $inputs = $this->input->get();
+            $first_page_header_only = (isset($inputs['print_firs_header_only']) && $inputs['print_firs_header_only']==1)?1:0;
+
 //            echo '<pre>';            print_r($this->input->get()); die;
             $location_name = ($inputs['location_id'] != '')?get_single_row_helper(INV_LOCATION,'id = "'.$inputs['location_id'].'"')['location_name']:'All'; 
             $category_name = ($inputs['item_category_id'] != '')?get_single_row_helper(ITEM_CAT,'id = "'.$inputs['item_category_id'].'"')['category_name']:'All'; 
@@ -62,7 +64,8 @@ class Stock_costing extends CI_Controller {
 //            
             // create new PDF document
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-            $pdf->fl_header='header_jewel';//invice bg
+           
+            $pdf->fl_header= ($first_page_header_only==1)?'header_empty':'header_jewel';//invice bg
             $pdf->fl_header_title='Report';//invice bg
             $pdf->fl_header_title_RTOP='Stock Purchasing Valuation';//invice bg
             //
@@ -84,7 +87,7 @@ class Stock_costing extends CI_Controller {
             $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
             // set margins
-            $pdf->SetMargins(PDF_MARGIN_LEFT, 50, PDF_MARGIN_RIGHT);
+            $pdf->SetMargins(PDF_MARGIN_LEFT, (($first_page_header_only==1)?10:50), PDF_MARGIN_RIGHT);
             $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
             $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -94,13 +97,74 @@ class Stock_costing extends CI_Controller {
             // set image scale factor
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
                     
+        
+        
+            $pdf->AddPage();      
+            $html =""; 
+            
+            
+            if($first_page_header_only == 1){
+                $this->load->model('Company_model');
+                $company_dets = $this->Company_model->get_single_row($_SESSION[SYSTEM_CODE]['company_id']);
+        //        echo '<pre>'; print_r($company_dets); die;
+                $header_info = '<table border="0"> 
+                                    <tr>
+                                        <td align="center">'.$company_dets[0]['street_address'].', '.$company_dets[0]['city'].', '.$company_dets[0]['country_name'].'.</td>
+                                    </tr> 
+                                    <tr>
+                                        <td align="center">Phone: '.$company_dets[0]['phone'].(($company_dets[0]['other_phone']!='')?', '.$company_dets[0]['other_phone']:'').'</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').'</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">Website: '.(($company_dets[0]['website']!='')?$company_dets[0]['website']:'').'</td>
+                                    </tr>
+
+                                </table> ';
+                $header_right_info = '<table border=""> 
+                                    <tr>
+                                        <td style="height:50px;" align="right">'.$pdf->fl_header_title_RTOP.'</td>
+                                    </tr>   
+                                    <tr>
+                                        <td style="height:35px;" align="right"><img src="'. base_url(DEFAULT_IMAGE_LOC.'gema.png').'"></td>
+                                    </tr>   
+                                    <tr>
+                                        <td style="height:30px; font-size:25px;" align="right"><b>'.$pdf->fl_header_title.'</b></td>
+                                    </tr>   
+                                </table> ';
+
+
+                $image_file = COMPANY_LOGO.$company_dets[0]['logo'];
+
+                $source_properties = getimagesize($image_file); 
+                $image_file = COMPANY_LOGO.$company_dets[0]['logo'];
+                $pdf->Image($image_file, 9, 10, '', 35, (($source_properties[2]==IMAGETYPE_JPEG)?'JPG':'PNG'), '', 'T', false, 300, '', false, false, 0, false, false, false);
+
+
+                $pdf->SetTextColor(48,75,105);
+                $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/CanelaBarkBold_PERSONAL.ttf', 'TrueTypeUnicode', '', 96);
+                // use the font
+                $pdf->SetFont($fontname, '', 35, '', false);
+                $pdf->SetTextColor(48,75,105);
+                $pdf->Text('60', 9, $company_dets[0]['company_name'], false, false, true, 0, 0, 'center', false,'',1);
+
+                $pdf->SetTextColor(96,96,96);
+                $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Light.ttf', 'TrueTypeUnicode', '', 96);
+                $pdf->SetFont($fontname, 'I', 10.5);
+                $pdf->writeHTMLCell(130,20,40,23,$header_info); 
+        //        $this->writeHTMLCell(90,20,60,23,$header_info); 
+
+                $pdf->writeHTMLCell(45,20,155,9,$header_right_info); 
+  
+                $pdf->Line(10, 48, 200, 48); 
+
+            }
+            
+            
             // set font
             $pdf->SetFont('times', '', 9);
-        
-        
-            $pdf->AddPage();   
-            $pdf->SetTextColor(32,32,32);     
-            $html =""; 
+            $pdf->SetTextColor(32,32,32);  
             $all_tot_units = $all_tot_units_2 = $all_tot_amount = $item_count = 0;
             $i = 1; 
             foreach ($item_stocks_cat as $item_stocks){
@@ -141,6 +205,17 @@ class Stock_costing extends CI_Controller {
                                         $all_tot_units_2 += $tot_units_2;
                                         $all_tot_amount += $cost;
                                         
+                                        if(isset($all_tot_uom[$item['uom_id']])){
+                                            $all_tot_uom[$item['uom_id']]['unit1'] += $tot_units;
+                                            $all_tot_uom[$item['uom_id']]['unit2'] += $tot_units_2; 
+                                        }
+                                        else{
+                                            $all_tot_uom[$item['uom_id']]['unit1'] = $tot_units;
+                                            $all_tot_uom[$item['uom_id']]['unit2'] = $tot_units_2; 
+                                        }
+                                        $all_tot_uom[$item['uom_id']]['unit_abr'] = $item['uom_name']; 
+                                        $all_tot_uom[$item['uom_id']]['unit_abr_2'] = $item['uom_name_2']; 
+
                                         if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
                                            $html .= '<tr>
                                                         <td width="3%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$j.'</td>
@@ -173,8 +248,8 @@ class Stock_costing extends CI_Controller {
                 ';               
                 $i++;
             } 
-            
-            $html = '<table border="0">
+//            echo '<pre>';            print_r($all_tot_uom); die;
+            $html2 = '<table border="0">
                         <tr>
                             <td><b>Report: Gemstone Stock Purchasing Valuation</b></td>
                             <td align="center">Shape: '.$shape_name.' </td> 
@@ -194,11 +269,14 @@ class Stock_costing extends CI_Controller {
                         <tr>
                             <td colspan="3"><b>Total Valuation -</b><br>
                                 Items: '.$item_count.'<br>
-                                Units: '.$all_tot_units.' '.((isset($item))?$item['uom_name'].(($item['uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-'):'').' <br> 
-                                Total Cost: '.$def_cur['code'].' '. number_format($all_tot_amount,2).'</td>
+                                Units: ';
+                                foreach ($all_tot_uom as $uom_unts){
+                                    $html2 .= $uom_unts['unit1'].' '.$uom_unts['unit_abr'].(($uom_unts['unit2']>0)?'  '.$uom_unts['unit2'].' '.$uom_unts['unit_abr_2']:'').' | ';    
+                                }
+                          $html2 .=  '<br> Total Cost: '.$def_cur['code'].' '. number_format($all_tot_amount,2).'</td>
                         </tr> 
                     </table> '.$html;
-            $html .= '
+            $html2 .= '
                     <style>
                     .colored_bg{
                         background-color:#E0E0E0;
@@ -218,7 +296,7 @@ class Stock_costing extends CI_Controller {
                         font-size: 6px;;
                     }
                     </style>';
-            $pdf->writeHTMLCell(190,'',10,'',$html);
+            $pdf->writeHTMLCell(190,'',10,(($first_page_header_only==1)?50:''),$html2);
             
             $pdf->SetFont('times', '', 12.5, '', false);
             $pdf->SetTextColor(255,125,125);            

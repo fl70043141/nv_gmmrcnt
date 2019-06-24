@@ -141,7 +141,7 @@ $(document).ready(function(){
                                               
                                                 </div> 
                                         </div> 
-                                        <div hiden class="col-md-3">  
+                                        <div hidden class="col-md-3">  
                                                 <div class="form-group pad  no-pad-top">
                                                     <label for="print_firs_header_only">Print Type</label>
                                                      <?php echo form_dropdown('print_firs_header_only',array(1=>'Print First Page Header',0=>'Normal'),set_value('print_firs_header_only'),' class="form-control select2" id="print_firs_header_only"');?>

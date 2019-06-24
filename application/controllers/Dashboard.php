@@ -67,7 +67,7 @@ class Dashboard extends CI_Controller {
                 $tot_weight_arr[$item['uom_id']]['uom2_tot'] += $item['sum_unit_2']; 
                 
             }
-            $tot_count = ''; $j=1; $andvar=' & ';
+            $tot_count = ''; $j=1; $andvar=' | ';
             foreach ($tot_weight_arr as $tot_unts){
                 if(count($tot_weight_arr)==$j){
                     $andvar = "";

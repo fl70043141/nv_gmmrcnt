@@ -48,6 +48,17 @@
                                 $all_tot_units_2 += $tot_units_2;
                                 $all_tot_amount += $cost;
                                 
+                                if(isset($all_tot_uom[$item['uom_id']])){
+                                    $all_tot_uom[$item['uom_id']]['unit1'] += $tot_units;
+                                    $all_tot_uom[$item['uom_id']]['unit2'] += $tot_units_2; 
+                                }
+                                else{
+                                    $all_tot_uom[$item['uom_id']]['unit1'] = $tot_units;
+                                    $all_tot_uom[$item['uom_id']]['unit2'] = $tot_units_2; 
+                                }
+                                $all_tot_uom[$item['uom_id']]['unit_abr'] = $item['uom_name']; 
+                                $all_tot_uom[$item['uom_id']]['unit_abr_2'] = $item['uom_name_2']; 
+                                
                                 if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
                                     $html_row .= '
                                         <tr>
@@ -84,6 +95,7 @@
                             </table>
                             ';
                    }
+//                   echo '<pre>';                   print_r($all_tot_uom); die;
                    echo '<div class="row">
                             <div class="col-md-4">
                                 <dl class="dl-horizontal">
@@ -93,8 +105,12 @@
                             
                             <div class="col-md-4">
                                 <dl class="dl-horizontal">
-                                    <dt>Units: </dt><dd>'.$all_tot_units.' '.((isset($item)?$item['uom_name'].(($item['uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-'):'')).' </dd>
-                                </dl> 
+                                    <dt>Units: </dt>';
+                            foreach ($all_tot_uom as $uom_unts){
+                                echo ' <dd>'.$uom_unts['unit1'].' '.$uom_unts['unit_abr'].(($uom_unts['unit2']>0)?' | '.$uom_unts['unit2'].' '.$uom_unts['unit_abr_2']:'').' </dd>';
+                            }
+                            
+                          echo '      </dl> 
                             </div>
                                 
                             <div class="col-md-4">
