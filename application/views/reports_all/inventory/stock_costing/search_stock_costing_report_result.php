@@ -107,7 +107,7 @@
                                 <dl class="dl-horizontal">
                                     <dt>Units: </dt>';
                             foreach ($all_tot_uom as $uom_unts){
-                                echo ' <dd>'.$uom_unts['unit1'].' '.$uom_unts['unit_abr'].(($uom_unts['unit2']>0)?' | '.$uom_unts['unit2'].' '.$uom_unts['unit_abr_2']:'').' </dd>';
+                                echo ' <dd>'.$uom_unts['unit1'].' '.$uom_unts['unit_abr'].(($uom_unts['unit2']>0)?'  |  '.$uom_unts['unit2'].' '.$uom_unts['unit_abr_2']:'').' </dd>';
                             }
                             
                           echo '      </dl> 
