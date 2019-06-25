@@ -373,7 +373,11 @@ class Consignee_submission extends CI_Controller {
             $data['category_list'] = get_dropdown_data(ADDON_CALC_INCLUDED,'name','id','Agent Type');
             $data['currency_list'] = get_dropdown_data(CURRENCY,'code','code','Currency');
                     
-
+            $data['item_category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Category');
+            $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
+            $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
+            $data['color_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Color','dropdown_id = 17'); //17 for Color
+            
             return $data;
 	}	
         

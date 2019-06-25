@@ -224,7 +224,7 @@ class Stock_costing extends CI_Controller {
                                                         <td width="9%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['treatment_name'].'</td>
                                                         <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['color_name'].'</td>
                                                         <td width="10%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['shape_name'].'</td>
-                                                        <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;" >'.$tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$tot_units_2.' '.$item['uom_name_2']:'-').'</td> 
+                                                        <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;" >'.$tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$tot_units_2.' '.$item['uom_name_2']:'').'</td> 
                                                         <td width="13%" align="right" style="border-right: 1px solid #cdd0d4;">'. number_format(($item['price_amount'] / $item['ip_curr_value']),2).'&nbsp;&nbsp;</td>
                                                         <td width="13%" align="right" style="border-right: 1px solid #cdd0d4;">'. number_format($cost,2).' &nbsp;&nbsp;</td>
 
@@ -236,8 +236,8 @@ class Stock_costing extends CI_Controller {
                                         }      
                                             if($j>1){
                                                 $html .= '<tr>
-                                                                <td align="right" colspan="6" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;"><b>Total</b></td>
-                                                                <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;">'.$cat_tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$cat_tot_units_2.' '.$item['uom_name_2']:'-').'</td>
+                                                                <td align="right" colspan="6" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;"><b>Total : </b></td>
+                                                                <td width="16%" align="center" style="border-right: 1px solid #cdd0d4;">'.$cat_tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$cat_tot_units_2.' '.$item['uom_name_2']:'').'</td>
                                                                 <td ></td>
                                                                 <td width="13%" align="right" style="border-right: 1px solid #cdd0d4;">'. number_format($cat_tot_amount,2).' &nbsp;&nbsp;</td>
 
@@ -270,8 +270,10 @@ class Stock_costing extends CI_Controller {
                             <td colspan="3"><b>Total Valuation -</b><br>
                                 Items: '.$item_count.'<br>
                                 Units: ';
+                                $i1=1;
                                 foreach ($all_tot_uom as $uom_unts){
-                                    $html2 .= $uom_unts['unit1'].' '.$uom_unts['unit_abr'].(($uom_unts['unit2']>0)?'  '.$uom_unts['unit2'].' '.$uom_unts['unit_abr_2']:'').' | ';    
+                                    $html2 .= $uom_unts['unit1'].' '.$uom_unts['unit_abr'].(($uom_unts['unit2']>0)?'  '.$uom_unts['unit2'].' '.$uom_unts['unit_abr_2']:''). (($i1 == count($all_tot_uom))?'':' | ');    
+                                    $i1++;
                                 }
                           $html2 .=  '<br> Total Cost: '.$def_cur['code'].' '. number_format($all_tot_amount,2).'</td>
                         </tr> 

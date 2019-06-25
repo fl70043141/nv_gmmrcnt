@@ -68,7 +68,7 @@
                                             <td align="center">'.$item['treatment_name'].'</td>
                                             <td align="center">'.$item['color_name'].'</td>
                                             <td align="center">'.$item['shape_name'].'</td> 
-                                            <td align="center">'.$item['units_available'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
+                                            <td align="center">'.$item['units_available'].' '.$item['uom_name'].' '.(($item['uom_id_2']>0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'').'</td>
                                             <td align="right">'. number_format(($item['price_amount'] / $item['ip_curr_value']),2).'</td>
                                             <td align="right">'. number_format($cost,2).'</td>
                                             </tr>';
@@ -79,7 +79,7 @@
                             if($i>1){
                                        $html_row .= '<tr>
                                                         <td colspan="6" align="right" ><b>Total</b></td>
-                                                        <td align="center">'.$cat_tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$cat_tot_units_2.' '.$item['uom_name_2']:'-').'</td>
+                                                        <td align="center">'.$cat_tot_units.' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$cat_tot_units_2.' '.$item['uom_name_2']:'').'</td>
                                                         <td></td>
                                                         <td align="right">'. number_format($cat_tot_amount,2).' &nbsp;&nbsp;</td>
 

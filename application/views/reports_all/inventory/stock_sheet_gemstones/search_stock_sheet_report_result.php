@@ -34,11 +34,12 @@
                                             <td align="center">'.$item['units_on_consignee'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_on_consignee_2'].' '.$item['uom_name_2']:'').'</td>
                                         </tr>';
                                     $i++;
-                                }else{
-                                        echo '<tr>
-                                                <td>No Results found</td> 
-                                            </tr>';
-                                   } 
+                                }
+                   }
+                   if($i==0){
+                       echo '<tr>
+                                <td>No Results found</td> 
+                            </tr>';
                    }
               ?>   
         </tbody> 
