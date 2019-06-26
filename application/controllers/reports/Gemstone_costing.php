@@ -246,4 +246,178 @@ class Gemstone_costing extends CI_Controller {
 //            echo '<pre>';            print_r($ret_arr); die; 
             return $ret_arr;
         }
+        public function print_report2(){ 
+//            $this->input->post() = 'aa';
+            $item_stocks = $this->load_data(); 
+            $inputs = $this->input->get();
+//            echo '<pre>';            print_r($this->input->get()); die;
+            $location_name = ($inputs['location_id'] != '')?get_single_row_helper(INV_LOCATION,'id = "'.$inputs['location_id'].'"')['location_name']:'All'; 
+            $category_name = ($inputs['item_category_id'] != '')?get_single_row_helper(ITEM_CAT,'id = "'.$inputs['item_category_id'].'"')['category_name']:'All'; 
+            $shape_name = ($inputs['shape_id'] != '')?get_single_row_helper(DROPDOWN_LIST,'id = "'.$inputs['shape_id'].'"')['dropdown_value']:'All'; 
+            $treatment_name = ($inputs['treatment_id'] != '')?get_single_row_helper(DROPDOWN_LIST,'id = "'.$inputs['treatment_id'].'"')['dropdown_value']:'All'; 
+            $color_name = ($inputs['color_id'] != '')?get_single_row_helper(DROPDOWN_LIST,'id = "'.$inputs['color_id'].'"')['dropdown_value']:'All'; 
+            $this->load->library('Pdf'); 
+            $this->load->model('Items_model');
+            $def_cur = get_single_row_helper(CURRENCY,'code="'.$this->session->userdata(SYSTEM_CODE)['default_currency'].'"');
+             
+            $html =""; 
+            
+            $html .=' <table  width="100%"  id="example1" class="table table-line " border="0">
+                            <thead> 
+                                <tr style=""> 
+                                    <th width="6%" style="text-align: left;"><u><b>#</b></u></th>  
+                                    <th width="10%" style="text-align: left;"><u><b>Code</b></u></th>  
+                                    <th width="13%" style="text-align: left;"><u><b>Desc</b></u></th>  
+                                    <th width="12%" style="text-align: center;"><u><b>Weight</b></u></th> 
+                                    <th width="17%" style="text-align: left;" ><u><b>Type</b></u></th>  
+                                    <th width="14%" style="text-align: left;" ><u><b>Person</b></u></th>  
+                                    <th width="14%" style="text-align: right;"><u><b>Cost</b></u></th> 
+                                    <th width="14%" style="text-align: right;"><u><b>Total Cost</b></u></th> 
+                                 </tr>
+                            </thead>
+                        <tbody>';
+            
+            $all_tot_units = $all_tot_units_2 = $all_tot_amount = $item_count = 0;
+            $i = 1; 
+            foreach ($item_stocks as $item){
+//                echo '<pre>';            print_r($item); die;    
+
+                $tot_units = $item['units_available'] + $item['units_on_workshop'] + $item['units_on_consignee'];
+                $tot_units_2 = $item['units_available_2'] + $item['units_on_workshop_2'] + $item['units_on_consignee_2'];
+                $purch_cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units);
+                $cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units) + $item['total_lapidary_cost'];
+
+//                $cat_tot_units += $tot_units;
+//                $cat_tot_units_2 += $tot_units_2;
+//                $cat_tot_amount += $cost;
+
+                $all_tot_units += $tot_units;
+                $all_tot_units_2 += $tot_units_2;
+                $all_tot_amount += $cost;
+
+               if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
+                   $bg_colr = ($i%2==0)?'#F5F5F5':'#FFFFFF';
+                   $html .= '
+                       <tr>
+                           <td style="width:6%;">'.$i.'</td> 
+                           <td style="width:10%;" align="left">'.$item['item_code'].'</td>
+                           <td style="width:13%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                           <td style="width:12%;" align="center">'.$item['units_available'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
+                           <td style="width:17%;" align="left">Purchase</td>
+                           <td style="width:14%;" align="left">Supplier</td> 
+                           <td style="width:14%;" align="right">'. number_format($purch_cost,2).'</td>
+                           <td style="width:14%; text-align:right; vertical-align:bottom;" rowspan="'.(count($item['lapidary_costs'])+1).'" >'. number_format($cost,2).'</td>
+                      </tr>';
+                   if(!empty($item['lapidary_costs'])){
+                       foreach ($item['lapidary_costs'] as $lcost){
+//                echo '<pre>';            print_r($item['lapidary_costs']); die;    
+                          $html .= '<tr>
+                                              <td colspan="4"></td> 
+                                              <td align="left">'.((isset($lcost['dropdown_list_name']))?$lcost['dropdown_list_name']:$lcost['lapidary_type']).'</td>
+                                              <td align="left">'.((isset($lcost['dropdown_value']))?$lcost['dropdown_value']:$lcost['lapidary_name']).'</td>
+                                              <td align="right">'. number_format($lcost['amount_cost'],2).'</td>
+
+                                         </tr>';
+                      }
+                   }
+                   $i++;
+                   $item_count++;
+               }
+            } 
+            $html .= '</tbody></table>';
+            
+            $html = '<table  width="100%"  border="0">
+                        <tr>
+                            <td><b>Report: Gemstone Stock Costing Report</b></td>
+                            <td align="center">Shape: '.$shape_name.' </td> 
+                            <td align="right">Printed on : '.date(SYS_DATE_FORMAT).'</td>
+                        </tr>
+                        <tr>
+                            <td>Locarion: '.$location_name.' </td>
+                            <td align="center">Color: '.$color_name.' </td>
+                            <td align="right"></td>
+                        </tr> 
+                        <tr>
+                            <td>Variety: '.$category_name.' </td>
+                            <td align="center">CDC: '.$treatment_name.' </td>
+                            <td align="right">Printed by : '.$this->session->userdata(SYSTEM_CODE)['user_first_name'].' '.$this->session->userdata(SYSTEM_CODE)['user_last_name'].'</td>
+                        </tr> 
+                        <tr><td colspan="3"></td></tr>
+                        <tr>
+                            <td colspan="3"><b>Total Valuation -</b><br>
+                                Items: '.$item_count.'<br>
+                                Units: '.$all_tot_units.' '.((isset($item))?$item['uom_name'].(($item['uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-'):'').' <br> 
+                                Total Cost: '.$def_cur['code'].' '. number_format($all_tot_amount,2).'</td>
+                        </tr> 
+                        
+                        <tr><td colspan="3"></td></tr>
+                    </table> '.$html;
+            
+            $html .= '
+                        <style>
+                        .colored_bg{
+                            background-color:#E0E0E0;
+                        }
+                        .table-line th, .table-line td {
+                            padding-bottom: 2px;
+                            border-bottom: 1px solid #ddd; 
+                        }
+                        .text-right,.table-line.text-right{
+                            text-align:right;
+                        }
+                        .table-line tr{ 
+                            line-height: 20px;
+                            font-family: "arial";
+                            font-size:11px;
+                        }
+                        </style>';
+            
+            $this->load->model('Company_model');
+            $company_dets = $this->Company_model->get_single_row($_SESSION[SYSTEM_CODE]['company_id']);
+            $header_info = '<table width="100%"  style="border-bottom: 2px solid #404040;">
+                                <tr>
+                                    <td width="15%">
+                                        <img style="width:120px;"src="'. base_url(COMPANY_LOGO.$company_dets[0]['logo']).'">
+                                    </td>
+                                    <td width="65%"  align="center">
+                                        <table border="0"> 
+                                            <tr>
+                                                <td align="center" style=" color: #105d8a; font-family: Lobster, cursive; font-size: 32px; font-weight: normal; line-height: 46px; margin: 0 0 18px; text-shadow: 1px 0 0 #fff;">'.$company_dets[0]['company_name'].'.</td>
+                                            </tr> 
+                                            <tr>
+                                                <td align="center">'.$company_dets[0]['street_address'].', '.$company_dets[0]['city'].', '.$company_dets[0]['country_name'].'.</td>
+                                            </tr> 
+                                            <tr>
+                                                <td align="center">Phone: '.$company_dets[0]['phone'].(($company_dets[0]['other_phone']!='')?', '.$company_dets[0]['other_phone']:'').'</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').'</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center">Website: '.(($company_dets[0]['website']!='')?$company_dets[0]['website']:'').'</td>
+                                            </tr>
+
+                                        </table> 
+                                    </td>
+                                    <td width="20%" align="right">
+                                        <table border="0"> 
+                                            <tr>
+                                                <td style="height:50px;" align="right">Report</td>
+                                            </tr>   
+                                            <tr>
+                                                <td style="height:35px;" align="right"><img src="'. base_url(DEFAULT_IMAGE_LOC.'gema.png').'"></td>
+                                            </tr>   
+                                            <tr>
+                                                <td style="height:30px; font-size:25px;" align="right"><b>Gemstone Costing </b></td>
+                                            </tr>   
+                                        </table> 
+                                    </td>
+                                </tr>
+                            </table>'; 
+            
+            echo $header_info.$html;
+            echo '<script> this.print(); </script>';
+            
+        }
+        
 }
