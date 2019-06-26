@@ -208,6 +208,7 @@ class Stock_sheet_gemstones extends CI_Controller {
             }
             </style>
                     ';
+//           echo $header_info.$html; die;
 //            echo '<pre>';            print_r($html); die;
             $pdf->writeHTMLCell(190,'',10,(($first_page_header_only==1)?50:''),$html);
             
@@ -239,5 +240,93 @@ class Stock_sheet_gemstones extends CI_Controller {
             
 //            echo '<pre>';            print_r($ret_arr); die; 
             return $item_stocks;
+        }
+        
+        function print_report2(){
+//            echo 'kokoko';
+             
+//            $this->input->post() = 'aa';
+            $item_stocks_cat = $this->load_data(); 
+            $input_get = $this->input->get();
+            $first_page_header_only = (isset($input_get['print_firs_header_only']) && $input_get['print_firs_header_only']==1)?1:0;
+//            echo '<pre>';            print_r($input_get); die;  
+            $this->load->model('Items_model');
+             
+            $html = ''; 
+            
+            $html .= '<table width="100%" id="example1" class="table-line" border="0">
+                                                    <thead> 
+                                                        <tr style=""> 
+                                <th width="12%" align="center"><b>Code</b></th> 
+                                <th width="23%" align="center"><b>Desc</b></th> 
+                                <th width="9%" align="center"><b>Treatment</b></th> 
+                                <th width="9%" align="center"><b>color</b></th> 
+                                <th width="9%" align="center"><b>shape</b></th> 
+                                <th width="13%" align="right" colspan="1"><b>In Stock</b></th> 
+                                <th width="13%" align="right" colspan="1"><b>On Lapidary</b></th>  
+                                <th width="13%" align="right" colspan="1"><b>On Consignee</b></th>
+                            </tr> 
+                        </thead>
+                        <tbody>';  
+            $i=1; 
+            
+            foreach ($item_stocks_cat as $item){
+//            echo '<pre>';            print_r($item); die;
+             
+                        if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
+                           $html .= '<tr>
+                                        <td width="12%" align="center">'.$item['item_code'].'</td>
+                                        <td width="23%" align="center" >'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                                        <td width="9%" align="center" >'.$item['treatment_name'].'</td>
+                                        <td width="9%" align="center" >'.$item['color_name'].'</td>
+                                        <td width="9%" align="center" >'.$item['shape_name'].'</td>
+                                        <td width="13%" align="right" >'.$item['units_available'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'').'</td> 
+                                        <td width="13%" align="right">'.$item['units_on_workshop'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_workshop_2'].' '.$item['uom_name_2']:'').'</td>
+                                        <td width="13%" align="right">'.$item['units_on_consignee'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_consignee_2'].' '.$item['uom_name_2']:'').'</td>
+
+                                    </tr>';
+                            }   
+                $i++;
+            } 
+            
+            $html .= '</tbody> </table> ';
+            
+           $html .= '
+            <style>
+            .colored_bg{
+                background-color:#E0E0E0;
+            }
+            .table-line th, .table-line td {
+                padding-bottom: 2px;
+                border-bottom: 1px solid #ddd; 
+            }
+            .text-right,.table-line.text-right{
+                text-align:right;
+            }
+            .table-line tr{
+                line-height: 20px;
+                font-family: "arial";
+                font-size:11px;
+            }
+            </style>
+                    ';
+//           echo $html; die; 
+           
+            $this->load->library('DomPDFgen');
+            // Instantiate and use the dompdf class 
+          
+            $dompdf = new DomPDFgen();
+
+            // Load HTML content 
+            $dompdf->loadHtml($html); 
+//            $dompdf->
+            // (Optional) Setup the paper size and orientation 
+            $dompdf->setPaper('A4', 'portrait'); 
+
+            // Render the HTML as PDF 
+            $dompdf->render(); 
+
+            // Output the generated PDF to Browser 
+            $dompdf->stream("dompdf_out.pdf", array("Attachment" => false));
         }
 }
