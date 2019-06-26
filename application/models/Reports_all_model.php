@@ -38,7 +38,7 @@ class Reports_all_model extends CI_Model
 ------------------------------------------------------------*/
         
     public function get_item_stocks_gemstones($data='',$where=''){ 
-//            echo '<pre>';            print_r('$data'); die;
+//            echo '<pre>';            print_r($data); die;
         
         $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
         $cur_det = get_currency_for_code($def_curcode);
@@ -74,7 +74,7 @@ class Reports_all_model extends CI_Model
         if(isset($data['color_id']) && $data['color_id'] !='')$this->db->where('itm.color',$data['color_id']);
         if(isset($data['shape_id']) && $data['shape_id'] !='')$this->db->where('itm.shape',$data['shape_id']);
         
-        if(isset($data['stock_stat']) && $data['stock_stat']==1){
+        if(isset($data['max_weight_check']) && $data['max_weight_check']==1){
             if(isset($data['min_weight']) && $data['min_weight'] >0)$this->db->where('is.units_available >',$data['min_weight']);
             if(isset($data['max_weight_check']) && isset($data['max_weight']) && $data['max_weight'] >0)$this->db->where('is.units_available <',$data['max_weight']);
         }

@@ -17,6 +17,12 @@ $(document).ready(function(){
         window.open('<?php echo $this->router->fetch_class()."/print_report?";?>'+post_data,'ZV VINDOW',width=600,height=300)
     });
 	
+    $("#print_btn2").click(function(){
+        var post_data = jQuery('#form_search').serialize(); 
+//        var json_data = JSON.stringify(post_data)
+        window.open('<?php echo $this->router->fetch_class()."/print_report2?";?>'+post_data,'ZV VINDOW',width=600,height=300)
+    });
+	
 	
 	function get_results(){
         $("#result_search").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Retrieving Data..');    
@@ -96,13 +102,13 @@ $(document).ready(function(){
                                         </div>    
                                         <div class="col-md-3">  
                                                 <div class="form-group pad  no-pad-top">
-                                                    <label for="min_weight">Minimum Weight (cts).</label>
+                                                    <label for="min_weight">Minimum Weight.</label>
                                                      <?php echo form_input('min_weight',set_value('min_weight',0),' class="form-control" placeholder="Enter Minimim Carat weight"  id="min_weight"');?>
                                                </div> 
                                         </div>    
                                         <div class="col-md-3">  
                                                 <div class="form-group pad  no-pad-top">
-                                                    <label for="max_weight">Maximum Weight (cts) <input type="checkbox" name="max_weight_check" id="max_weight_check" id="max_weight_check" value="1"></label>
+                                                    <label for="max_weight">Maximum Weight<input type="checkbox" name="max_weight_check" id="max_weight_check" id="max_weight_check" value="1"></label>
                                                      <?php echo form_input('max_weight',set_value('max_weight',10),' class="form-control" placeholder="Enter Maximum Carat weight" id="max_weight"');?>
                                                </div> 
                                         </div>    
@@ -155,6 +161,7 @@ $(document).ready(function(){
                 <div class="panel-footer">
                                     <button  class="btn btn-default">Clear Form</button>                                    
                                     <a id="print_btn" class="btn btn-info margin-r-5 pull-right"><span class="fa fa-print"></span> Print</a>
+                                    <a id="print_btn2" class="btn bg-aqua-active margin-r-5 pull-right"><span class="fa fa-print"></span> Optimized Print</a>
                                     <a id="search_btn" class="btn btn-primary margin-r-5 pull-right"><span class="fa fa-search"></span> Search</a>
                                 </div>
               </div>

@@ -310,23 +310,57 @@ class Stock_sheet_gemstones extends CI_Controller {
             }
             </style>
                     ';
-//           echo $html; die; 
            
-            $this->load->library('DomPDFgen');
-            // Instantiate and use the dompdf class 
-          
-            $dompdf = new DomPDFgen();
+            $this->load->model('Company_model');
+            $company_dets = $this->Company_model->get_single_row($_SESSION[SYSTEM_CODE]['company_id']);
+            
+//            echo '<pre>';            print_r($company_dets); die;
+            
+            $header_info = '<table width="100%"  style="border-bottom: 2px solid #404040;">
+                                <tr>
+                                    <td width="15%">
+                                        <img style="width:120px;"src="'. base_url(COMPANY_LOGO.$company_dets[0]['logo']).'">
+                                    </td>
+                                    <td width="65%"  align="center">
+                                        <table border="0"> 
+                                            <tr>
+                                                <td align="center" style=" color: #105d8a; font-family: Lobster, cursive; font-size: 32px; font-weight: normal; line-height: 46px; margin: 0 0 18px; text-shadow: 1px 0 0 #fff;">'.$company_dets[0]['company_name'].'.</td>
+                                            </tr> 
+                                            <tr>
+                                                <td align="center">'.$company_dets[0]['street_address'].', '.$company_dets[0]['city'].', '.$company_dets[0]['country_name'].'.</td>
+                                            </tr> 
+                                            <tr>
+                                                <td align="center">Phone: '.$company_dets[0]['phone'].(($company_dets[0]['other_phone']!='')?', '.$company_dets[0]['other_phone']:'').'</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').'</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center">Website: '.(($company_dets[0]['website']!='')?$company_dets[0]['website']:'').'</td>
+                                            </tr>
 
-            // Load HTML content 
-            $dompdf->loadHtml($html); 
-//            $dompdf->
-            // (Optional) Setup the paper size and orientation 
-            $dompdf->setPaper('A4', 'portrait'); 
-
-            // Render the HTML as PDF 
-            $dompdf->render(); 
-
-            // Output the generated PDF to Browser 
-            $dompdf->stream("dompdf_out.pdf", array("Attachment" => false));
+                                        </table> 
+                                    </td>
+                                    <td width="20%" align="right">
+                                        <table border="0"> 
+                                            <tr>
+                                                <td style="height:50px;" align="right">Report</td>
+                                            </tr>   
+                                            <tr>
+                                                <td style="height:35px;" align="right"><img src="'. base_url(DEFAULT_IMAGE_LOC.'gema.png').'"></td>
+                                            </tr>   
+                                            <tr>
+                                                <td style="height:30px; font-size:25px;" align="right"><b>Stock Sheet</b></td>
+                                            </tr>   
+                                        </table> 
+                                    </td>
+                                </tr>
+                            </table>'; 
+           echo $header_info;  
+           echo $html; 
+           
+            echo '<script> this.print(); </script>';
+//            $js = 'print(true);';
+           
         }
 }

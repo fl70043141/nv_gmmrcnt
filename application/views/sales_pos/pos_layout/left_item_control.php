@@ -38,7 +38,7 @@
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <div class="form-group pad">
-                                                                    <label for="item_unit_cost">Unit Price/g</label>
+                                                                    <label for="item_unit_cost">Unit Price</label>
                                                                     <input  name="item_unit_cost" class="form-control add_item_inpt" id="item_unit_cost" value="0" placeholder="Unit Cost for item">
                                                                 </div>
                                                             </div>
