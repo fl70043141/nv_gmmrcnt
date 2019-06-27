@@ -28,7 +28,7 @@
                                         <td align="center">'.(($invoice['invoice_date']>0)?date('d M Y',$invoice['invoice_date']):'').'</td>
                                         <td align="center">'.$invoice['item_count'].'</td>
                                         <td align="center">
-                                             <a hidden id="print_'.$invoice['id'].'" class="btn btn-sm btn-success print_btn"><span class="fa fa-print"></span></a>
+                                             <a id="print_'.$invoice['id'].'" class="btn btn-sm hide btn-success print_btn"><span class="fa fa-print"></span></a>
                                              <a id="printrool_'.$invoice['id'].'" class="btn btn-sm bg-aqua print_btn_rolltype"><span class="fa fa-barcode"></span></a>
                                        </td>   
                                     </tr>';
