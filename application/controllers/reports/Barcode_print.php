@@ -240,25 +240,7 @@ class Barcode_print extends CI_Controller {
             $pdf->SetDisplayMode('fullpage', 'SinglePage', 'UseNone');
             $pdf->SetFont('helveticaB','',7);  // set font 
             $pdf->AddPage('L',array($width,$height));
-         
-            
-            // define barcode style
-                $style = array(
-                    'position' => '',
-                    'align' => 'C',
-                    'stretch' => false,
-                    'fitwidth' => true,
-                    'cellfitalign' => '',
-                    'border' => false,
-                    'hpadding' => 'auto',
-                    'vpadding' => 'auto',
-                    'fgcolor' => array(0,0,0),
-                    'bgcolor' => false, //array(255,255,255),
-                    'text' => true,
-                    'font' => 'helvetica',
-                    'fontsize' => 8,
-                    'stretchtext' => 4
-                );
+          
                 
                  
                 
@@ -270,11 +252,15 @@ class Barcode_print extends CI_Controller {
                 foreach ($report_data as $item_bc){
                     
 //            echo '<pre>';            print_r($item_bc); die; 
-                    require_once dirname(__FILE__) . '\..\..\libraries\tcpdf\tcpdf_barcodes_1d.php';
+                    require_once dirname(__FILE__) . '/../../libraries/tcpdf/tcpdf_barcodes_1d.php';
                     $barcodeobj = new TCPDFBarcode($item_bc['item_code'], 'C128');
-                    $img =  $barcodeobj->getBarcodePngData(1.5,20); 
-                    $base64 = 'data:image/png;base64,' . base64_encode($img);  
-
+                    $img =  $barcodeobj->getBarcodePngData(1.5,20, array(80,80,80)); 
+                    $base64 = 'data:image/png;base64,' . base64_encode($img);
+                    
+                $pdf->SetTextColor(80,80,80);
+                $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Light.ttf', 'TrueTypeUnicode', '', 96);
+                $pdf->SetFont($fontname, 'I', 8.5);
+                
                     $item_seriel = $item_bc['item_code'];
                     $item_desc = $item_bc['supplier_item_desc']; 
                         $bc_arr = array(
@@ -287,8 +273,8 @@ class Barcode_print extends CI_Controller {
                     $html .= '<table style="width:'.$width.'mm;height:'.$height.';mm" border="0">
                                 <tr><td colspan="2" style="line-height:1mm;"></td></tr>
                                 <tr>
-                                    <td width="30%" style="text-align:center; line-height:'.($content_height*0.35).'mm;"><img style="height:'.($content_height*0.35).'mm;" src="'.$comp_logo.'"></td>
-                                    <td width="70%">'.$company_dets[0]['company_name'].'</td> 
+                                    <td width="20%" style="text-align:center; line-height:'.($content_height*0.35).'mm;"><img style="height:'.($content_height*0.35).'mm;" src="'.$comp_logo.'"></td>
+                                    <td width="90%">'.$company_dets[0]['company_name'].'</td> 
                                 </tr> 
                                 <tr>
                                     <td width="50%" style="text-align:left; line-height:'.($content_height*0.15).'mm;">'.$item_seriel.'</td>
