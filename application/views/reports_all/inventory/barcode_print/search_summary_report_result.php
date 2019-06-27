@@ -4,6 +4,7 @@
                     <th>#</th>
                     <th style="text-align:center;">Invoice No</th> 
                     <th style="text-align:center;">Date</th>   
+                    <th style="text-align:center;">Nomber of Items</th>   
                     <th style="text-align:center;">Action</th>
                 </tr>
             </thead>
@@ -25,7 +26,11 @@
                                         <td>'.($i+1).'</td> 
                                         <td align="center">'.$invoice['supplier_invoice_no'].'</td>
                                         <td align="center">'.(($invoice['invoice_date']>0)?date('d M Y',$invoice['invoice_date']):'').'</td>
-                                        <td align="center"><a id="print_'.$invoice['id'].'" class="btn btn-sm btn-success print_btn"><span class="fa fa-print"></span></a></td> 
+                                        <td align="center">'.$invoice['item_count'].'</td>
+                                        <td align="center">
+                                             <a hidden id="print_'.$invoice['id'].'" class="btn btn-sm btn-success print_btn"><span class="fa fa-print"></span></a>
+                                             <a id="printrool_'.$invoice['id'].'" class="btn btn-sm bg-aqua print_btn_rolltype"><span class="fa fa-barcode"></span></a>
+                                       </td>   
                                     </tr>';
                                 $i++;
                             }
@@ -42,6 +47,14 @@
             var purchse_id = (this.id).split('_')[1];
 //            fl_alert('info',this.id)  
             window.open('<?php echo $this->router->fetch_class()."/print_report?";?>'+'prc_id='+purchse_id,'ZV VINDOW',width=600,height=300)
+        });
+    });
+    $(document).ready(function(){
+        $('.print_btn_rolltype').click(function(){
+            
+            var purchse_id = (this.id).split('_')[1];
+//            fl_alert('info',this.id)  
+            window.open('<?php echo $this->router->fetch_class()."/print_report_rolltype?";?>'+'prc_id='+purchse_id,'ZV VINDOW',width=600,height=300)
         });
     });
 </script>

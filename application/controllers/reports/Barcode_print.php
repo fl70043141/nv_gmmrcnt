@@ -215,6 +215,103 @@ class Barcode_print extends CI_Controller {
         //Close and output PDF document
         $pdf->Output('barcode_.pdf', 'I');
         }
+        public function print_report_rolltype($width='63',$height='25'){ 
+            
+            $content_height = $height-4; //top and bottom margin 2mm
+//            $this->input->post() = 'aa';
+            $this->load->model('Company_model');
+            $company_dets = $this->Company_model->get_single_row($_SESSION[SYSTEM_CODE]['company_id']);
+            $comp_logo = COMPANY_LOGO.$company_dets[0]['logo'];
+            
+            $report_data = $this->load_data_barcode(); 
+            //load library
+            $this->load->library('Pdf');
+            $pdf = new Pdf('L', 'mm', array($width,$height), true, 'UTF-8', false);
+                    
+           
+            $pdf->setPrintHeader(false);  // remove default header 
+            $pdf->setPrintFooter(false);  // remove default footer 
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);// set default monospaced font
+            $pdf->SetMargins(0, 1, 0); // set margins
+            $pdf->SetAutoPageBreak(TRUE, 0); // set auto page breaks
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);// set image scale factor
+                    
+            // ---------------------------------------------------------
+            $pdf->SetDisplayMode('fullpage', 'SinglePage', 'UseNone');
+            $pdf->SetFont('helveticaB','',7);  // set font 
+            $pdf->AddPage('L',array($width,$height));
+         
+            
+            // define barcode style
+                $style = array(
+                    'position' => '',
+                    'align' => 'C',
+                    'stretch' => false,
+                    'fitwidth' => true,
+                    'cellfitalign' => '',
+                    'border' => false,
+                    'hpadding' => 'auto',
+                    'vpadding' => 'auto',
+                    'fgcolor' => array(0,0,0),
+                    'bgcolor' => false, //array(255,255,255),
+                    'text' => true,
+                    'font' => 'helvetica',
+                    'fontsize' => 8,
+                    'stretchtext' => 4
+                );
+                
+                 
+                
+//            echo '<pre>';            print_r($company_dets); die; 
+                $from=1; $to=100;$arr_key=0;
+                $bc_arr = array(); 
+                $count=1;
+                $html = '';
+                foreach ($report_data as $item_bc){
+                    
+//            echo '<pre>';            print_r($item_bc); die; 
+                    require_once dirname(__FILE__) . '\..\..\libraries\tcpdf\tcpdf_barcodes_1d.php';
+                    $barcodeobj = new TCPDFBarcode($item_bc['item_code'], 'C128');
+                    $img =  $barcodeobj->getBarcodePngData(1.5,20); 
+                    $base64 = 'data:image/png;base64,' . base64_encode($img);  
+
+                    $item_seriel = $item_bc['item_code'];
+                    $item_desc = $item_bc['supplier_item_desc']; 
+                        $bc_arr = array(
+                                            'sup_info'=>'AG',
+                                            'base64'=>$base64,
+                                            'item_serial'=>$item_seriel,
+                                            'item_desc'=>$item_desc,
+                                            );
+                        
+                    $html .= '<table style="width:'.$width.'mm;height:'.$height.';mm" border="0">
+                                <tr><td colspan="2" style="line-height:1mm;"></td></tr>
+                                <tr>
+                                    <td width="30%" style="text-align:center; line-height:'.($content_height*0.35).'mm;"><img style="height:'.($content_height*0.35).'mm;" src="'.$comp_logo.'"></td>
+                                    <td width="70%">'.$company_dets[0]['company_name'].'</td> 
+                                </tr> 
+                                <tr>
+                                    <td width="50%" style="text-align:left; line-height:'.($content_height*0.15).'mm;">'.$item_seriel.'</td>
+                                    <td width="50%" style="text-align:right;">'.$item_bc['purchasing_unit'].' '.$item_bc['unit_abbreviation'].' '.(($item_bc['secondary_unit']>0)?' | '.$item_bc['secondary_unit'].' '.$item_bc['unit_abbreviation_2']:'').'</td> 
+                                </tr> 
+                                <tr><td colspan="2" style="line-height:1mm;"></td></tr>
+                                <tr>
+                                    <td colspan="2" width="100%" style="text-align:center;line-height:'.($content_height*0.45).'mm;"><img style="height:'.($content_height*0.35).'mm;"src="'.$base64.'"></td>
+                                </tr>  
+                            </table>';
+                    
+                }
+                $pdf->writeHTMLCell($width,'',0,0,$html);
+//                         echo $html; die;
+//                 print a block of text using Write()
+
+        // ---------------------------------------------------------
+
+
+
+        //Close and output PDF document
+        $pdf->Output('barcode_.pdf', 'I');
+        }
         
         public function  load_data(){
             $invoices = array();
@@ -238,13 +335,14 @@ class Barcode_print extends CI_Controller {
                 $invoice_list = $this->Purchase_report_models->search_result($search_data);
                 if(!empty($invoice_list)){
                     foreach ($invoice_list as $invoice){
+//            echo '<pre>';            print_r($invoice); die; 
                         $invoices['rep_data'][$cust['id']]['invoices'][$invoice['id']]=$invoice;
                         $invoices['rep_data'][$cust['id']]['invoices'][$invoice['id']]['transections']= $this->Payments_model->get_transections(20,$invoice['id'],'transection_type_id = 3');
                     }
                 }
                 
             } 
-//            echo '<pre>';            print_r($cust_list); die; 
+//            echo '<pre>';            print_r($invoice_list); die; 
             return $invoices;
         }
         public function  load_data_barcode(){
