@@ -188,13 +188,12 @@ endswitch;
                                     <table id="invoice_list_tbl" class="table table-bordered table-striped fl_scrollable">
                                         <thead>
                                            <tr> 
-                                               <th width="10%"  style="text-align: center;">Invoice No</th> 
-                                               <th width="10%"  style="text-align: center;">Item Code</th> 
-                                               <th width="20%" style="text-align: center;">Item Description</th> 
-                                               <th width="12%" style="text-align: center;">Date</th> 
-                                               <th width="10%" style="text-align: right;">Qty</th>  
+                                               <th width="10%"  style="text-align: center;">Submission Info</th> 
+                                               <th width="30%"  style="text-align: center;">Item Info</th> 
+                                               <th width="10%" style="text-align: center;">Cons. Type</th> 
+                                               <th width="10%" style="text-align: center;">Cons. Rate</th> 
                                                <th width="10%" style="text-align: center;" colspan="2">Qty to Credit</th> 
-                                               <th width="10%" style="text-align: center;">price</th> 
+                                               <th width="10%" style="text-align: center;">price/Unit</th> 
                                                <th width="15%" style="text-align: right;">Total</th> 
                                                <th width="5%" style="text-align: center;">Action</th>
                                            </tr>
@@ -319,32 +318,82 @@ function get_inv_items_res(){
 
                                 $(res2).each(function (index, elment) {
 //                                    console.log(elment); 
+                                    
 //                                    fl_alert('info',elment.item_quantity)
                                     var submitted_date = timeConverter(elment.submitted_date);
                                     elment.unit_price = parseFloat(elment.unit_price)*(100-parseFloat(elment.discount_persent))*0.01 ;
                                     var sub_tot = parseFloat(elment.item_quantity)* parseFloat(elment.unit_price);
-                                    var newRow = '<tr id="rowb_'+elment.sd_id+'">'+
-                                                        '<td style="text-align: center;">'+elment.cs_no+'<input hidden id="'+elment.sd_id+'_cs_no" value="'+elment.cs_no+'"></td>'+
-                                                        '<td style="text-align: center;">'+elment.item_code+'<input hidden id="'+elment.sd_id+'_item_code" value="'+elment.item_code+'"><input hidden id="'+elment.sd_id+'_item_id" value="'+elment.item_id+'"></td>'+
-                                                        '<td style="text-align: center;">'+elment.item_description+'<input hidden id="'+elment.sd_id+'_item_description" value="'+elment.item_description+'"></td>'+
-                                                        '<td style="text-align: center;">'+submitted_date+'<input hidden  id="'+elment.sd_id+'_cs_date" value="'+elment.submitted_date+'"></td>'+
-                                                        '<td style="text-align: right;">'+elment.item_quantity+' '+elment.unit_abbreviation+((elment.item_quantity_uom_id_2>0)?(' | '+elment.item_quantity_2+' '+elment.unit_abbreviation_2):'')+'<input hidden  id="'+elment.sd_id+'_item_quantity" value="'+elment.item_quantity+'"></td>';
+                                    
+                                    var cons_typ= ''; var cons_rate = '';
+                                    switch(elment.consignment_type_id){
+                                        case '1': cons_typ = '(Percentage)'; cons_rate = (sub_tot*parseFloat(elment.consignment_rate)*0.01)+"("+parseFloat(elment.consignment_rate)+'%)'; break;
+                                        case '2': cons_typ = '(Percentage Included)'; cons_rate = (sub_tot*parseFloat(elment.consignment_rate)*0.01)+"("+parseFloat(elment.consignment_rate)+'%)';break;
+                                        case '3': cons_typ = '(Fixed Amount)'; cons_rate = parseFloat(elment.consignment_rate).toFixed(2);break;
+                                        case '4': cons_typ = '(Fixed Amount Included)';cons_rate = parseFloat(elment.consignment_rate).toFixed(2); break;
+                                    }
+                                    
+                                    var newRow = '<tr class="row_btm_cls" id="rowb_'+elment.sd_id+'">'+
+                                                        '<td style="text-align: center;"><ul>'+
+                                                                                            '<li>'+elment.cs_no+'<input hidden id="'+elment.sd_id+'_cs_no" value="'+elment.cs_no+'"></li>'+
+                                                                                            '<li>Date: '+submitted_date+'<input hidden id="'+elment.sd_id+'_cs_date" value="'+elment.submitted_date+'"></li>'+
+                                                        '</ul></td>'+
+                                                        '<td style="text-align: left;"><ul>'+
+                                                                '<li>Code: '+elment.item_code+'</li>'+
+                                                                '<li>Desc: '+elment.item_description+'</li>'+
+                                                                '<li>Units: '+elment.item_quantity+' '+elment.unit_abbreviation+((elment.item_quantity_uom_id_2>0)?(' | '+elment.item_quantity_2+' '+elment.unit_abbreviation_2):'')+'<input hidden  id="'+elment.sd_id+'_item_quantity" value="'+elment.item_quantity+'"></li>'+
+                                                            '</ul><input hidden id="'+elment.sd_id+'_item_code" value="'+elment.item_code+'"><input hidden id="'+elment.sd_id+'_item_id" value="'+elment.item_id+'"></td>'+
+                                                    '<td style="text-align: left;" class="cons_type_td"><span class="cons_type_text">'+cons_typ+'</span><select class="cons_type_input" hidden id="'+elment.sd_id+'_cons_type_id">'+
+                                                        '<option '+((elment.consignment_type_id==1)?'selected':'')+' value="1">Percentage (Excluded Rate)</option>'+
+                                                        '<option '+((elment.consignment_type_id==2)?'selected':'')+' value="2">Percentage (Included Rate)</option>'+
+                                                        '<option '+((elment.consignment_type_id==3)?'selected':'')+' value="3">Fixed Amount</option>'+
+                                                        '<option '+((elment.consignment_type_id==4)?'selected':'')+' value="4">Fixed Amount (Included)</option>'+
+                                                    '</select></td>'+
+                                                    '<td class="cons_rate_td" style="text-align: left;"><span class="cons_rate_text">'+cons_rate+'</span><input class="cons_rate_inpt" hidden step="1" type="number" id="'+elment.sd_id+'_cons_rate"  value="'+elment.consignment_rate+'"></td>';
                                         if(elment.item_quantity_uom_id_2>0){
-                                            newRow +=   '<td style="text-align: left;">'+elment.unit_abbreviation+'<input step="0.01" max="'+elment.item_quantity+'" type="number" id="'+elment.sd_id+'_unit_to_credit"  value="'+elment.item_quantity+'"><input hidden  id="'+elment.sd_id+'_uom_abr" value="'+elment.unit_abbreviation+'"><input hidden  id="'+elment.sd_id+'_uom_id" value="'+elment.item_quantity_uom_id+'"></td>'+
-                                                        '<td style="text-align: left;">'+elment.unit_abbreviation_2+'<input step="1" max="'+elment.item_quantity_2+'" type="number" id="'+elment.sd_id+'_unit_to_credit_2"  value="'+elment.item_quantity_2+'"><input hidden  id="'+elment.sd_id+'_uom_abr_2" value="'+elment.unit_abbreviation_2+'"><input hidden  id="'+elment.sd_id+'_uom_id_2" value="'+elment.item_quantity_uom_id_2+'"></td>';
+                                            newRow +=   '<td style="text-align: left;">'+elment.unit_abbreviation+'<input  step="0.01" max="'+elment.item_quantity+'" type="number" id="'+elment.sd_id+'_unit_to_credit" class="unit1_cls" value="'+elment.item_quantity+'"><input hidden  id="'+elment.sd_id+'_uom_abr" value="'+elment.unit_abbreviation+'"><input hidden  id="'+elment.sd_id+'_uom_id" value="'+elment.item_quantity_uom_id+'"></td>'+
+                                                        '<td style="text-align: left;">'+elment.unit_abbreviation_2+'<input step="1" max="'+elment.item_quantity_2+'" type="number" id="'+elment.sd_id+'_unit_to_credit_2" class="unit2_cls" value="'+elment.item_quantity_2+'"><input hidden  id="'+elment.sd_id+'_uom_abr_2" value="'+elment.unit_abbreviation_2+'"><input hidden  id="'+elment.sd_id+'_uom_id_2" value="'+elment.item_quantity_uom_id_2+'"></td>';
                                         }else{
-                                             newRow +=   '<td style="text-align: left;" colspan="2">'+elment.unit_abbreviation+'<br><input  step="0.01" max="'+elment.item_quantity+'" type="number" min="0" max="'+elment.item_quantity_1+'" id="'+elment.sd_id+'_unit_to_credit"  value="'+elment.item_quantity+'"><input hidden  id="'+elment.sd_id+'_uom_abr" value="'+elment.unit_abbreviation+'"><input hidden  id="'+elment.sd_id+'_uom_id" value="'+elment.item_quantity_uom_id+'"></td>';
+                                             newRow +=   '<td style="text-align: left;" colspan="2">'+elment.unit_abbreviation+'<br><input  step="0.01" max="'+elment.item_quantity+'" type="number" min="0" max="'+elment.item_quantity_1+'" class="unit1_cls" id="'+elment.sd_id+'_unit_to_credit"  value="'+elment.item_quantity+'"><input hidden  id="'+elment.sd_id+'_uom_abr" value="'+elment.unit_abbreviation+'"><input hidden  id="'+elment.sd_id+'_uom_id" value="'+elment.item_quantity_uom_id+'"></td>';
                                         }
-                                            newRow +=  '<td style="text-align: left;">'+elment.currency_code+((parseFloat(elment.discount_persent)>0)?'['+elment.discount_persent+'% Discount inc]':'')+'<input step="1" type="number" id="'+elment.sd_id+'_unit_price"  value="'+parseFloat(elment.unit_price).toFixed(2)+'"></td>'+
-                                                       '<td style="text-align: right;"><b>'+sub_tot.toFixed(2)+'<input hidden id="'+elment.sd_id+'_sub_tot" value="'+sub_tot+'"></b></td>'+
+                                            newRow +=  '<td style="text-align: left;">'+elment.currency_code+((parseFloat(elment.discount_persent)>0)?'['+elment.discount_persent+'% Discount inc]':'')+'<input step="1" type="number" id="'+elment.sd_id+'_unit_price" class="" value="'+parseFloat(elment.unit_price).toFixed(2)+'"><input hidden type="number" id="'+elment.sd_id+'_unit_price_floted" class="price_cls" value="'+parseFloat(elment.unit_price)+'"></td>'+
+                                                       '<td style="text-align: right;"><b><span class="subtot_cls">'+sub_tot.toFixed(2)+'</span><input hidden id="'+elment.sd_id+'_sub_tot" value="'+sub_tot+'"></b></td>'+
                                                        '<td><span  id="'+elment.sd_id+'" class="btn btn-success fa fa-plus add_res_row"></span></td>'+
                                                   '</tr>';
                                     jQuery('#bottom_rows_restbl').append(newRow); 
+                                    recalculate_totals();
+                                    
+                                    $('.cons_rate_td').click(function(){  
+                                        var tr_id = $(this).closest('tr').attr('id'); 
+                                        $('#'+tr_id+' #'+elment.sd_id+'_cons_rate').addClass("form-control");
+                                        $('#'+tr_id+' #'+elment.sd_id+'_cons_rate').show().focus().select();  
+                                    });
+                                    $('.cons_rate_inpt').focusout(function(){    
+                                        var tr_id = $(this).closest('tr').attr('id'); 
+                                        $('#'+tr_id+' .cons_rate_td .cons_rate_text').text(parseFloat($(this).val()).toFixed(2));
+                                        $(this).removeClass('form-control');
+                                        recalculate_totals();
+                                    });
+                                    
+                                    $('.cons_type_td').click(function(){  
+                                        var tr_id = $(this).closest('tr').attr('id'); 
+                                        $('#'+tr_id+' #'+elment.sd_id+'_cons_type_id').addClass("form-control");
+                                        $('#'+tr_id+' #'+elment.sd_id+'_cons_type_id').show().focus().select();  
+                                    });
+                                    $('.cons_type_input').focusout(function(){     
+                                        var tr_id = $(this).closest('tr').attr('id'); 
+                                        $('#'+tr_id+' .cons_type_text').text($("#"+this.id+" option:selected").text());
+                                        $(this).removeClass('form-control');
+                                        recalculate_totals();
+                                    });
                              });
                              
                                     $('.add_res_row').click(function(){
                                         
                                         var add_id = this.id;
+                                        var add_cons_type_id = $("#"+add_id+"_cons_type_id").val();
+                                        var add_cons_type_name = $("#"+add_id+"_cons_type_id option:selected").text();
+                                        var add_cons_rate = $("#"+add_id+"_cons_rate").val();
+                                        var add_cons_rate_text = $("#rowb_"+add_id+" .cons_rate_text").text();
                                         var add_cs_no = $("#"+add_id+"_cs_no").val()
                                         var add_cs_date = $("#"+add_id+"_cs_date").val()
                                         var add_item_code = $("#"+add_id+"_item_code").val()
@@ -364,13 +413,19 @@ function get_inv_items_res(){
 //                                       fl_alert('info',add_uom_abr_2)
                                         var add_sub_tot = parseFloat(add_unit_to_credit)* parseFloat(add_unit_price);
 //                                     
-                                        var newRow = '<tr id="rowt_'+add_id+'">'+
-                                                        '<td style="text-align: center;">'+add_cs_no+'<input hidden name="inv_items_btm['+add_id+'][cs_no]" value="'+add_cs_no+'"></td>'+
-                                                        '<td style="text-align: center;">'+add_item_code+'<input hidden name="inv_items_btm['+add_id+'][item_code]" value="'+add_item_code+'"><input hidden name="inv_items_btm['+add_id+'][item_id]" value="'+add_item_id+'"></td>'+
-                                                        '<td style="text-align: center;">'+add_item_description+'<input hidden name="inv_items_btm['+add_id+'][item_description]" value="'+add_item_description+'"></td>'+
-                                                        '<td style="text-align: center;">'+add_cs_date+'<input hidden name="inv_items_btm['+add_id+'][cs_date]" value="'+add_cs_date+'"></td>'+
-                                                        '<td style="text-align: right;">'+add_item_quantity+' '+add_uom_abr+'<input hidden name="inv_items_btm['+add_id+'][item_quantity]" value="'+add_unit_price+'"></td>'+
-                                                        '<td style="text-align: right;" colspan="2">'+parseFloat(add_unit_to_credit).toFixed(2)+' '+add_uom_abr+((add_uom_abr_2!=0)?'| '+add_unit_to_credit_2+' '+add_uom_abr_2:'')+'<input hidden name="inv_items_btm['+add_id+'][item_quantity]" value="'+add_unit_to_credit+'"><input hidden name="inv_items_btm['+add_id+'][item_quantity_2]" value="'+add_unit_to_credit_2+'"><input hidden name="inv_items_btm['+add_id+'][uom_id]" value="'+add_uom_id+'"><input hidden name="inv_items_btm['+add_id+'][uom_id_2]" value="'+add_uom_id_2+'"></td>'+
+                                        var newRow = '<tr class="row_top_cls" id="rowt_'+add_id+'">'+
+                                                        '<td style="text-align: center;"><ul><li>'+add_cs_no+'<input hidden name="inv_items_btm['+add_id+'][cs_no]" value="'+add_cs_no+'"></li>'+
+                                                        '<li>'+add_cs_date+'<input hidden name="inv_items_btm['+add_id+'][cs_date]" value="'+add_cs_date+'"></li></ul></td>'+
+                                                        '<td style="text-align: left;">'+
+                                                            '<ul>'+
+                                                                '<li>Code: '+add_item_code+'<input hidden name="inv_items_btm['+add_id+'][item_code]" value="'+add_item_code+'"><input hidden name="inv_items_btm['+add_id+'][item_id]" value="'+add_item_id+'"></li>'+
+                                                                '<li>Desc: '+add_item_description+'<input hidden name="inv_items_btm['+add_id+'][item_description]" value="'+add_item_description+'"></li>'+
+                                                                '<li>Units: '+add_item_quantity+' '+add_uom_abr+'<input hidden name="inv_items_btm['+add_id+'][item_quantity]" value="'+add_unit_price+'"></li>'+
+                                                            '</ul>'+
+                                                        '</td>'+
+                                                        '<td style="text-align: center;">'+add_cons_type_name+'<input hidden name="inv_items_btm['+add_id+'][cons_type_id]" value="'+add_cons_type_id+'"></td>'+
+                                                        '<td style="text-align: center;">'+add_cons_rate_text+'<input hidden name="inv_items_btm['+add_id+'][cons_rate]" value="'+add_cons_rate+'"></td>'+
+                                                        '<td style="text-align: center;" colspan="2">'+parseFloat(add_unit_to_credit).toFixed(2)+' '+add_uom_abr+((add_uom_abr_2!=0)?'| '+add_unit_to_credit_2+' '+add_uom_abr_2:'')+'<input hidden name="inv_items_btm['+add_id+'][item_quantity]" value="'+add_unit_to_credit+'"><input hidden name="inv_items_btm['+add_id+'][item_quantity_2]" value="'+add_unit_to_credit_2+'"><input hidden name="inv_items_btm['+add_id+'][uom_id]" value="'+add_uom_id+'"><input hidden name="inv_items_btm['+add_id+'][uom_id_2]" value="'+add_uom_id_2+'"></td>'+
                                                         '<td style="text-align: right;">'+parseFloat(add_unit_price).toFixed(2)+'<input hidden name="inv_items_btm['+add_id+'][unit_price]" value="'+parseFloat(add_unit_price).toFixed(2)+'"></td>'+
                                                         '<td style="text-align: right;"><b>'+add_sub_tot.toFixed(2)+'<input hidden name="inv_items_btm['+add_id+'][sub_tot]" id="remove_subtot_'+add_id+'" value="'+add_sub_tot+'"></b></td>'+
                                                         '<td><span  id="add_'+add_id+'" class="btn btn-danger fa fa-trash remove_res_row"></span>'+'<input hidden id="add_'+add_id+'_remove" value="'+add_id+'"></td>'+
@@ -400,6 +455,36 @@ function get_inv_items_res(){
                     }
         });
 }
+
+    function recalculate_totals(){
+        var tot_cons = 0; var totl="";
+        $('.row_btm_cls').each(function() {  
+            var cons_amount=0;
+            var ds_id = this.id;
+            var cons_type_id = $("#"+ds_id+" .cons_type_input").val();
+            var unit1 =  parseFloat($("#"+ds_id+" .unit1_cls").val());
+            var prc =  parseFloat($("#"+ds_id+" .price_cls").val());
+            var cons_rate =  parseFloat($("#"+ds_id+" .cons_rate_inpt").val());
+            var sub_totl =  prc*unit1;
+            switch(cons_type_id){
+                case '1': cons_amount = (unit1*prc*cons_rate)*0.01 ; tot_cons += cons_amount; sub_totl+= cons_amount; 
+                          $('#'+ds_id+' .cons_rate_td .cons_rate_text').text(cons_amount.toFixed(2)+" ("+cons_rate.toFixed(2)+")%");
+                          break;
+                case '2': cons_amount = (unit1*prc*cons_rate)*0.01 ; tot_cons += cons_amount;
+                          $('#'+ds_id+' .cons_rate_td .cons_rate_text').text(cons_amount.toFixed(2)+" ("+cons_rate.toFixed(2)+")%");
+                          break;
+                case '3': cons_amount = cons_rate ; tot_cons += cons_amount; sub_totl+= cons_amount; 
+                          $('#'+ds_id+' .cons_rate_td .cons_rate_text').text(cons_rate.toFixed(2));
+                          break;
+                case '4': cons_amount = cons_rate ; tot_cons += cons_amount; 
+                          $('#'+ds_id+' .cons_rate_td .cons_rate_text').text(cons_rate.toFixed(2));
+                          break;
+            }
+            
+            totl +=  sub_totl;
+            $('#'+ds_id+" .subtot_cls").text(sub_totl.toFixed(2));
+        });
+    }
 function timeConverter(UNIX_timestamp){
   var a = new Date(UNIX_timestamp * 1000);
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];

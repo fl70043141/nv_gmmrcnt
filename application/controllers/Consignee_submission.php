@@ -47,7 +47,7 @@ class Consignee_submission extends CI_Controller {
             $data  			= $this->load_data($id);
             $data['action']		= 'Delete';
             $data['main_content']='consignee_submission/view_consignee_submission'; 
-            $data['inv_data'] = $this->get_submission_info($id);
+            $data['cs_desc_data'] = $this->get_submission_info($id);
             
             $this->load->view('includes/template',$data); 
 	}
@@ -128,7 +128,7 @@ class Consignee_submission extends CI_Controller {
             $cur_det = $this->Consignee_submission_model->get_currency_for_code($inputs['currency_code']);
             if(isset($inputs['status'])){
                 $inputs['status'] = 1;
-            } else{
+            }else{
                 $inputs['status'] = 0;
             }
             $data['inv_tbl'] = array(
@@ -161,7 +161,9 @@ class Consignee_submission extends CI_Controller {
                                             'item_quantity_2' => $inv_item['item_quantity_2'],
                                             'item_quantity_uom_id_2' => $inv_item['item_quantity_uom_id_2'],
                                             'unit_price' => $inv_item['item_unit_cost'],
-                                            'discount_persent' => $inv_item['item_line_discount'],
+                                            'consignment_type_id' => $inv_item['item_consignee_type_id'],
+                                            'consignment_rate' => $inv_item['consignee_rate'],
+                                            'consignment_amount' => $inv_item['item_cons_commish'], 
                                             'location_id' => $inputs['location_id'],
                                             'status' => 1,
                                             'deleted' => 0,
@@ -294,12 +296,12 @@ class Consignee_submission extends CI_Controller {
             $this->load->model('Item_stock_model');
             $inputs = $this->input->post(); 
             //check the payments before delete reservation
-            $trans_data = $this->Consignee_submission_model->get_transections($inputs['id']);
-            if(!empty($trans_data)){
-                $this->session->set_flashdata('error','You need to remove the Payments transections before delete Invoice!');
-                redirect(base_url($this->router->fetch_class().'/delete/'.$inputs['id']));
-                return false;
-            }
+//            $trans_data = $this->Consignee_submission_model->get_transections($inputs['id']);
+//            if(!empty($trans_data)){
+//                $this->session->set_flashdata('error','You need to remove the Payments transections before delete Invoice!');
+//                redirect(base_url($this->router->fetch_class().'/delete/'.$inputs['id']));
+//                return false;
+//            }
             $data['tbl_data'] = array(
                             'deleted' => 1,
                             'deleted_on' => date('Y-m-d'),
@@ -372,6 +374,7 @@ class Consignee_submission extends CI_Controller {
             $data['sales_type_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 14'); //14 for sales type
             $data['category_list'] = get_dropdown_data(ADDON_CALC_INCLUDED,'name','id','Agent Type');
             $data['currency_list'] = get_dropdown_data(CURRENCY,'code','code','Currency');
+            $data['country_list'] = get_dropdown_data(COUNTRY_LIST,'country_name','country_code',''); 
                     
             $data['item_category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Category');
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
@@ -612,8 +615,7 @@ class Consignee_submission extends CI_Controller {
         
         function fl_ajax(){
             
-//            echo '<pre>';            print_r($this->input->post()); die;
-            $func = $this->input->get('function_name');
+            $func = $this->input->post('function_name');
             $param = $this->input->post();
             
             if(method_exists($this, $func)){ 
@@ -690,6 +692,43 @@ class Consignee_submission extends CI_Controller {
 //                echo '<pre>';                print_r($res); die;
 //                echo form_dropdown('variety',$dropdown_data, set_value('variety'),' class="form-control select" data-live-search="true" id="variety" ');
                 echo json_encode($res[0]);
+        }
+        
+        function get_dropdown_formodal($table='CONSIGNEES',$name='customer_name',$id="id"){ 
+             echo json_encode(get_dropdown_data(CONSIGNEES, array('consignee_name',"CONCAT(consignee_name,' | ',consignee_short_name) as consignee_name"), $id,'Consignee')); 
+//             echo json_encode(get_dropdown_data(CUSTOMERS, $name, $id,'Customer')); 
+        }
+        function add_consignee_quick($data1){
+            unset($data1['function_name']);
+            $short_name = gen_id('C-', CONSIGNEES, 'id',2,0); 
+            $cons_id = get_autoincrement_no(CONSIGNEES);
+                    
+            $country_dets = get_single_row_helper(COUNTRY_LIST,"country_code = '".$data1['country']."'");
+            $data1['address'] =  $data1['address'].(($data1['city']!='')?','.$data1['city']:'').(($data1['country']!='')?','.$country_dets['country_name']:'');
+            unset($data1['city']);unset($data1['country']);
+            
+            $data = array(
+                            'id' => $cons_id,  
+                            'consignee_name' => $data1['consignee_name'], 
+                            'phone' => $data1['phone'], 
+                            'address' => $data1['address'], 
+                            'consignee_short_name' => $short_name, 
+                            'status' => 1,  
+                            'added_on' => date('Y-m-d'),
+                            'added_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
+                            );
+            
+                    
+//            echo '<pre>';            print_r($data2); die;
+                $this->load->model('Consignees_model');
+		$add_stat = $this->Consignees_model->add_db($data); 
+                
+		if($add_stat[0]){ 
+                    //update log data
+                    $new_data = $this->Consignees_model->get_single_row($add_stat[1]);
+                    add_system_log(CUSTOMERS, $this->router->fetch_class(), __FUNCTION__, '', $new_data); 
+                }
+                echo $add_stat[1];
         }
         
         function test(){

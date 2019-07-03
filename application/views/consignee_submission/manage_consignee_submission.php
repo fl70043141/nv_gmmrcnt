@@ -9,7 +9,7 @@
                         'submitted_date'=>date('m/d/Y'),
                         'delivery_address'=>"",
                         'customer_phone'=>"",
-                        'customer_reference'=>"", 
+                        'consignee_reference'=>"", 
                         'location_id'=>"",
                         'memo'=>"",
                         'reference'=> 'G-'.date('Ymd-Hi'),
@@ -111,10 +111,11 @@ endswitch;
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">Consignee<span style="color: red">*</span></label>
-                                    <div class="col-md-9">    
+                                    <div class="col-md-7">    
                                          <?php  echo form_dropdown('consignee_id',$customer_list,set_value('consignee_id',$result['consignee_id']),' class="form-control select2" data-live-search="true" id="consignee_id"');?>
                                          <!--<span class="help-block"><?php // echo form_error('customer_type_id');?>&nbsp;</span>-->
                                     </div> 
+                                    <div class="col-md-2"> <a id="add_consg_btn" class="btn btn-primary pull-right btn-sm "><span class="fa fa-plus"></span></a></div>
                                 </div>
                                
                                 <div class="form-group">
@@ -155,6 +156,7 @@ endswitch;
                             </div> 
                         </div>
                         <div class="row"> 
+                            <div id="fl_res1"></div>
                             <hr>
                             <div class="">
                                 <div id='add_item_form' class="col-md-12 fl_scrollable_x bg-light-blue-gradient">
@@ -179,7 +181,7 @@ endswitch;
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group pad">
-                                                <label for="item_unit_cost">Unit Cost <span id="cur_code_lineform"></span>/<span id="prce_unit_name"></span> <input type="checkbox" name="is_price_per_unit" id="is_price_per_unit" value="1" checked></label>
+                                                <label for="item_unit_cost">Unit Cost <span id="cur_code_lineform"></span>/<span id="prce_unit_name"></span> <input type="checkbox" name="is_price_per_unit" id="is_price_per_unit" value="1"></label>
                                                 <input type="number" min="0"  step=".001"  name="item_unit_cost" class="form-control add_item_inpt" id="item_unit_cost" placeholder="Unit Cost for item">
                                             </div>
                                         </div>
@@ -189,9 +191,21 @@ endswitch;
                                                 <input type="number" name="item_discount" step="5" min="0" max="100"  class="form-control add_item_inpt" id="item_discount" value="0" placeholder="Enter Line Discount">
                                             </div>
                                         </div>
-                                        <div class="col-md-1">
-                                            <div class="form-group pad"><br>
-                                                <span id="add_item_btn" class="btn-default btn add_item_inpt pad">Add</span>
+                                        <div class="col-md-2">
+                                            <div class="form-group pad no-pad-top">
+                                                <label for="cons_type">Cons. Type</label>
+                                                <?php echo form_dropdown('cons_type',array(1=>'Percentage (Excluded Rate)',2=>'Percentage (Included Rate)', '3'=>'Fixed Amount', '4'=>'Fixed Amount (Included)'),set_value('cons_type'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="cons_type"');?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group pad no-pad-top">
+                                                <label for="cons_rate">Consignment Amount </label>
+                                                <input type="number" min="0"  step=".001"  name="cons_rate" class="form-control add_item_inpt" id="cons_rate" value="0" placeholder="Enter Consignment Rate or Amount">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group pad no-pad-top"><br>
+                                                <span id="add_item_btn" class="btn-default btn add_item_inpt pad"><span class="fa fa-plus"></span> Add to List</span>
                                             </div>
                                         </div>
                                     </div> 
@@ -205,7 +219,7 @@ endswitch;
                                                <th width="20%" style="text-align: center;">Item Description</th> 
                                                <th width="10%" style="text-align: center;">Quantity</th> 
                                                <th width="10%" style="text-align: right;">Unit Cost</th>  
-                                               <th width="10%" style="text-align: right;">Discount</th>  
+                                               <th width="10%" style="text-align: right;">Commission</th>  
                                                <th width="10%" style="text-align: right;">Total</th> 
                                                <th width="5%" style="text-align: center;">Action</th>
                                            </tr>
@@ -245,15 +259,15 @@ endswitch;
                                             
                                             <tr>
                                                 <th colspan="4"></th>
-                                                <th  style="text-align: right;">Sub Total</th>
+                                                <th  style="text-align: right;"> Total</th>
                                                 <th  style="text-align: right;"><input hidden value="<?php echo (isset($so_total)?$so_total:0);?>" name="invoice_sub_total" id="invoice_sub_total"><span id="inv_sub_tot"><?php echo number_format($so_total,2);?></span></th>
                                             </tr>
                                             <tr>
-                                                <th colspan="3"></th>
-                                                <th colspan="2" style="text-align: right;">Consignee Commission <span id="commiss_val"></span></th>
-                                                <th  style="text-align: right;"><input hidden value="<?php echo (isset($so_total)?$so_total:0);?>" name="total_commission" id="total_commission"><span id="total_commiss"><?php echo number_format($so_total,2);?></span></th>
+                                                <th colspan="4"></th>
+                                                <th  style="text-align: right;">Total Consignee Commission <input hidden type="text" value="0" id="tot_commish_val_inp" name="tot_commish_val_inp"></th>
+                                                <th  style="text-align: right;"><span id="tot_commish_val_text"><?php echo number_format($so_total,2);?></span></th>
                                             </tr> 
-                                            <tr>
+                                            <tr hidden>
                                                 <th colspan="4"></th>
                                                 <th  style="text-align: right;">Total</th>
                                                 <th  style="text-align: right;"><input hidden value="<?php echo (isset($so_total)?$so_total:0);?>" name="invoice_total" id="invoice_total"><span id="inv_total"><?php echo number_format($so_total,2);?></span></th>
@@ -266,7 +280,7 @@ endswitch;
                         </div>
                         
                         <div class="row" id="footer_sales_form">
-                            <h5>Order Delivery Info</h5>
+                            <h5>Consignment Delivery Info</h5>
                             <hr>
                             <div class="col-md-6"> 
                                 <div class="form-group">
@@ -296,8 +310,8 @@ endswitch;
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">Reference<span style="color: red"></span></label>
                                     <div class="col-md-9">    
-                                        <?php echo form_input('customer_reference', set_value('customer_reference',$result['customer_reference']), 'id="customer_reference" class="form-control" placeholder="Enter ref"'.$dis.' '.$o_dis.' '); ?>
-                                        <?php echo form_error('customer_reference');?> 
+                                        <?php echo form_input('consignee_reference', set_value('consignee_reference',$result['consignee_reference']), 'id="consignee_reference" class="form-control" placeholder="Enter ref"'.$dis.' '.$o_dis.' '); ?>
+                                        <?php echo form_error('consignee_reference');?> 
                                     </div> 
                                 </div>
                                 
@@ -387,6 +401,7 @@ endswitch;
 </div>
     
 <?php $this->load->view('sales_invoices/inv_modals/item_search/item_search_modal'); ?>
+<?php $this->load->view('consignee_submission/cs_modals/add_new_consignee_model'); ?>
 <script type="text/javascript">
   $('tbody').sortable();
 </script>
@@ -604,15 +619,31 @@ $(document).ready(function(){
                                 
 //                                    return false;
 //                                $("#search_result_1").html(result); 
-                                if((parseFloat(res2.stock.units_available)<parseFloat(item_qty1) || parseFloat(res2.stock.units_available_2)<parseFloat(item_qty2)) || parseFloat(item_qty2)<=0){
-                                    fl_alert('info','Please check the Item line Quantity.');
+                                
+                                if(parseFloat(unit_cost1)<=0 || isNaN(parseFloat(unit_cost1)) ){
+                                    unit_cost1 =0;
+                                    
+//                                    fl_fl_alert('warning','warning','Item Price invalid! Please recheck before add.');
+                                    fl_alert('warning','Item Price invalid! Please recheck before add.');
                                     return false;
-                                }
+                                }  
+                                
+                                var cur_req_qty = parseFloat(item_qty1);
+                                $('.qty_'+item_code1).each(function() { 
+                                    cur_req_qty = cur_req_qty +  parseFloat(this.value)
+                                });
+                                
+                                if(parseFloat(res2.stock.units_available)<parseFloat(item_qty1) || parseFloat(res2.stock.units_available_2)<parseFloat(item_qty2) ){
+                                    fl_alert('warning','Please check the Item line Quantity.');
+                                    return false;
+                                }  
                                 
                                 if(res2.item_code==null){
-                                    fl_alert('info','Item invalid! Please recheck before add.');
+                                    fl_alert('warning','Item invalid! Please recheck before add.');
                                     return false;
                                 }
+                                 
+                                
                                 var rowCount = $('#invoice_list_tbl tr').length;
                                 var counter = rowCount+1;
                                 var qtyXprice = parseFloat(unit_cost1) * parseFloat(item_qty1);
@@ -620,9 +651,26 @@ $(document).ready(function(){
                                 var item_total = qtyXprice - (parseFloat($('#item_discount').val())* 0.01 * qtyXprice);
 //                                var item_total = qtyXprice;
                                 
+                                var cons_commish_amount = 0;
+                                var cons_type_id = $('#cons_type').val(); 
+                                var commish_value = parseFloat($('#cons_rate').val()); 
+                                var commish_note = '-';
+                                if(commish_value>0){
+                                    switch($('#cons_type').val()){
+                                        case '1':  cons_commish_amount = (qtyXprice*(commish_value/100)); item_total += cons_commish_amount; commish_note = commish_value+'% '; break;
+                                        case '2':  cons_commish_amount = (qtyXprice*(commish_value/100)); commish_note = commish_value+'% Included'; break;
+                                        case '3':  cons_commish_amount = commish_value; item_total += cons_commish_amount; commish_note = 'Fixed Amount'; break; 
+                                        case '4':  cons_commish_amount = commish_value; commish_note = 'Fixed Amount Included'; break; 
+                                    }
+                                }
+                                
+                                if(parseFloat(cons_commish_amount) > (parseFloat(unit_cost1) * parseFloat(item_qty1))){
+                                    fl_alert('warning','Consignment amount can not be overtaken the item price!');
+                                    return false;
+                                }
                                 
                                 var row_str = '<tr style="padding:10px" id="tr_'+rowCount+'">'+ 
-                                                        '<td><input hidden name="inv_items['+rowCount+'][item_code]" value="'+item_code1+'">'+item_code1+'</td>'+
+                                                        '<td><input class="itemcode_cls"  hidden name="inv_items['+rowCount+'][item_code]" value="'+item_code1+'">'+item_code1+'</td>'+
                                                         '<td><input hidden name="inv_items['+rowCount+'][item_desc]" value="'+res2.item_name+'"><input hidden name="inv_items['+rowCount+'][item_id]" value="'+res2.id+'">'+res2.item_name+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_quantity]" value="'+item_qty1+'"><input hidden name="inv_items['+rowCount+'][item_quantity_2]" value="'+((item_qty2==null)?0:item_qty2)+'">'+
                                                         '<input hidden name="inv_items['+rowCount+'][unit_abbreviation]" value="'+res2.unit_abbreviation+'"><input hidden name="inv_items['+rowCount+'][item_quantity_uom_id]" value="'+res2.item_uom_id+'"><input hidden name="inv_items['+rowCount+'][item_quantity_uom_id_2]" value="'+res2.item_uom_id_2+'">'+
@@ -631,12 +679,22 @@ $(document).ready(function(){
                                     row_str = row_str + ' | ' + item_qty2+' '+res2.unit_abbreviation_2+'<input hidden name="inv_items['+rowCount+'][unit_abbreviation_2]" value="'+res2.unit_abbreviation_2+'">';
                                 }                                                                                                                                                                                                                                                                        
                                 row_str = row_str + '</td> <td align="right"><input hidden name="inv_items['+rowCount+'][item_unit_cost]" value="'+unit_cost1+'">'+parseFloat(unit_cost1).toFixed(2)+'</td>'+ 
-                                                        '<td align="right"><input class="item_line_discount" hidden name="inv_items['+rowCount+'][item_line_discount]" value="'+item_discount1+'">'+line_disc_amount.toFixed(2)+' ('+item_discount1+' %)</td>'+
+                                                        '<td align="right"><input class="item_cons_commish_cls" hidden name="inv_items['+rowCount+'][item_cons_commish]" value="'+cons_commish_amount+'">'+ 
+                                                            '<input hidden name="inv_items['+rowCount+'][item_consignee_type_id]" value="'+cons_type_id+'"> <input hidden name="inv_items['+rowCount+'][consignee_rate]" value="'+$('#cons_rate').val()+'"> '+cons_commish_amount.toFixed(2)+' ('+commish_note+')'+
+                                                        '</td>'+
                                                         '<td align="right"><input class="item_tots" hidden name="inv_items['+rowCount+'][item_total]" value="'+item_total+'">'+item_total.toFixed(2)+'</td>'+
                                                         '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
-                                                    '</tr>';
-                                var newRow = $(row_str);
-                                jQuery('table#invoice_list_tbl ').append(newRow);
+                                                    '</tr>'; 
+                                var newRow = $(row_str);var exist_item=0;
+                                $('.itemcode_cls').each(function(){
+                                    if(this.value == item_code1){
+                                        fl_alert('warning',"This Item already added to list!")
+                                        exist_item = 1;
+                                    }
+                                });
+                                if(exist_item==0){
+                                    jQuery('table#invoice_list_tbl ').append(newRow);
+                                }
                                 var inv_sub_total = parseFloat(invs_total1) + ((set_cookie_data=='')?item_total:0);
                                 var consignee_commiss = 0; 
                                 if(commiss_plan1=="1"){//percentage
@@ -651,8 +709,6 @@ $(document).ready(function(){
                                 
                                 $('#invoice_sub_total').val(parseFloat(inv_sub_total).toFixed(2));
                                 $('#inv_sub_tot').text(parseFloat(inv_sub_total).toFixed(2));
-                                $('#total_commission').val(consignee_commiss.toFixed(2));
-                                $('#total_commiss').text(consignee_commiss.toFixed(2));
                                 $('#invoice_total').val(inv_total.toFixed(2));
                                 $('#total_amount').val(inv_total.toFixed(2));
                                 $('#inv_total').text(inv_total.toFixed(2));
@@ -675,14 +731,14 @@ $(document).ready(function(){
                                         consignee_commiss = parseFloat(commiss_amount1) ;
                                     }  
                                      $('#inv_sub_tot').text(parseFloat(tot_amt).toFixed(2));
-                                    $('#total_commission').val(consignee_commiss.toFixed(2));
-                                    $('#total_commiss').text(consignee_commiss.toFixed(2));
                                     
                                     $('#invoice_total').val(tot_amt.toFixed(2));
                                     $('#total_amount').val(tot_amt.toFixed(2));
                                     $('#inv_total').text(tot_amt.toFixed(2)); 
                                     set_list_cookies();
+                                    recalculate_totals();
                                 });
+                                recalculate_totals();
                                 set_list_cookies();
                                 
         }
@@ -740,27 +796,64 @@ $(document).ready(function(){
         
         function get_consignee_info(){ 
              $.ajax({
-                            url: "<?php echo site_url('Consignee_submission/fl_ajax?function_name=get_consignee_info');?>",
+                            url: "<?php echo site_url('Consignee_submission/fl_ajax/');?>",
                             type: 'post',
-                            data : {function_name:'get_cookie_data_itms', consignee_id:$('#consignee_id').val()},
+                            data : {function_name:'get_consignee_info', consignee_id:$('#consignee_id').val()},
                             success: function(result){ 
-//                                    $("#search_result_1").html(result); 
-                                    res2 = JSON.parse(result);
+//                                    $("#fl_res1").html(result); 
+                                    var res2 = JSON.parse(result);
 //                                    console.log(res2);
 //                                    fl_alert('info',res2.id);
                                     $('input[name=commission_plan]').val(res2.commission_plan);
                                     $('input[name=commission_amount]').val(res2.commission_amount);
                                         if(res2.commission_plan ==1){
                                             $('#commiss_val').text(' ('+parseFloat(res2.commission_amount).toFixed(2)+' %)');
+                                            $('#commish_val_text').val(parseFloat(res2.commission_amount));
                                         }
                                         if(res2.commission_plan ==2){
                                             $('#commiss_val').text(' ('+parseFloat(res2.commission_amount).toFixed(2)+')');
+                                            $('#commish_val_text').val(parseFloat(res2.commission_amount));
                                         }
 //                                             console.log(res2.consignee_id);return false; 
                                         
                             }
                     }); 
         }
+        
+            function recalculate_totals(){
+                var tot_amt = 0;
+                var subtot= 0;
+                $('input[class^="item_tots"]').each(function() { 
+                    subtot = subtot + parseFloat($(this).val());
+                   
+                });  
+                tot_amt += subtot;
+                
+                //addons
+               var addon_tot = 0;
+               $('.addon_inputs').each(function() {  
+                   addon_tot = addon_tot + parseFloat($(this).val());
+               });
+//                   alert(addon_tot)
+               tot_amt += addon_tot;
+               
+               
+                //Consignee Commish
+               var cons_commish_tot = 0;
+               $('.item_cons_commish_cls').each(function() {  
+                   cons_commish_tot = cons_commish_tot + parseFloat($(this).val());
+               });
+                
+                
+                $('#tot_commish_val_text').text(cons_commish_tot.toFixed(2));
+                $('#tot_commish_val_inp').val(cons_commish_tot);
+                $('#invoice_total').val(tot_amt.toFixed(2));
+                $('#inv_total').text(tot_amt.toFixed(2)); 
+                
+                $('#invoice_sub_total').val(subtot.toFixed(2));
+                $('#inv_sub_total').text(subtot.toFixed(2)); 
+                
+            }
         
          $(document).ready(function(){
         //Dynamic itemloader for select2

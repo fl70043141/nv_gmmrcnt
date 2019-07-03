@@ -11,7 +11,7 @@ class Consignee_receive_model extends CI_Model
         public function search_consignee_submission($cs_no='',$from='',$to='',$consigee_id='',$location_id=''){
 //            echo $location_id; die;
             $this->db->select("cs.cs_no,cs.submitted_date,cs.currency_code"); 
-            $this->db->select("sd.id as sd_id,sd.item_id,sd.item_description,sd.item_quantity,sd.item_quantity_2,sd.item_quantity_uom_id,sd.item_quantity_uom_id_2,sd.unit_price,sd.discount_persent");
+            $this->db->select("sd.id as sd_id,sd.item_id,sd.item_description,sd.item_quantity,sd.item_quantity_2,sd.item_quantity_uom_id,sd.item_quantity_uom_id_2,sd.unit_price,sd.discount_persent,sd.consignment_type_id,sd.consignment_rate,sd.consignment_amount");
 //            
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = sd.item_quantity_uom_id)  as unit_abbreviation');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = sd.item_quantity_uom_id_2)  as unit_abbreviation_2');

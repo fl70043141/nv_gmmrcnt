@@ -120,7 +120,7 @@ class Consignee_submission_model extends CI_Model
 	}
          
                         
-        public function add_db($data){    
+        public function add_db($data){  
 //            echo '<pre>';            print_r($data); die; 
                 $this->db->trans_start();
                 

@@ -28,8 +28,7 @@ class Consignees_model extends CI_Model
             return $result;
 	}
                         
-        public function add_db($data){
-//            echo '<pre>';            print_r($data); die;       
+        public function add_db($data){     
                 $this->db->trans_start();
 		$this->db->insert(CONSIGNEES, $data); 
                 $insert_id =  $this->db->insert_id();
