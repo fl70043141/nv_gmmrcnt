@@ -23,14 +23,23 @@ class Sales_invoices extends CI_Controller {
         
 	function add(){ 
             $data  			= $this->load_data();  
-            if(isset($_GET['soid'])){ //data from sale order
-                $this->load->model('Sales_orders_model');
-                $so_data = $this->get_salesorder_info($_GET['soid']);
-                $data['so_data'] = $so_data['order_dets']; 
-                $data['so_order_items'] = $so_data['order_desc']; 
-                $data['og_data'] = $so_data['so_og_info']; 
-                $data['so_transection_pay'] = $so_data['so_transection_pay']; 
+//            if(isset($_GET['soid'])){ //data from sale order
+//                $this->load->model('Sales_orders_model');
+//                $so_data = $this->get_salesorder_info($_GET['soid']);
+//                $data['so_data'] = $so_data['order_dets']; 
+//                $data['so_order_items'] = $so_data['order_desc']; 
+//                $data['og_data'] = $so_data['so_og_info']; 
+//                $data['so_transection_pay'] = $so_data['so_transection_pay']; 
+//            }
+            
+            if(isset($_GET['cr_id'])){
+                $this->load->model('Consignee_receive_model');
+                $cr_data =$this->Consignee_receive_model->get_single_row($_GET['cr_id']);
+                $cr_descs =$this->Consignee_receive_model->get_invc_desc($_GET['cr_id']);
+                $data['cr_data'] = $cr_data;
+                $data['cr_items'] = $cr_descs;
             }
+//            echo '<pre>';            print_r($cr_descs); die;  
             
             $data['action']		= 'Add';
             $data['main_content']='sales_invoices/manage_sales_invoices';  
@@ -143,9 +152,9 @@ class Sales_invoices extends CI_Controller {
         }
         
 	function create(){
-            
             $inputs = $this->input->post();
             
+//            echo '<pre>';            print_r($inputs); die;
             $invoice_id = get_autoincrement_no(INVOICES);
             $invoice_no = gen_id(INVOICE_NO_PREFIX, INVOICES, 'id');
             
@@ -185,7 +194,7 @@ class Sales_invoices extends CI_Controller {
             $data['item_stock_transection'] = array(); //stock transection 
             $data['transection'] = array(); //payments transection 
             
-            $total_stnd = $total = 0;
+            $total_stnd = $total = 0; $total_consignemnt=0;
             foreach ($inputs['inv_items'] as $inv_item){
                 $standard_price_info = $this->Sales_invoices_model->get_item_standard_prices($inv_item['item_id']);
                 $standard_price = (!empty($standard_price_info))?$standard_price_info[0]['price_amount']:'';
@@ -236,6 +245,11 @@ class Sales_invoices extends CI_Controller {
                 }
                  
                 $data['so_desc_tbl'][] = array('new_item_id'=>$inv_item['item_id'],'invoiced'=>1);
+                
+                //if Consignement Exist
+                if(isset($inv_item['cons_data']) && !empty($inv_item['cons_data'])){
+                    $total_consignemnt += $inv_item['cons_data']['cons_amount'];
+                }
            }
            
            
@@ -463,6 +477,37 @@ class Sales_invoices extends CI_Controller {
                 }
             }
                   
+            if($total_consignemnt>0){
+                
+                $data['gl_trans'][] = array(
+                                               'person_type' => 30,
+                                               'person_id' => $inputs['consignee_id'],
+                                               'trans_ref' => $inputs['cons_receive_id'],
+                                               'trans_date' => strtotime("now"),
+                                               'account' => 104, //5 inventory GL
+                                               'account_code' => 5065, //5 inventory GL
+                                               'memo' => 'Consignment',
+                                               'amount' => (+$total_consignemnt), 
+                                               'currency_code' => $cur_det['code'], 
+                                               'currency_value' => $cur_det['value'], 
+                                               'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                               'status' => 1,
+                                       );
+                $data['gl_trans'][] = array(
+                                               'person_type' => 30,
+                                               'person_id' => $inputs['consignee_id'],
+                                               'trans_ref' => $inputs['cons_receive_id'],
+                                               'trans_date' => strtotime("now"),
+                                               'account' => 1, //75 workshop asset
+                                               'account_code' => 1060, 
+                                               'memo' => 'Consignment',
+                                               'amount' => (-$total_consignemnt),
+                                               'currency_code' => $cur_det['code'], 
+                                               'currency_value' => $cur_det['value'], 
+                                               'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                               'status' => 1,
+                                       );
+            }
 //            echo '<pre>';            print_r($tot_available_for_invoice);  
 //            echo '<pre>';            print_r($data); die;
 		$add_stat = $this->Sales_invoices_model->add_db($data);

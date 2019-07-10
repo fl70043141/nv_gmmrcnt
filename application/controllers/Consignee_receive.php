@@ -99,7 +99,7 @@ class Consignee_receive extends CI_Controller {
         
 	function create(){    
             $inputs = $this->input->post();
-//            echo '<pre>';            print_r($inputs); die; 
+//            echo '<pre>';            print_r($inputs); die;
                 $cr_id = get_autoincrement_no(CONSIGNEE_RECIEVE);
                 $cr_no = gen_id(CR_NO_PREFIX, CONSIGNEE_RECIEVE, 'id');
 
@@ -125,6 +125,14 @@ class Consignee_receive extends CI_Controller {
                 $data['item_stock_transection'] = array(); //stock transection purchasing
 
                 foreach ($inputs['inv_items_btm'] as $inv_item){
+                    $sub_tot = $inv_item['unit_price'] * $inv_item['item_quantity'];
+                    $item_cons_amount=0;
+                    switch ($inv_item['cons_type_id']){
+                        case 1: $item_cons_amount = $sub_tot*$inv_item['cons_rate']*0.01; break;
+                        case 2: $item_cons_amount = $sub_tot*$inv_item['cons_rate']*0.01; break;
+                        case 3: $item_cons_amount = $inv_item['cons_rate']; break;
+                        case 4: $item_cons_amount = $inv_item['cons_rate']; break;
+                    }
                     $data['cr_desc'][] = array(
                                                 'cr_id' => $cr_id,
                                                 'cs_no' => $inv_item['cs_no'],
@@ -135,6 +143,9 @@ class Consignee_receive extends CI_Controller {
                                                 'item_quantity_2' => $inv_item['item_quantity_2'],
                                                 'item_quantity_uom_id_2' => $inv_item['uom_id_2'],
                                                 'unit_price' => $inv_item['unit_price'],
+                                                'consignment_type_id' => $inv_item['cons_type_id'],
+                                                'consignment_rate' => $inv_item['cons_rate'],
+                                                'consignment_amount' => $item_cons_amount,
                                                 'location_id' => $inputs['location_id'],
                                                 'status' => 1,
                                                 'deleted' => 0,
@@ -165,7 +176,8 @@ class Consignee_receive extends CI_Controller {
 
                 }
 
-    //            echo '<pre>';            print_r($data); die;
+//                echo '<pre>';            print_r($inputs); die;
+//                echo '<pre>';            print_r($data); die;
 
                     $add_stat = $this->Consignee_receive_model->add_db($data);
 
@@ -173,7 +185,7 @@ class Consignee_receive extends CI_Controller {
                         //update log data
                         $new_data = $this->Consignee_receive_model->get_single_row($add_stat[1]);
                         add_system_log(CONSIGNEE_RECIEVE, $this->router->fetch_class(), __FUNCTION__, '', $new_data);
-                        if($inputs['form_action']=='invoice'){ 
+                        if($inputs['form_action']=='invoice'){
                             $this->session->set_flashdata('warn',"Consignee data ready for create Invoice");
                             redirect(base_url('Sales_invoices/add?cr_id='.$cr_id));
                         }

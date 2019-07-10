@@ -37,7 +37,7 @@ class Consignee_receive_model extends CI_Model
             return $result;
             
         }
-         public function search_result($data=''){ 
+         public function search_result($data=''){
 //            echo '<pre>';            print_r($data); die;
                 $this->db->select('i.*');
                 $this->db->select('(select concat(first_name," ",last_name) from '.USER.' where auth_id = i.added_by) as sales_person');
@@ -143,8 +143,9 @@ class Consignee_receive_model extends CI_Model
 	}               
         
         
-        public function get_invc_desc($id){ 
-            $this->db->select('im.item_code,id.*, (id.unit_price*id.item_quantity*(100-id.discount_persent)*0.01) as sub_total');
+        public function get_invc_desc($id){
+            $this->db->select('id.*');
+            $this->db->select('im.item_code, (id.unit_price*id.item_quantity*(100-id.discount_persent)*0.01) as sub_total');
             $this->db->select('(select ic.id from '.ITEM_CAT.' ic LEFT JOIN '.ITEMS.' itm ON itm.item_category_id = ic.id where itm.id = id.item_id) as item_category');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = id.item_quantity_uom_id)  as unit_abbreviation');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = id.item_quantity_uom_id_2)  as unit_abbreviation_2');

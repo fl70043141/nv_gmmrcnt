@@ -262,6 +262,38 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                                         }
                                                     }
                                                 }
+                                                
+                                                $cr_total=0;
+                                                if(isset($cr_items) && isset($cr_data)){
+//                                                            echo '<pre>';print_r($cr_data);  
+                                                    foreach ($cr_items as $cr_item){
+                                                        if($cr_item['status'] != 2){
+                                                            $sub_tot_actual = $cr_item['unit_price'] * $cr_item['item_quantity'];
+                                                            echo '<pre>';print_r($cr_item);  
+                                                            $item_cons_amount=0;
+                                                            
+//                                                            switch ($cr_item['consignment_type_id']){
+//                                                                case 1: $item_cons_amount = $sub_tot*$inv_item['cons_rate']*0.01; break;
+//                                                                case 2: $item_cons_amount = $sub_tot*$inv_item['cons_rate']*0.01; break;
+//                                                                case 3: $item_cons_amount = $inv_item['cons_rate']; break;
+//                                                                case 4: $item_cons_amount = $inv_item['cons_rate']; break;
+//                                                            }
+        
+                                                            
+                                                            echo '<tr style="padding:10px" id="trcr_'.$row_count.'">
+                                                                    <td><span id="'.$row_count.'_row_cntr" class="row_counter_cls">'.$i.'</span></td>
+                                                                    <td><input class="itemcode_cls" hidden="" name="inv_items['.$row_count.'][item_code]" value="'.$cr_item['item_code'].'">'.$cr_item['item_code'].'</td>
+                                                                    <td id="td_item_name_'.$row_count.'"><input hidden="" name="inv_items['.$row_count.'][item_desc]" value="'.$cr_item['item_desc'].'"><input hidden="" name="inv_items['.$row_count.'][item_id]" value="'.$cr_item['item_id'].'">'.$cr_item['item_desc'].' 
+                                                                        <input class="cell_cur_value" hidden="" name="inv_items['.$row_count.'][cons_data][cons_cur_value]" value="'.$cr_data['currency_value'].'"><input hidden="" class="cell_price" name="inv_items['.$row_count.'][cons_data][cons_amount]" value="'.$cr_item['consignment_amount'].'"><input hidden name="inv_items['.$row_count.'][cons_data][consignment_type_id]" value="'.$cr_item['consignment_type_id'].'"> <input hidden name="inv_items['.$row_count.'][cons_data][consignment_rate]" value="'.$cr_item['consignment_rate'].'">  <input hidden name="inv_items['.$row_count.'][cons_data][cr_id]" value="'.$cr_item['cr_id'].'"><input hidden name="inv_items['.$row_count.'][cons_data][payment_term_id]" value="'.$cr_data['payment_term_id'].'">(Cons. Amount: <span class="cell_price_text">'. number_format($cr_item['consignment_amount'],2).'</span>)</td>
+                                                                    <td align="center"><input hidden="" name="inv_items['.$row_count.'][item_quantity]" value="'.$cr_item['item_quantity'].'"><input hidden="" name="inv_items['.$row_count.'][item_quantity_2]" value="'.$cr_item['item_quantity_2'].'"><input hidden="" name="inv_items['.$row_count.'][unit_abbreviation]" value="'.$cr_item['unit_abbreviation'].'"><input hidden="" name="inv_items['.$row_count.'][item_quantity_uom_id]" value="'.$cr_item['item_quantity_uom_id'].'"><input hidden="" name="inv_items['.$row_count.'][item_quantity_uom_id_2]" value="'.$cr_item['item_quantity_uom_id_2'].'">'.$cr_item['item_quantity'].' '.$cr_item['unit_abbreviation'].' '.(($cr_item['item_quantity_2']>0)?'| '.$cr_item['item_quantity_2'].' '.$cr_item['unit_abbreviation_2']:'').'<input hidden="" name="inv_items['.$row_count.'][unit_abbreviation_2]" value="'.$cr_item['unit_abbreviation_2'].'"></td> 
+                                                                    <td id="td_unitcost_'.$row_count.'" align="right"><input class="cell_cur_value" value="'.$cr_data['currency_value'].'" hidden=""><input hidden="" class="cell_price" name="inv_items['.$row_count.'][item_unit_cost]" value="'.$cr_item['unit_price'].'"><span class="cell_price_text">'. number_format($cr_item['unit_price'],2).'</span></td><td align="right"><input class="item_line_discount" hidden="" name="inv_items['.$row_count.'][item_line_discount]" value="0">0.00 (0 %)</td>
+                                                                    <td id="td_to_'.$row_count.'" align="right"><input class="cell_cur_value" hidden="" name="inv_items['.$row_count.'][item_cur_value]" value="'.$cr_data['currency_value'].'"><input class="item_tots cell_price" hidden="" name="inv_items['.$row_count.'][item_total]" value="'.$cr_item['sub_total'].'"><span class="cell_price_text">'. number_format($cr_item['sub_total'],2).'</span></td>
+                                                                    <td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td></tr>';
+                                                            $so_total += $sub_tot_actual;
+                                                            $row_count++; $i++;
+                                                        }
+                                                    }
+                                                }
         
                                            ?> 
                                        </tbody>
@@ -313,12 +345,13 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                 <hr>
                                 <?php
 //                                echo '<pre>';print_r($cr_data);
+                                $consgnee_show = (isset($cr_data))?'':'hidden';
                                 ?>
-                                <div hidden class="form-group">
+                                <div <?php echo $consgnee_show;?>  class="form-group">
                                     <label class="col-md-3 control-label">Consignee<span style="color: red"></span></label>
                                     <div class="col-md-9">    
                                         <?php  echo form_dropdown('consignee_id',$consignee_list,set_value('consignee_id',(isset($cr_data['consignee_id']))?$cr_data['consignee_id']:''),' class="form-control select2" data-live-search="true" id="consignee_id"');?>
-                                        <?php  echo form_hidden('cr_id', (isset($cr_data['cr_id']))?$cr_data['cr_id']:'');?>
+                                        <?php  echo form_hidden('cons_receive_id', (isset($cr_data['id']))?$cr_data['id']:'');?>
                                           <!--<span class="help-block"><?php // echo form_error('delivery_address');?>&nbsp;</span>-->
                                     </div> 
                                 </div> 
