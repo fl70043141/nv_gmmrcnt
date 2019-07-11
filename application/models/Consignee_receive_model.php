@@ -156,6 +156,26 @@ class Consignee_receive_model extends CI_Model
             $result = $this->db->get()->result_array();  
             return $result;
 	}  
+        
+        public function get_rec_desc_for_invoice($id){
+            $this->db->select('is.units_available,id.*');
+            $this->db->select('cc.commision_unit,cc.commision_unit_2');
+            $this->db->select('im.item_code, (id.unit_price*id.item_quantity*(100-id.discount_persent)*0.01) as sub_total');
+            $this->db->select('(select ic.id from '.ITEM_CAT.' ic LEFT JOIN '.ITEMS.' itm ON itm.item_category_id = ic.id where itm.id = id.item_id) as item_category');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = id.item_quantity_uom_id)  as unit_abbreviation');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = id.item_quantity_uom_id_2)  as unit_abbreviation_2');
+            $this->db->from(CONSIGNEE_RECIEVE_DESC.' id'); 
+            $this->db->join(ITEMS.' im','im.id = id.item_id');
+            $this->db->join(CONSIGNEE_COMMISH.' cc','cc.item_id = id.item_id', 'left');
+            $this->db->join(ITEM_STOCK.' is','is.item_id = id.item_id', 'left');
+            $this->db->where('id.cr_id',$id);
+            $this->db->where('id.deleted',0); 
+            $this->db->where('is.units_available>',0); 
+            $result = $this->db->get()->result_array();  
+//            echo  $this->db->last_query(); die;
+//        echo '<pre>';        print_r($result);die;
+            return $result;
+	}  
          public function get_transections($inv_id,$where=''){ 
             $this->db->select('tr.*');
             $this->db->select('trt.name,trt.calculation');

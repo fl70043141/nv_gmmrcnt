@@ -184,7 +184,7 @@ class Sales_invoices_model extends CI_Model
                         $this->db->update(SALES_ORDER_DESC,array('invoiced'=>1)); 
                     }
                 }
-		if(!empty($data['consignee_commish_tbl']))$this->db->insert(CONSIGNEE_COMMISH, $data['consignee_commish_tbl']);  //consigne  commish 
+		if(!empty($data['consignee_commish_tbl']))$this->db->insert_batch(CONSIGNEE_COMMISH, $data['consignee_commish_tbl']);  //consigne  commish 
                  
 		if(!empty($data['payment_transection']))$this->db->insert(TRANSECTION, $data['payment_transection']);  
 		if(!empty($data['payment_transection_ref']))$this->db->insert(TRANSECTION_REF, $data['payment_transection_ref']);  

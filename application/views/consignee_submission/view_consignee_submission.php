@@ -129,7 +129,7 @@ $cs_desc_data = $cs_desc_data;
                         <table width="100%" border="1">
                             <tr><td>
                     <?php
-                          
+                          $tot_cons=0;
                     foreach ($cs_desc_data['invoice_desc'] as $inv_itms){ 
 //                        echo '<pre>';                        print_r($inv_itms); 
                         
@@ -140,10 +140,10 @@ $cs_desc_data = $cs_desc_data;
                                          </tr>
                                         <tr style="">
                                              <th width="15%" style="text-align: center;"><u><b>Code</b></u></th>  
-                                             <th width="35%" style="text-align: left;"><u><b>Description</b></u></th>
+                                             <th width="22%" style="text-align: left;"><u><b>Description</b></u></th>
                                              <th  width="10%"><u><b>Qty</b></u></th>   
                                              <th width="10%" style="text-align: right;"><u><b>Rate</b></u></th>  
-                                             <th width="10%" style="text-align: right;"><u><b>Discount(%)</b></u></th>  
+                                             <th width="23%" style="text-align: right;"><u><b>Cons.Amount</b></u></th>  
                                              <th width="19%" style="text-align: right;"><u><b>Subtotal</b></u></th> 
                                             <td width="4%" style="text-align: right;"></td> 
                                          </tr>
@@ -151,14 +151,14 @@ $cs_desc_data = $cs_desc_data;
                                 <tbody>';
 
                      foreach ($inv_itms as $inv_itm){
-                         
+                         $tot_cons += $inv_itm['consignment_amount'];
                          echo     '<tr>
                                         <td width="15%" style="text-align: center;">'.$inv_itm['item_code'].'</td>  
-                                        <td width="35%" style="text-align: left;">'.$inv_itm['item_description'].'</td>  
+                                        <td width="22%" style="text-align: left;">'.$inv_itm['item_description'].'</td>  
                                         <td width="10%">'.$inv_itm['item_quantity'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['item_quantity_uom_id_2']>0)?' | '.$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
                                         <td width="10%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td> 
-                                        <td width="10%" style="text-align: right;">'. number_format($inv_itm['discount_persent'],2).'</td> 
-                                        <td width="19%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
+                                        <td width="20%" style="text-align: right;">'. number_format($inv_itm['consignment_amount'],2).' '.(($inv_itm['consignment_type_id']==1 || $inv_itm['consignment_type_id']==2)?'('. $inv_itm['consignment_rate'].'%)':'').'</td> 
+                                        <td width="23%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
                                         <td width="4%" style="text-align: right;"></td> 
                                     </tr> ';
                      }
@@ -172,6 +172,11 @@ $cs_desc_data = $cs_desc_data;
                                 <tr class="td_ht">
                                     <td style="text-align: right;" colspan="4"><b> Total</b></td> 
                                     <td  width="19%"  style="text-align: right;"><b>'. number_format($cs_desc_data['invoice_desc_total'],2).'</b></td> 
+                                    <td width="1%" style="text-align: right;"></td> 
+                                </tr>
+                                <tr class="td_ht">
+                                    <td style="text-align: right;" colspan="4"><b> Total Cons.</b></td> 
+                                    <td  width="19%"  style="text-align: right;"><b>'. number_format($tot_cons,2).'</b></td> 
                                     <td width="1%" style="text-align: right;"></td> 
                                 </tr>';  
                         echo '</tbody>

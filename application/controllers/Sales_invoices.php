@@ -35,7 +35,7 @@ class Sales_invoices extends CI_Controller {
             if(isset($_GET['cr_id'])){
                 $this->load->model('Consignee_receive_model');
                 $cr_data =$this->Consignee_receive_model->get_single_row($_GET['cr_id']);
-                $cr_descs =$this->Consignee_receive_model->get_invc_desc($_GET['cr_id']);
+                $cr_descs =$this->Consignee_receive_model->get_rec_desc_for_invoice($_GET['cr_id']);
                 $data['cr_data'] = $cr_data;
                 $data['cr_items'] = $cr_descs;
             }
@@ -249,6 +249,21 @@ class Sales_invoices extends CI_Controller {
                 //if Consignement Exist
                 if(isset($inv_item['cons_data']) && !empty($inv_item['cons_data'])){
                     $total_consignemnt += $inv_item['cons_data']['cons_amount'];
+                    $data['consignee_commish_tbl'][] = array(
+                                                                'transection_type'=>1, //1  for purchase commsishin  
+                                                                'trans_ref'=>$invoice_id, //sales_invoice  
+                                                                'item_id'=>$inv_item['item_id'], 
+                                                                'consignee_id'=>$inputs['consignee_id'], 
+                                                                'cons_rec_id'=>$inv_item['cons_data']['cr_id'], 
+                                                                'consignment_type_id'=>$inv_item['cons_data']['consignment_type_id'], 
+                                                                'consignment_rate'=>$inv_item['cons_data']['consignment_rate'], 
+                                                                'consignment_amount'=>$inv_item['cons_data']['cons_amount'], 
+                                                                'commision_unit'=>$inv_item['item_quantity'], 
+                                                                'commision_unit_2'=>$inv_item['item_quantity_2'], 
+                                                                'currency_code'=>$cur_det['code'], 
+                                                                'currency_value'=>$cur_det['value'], 
+                                                                'status'=>'1', 
+                                                            );
                 }
            }
            

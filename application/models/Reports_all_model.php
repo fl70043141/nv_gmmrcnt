@@ -382,5 +382,40 @@ class Reports_all_model extends CI_Model
             return $result;
         }
  
+        
+        
+/*
+---------------------------------------------------------------------
+              GET CONSGNEE COMMISSION DATA
+----------------------------------------------------------------------*/	   
+        
+    public function get_consignee_commisions($data='',$where=''){ 
+//            echo '<pre>';            print_r($data); die;
+        $this->db->select('cc.*'); 
+        $this->db->select('cns.consignee_name,cr.cr_no'); 
+        $this->db->select('si.invoice_no,si.invoice_date'); 
+        $this->db->select('itm.item_name,itm.item_code'); 
+        $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
+        $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = itm.item_uom_id)  as uom_name');
+        $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = itm.item_uom_id_2)  as uom_name_2');
+        $this->db->from(CONSIGNEE_COMMISH.' cc'); 
+        $this->db->join(INVOICES.' si','si.id = cc.trans_ref'); 
+        $this->db->join(CONSIGNEES.' cns','cns.id = cc.consignee_id'); 
+        $this->db->join(CONSIGNEE_RECIEVE.' cr','cr.id = cc.cons_rec_id'); 
+        $this->db->join(ITEMS.' itm','itm.id = cc.item_id'); 
+        
+        if(isset($data['item_category_id']) && $data['item_category_id'] !='')$this->db->where('itm.item_category_id',$data['item_category_id']);
+        if(isset($data['consignee_id']) && $data['consignee_id'] !='')$this->db->where('cc.consignee_id',$data['consignee_id']);
+        if(isset($data['item_code']) && $data['item_code'] !='')$this->db->like('itm.item_code',$data['item_code']);
+        if(isset($data['invoice_no']) && $data['invoice_no'] !='')$this->db->like('si.invoice_no',$data['invoice_no']);
+            
+        if($where!='')$this->db->where($where);
+        $this->db->where('cc.deleted',0); 
+        
+        $result = $this->db->get()->result_array();    
+//        echo $this->db->last_query();die;
+//            echo '<pre>';            print_r($result); die;
+        return $result;
+    } 
 }
 ?>

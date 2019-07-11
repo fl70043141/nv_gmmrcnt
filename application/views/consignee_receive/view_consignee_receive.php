@@ -33,6 +33,7 @@ $cs_data = $user_data;
             <?php // echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], 'Customer_payments', 'add_customer_payment'))?'<a href="'.base_url('Customer_payments/add_customer_payment/'.$cs_data['id'].'/20').'" class="btn btn-app "><i class="fa fa-money"></i>Payments</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'delete'))?'<a href="'.base_url($this->router->fetch_class().'/delete/'.$cs_data['id']).'" class="btn btn-app "><i class="fa fa-trash"></i>Delete Invoice</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'sales_invoice_print'))?'<a target="_blank" href="'.base_url($this->router->fetch_class().'/sales_invoice_print/'.$cs_data['id']).'" class="btn btn-app "><i class="fa fa-print"></i>Print Invoice</a>':''; ?>
+            <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], "Sales_invoices", 'add'))?'<a target="_blank" href="'.base_url('Sales_invoices/add?cr_id='.$cs_data['id']).'" class="btn btn-app "><i class="fa fa-list"></i>Gen. Invoice</a>':''; ?>
 
         </div>
     </div>
@@ -130,11 +131,11 @@ $cs_data = $user_data;
                                          </tr>
                                         <tr style="">
                                              <th width="15%" style="text-align: center;"><u><b>Code</b></u></th>  
-                                             <th width="35%" style="text-align: left;"><u><b>Description</b></u></th>
+                                             <th width="22%" style="text-align: left;"><u><b>Description</b></u></th>
                                              <th  width="10%"><u><b>Qty</b></u></th>   
                                              <th width="10%" style="text-align: right;"><u><b>Rate</b></u></th>  
-                                             <th width="10%" style="text-align: right;"><u><b>Discount(%)</b></u></th>  
-                                             <th width="19%" style="text-align: right;"><u><b>Subtotal</b></u></th> 
+                                             <th width="20%" style="text-align: right;"><u><b>Cons. Amount</b></u></th>  
+                                             <th width="23%" style="text-align: right;"><u><b>Subtotal</b></u></th> 
                                             <td width="4%" style="text-align: right;"></td> 
                                          </tr>
                                     </thead>
@@ -144,11 +145,11 @@ $cs_data = $user_data;
                          
                          echo     '<tr>
                                         <td width="15%" style="text-align: center;">'.$inv_itm['item_code'].'</td>  
-                                        <td width="35%" style="text-align: left;">'.$inv_itm['item_desc'].'</td>  
+                                        <td width="22%" style="text-align: left;">'.$inv_itm['item_desc'].'</td>  
                                         <td width="10%">'.$inv_itm['item_quantity'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['item_quantity_uom_id_2']>0)?' | '.$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
                                         <td width="10%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td> 
-                                        <td width="10%" style="text-align: right;">'. number_format($inv_itm['discount_persent'],2).'</td> 
-                                        <td width="19%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
+                                        <td width="10%" style="text-align: right;">'. number_format($inv_itm['consignment_amount'],2).' '.(($inv_itm['consignment_type_id']==1 || $inv_itm['consignment_type_id']==2)?'('. $inv_itm['consignment_rate'].'%)':'').'</td> 
+                                        <td width="23%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
                                         <td width="4%" style="text-align: right;"></td> 
                                     </tr> ';
                      }
