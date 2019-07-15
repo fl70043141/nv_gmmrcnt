@@ -171,8 +171,13 @@ class Pdf extends TCPDF
                             </tr> 
                             <tr>
                                 <td align="center">Phone: '.$company_dets[0]['phone'].(($company_dets[0]['other_phone']!='')?', '.$company_dets[0]['other_phone']:'').'</td>
-                            </tr>
-                            <tr>
+                            </tr>';
+        if($company_dets[0]['fax']!=''){ 
+            $header_info .=    '<tr>
+                                    <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').'</td>
+                                </tr>';
+        }
+        $header_info .=    '<tr>
                                 <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').'</td>
                             </tr>
                             <tr>
@@ -208,7 +213,7 @@ class Pdf extends TCPDF
         $this->Text('60', 9, $company_dets[0]['company_name'], false, false, true, 0, 0, 'center', false,'',1);
         
         $this->SetTextColor(96,96,96);
-        $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Light.ttf', 'TrueTypeUnicode', '', 96);
+        $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/GOTHICB.TTF', 'TrueTypeUnicode', '', 96);
         $this->SetFont($fontname, 'I', 10.5);
         $this->writeHTMLCell(130,20,40,23,$header_info); 
 //        $this->writeHTMLCell(90,20,60,23,$header_info); 
