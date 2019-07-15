@@ -206,7 +206,7 @@ class Pdf extends TCPDF
          
         
         $this->SetTextColor(48,75,105);
-        $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/GOTHICB.TTF','TrueTypeUnicode', '', 96);
+        $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/CanelaBarkBold_PERSONAL.ttf', 'TrueTypeUnicode', '', 96);
         // use the font
         $this->SetFont($fontname, '', 35, '', false);
         $this->SetTextColor(48,75,105);
