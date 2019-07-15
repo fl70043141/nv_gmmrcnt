@@ -174,7 +174,7 @@ class Pdf extends TCPDF
                             </tr>';
         if($company_dets[0]['fax']!=''){ 
             $header_info .=    '<tr>
-                                    <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').'</td>
+                                    <td align="center">Fax: '.(($company_dets[0]['fax']!='')?$company_dets[0]['fax']:'').'</td>
                                 </tr>';
         }
         $header_info .=    '<tr>
@@ -206,14 +206,14 @@ class Pdf extends TCPDF
          
         
         $this->SetTextColor(48,75,105);
-        $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/CanelaBarkBold_PERSONAL.ttf', 'TrueTypeUnicode', '', 96);
+        $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/GOTHICB.TTF', 'TrueTypeUnicode', '', 96);
         // use the font
         $this->SetFont($fontname, '', 35, '', false);
         $this->SetTextColor(48,75,105);
         $this->Text('60', 9, $company_dets[0]['company_name'], false, false, true, 0, 0, 'center', false,'',1);
         
         $this->SetTextColor(96,96,96);
-        $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/GOTHICB.TTF', 'TrueTypeUnicode', '', 96);
+        $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Light.ttf', 'TrueTypeUnicode', '', 96);
         $this->SetFont($fontname, 'I', 10.5);
         $this->writeHTMLCell(130,20,40,23,$header_info); 
 //        $this->writeHTMLCell(90,20,60,23,$header_info); 
