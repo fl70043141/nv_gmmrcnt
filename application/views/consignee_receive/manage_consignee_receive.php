@@ -345,9 +345,7 @@ function get_inv_items_res(){
                                                                 '<li>Units: '+elment.item_quantity+' '+elment.unit_abbreviation+((elment.item_quantity_uom_id_2>0)?(' | '+elment.item_quantity_2+' '+elment.unit_abbreviation_2):'')+'<input hidden  id="'+elment.sd_id+'_item_quantity" value="'+elment.item_quantity+'"></li>'+
                                                             '</ul><input hidden id="'+elment.sd_id+'_item_code" value="'+elment.item_code+'"><input hidden id="'+elment.sd_id+'_item_id" value="'+elment.item_id+'"></td>'+
                                                     '<td style="text-align: left;" class="cons_type_td"><span class="cons_type_text">'+cons_typ+'</span><select class="cons_type_input" hidden id="'+elment.sd_id+'_cons_type_id">'+
-                                                        '<option '+((elment.consignment_type_id==1)?'selected':'')+' value="1">Percentage (Excluded Rate)</option>'+
                                                         '<option '+((elment.consignment_type_id==2)?'selected':'')+' value="2">Percentage (Included Rate)</option>'+
-                                                        '<option '+((elment.consignment_type_id==3)?'selected':'')+' value="3">Fixed Amount</option>'+
                                                         '<option '+((elment.consignment_type_id==4)?'selected':'')+' value="4">Fixed Amount (Included)</option>'+
                                                     '</select></td>'+
                                                     '<td class="cons_rate_td" style="text-align: left;"><span class="cons_rate_text">'+cons_rate+'</span><input class="cons_rate_inpt" hidden step="1" type="number" id="'+elment.sd_id+'_cons_rate"  value="'+elment.consignment_rate+'"></td>';

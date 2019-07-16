@@ -194,7 +194,8 @@ endswitch;
                                         <div class="col-md-2">
                                             <div class="form-group pad no-pad-top">
                                                 <label for="cons_type">Cons. Type</label>
-                                                <?php echo form_dropdown('cons_type',array(1=>'Percentage (Excluded Rate)',2=>'Percentage (Included Rate)', '3'=>'Fixed Amount', '4'=>'Fixed Amount (Included)'),set_value('cons_type'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="cons_type"');?>
+                                                <?php echo form_dropdown('cons_type',array(2=>'Percentage (Included Rate)','4'=>'Fixed Amount (Included)'),set_value('cons_type'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="cons_type"');?>
+                                                <?php // echo form_dropdown('cons_type',array(1=>'Percentage (Excluded Rate)',2=>'Percentage (Included Rate)', '3'=>'Fixed Amount', '4'=>'Fixed Amount (Included)'),set_value('cons_type'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="cons_type"');?>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
