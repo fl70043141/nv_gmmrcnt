@@ -111,10 +111,10 @@ class Gemstone_costing extends CI_Controller {
                                 <tr style=""> 
                                     <th width="6%" style="text-align: left;"><u><b>#</b></u></th>  
                                     <th width="10%" style="text-align: left;"><u><b>Code</b></u></th>  
-                                    <th width="13%" style="text-align: left;"><u><b>Desc</b></u></th>  
+                                    <th width="16%" style="text-align: left;"><u><b>Desc</b></u></th>  
                                     <th width="12%" style="text-align: center;"><u><b>Weight</b></u></th> 
-                                    <th width="17%" style="text-align: left;" ><u><b>Type</b></u></th>  
-                                    <th width="14%" style="text-align: left;" ><u><b>Person</b></u></th>  
+                                    <th width="15%" style="text-align: left;" ><u><b>Type</b></u></th>  
+                                    <th width="13%" style="text-align: left;" ><u><b>Person</b></u></th>  
                                     <th width="14%" style="text-align: right;"><u><b>Cost</b></u></th> 
                                     <th width="14%" style="text-align: right;"><u><b>Total Cost</b></u></th> 
                                  </tr>
@@ -145,10 +145,10 @@ class Gemstone_costing extends CI_Controller {
                        <tr>
                            <td style="width:6%;">'.$i.'</td> 
                            <td style="width:10%;" align="left">'.$item['item_code'].'</td>
-                           <td style="width:13%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                           <td style="width:16%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].':'. float2rat($item['partnership']).')</b>':'').'</td>
                            <td style="width:12%;" align="center">'.$item['units_available'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
-                           <td style="width:17%;" align="left">Purchase</td>
-                           <td style="width:14%;" align="left">Supplier</td> 
+                           <td style="width:15%;" align="left">Purchase</td>
+                           <td style="width:13%;" align="left">Supplier</td> 
                            <td style="width:14%;" align="right">'. number_format($purch_cost,2).'</td>
                            <td style="width:14%; text-align:right; vertical-align:bottom;" rowspan="'.(count($item['lapidary_costs'])+1).'" >'. number_format($cost,2).'</td>
                       </tr>';

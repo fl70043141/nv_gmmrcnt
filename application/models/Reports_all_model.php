@@ -46,7 +46,7 @@ class Reports_all_model extends CI_Model
         $this->db->select('is.*'); 
         $this->db->select('sum((glc.amount_cost/glc.currency_value) * '.$cur_det['value'].') as total_lapidary_cost'); 
         $this->db->select('ip.item_price_type, ip.price_amount,ip.currency_code as ip_curr_code, ip.currency_value as ip_curr_value'); 
-        $this->db->select('itm.item_name,itm.item_code,itm.item_category_id,ityp.item_type_name,ityp.type_short_name'); 
+        $this->db->select('itm.item_name,itm.item_code,itm.item_category_id,ityp.item_type_name,ityp.type_short_name,itm.partnership'); 
         $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
         $this->db->select('(select location_name from '.INV_LOCATION.' where id = is.location_id)  as location_name');
         $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id)  as uom_name');
@@ -349,7 +349,7 @@ class Reports_all_model extends CI_Model
             $def_curcode = $this->session->userdata(SYSTEM_CODE)['default_currency'];
             $cur_det = get_currency_for_code($def_curcode);
             
-            $this->db->select('itm.item_code,itm.item_name,ityp.item_type_name,ityp.type_short_name');
+            $this->db->select('itm.item_code,itm.item_name,ityp.item_type_name,ityp.type_short_name,itm.partnership');
             $this->db->select('id.*,sum(id.item_quantity) as total_sold_qty,sum(id.item_quantity_2) as total_sold_qty_2');
             $this->db->select('ist.units as purch_units, ist.units_2 as purch_units_2');
             $this->db->select('istk.units_available, istk.units_available_2');
