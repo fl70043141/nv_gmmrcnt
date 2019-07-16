@@ -25,7 +25,7 @@ class Upload_csv extends CI_Controller {
                                         
 	 
         function validate(){
-            echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
+//            echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
             $file = $_FILES["file"]["tmp_name"];
             $file_open = fopen($file, "r");
 
@@ -62,6 +62,7 @@ class Upload_csv extends CI_Controller {
             if($insert_stat){
                 $total=0;
                 while (($csv = fgetcsv($file_open, 1000, ",")) !== false && $csv[0]!='') {
+                    
                         if($i!=0){
                             $item_code = $csv[0];
                             $item_desc = $csv[1];
@@ -88,7 +89,8 @@ class Upload_csv extends CI_Controller {
                             
                             $sales_price2 = $csv[19];
                             $sales_price2_id = $csv[20];
-
+                            $partnerhip = $csv[21];
+                          
                             $item_id = get_autoincrement_no(ITEMS); 
                 //            $item_code = gen_id('1', ITEMS, 'id',4);
                             $inputs['status'] = (isset($inputs['status']))?1:0;
@@ -132,7 +134,8 @@ class Upload_csv extends CI_Controller {
                                                     'item_uom_id' => $uom_id,
                                                     'item_uom_id_2' => $uom_id_2,
                                                     'item_category_id' => $cat_id,
-                                                    'item_type_id' => 1,
+                                                    'item_type_id' => ($partnerhip>0 && $partnerhip!='')?5:1,  //5 forpartnership
+                                                    'partnership' => ($partnerhip>0 && $partnerhip!='')?$partnerhip:1,  // forpartnership range
                                                     'description' => '',
                                                     'addon_type_id' => 0,
                                                     'sales_excluded' => $sales_excluded,

@@ -488,3 +488,11 @@ function float2rat($n, $tolerance = 1.e-6) {
 
     return "$h1/$k1";
 }
+
+function calculate_string( $mathString ){ //EG: 1/2 ===>> 0.5 
+        $mathString = trim($mathString);
+        $mathString = str_replace ('[^0-9\+-\*\/\(\) ]', '', $mathString); 
+
+        $compute = create_function("", "return (" . $mathString . ");" );
+        return 0 + $compute();
+    }

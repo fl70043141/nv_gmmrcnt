@@ -249,7 +249,8 @@ class Items extends CI_Controller {
 		
 	function update(){
             $inputs = $this->input->post();   
-//                                echo '<pre>';                                print_r($inputs); die;
+            $inputs['partnership'] = calculate_string($inputs['partnership']);
+//            echo calculate_string($inputs['partnership']); die;
             $item_id = $this->input->post('id');   
             $inputs['status'] = (isset($inputs['status']))?1:0;
             $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
@@ -364,6 +365,7 @@ class Items extends CI_Controller {
                             'treatment' => $inputs['treatment'],
                             'shape' => $inputs['shape'],
                             'item_type_id' => $inputs['item_type_id'],
+                            'partnership' => ($inputs['item_type_id']==5 && $inputs['partnership']<1 && $inputs['partnership']>0)?$inputs['partnership']:1,
                             'description' => $inputs['description'],
                             'addon_type_id' => $inputs['addon_type_id'],
                             'sales_excluded' => $inputs['sales_excluded'],
@@ -376,8 +378,8 @@ class Items extends CI_Controller {
                             'updated_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
                         ); 
                         if(!empty($def_image)) $data['image'] = $def_image[0]['name']; 
-                            
-                        
+                    
+
                     //Quick entry Costing
                         if(isset($inputs['cost_entry']) && !empty($inputs['cost_entry'])){
                             $lapd_cost_id = get_autoincrement_no(GEM_LAPIDARY_COSTING); 

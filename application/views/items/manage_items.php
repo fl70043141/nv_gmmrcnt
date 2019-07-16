@@ -16,6 +16,7 @@
                         'item_uom_id'=>"",
                         'item_uom_id_2'=>"",
                         'item_type_id'=>"",
+                        'partnership'=>"",
                         'addon_type_id'=>"",
                         'sales_excluded'=>0, 
                         'purchases_excluded'=>0, 
@@ -248,6 +249,13 @@ endswitch;
                                                     <div class="col-md-9">    
                                                        <?php  echo form_dropdown('item_type_id',$item_type_list,set_value('item_type_id',$result['item_type_id']),' class="form-control " data-live-search="true" id="item_type_id" '.$o_dis.'');?> 
                                                         <span class="help-block"><?php echo form_error('item_type_id');?></span>
+                                                    </div> 
+                                                </div>
+                                                <div id="partnership_div" class="form-group">
+                                                    <label class="col-md-3 control-label">Partnership Value<span style="color: red"></span></label>
+                                                    <div class="col-md-9">    
+                                                        <?php echo form_input('partnership', set_value('partnership', float2rat($result['partnership'])), 'id="partnership" class="form-control" placeholder="Eg : 1/3" '.$dis.' '.$o_dis.' '); ?>
+                                                        <span class="help-block"><?php echo form_error('partnership');?></span>
                                                     </div> 
                                                 </div>
                                                 <div hidden class="form-group">
@@ -918,6 +926,19 @@ $(document).ready(function(){
 //        alert(actv_tab_id);
         $('[href="#'+actv_tab_id+'"]').tab('show'); 
     }
+     
+    if($("#item_type_id").val()=='5'){ //5 for parnership
+        $('#partnership_div').show();
+    }else{
+        $('#partnership_div').hide();
+    }
+    $('#item_type_id').change(function(){
+        if($("#item_type_id").val()=='5'){ //5 for parnership
+            $('#partnership_div').show();
+        }else{
+            $('#partnership_div').hide();
+        }
+    });
     
     
     get_category();
