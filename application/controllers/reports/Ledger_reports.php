@@ -98,12 +98,7 @@ class Ledger_reports extends CI_Controller {
         
         function load_expensess_data(){
             $trans_group = array();
-            $input_post = $this->input->post();
-//            if(empty($this->input->post()))
-//                $input =  $this->input->get();
-//            else
-//                $input =  $this->input->post(); 
-            $input = (empty($input_post))? $this->input->get():$this->input->post();   
+            $input_post = $this->input->post(); $input = (empty($input_post))? $this->input->get():$this->input->post();   
             
                 $search_data=array( 
                                     'from_date' => ($input['from_date']>0)?strtotime($input['from_date']):'',
@@ -127,7 +122,7 @@ class Ledger_reports extends CI_Controller {
         }
         public function  search_ledger_month(){ // view month ledger
             $trans_group = array();
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();  
+            $input_post = $this->input->post(); $input = (empty($input_post))? $this->input->get():$this->input->post();  
 //                echo '<pre>';            print_r($input); die;
 //            $timestamp    = strtotime($input['date_month']);
 //            $first_day =  strtotime(date('01-m-Y 00:00:00', $timestamp));
@@ -156,7 +151,7 @@ class Ledger_reports extends CI_Controller {
         
         public function  search_ledger_day(){ // view month ledger
             $trans_group = array();
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();  
+            $input_post = $this->input->post(); $input = (empty($input_post))? $this->input->get():$this->input->post();  
             $timestamp    = strtotime($input['date_day']);
             $begin_time =  strtotime(date('01-m-Y 00:00:00', $timestamp));
             $end_time  =  strtotime(date('t-m-Y 23:59:59', $timestamp));  
@@ -184,7 +179,7 @@ class Ledger_reports extends CI_Controller {
         
         public function  search_expenses(){ 
             $trans_group = array();
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();   
+            $input_post = $this->input->post(); $input = (empty($input_post))? $this->input->get():$this->input->post();   
             
                 $search_data=array( 
                                     'from_date' => ($input['from_date']>0)?strtotime($input['from_date']):'',
