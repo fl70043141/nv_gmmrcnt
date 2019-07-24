@@ -36,7 +36,7 @@ class Pnl_General extends CI_Controller {
         }
         function load_data(){
             
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();  
+            $input_post = $this->input->post(); $input = (empty($input_post))? $this->input->get():$this->input->post();  
 //            $timestamp    = strtotime($input['date_month']);
 //            $first_day =  strtotime(date('01-m-Y 00:00:00', $timestamp));
 //            $last_day  =  strtotime(date('t-m-Y 23:59:59', $timestamp));  
