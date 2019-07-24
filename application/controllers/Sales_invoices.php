@@ -1151,6 +1151,18 @@ class Sales_invoices extends CI_Controller {
             $this->load->model('Sales_orders_model');
             $print_option = $this->input->get();
             $print_option = json_decode($print_option['prnt_optn']);
+            
+            $bank_info = $cert_info = 0;
+             if(isset($print_option) && !empty($print_option)){
+                 foreach ($print_option as $propt){
+                     if($propt == 'bank'){
+                         $bank_info = 1;
+                     }
+                     if($propt == 'cert'){
+                         $cert_info = 1;
+                     }
+                 }
+             }
 //            echo '<pre>';            print_r($print_option); die;
             $inv_data = $this->get_invoice_info($inv_id);
             $inv_dets = $inv_data['invoice_dets'];
@@ -1203,7 +1215,7 @@ class Sales_invoices extends CI_Controller {
             $pdf->AddPage();   
                         
 //            echo '<pre>';            print_r($cur_det['symbol_left']); die;
-            $payment = $old_gold = '';
+            $payment = $old_gold = '';$addone_note = '';
             $payment_tot = $old_gold_tot = 0;
             $pdf->SetTextColor(32,32,32);    
             if(isset($inv_data['inv_transection']) && !empty($inv_data['inv_transection'])){
@@ -1308,8 +1320,9 @@ class Sales_invoices extends CI_Controller {
                      $html .= '<table border="0" style=""><tr><td>';
                                      $inv_tot = 0;
                                      $is_gem_stat = $is_item_stat = 0;
-                                     $item_list_html = $gem_list_html = '';
+                                     $item_list_html = $gem_list_html =  $html_certs = '';
 //            echo '<pre>';            print_r($inv_data['invoice_desc_list']); die; 
+                                     $gmcount=1;$gmqty1 =$gmqty2 =0; 
                                 foreach ($inv_data['invoice_desc_list'] as $inv_itm){
                                     if($inv_itm['is_gem']==1){
                                         $is_gem_stat++;
@@ -1343,6 +1356,24 @@ class Sales_invoices extends CI_Controller {
                                                        </tr> ';
                                         $inv_tot+=$inv_itm['sub_total'];
                                     }
+                                    
+                                    if($inv_itm['certificates_files'] !='' ){
+                                        $img_arr = json_decode($inv_itm['certificates_files']);
+                                        
+                                        if(!empty($img_arr)){  
+                                                $html_certs .= '<tr>
+                                                                    <td width="10%">'.($gmcount-1).'</td>
+                                                                    <td width="20%">'.$inv_itm['item_code'].'</td>
+                                                                    <td width="70%">';
+                                                                        foreach ($img_arr as $imgcert){
+                                                                            $html_certs .= '<img style="height:310px;" src="'. base_url(ITEM_IMAGES.$inv_itm['item_id'].'/certificates_files/'.$imgcert).'"> <br><br>';
+                                                                        }
+                                                 $html_certs .='    </td>
+                                                                </tr> '; 
+                                        }
+                                    }
+                                    
+//            echo '<pre>';            print_r($html_certs  ); die;
                                 }
                                 
                                 //items
@@ -1441,6 +1472,24 @@ class Sales_invoices extends CI_Controller {
                         
                         
             $html .= $payment.$old_gold;
+            
+            if($cert_info==1 || $bank_info==1 || $html_certs!=''){
+                $html .= '<table border="0">
+                            <tr>
+                                <th style="text-align: left;">Notes: </th>  
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">
+                                    <ul>
+                                        '.(($cert_info==1 && $html_certs!='')?'<li>Certificate Copy Attached</li>':'').'
+                                        '.$addone_note.'
+                                        '.(($bank_info==1)?'<li>Bank Details Attached</li>':'').'
+
+                                    </ul>
+                                </td>  
+                            </tr>
+                        </table>';
+            }
 //            $html .= '<table border="0">
 //                            <tr style="line-height:80px;"><td  colspan="4"><br></td></tr>
 //                            <tr>
@@ -1482,6 +1531,21 @@ class Sales_invoices extends CI_Controller {
                     ';
             $pdf->writeHTML($html);
             
+             $bank_details = '';
+            
+//            if($bank_info==1){
+//                $pdf->AddPage();   
+//                $pdf->writeHTML($bank_details);
+//            }
+            if($cert_info==1 && $html_certs!=''){
+                $pdf->AddPage();
+                
+                $html_certs_top = '<table style="padding:20px;" class="table-line" border="0">
+                                    <tr>
+                                        <td colspan="3"><h2>Certificates</h2></td>
+                                    </tr> '; 
+                $pdf->writeHTML($html_certs_top.$html_certs.'</table>');
+            }
             $pdf->SetFont('times', '', 12.5, '', true);
             $pdf->SetTextColor(255,125,125);           
 //            $pdf->Text(160,20,$inv_dets['sales_order_no']);
