@@ -1355,6 +1355,9 @@ class Sales_invoices extends CI_Controller {
                                                            <td width="12%" style="text-align: right;"> '. number_format($inv_itm['sub_total'],2).'</td> 
                                                        </tr> ';
                                         $inv_tot+=$inv_itm['sub_total'];
+                                        $gmqty1 +=$inv_itm['item_quantity'];
+                                        $gmqty2 +=$inv_itm['item_quantity_2'];
+                                        $gmcount++;
                                     }
                                     
                                     if($inv_itm['certificates_files'] !='' ){
