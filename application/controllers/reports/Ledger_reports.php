@@ -98,7 +98,11 @@ class Ledger_reports extends CI_Controller {
         
         function load_expensess_data(){
             $trans_group = array();
-            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();   
+            if(empty($this->input->post()))
+                $input =  $this->input->get();
+            else
+                $input =  $this->input->post(); 
+//            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();   
             
                 $search_data=array( 
                                     'from_date' => ($input['from_date']>0)?strtotime($input['from_date']):'',
