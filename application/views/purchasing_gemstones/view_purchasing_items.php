@@ -1,8 +1,8 @@
 <?php
-//echo '<pre>';print_r($inv_data); die;
 $inv_dets = $inv_data['invoice_dets'];
 $inv_desc = $inv_data['invoice_desc'];
 $inv_trans = $inv_data['inv_transection'];
+//echo '<pre>';print_r($inv_dets); die;
 
 
 ?>
@@ -84,6 +84,12 @@ $inv_trans = $inv_data['inv_transection'];
                                          <!--<span class="help-block"><?php // echo form_error('invoice_date');?>&nbsp;</span>-->
                                     </div> 
                                 </div> 
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Memo <span style="color: red"></span></label>
+                                    <div class="col-md-9">  
+                                        <textarea readonly="" class="form-control"><?php echo $inv_dets['comments'];?></textarea>
+                                    </div> 
+                                </div> 
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -131,8 +137,8 @@ $inv_trans = $inv_data['inv_transection'];
                             <tr><td>
                     <?php
                             $cur_det = get_single_row_helper(CURRENCY,'code = "'.$inv_dets['currency_code'].'"');
-//                            echo '<pre>';                            print_r($cur_det); die;
                     foreach ($inv_desc as $inv_itms){ 
+//                            echo '<pre>';                            print_r($inv_itms);
                          echo '<table width="100%" id="example1" class="table-line" border="0">
                                     <thead>
                                         <tr class="colored_bg" style="background-color:#E0E0E0;">
@@ -142,7 +148,8 @@ $inv_trans = $inv_data['inv_transection'];
                                             <th width="" style="text-align: left;"><u><b>Item Code</b></u></th>  
                                             <th width="" style="text-align: left;"><u><b>Gemstone</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>NH/H</b></u></th>  
-                                             <th width="" style="text-align: left;"><u><b>Dimesnion(LxWxH)</b></u></th>  
+                                             <th width="" style="text-align: left;"><u><b>Partnership</b></u></th>  
+                                             <th hidden width="" style="text-align: left;"><u><b>Dimesnion(LxWxH)</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>Shape</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>Color</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>Origin</b></u></th>  
@@ -161,7 +168,8 @@ $inv_trans = $inv_data['inv_transection'];
                                         <td width="" style="text-align: left;">'.$inv_itm['item_code'].'</td> 
                                         <td width="" style="text-align: left;">'.$inv_itm['supplier_item_desc'].'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['treatment']>0)?get_dropdown_value($item_info['treatment']):'').'</td>   
-                                        <td width="" style="text-align: left;">'.(($item_info['length']!='')?$item_info['length']:'-').' x '.(($item_info['width']!='')?$item_info['width']:'-').' x '.(($item_info['height']!='')?$item_info['height']:'-').' mm</td>   
+                                        <td width="" style="text-align: left;">'. (($item_info['item_type_id']==5 && $item_info['partnership']>0 && $item_info['partnership']<1)?'P - '.float2rat($item_info['partnership']):'-').'</td>   
+                                        <td hidden width="" style="text-align: left;">'.(($item_info['length']!='')?$item_info['length']:'-').' x '.(($item_info['width']!='')?$item_info['width']:'-').' x '.(($item_info['height']!='')?$item_info['height']:'-').' mm</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['shape']>0)?get_dropdown_value($item_info['shape']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['color']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['origin']>0)?get_dropdown_value($item_info['origin']):'-').'</td>   

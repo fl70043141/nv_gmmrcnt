@@ -277,6 +277,8 @@ class User_default_model extends CI_Model
     function get_active_fiscal_year(){
         $this->db->select('*');
         $this->db->from(GL_FISCAL_YEARS);
+        $this->db->where('closed',0);
+        $this->db->where('status',1);
         $res = $this->db->get()->result_array();
         if(!empty($res))
             return $res[0];

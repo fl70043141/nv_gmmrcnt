@@ -63,7 +63,7 @@
                 </div>
               </div>  
               <div class="form-group">
-                <label for="new_customer_city" class="col-sm-3 control-label">City<span style="color: red">*</span></label>
+                <label for="new_customer_city" class="col-sm-3 control-label">City<span style="color: red"></span></label>
                 <div class="col-sm-9">
                     <input type="text" name="new_customer_city" class="form-control input-lg checkout_input" id="new_customer_city" placeholder="City Name">
                 </div>
@@ -108,11 +108,11 @@
                 $('#new_customer_name').focus().select();
                 return false;
             }
-            if($('#new_customer_city').val()=='' || $('#new_customer_city').val().length<3){
-                fl_alert('info',"City Name Invalid!");
-                $('#new_customer_city').focus().select();
-                return false;
-            }
+//            if($('#new_customer_city').val()=='' || $('#new_customer_city').val().length<3){
+//                fl_alert('info',"City Name Invalid!");
+//                $('#new_customer_city').focus().select();
+//                return false;
+//            }
             add_customer_modal(); 
         });
         

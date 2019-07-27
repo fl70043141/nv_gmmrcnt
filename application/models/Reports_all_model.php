@@ -47,6 +47,7 @@ class Reports_all_model extends CI_Model
         $this->db->select('sum((glc.amount_cost/glc.currency_value) * '.$cur_det['value'].') as total_lapidary_cost'); 
         $this->db->select('ip.item_price_type, ip.price_amount,ip.currency_code as ip_curr_code, ip.currency_value as ip_curr_value'); 
         $this->db->select('itm.item_name,itm.item_code,itm.item_category_id,ityp.item_type_name,ityp.type_short_name,itm.partnership'); 
+        $this->db->select('(select supplier_name from '.SUPPLIERS.' where id = si.supplier_id)  as supp_name');
         $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
         $this->db->select('(select location_name from '.INV_LOCATION.' where id = is.location_id)  as location_name');
         $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id)  as uom_name');
@@ -84,6 +85,7 @@ class Reports_all_model extends CI_Model
         if($where!='')$this->db->where($where);
         $this->db->where('is.deleted',0);
         $this->db->group_by('is.item_id'); 
+        $this->db->order_by('itm.item_code'); 
         $result = $this->db->get()->result_array();   
 //echo $this->db->last_query(); die;
 //        echo '<pre>';        print_r($result); die;

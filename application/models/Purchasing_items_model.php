@@ -46,7 +46,7 @@ class Purchasing_items_model extends CI_Model
             $this->db->select('(select itms.item_code from '.ITEMS.' itms where itms.id = id.item_id) as item_code');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = id.purchasing_unit_uom_id)  as unit_abbreviation');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = id.secondary_unit_uom_id)  as unit_abbreviation_2');
-            $this->db->select('itm.item_code,itm.item_category_id as item_category');
+            $this->db->select('itm.item_code,itm.item_category_id as item_category, itm.item_type_id,itm.partnership');
             $this->db->select('ic.category_name as item_cat_name,ic.is_gem');
             $this->db->join(ITEMS.' itm', 'itm.id = id.item_id'); 
             $this->db->join(ITEM_CAT." ic","ic.id = itm.item_category_id");  

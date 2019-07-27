@@ -95,9 +95,9 @@ class Suppliers extends CI_Controller {
             $this->form_validation->set_rules('supplier_name','Customer Name','required|min_length[2]');
 //            $this->form_validation->set_rules('short_name','Short Name','required|min_length[2]'); 
 //            $this->form_validation->set_rules('address','Address','required');
-            $this->form_validation->set_rules('city','City','required'); 
-            $this->form_validation->set_rules('phone','phone','required|min_length[10]|integer');  
-            $this->form_validation->set_rules('credit_limit','Credit Limit','required|numeric'); 
+//            $this->form_validation->set_rules('city','City','required'); 
+            $this->form_validation->set_rules('phone','phone','min_length[10]|integer');  
+//            $this->form_validation->set_rules('credit_limit','Credit Limit','required|numeric'); 
       }	
                     
 	function create(){   

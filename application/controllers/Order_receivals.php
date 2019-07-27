@@ -186,7 +186,7 @@ class Order_receivals extends CI_Controller {
                 
                 $item_id = $next_item_id;
                 $next_item_id++;
-                $item_code = ($inv_item['new_item_code']=='')?gen_id_for_no('1', $item_id, 'id',4):$inv_item['new_item_code'];
+                $item_code = ($inv_item['new_item_code']=='')?gen_id_for_no(ITEMCODE_PREFIX, $item_id, 'id',4):$inv_item['new_item_code'];
                 $data['items'][] = array(
                                     'id' => $item_id,
                                     'item_code' => $item_code,

@@ -129,7 +129,7 @@ class Purchasing_gemstones extends CI_Controller {
             if(!empty($item)){ 
                     
                     $item_id = get_autoincrement_no(ITEMS); 
-                    $item_code = (isset($item['item_code']) && $item['item_code']!="")?$item['item_code']:gen_id('SSL', ITEMS, 'id',4);
+                    $item_code = (isset($item['item_code']) && $item['item_code']!="")?$item['item_code']:gen_id(ITEMCODE_PREFIX, ITEMS, 'id',4);
                     $inputs['status'] = (isset($inputs['status']))?1:0;
                     $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
                     $inputs['purchases_excluded'] = (isset($inputs['purchases_excluded']))?1:0;
@@ -152,6 +152,8 @@ class Purchasing_gemstones extends CI_Controller {
                         }
                     }
                     
+                    $partnership_ratio = calculate_string($item['partnership_ratio']);
+//            echo '<pre>';            print_r($partnership_ratio); die; 
                     
                     
                     $data['item']           =   array(
@@ -169,7 +171,8 @@ class Purchasing_gemstones extends CI_Controller {
                                                     'length' => (isset($dim) && is_array($dim) && count($dim)==3)?$dim[0]:'', 
                                                     'width' => (isset($dim) && is_array($dim) && count($dim)==3)?$dim[1]:'', 
                                                     'height' => (isset($dim) &&  is_array($dim) && count($dim)==3)?$dim[2]:'', 
-                                                    'item_type_id' => 1, // 1 => for purchased item  
+                                                    'item_type_id' => ($item['is_partnership']==1 && $partnership_ratio<1)?5:1, // 1 => for purchased item   5 => for partnership
+                                                    'partnership' => ($item['is_partnership']==1 && $partnership_ratio<1)?$partnership_ratio:1,
                                                     'sales_excluded' => 0,
                                                     'purchases_excluded' => 0,
                                                     'purch_inv_ref' => 1, //item created when invoicing for purchase
@@ -219,6 +222,7 @@ class Purchasing_gemstones extends CI_Controller {
         }
 	function create(){   
             $inputs = $this->input->post();
+//                echo '<pre>';                                                    print_r($inputs); die;
             $invoice_id = get_autoincrement_no(SUPPLIER_INVOICE);
             $invoice_no = gen_id(SUP_INVOICE_NO_PREFIX, SUPPLIER_INVOICE, 'id');
             
@@ -247,12 +251,12 @@ class Purchasing_gemstones extends CI_Controller {
             $data['inv_desc'] = array(); 
             $data['item_stock_transection'] = array(); //stock transection purchasing
             ksort($inputs['inv_items']);
-//            echo '<pre>';            print_r($inputs['inv_items']); die; 
             $total = 0;
             foreach ($inputs['inv_items'] as $inv_item){
                 $total += $inv_item['item_quantity']*$inv_item['item_unit_cost'];
                 
                 $item_add_res = $this->new_items_insertion($inv_item);
+//            echo '<pre>';            print_r($inv_item); die; 
                 
                 $data['inv_desc'][] = array(
                                             'supplier_invoice_id' => $invoice_id,

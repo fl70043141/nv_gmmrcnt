@@ -119,7 +119,7 @@ class Purchasing_items extends CI_Controller {
             if(!empty($item)){ 
                     
                     $item_id = get_autoincrement_no(ITEMS); 
-                    $item_code = ($item['item_code']=='')?gen_id('1', ITEMS, 'id',4):$item['item_code'];
+                    $item_code = ($item['item_code']=='')?gen_id(ITEMCODE_PREFIX, ITEMS, 'id',4):$item['item_code'];
                     $inputs['status'] = (isset($inputs['status']))?1:0;
                     $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
                     $inputs['purchases_excluded'] = (isset($inputs['purchases_excluded']))?1:0;

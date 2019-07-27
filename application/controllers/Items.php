@@ -122,7 +122,7 @@ class Items extends CI_Controller {
 //            echo '<pre>';            print_r($inputs);die;
  
             $item_id = get_autoincrement_no(ITEMS); 
-            $item_code = ($inputs['item_code']=='')?gen_id('1', ITEMS, 'id',4):$inputs['item_code'];
+            $item_code = ($inputs['item_code']=='')?gen_id(ITEMCODE_PREFIX, ITEMS, 'id',4):$inputs['item_code'];
             $inputs['status'] = (isset($inputs['status']))?1:0;
             $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
             $inputs['purchases_excluded'] = (isset($inputs['purchases_excluded']))?1:0;
@@ -756,7 +756,7 @@ class Items extends CI_Controller {
                     redirect(base_url($this->router->fetch_class()));
                 }
             }
-            $data['new_item_code'] =  gen_id('1', ITEMS, 'id',4);
+            $data['new_item_code'] =  gen_id(ITEMCODE_PREFIX, ITEMS, 'id',4);
             $data['default_currency']  = get_single_row_helper(CURRENCY,'code="'.$this->session->userdata(SYSTEM_CODE)['default_currency'].'"');
 //            echo '<pre>';            print_r($data); die;
             $data['item_category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id',''); 

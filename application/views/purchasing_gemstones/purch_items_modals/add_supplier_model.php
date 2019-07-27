@@ -102,11 +102,11 @@
                 $('#supplier_name').focus().select();
                 return false;
             }
-            if($('#city').val()=='' || $('#city').val().length<3){
-                fl_alert('info',"City Name Invalid!");
-                $('#city').focus().select();
-                return false;
-            }
+//            if($('#city').val()=='' || $('#city').val().length<3){
+//                fl_alert('info',"City Name Invalid!");
+//                $('#city').focus().select();
+//                return false;
+//            }
             add_supplier_modal(); 
         });
         

@@ -203,7 +203,7 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group pad">
-                                                <label for="item_unit_cost">Unit Cost <span id="cur_code_lineform"></span>/<span id="prce_unit_name"></span> <input type="checkbox" name="is_price_per_unit" id="is_price_per_unit" value="1" checked></label>
+                                                <label for="item_unit_cost">Price <span id="cur_code_lineform"></span>/<span id="prce_unit_name"></span> <input type="checkbox" name="is_price_per_unit" id="is_price_per_unit" value="1" ></label>
                                                 <input type="number" min="0" name="item_unit_cost" step=".001"  class="form-control add_item_inpt" id="item_unit_cost" placeholder="Unit Cost for item">
                                             </div>
                                         </div>
@@ -229,7 +229,7 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                                <th width="10%"  style="text-align: center;">Item Code</th> 
                                                <th width="20%" style="text-align: center;">Item Description</th> 
                                                <th width="10%" style="text-align: center;">Quantity</th> 
-                                               <th width="10%" style="text-align: right;">Unit Cost</th>  
+                                               <th width="10%" style="text-align: right;">S.Price/unit</th>  
                                                <th width="10%" style="text-align: right;">Discount</th>  
                                                <th width="10%" style="text-align: right;">Total</th> 
                                                <th width="5%" style="text-align: center;">Action</th>
