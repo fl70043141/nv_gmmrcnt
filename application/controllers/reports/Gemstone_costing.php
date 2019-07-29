@@ -55,6 +55,7 @@ class Gemstone_costing extends CI_Controller {
             $item_stocks = $this->load_data(); 
             $inputs = $this->input->get();
 //            echo '<pre>';            print_r($this->input->get()); die;
+            $stock_stat = (isset($inputs['stock_stat']))?$inputs['stock_stat']:1; 
             $location_name = ($inputs['location_id'] != '')?get_single_row_helper(INV_LOCATION,'id = "'.$inputs['location_id'].'"')['location_name']:'All'; 
             $category_name = ($inputs['item_category_id'] != '')?get_single_row_helper(ITEM_CAT,'id = "'.$inputs['item_category_id'].'"')['category_name']:'All'; 
             $shape_name = ($inputs['shape_id'] != '')?get_single_row_helper(DROPDOWN_LIST,'id = "'.$inputs['shape_id'].'"')['dropdown_value']:'All'; 
@@ -124,12 +125,14 @@ class Gemstone_costing extends CI_Controller {
             $all_tot_units = $all_tot_units_2 = $all_tot_amount = $item_count = 0;
             $i = 1; 
             foreach ($item_stocks as $item){
-//                echo '<pre>';            print_r($item); die;    
+//                 if($item['item_code']== 'AZ0017')
+//                    echo '<pre>';            print_r($item);   
 
                 $tot_units = $item['units_available'] + $item['units_on_workshop'] + $item['units_on_consignee'];
                 $tot_units_2 = $item['units_available_2'] + $item['units_on_workshop_2'] + $item['units_on_consignee_2'];
-                $purch_cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units);
-                $cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units) + $item['total_lapidary_cost'];
+                $purch_cost = (($item['cost_amount'] / $item['ip_curr_value']));
+//                $purch_cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units);
+                $cost = $purch_cost+ $item['total_lapidary_cost'];
 
 //                $cat_tot_units += $tot_units;
 //                $cat_tot_units_2 += $tot_units_2;
@@ -139,7 +142,7 @@ class Gemstone_costing extends CI_Controller {
                 $all_tot_units_2 += $tot_units_2;
                 $all_tot_amount += $cost;
 
-               if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
+               if($stock_stat==2 || $item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
                    $bg_colr = ($i%2==0)?'#F5F5F5':'#FFFFFF';
                    $html .= '
                        <tr>
