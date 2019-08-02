@@ -132,13 +132,16 @@ class Pnl_gemstones extends CI_Controller {
 
                 $pnl_amount = $item['item_sale_amount'] - $cost;
                 $tot_pnl += $pnl_amount;
-
+                
+                $pnl_shared=0;
+                if($item['partnership']>0 && $item['partnership']<1)
+                    $pnl_shared= $pnl_amount*$item['partnership'];
               
                    $html .= '
                        <tr>
                            <td style="width:4%;">'.$i.'</td> 
                            <td style="width:8%;" align="left">'.$item['item_code'].'</td>
-                           <td style="width:14%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                           <td style="width:14%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].':'.float2rat($item['partnership']).')</b>':'').'</td>
                            <td style="width:17%;" align="center">'.$item['total_sold_qty'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['total_sold_qty_2'].' '.$item['uom_name_2']:'-');
                            if(($item['units_available']) > 0){
                                 $html .= '<br>In Stock: '.$item['units_available'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'-');
@@ -148,7 +151,7 @@ class Pnl_gemstones extends CI_Controller {
                            <td style="width:10%;" align="right">'. number_format($item['total_lapidary_cost'],2).'</td>
                            <td style="width:12%;" align="right">'. number_format($cost,2).'</td>
                            <td style="width:12%;" align="right">'. number_format($item['item_sale_amount'],2).'</td>
-                            <td style="width:12%; text-align:right; color:'.(($pnl_amount<0)?'red':'').';" >'. number_format($pnl_amount,2).'</td>
+                            <td style="width:12%; text-align:right; color:'.(($pnl_amount<0)?'red':'').';" >'. number_format($pnl_amount,2).(($pnl_shared>0)?'<br>['. number_format($pnl_shared,2).']':'').'</td>
                       </tr>'; 
                    $i++;
                    $item_count++; 

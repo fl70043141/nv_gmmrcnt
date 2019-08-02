@@ -36,11 +36,15 @@
                                      $pnl_amount = $item['item_sale_amount'] - $cost;
                                      $tot_pnl += $pnl_amount;
                                      
+                                     $pnl_shared=0;
+                                     if($item['partnership']>0 && $item['partnership']<1)
+                                        $pnl_shared= $pnl_amount*$item['partnership'];
+
                                          $html_row .= '
                                              <tr>
                                                  <td>'.($i+1).'</td> 
                                                  <td align="center">'.$item['item_code'].'</td>
-                                                 <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                                                 <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].':'.float2rat($item['partnership']).')</b>':'').'</td>
                                                  <td align="center">'.$item['total_sold_qty'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['total_sold_qty_2'].' '.$item['uom_name_2']:'-');
                                                     if(($item['units_available']) > 0){
                                                         $html_row .= '<br> In Stock :'.$item['units_available'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'-');
@@ -50,7 +54,7 @@
                                                  <td align="right">'. number_format($cost,2).'</td>
                                                  <td align="right">'. number_format($item['item_sale_amount'],2).'</td>
                                                  <td align="center">'.(($pnl_amount>0)?'<p style="color:green;">PROFIT</p>':'<p style="color:red;">LOST</p>').'</td>
-                                                 <td align="right" style="vertical-align: bottom;">'. number_format(abs($pnl_amount),2).'</td>
+                                                 <td align="right" style="vertical-align: bottom;">'. number_format(abs($pnl_amount),2).(($pnl_shared>0)?'<br>['. number_format($pnl_shared,2).']':'').'</td>
                                             </tr>';
                                          
                                          $i++;
