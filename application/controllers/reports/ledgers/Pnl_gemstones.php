@@ -117,6 +117,7 @@ class Pnl_gemstones extends CI_Controller {
                         <tbody>';
             
             $tot_sales = $tot_pnl = $all_tot_units = $all_tot_units_2 = $all_tot_amount = $item_count = 0;
+            $pnl_shared=0;$pnl_shared_tot=0;$pnl_non_shared_tot=0;
             $i = 1; 
             foreach ($item_stocks as $item){
 //                echo '<pre>';            print_r($item); die;    
@@ -133,9 +134,11 @@ class Pnl_gemstones extends CI_Controller {
                 $pnl_amount = $item['item_sale_amount'] - $cost;
                 $tot_pnl += $pnl_amount;
                 
-                $pnl_shared=0;
-                if($item['partnership']>0 && $item['partnership']<1)
+                if($item['partnership']>0 && $item['partnership']<1){
                     $pnl_shared= $pnl_amount*$item['partnership'];
+                    $pnl_shared_tot +=$pnl_shared;
+                    $pnl_non_shared_tot += abs($pnl_amount)-abs($pnl_shared);
+                }
               
                    $html .= '
                        <tr>
@@ -176,7 +179,8 @@ class Pnl_gemstones extends CI_Controller {
                                 Units: '.$all_tot_units.' '.((isset($item))?$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-'):'').' <br> 
                                 Total Sale: '.$def_cur['code'].' '. number_format($tot_sales,2).'<br>
                                 Total Cost: '.$def_cur['code'].' '. number_format($all_tot_amount,2).'<br>
-                                '.(($tot_pnl>0)?'Profit':'Lost').' Amount : '.$def_cur['code'].' '. number_format($tot_pnl,2).'</td>
+                                '.(($tot_pnl>0)?'Profit':'Lost').' Amount : '.$def_cur['code'].' '. number_format($tot_pnl,2).'<br>
+                                Calculated Profit/Lost: '.$def_cur['code'].' '. number_format((abs($tot_pnl)-abs($pnl_non_shared_tot)),2).'</td>
                         </tr> 
                         
                         <tr><td colspan="3"></td></tr>

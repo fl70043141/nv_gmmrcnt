@@ -3,6 +3,7 @@
               <?php
               $html_row = "";
               $tot_sales = $tot_pnl = $all_tot_units = $all_tot_units_2 = $all_tot_amount = $item_count = 0;
+              $pnl_shared=0;$pnl_shared_tot=0;$pnl_non_shared_tot=0;
               $def_cur = get_single_row_helper(CURRENCY,'code="'.$this->session->userdata(SYSTEM_CODE)['default_currency'].'"');
 //              echo '<pre>';              print_r($def_cur); die;
               $html_row .= '<thead>
@@ -35,11 +36,13 @@
                                      
                                      $pnl_amount = $item['item_sale_amount'] - $cost;
                                      $tot_pnl += $pnl_amount;
-                                     
-                                     $pnl_shared=0;
-                                     if($item['partnership']>0 && $item['partnership']<1)
+                                      
+                                   
+                                    if($item['partnership']>0 && $item['partnership']<1){
                                         $pnl_shared= $pnl_amount*$item['partnership'];
-
+                                        $pnl_shared_tot +=$pnl_shared;
+                                        $pnl_non_shared_tot += abs($pnl_amount)-abs($pnl_shared);
+                                    }
                                          $html_row .= '
                                              <tr>
                                                  <td>'.($i+1).'</td> 
@@ -66,6 +69,10 @@
                                             <td align="right"><b>'. number_format($all_tot_amount,2).'</b></td>
                                             <td align="right"><b>'. number_format($tot_sales,2).'</b></td>
                                             <td align="right" colspan="2" ><b style="color:'.(($tot_pnl>0)?'':'red').';">'. number_format($tot_pnl,2).'</b></td>
+                                    </tr>
+                                    <tr '.(($pnl_non_shared_tot>0)?'':'hidden').'>
+                                            <td colspan="6"></td>
+                                            <td align="right" colspan="2"><b>Calculated: '.number_format((abs($tot_pnl)-abs($pnl_non_shared_tot)),2).'</b></td>
                                     </tr>';
                     }else{
                             $html_row .= '<tr>
