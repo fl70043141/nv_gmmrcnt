@@ -133,7 +133,7 @@ class Pnl_gemstones extends CI_Controller {
 
                 $pnl_amount = $item['item_sale_amount'] - $cost;
                 $tot_pnl += $pnl_amount;
-                
+                $pnl_shared=0;
                 if($item['partnership']>0 && $item['partnership']<1){
                     $pnl_shared= $pnl_amount*$item['partnership'];
                     $pnl_shared_tot +=$pnl_shared;

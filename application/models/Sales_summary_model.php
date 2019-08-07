@@ -29,9 +29,11 @@ class Sales_summary_model extends CI_Model
 //            echo '<pre>';            print_r($result); die;
             return $result;
 	}
-        public function search_result($data=''){ 
-//            echo '<pre>';            print_r(); die;
-            $this->db->select('i.*');
+        public function search_result($data=''){  
+
+            $this->db->select('FROM_UNIXTIME(i.invoice_date+(86400*pt.days_after)) as due_date_calc');
+            $this->db->select('NOW() as now_strtotime');
+            $this->db->select('i.*');  
             $this->db->select('(select sum(unit_price*item_quantity*(100-discount_persent)*0.01) from '.INVOICE_DESC.' where invoice_id = i.id) as invoice_desc_total');
             $this->db->select('c.customer_name,c.short_name,pt.payment_term_name,pt.days_after');
             $this->db->from(INVOICES.' i');
@@ -42,7 +44,14 @@ class Sales_summary_model extends CI_Model
             if(isset($data['invoice_no']) && $data['invoice_no']!='') $this->db->where('i.invoice_no',$data['invoice_no']);
             if(isset($data['customer_id']) && $data['customer_id']!='') $this->db->where('i.customer_id',$data['customer_id']);
             if($data['from_date']!='' && $data['to_date']!='') $this->db->where("invoice_date>= ".$data['from_date']." AND invoice_date<= ".$data['to_date']." ");
-           
+//                       echo '<pre>';            print_r($data); die;
+            if(isset($data['show_type']) && $data['show_type']==2) {
+                $this->db->where('FROM_UNIXTIME(i.invoice_date+(86400*pt.days_after))<= NOW()'); 
+                $this->db->where('i.payment_settled','0'); 
+            }
+            if(isset($data['show_type']) && $data['show_type']==1) { 
+                $this->db->where('i.payment_settled','0'); 
+            } 
             if($this->session->userdata(SYSTEM_CODE)['user_group_id']!=0) $this->db->where('i.inv_group_id',$this->session->userdata(SYSTEM_CODE)['user_group_id']); 
             
             $result = $this->db->get()->result_array();  
