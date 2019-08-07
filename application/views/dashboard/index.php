@@ -73,7 +73,7 @@
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/Sales_summary");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-user"></i> Customer Balance</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/Gemstone_costing");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-money"></i> Gem Costing Report</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/Ledger_reports/expenses");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-dollar"></i> Expenses Report</a></div>
-        <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("ledgers/Pnl_General");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-bar-chart"></i> P&L Report</a></div>
+        <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/ledgers/Pnl_General");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-bar-chart"></i> P&L Report</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("Order_ecatalog");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-image"></i> E-Catelog</a></div>
              
       </div>
