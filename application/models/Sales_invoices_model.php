@@ -285,6 +285,7 @@ class Sales_invoices_model extends CI_Model
         public function get_available_items($where='',$limit=''){
 //            echo '<pre>';            print_r($limit); die;
             $this->db->select("is.*,itm.item_code,itm.item_category_id,CONCAT(itm.item_name,'-',itm.item_code) as item_name");
+            $this->db->select('(select supplier_name from '.SUPPLIERS.' where id = si.supplier_id)  as supplier_name');
             $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
             $this->db->select('(select location_name from '.INV_LOCATION.' where id = is.location_id)  as location_name');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id)  as uom_name');
@@ -295,6 +296,8 @@ class Sales_invoices_model extends CI_Model
             $this->db->select('(is.units_available + is.units_on_consignee + is.units_on_workshop) as tot_units_avlbl');
             $this->db->select('(is.units_available_2 + is.units_on_consignee_2 + is.units_on_workshop_2) as tot_units_avlbl_2');
             $this->db->join(ITEMS.' itm','itm.id = is.item_id','left');
+            $this->db->join(SUPPLIER_INVOICE_DESC.' sd','sd.item_id = itm.id'); 
+            $this->db->join(SUPPLIER_INVOICE." si", 'si.id = sd.supplier_invoice_id');  
             $this->db->from(ITEM_STOCK.' is');     
 //            $this->db->where('is.units_available >',0);
             $this->db->where('(is.units_available > 0 OR is.units_on_consignee > 0 OR is.units_on_workshop > 0)'); 

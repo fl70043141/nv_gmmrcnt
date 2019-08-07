@@ -1,6 +1,6 @@
   
  <!-- Modal Checkout-->
-<div class="modal fade"  id="item_search_modal" tabindex="-1" role="dialog" aria-labelledby="item_search_modal_label" aria-hidden="true">
+<div class="modal fade"  id="item_search_modal" role="dialog" aria-labelledby="item_search_modal_label" aria-hidden="true">
     <div class="modal-dialog  modal-lg" style="width: 800px;" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -39,7 +39,7 @@
                             <?php echo form_dropdown('search_item_treatment_id',$treatments_list,set_value('search_item_treatment_id'),' class="form-control  input-lg  " style="width:100%;" data-live-search="true" id="search_item_treatment_id"');?>
                         </div>
                   </div>
-                  <div class="col-md-4"> 
+                  <div hidden class="col-md-4"> 
                         <div class="form-group">
                             <label for="search_item_color_id" class=" control-label">Color</label>
                             <?php echo form_dropdown('search_item_color_id',$color_list,set_value('search_item_color_id'),' class="form-control  input-lg  " style="width:100%;" data-live-search="true" id="search_item_color_id"');?>
@@ -49,6 +49,12 @@
                         <div class="form-group">
                             <label for="search_item_shape_id" class=" control-label">Shape</label>
                             <?php echo form_dropdown('search_item_shape_id',$shape_list,set_value('search_item_shape_id'),' class="form-control  input-lg  " style="width:100%;" data-live-search="true" id="search_item_shape_id"');?>
+                        </div>
+                  </div> 
+                  <div class="col-md-4"> 
+                        <div class="form-group">
+                            <label for="search_item_supplier_id" class=" control-label">Supplier</label>
+                            <?php echo form_dropdown('search_item_supplier_id',$supplier_list,set_value('search_item_supplier_id'),' class="form-control select2  " style="width:100%;" data-live-search="true" id="search_item_supplier_id"');?>
                         </div>
                   </div>
               </div>
@@ -97,6 +103,9 @@
        $('#search_item_units').keyup(function(){ 
             get_modal_item_search()
        });
+       $('#search_item_supplier_id').change(function(){ 
+            get_modal_item_search()
+       });
        
         function get_modal_item_search(category='',item_desc='',item_code=''){
 //            $.ajax({
@@ -120,7 +129,8 @@
 			data : {function_name:'get_item_search_modal',item_cat_id:$('#search_item_category_id').val(),item_units:$('#search_item_units').val(),item_code:$('#search_item_code').val(),
                                         treatment_id:$('#search_item_treatment_id').val(),
                                         color_id:$('#search_item_color_id').val(),
-                                        shape_id:$('#search_item_shape_id').val()
+                                        shape_id:$('#search_item_shape_id').val(),
+                                        srch_supp_id:$('#search_item_supplier_id').val(),
                                 },
 			success: function(result){
 //                            alert(result);

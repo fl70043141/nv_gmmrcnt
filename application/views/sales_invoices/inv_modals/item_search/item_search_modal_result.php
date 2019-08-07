@@ -5,9 +5,9 @@
                                <th>#</th> 
                                <th>Item code</th> 
                                <th>Variety</th>   
+                               <th>Supplier</th>   
                                <th>Treatment</th>   
-                               <th>Shape</th>   
-                               <th>Color</th>   
+                               <th>Shape</th>    
                                <th>Units</th>   
                                <th>Action</th>
                            </tr>
@@ -22,9 +22,9 @@
                                                 <td>'.$i.'</td>
                                                 <td>'.$item['item_code'].'</td>
                                                 <td>'.$item['item_category_name'].'</td> 
+                                                <td>'.$item['supplier_name'].'</td>
                                                 <td>'.$item['treatment_name'].'</td>  
-                                                <td>'.$item['shape_name'].'</td>  
-                                                <td>'.$item['color_name'].'</td>  
+                                                <td>'.$item['shape_name'].'</td>   
                                                 <td>'.$item['tot_units_avlbl'].' '.$item['uom_name'].(($item['uom_id_2']>0)?' | '.$item['tot_units_avlbl_2'].' '.$item['uom_name_2']:'').'</td>  
                                                 <td><a id="item-search-pick_'.$item['item_code'].'" class="btn btn-success btn-xs "><span class="fa fa-cart-plus"></span></a></td>
                                            </tr> 

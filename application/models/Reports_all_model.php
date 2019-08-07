@@ -74,6 +74,7 @@ class Reports_all_model extends CI_Model
         if(isset($data['item_id']) && $data['item_id'] !='')$this->db->like('itm.id',$data['item_id']);
         if(isset($data['color_id']) && $data['color_id'] !='')$this->db->where('itm.color',$data['color_id']);
         if(isset($data['shape_id']) && $data['shape_id'] !='')$this->db->where('itm.shape',$data['shape_id']);
+        if(isset($data['supplier_id']) && $data['supplier_id'] !='')$this->db->where('si.supplier_id',$data['supplier_id']);
         
         if(isset($data['max_weight_check']) && $data['max_weight_check']==1){
             if(isset($data['min_weight']) && $data['min_weight'] >0)$this->db->where('is.units_available >',$data['min_weight']);

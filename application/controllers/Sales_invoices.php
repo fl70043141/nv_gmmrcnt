@@ -1072,6 +1072,7 @@ class Sales_invoices extends CI_Controller {
             $data['customer_list'] = get_dropdown_data(CUSTOMERS, 'customer_name', 'id','');
             $data['customer_type_list'] = get_dropdown_data(CUSTOMER_TYPE, 'customer_type_name', 'id','');
             $data['country_list'] = get_dropdown_data(COUNTRY_LIST,'country_name','country_code',''); 
+            $data['supplier_list'] = get_dropdown_data(SUPPLIERS,'supplier_name','id','No Supplier');
             
             $data['customer_branch_list'] = array();
             $data['consignee_list'] = get_dropdown_data(CONSIGNEES, 'consignee_name', 'id','Consignee'); 
@@ -1127,6 +1128,7 @@ class Sales_invoices extends CI_Controller {
                 $cat_qry_str .= ($inputs['treatment_id']!='')?"itm.treatment = ".$inputs['treatment_id']." AND ":'';
                 $cat_qry_str .= ($inputs['color_id']!='')?"itm.color = ".$inputs['color_id']." AND ":'';
                 $cat_qry_str .= ($inputs['shape_id']!='')?"itm.shape = ".$inputs['shape_id']." AND ":'';
+                $cat_qry_str .= ($inputs['srch_supp_id']!='')?"si.supplier_id = ".$inputs['srch_supp_id']." AND ":'';
 //                $item_res = $this->Items_model->get_available_items("itm.item_category_id = ".$inputs['item_cat_id']." AND itm.item_code like '%".$inputs['item_code']."%' AND itm.item_name LIKE '%".$inputs['item_desc']."'%");
                 
                 $cat_qry_str .= (isset($inputs['item_units']) && $inputs['item_units']!='')?"is.units_available = ".$inputs['item_units']." AND ":'';

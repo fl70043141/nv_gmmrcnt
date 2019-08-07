@@ -468,8 +468,8 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                            
 </div>
     
-<?php $this->load->view('sales_invoices/inv_modals/add_new_customer_model'); ?>
 <?php $this->load->view('sales_invoices/inv_modals/item_search/item_search_modal'); ?>
+<?php $this->load->view('sales_invoices/inv_modals/add_new_customer_model'); ?>
     
 <script type="text/javascript">
   $('tbody').sortable();
