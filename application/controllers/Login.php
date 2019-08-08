@@ -27,7 +27,7 @@ class Login extends CI_Controller {
 	function authenticate(){
 		$this->load->model('User_default_model');
 		$data = $this->input->post();
-//         print 'Data is <pre>';print_r($data);'</pre>'; die();
+         print 'Data is <pre>';print_r($data);'</pre>'; die();
 		if($this->User_default_model->login($data)){ 
                 //removing temp so items
                 $this->load->model('Sales_order_items_model');
