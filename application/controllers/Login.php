@@ -28,8 +28,9 @@ class Login extends CI_Controller {
 		$this->load->model('User_default_model');
                 $this->load->model('Sales_order_items_model');
 		$data = $this->input->post();
-//         print 'Data is <pre>';print_r($data);'</pre>'; die();
-		if($this->User_default_model->login($data)){ 
+                $login_scs = $this->User_default_model->login($data);
+         print 'Data is <pre>';print_r($data);'</pre>'; die();
+		if($login_scs){ 
                 //removing temp so items
 //                $del_res = $this->Sales_order_items_model->delete_temp_so_item($this->session->userdata(SYSTEM_CODE)['ID'].'_so_0');
                 $del_res = $this->Sales_order_items_model->delete_temp_so_item('',$this->session->userdata(SYSTEM_CODE)['ID']);
