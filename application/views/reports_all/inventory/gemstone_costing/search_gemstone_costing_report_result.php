@@ -36,7 +36,7 @@
                                                $price_in_def = $lcost['amount_cost'] * ($def_cur['value'] / $lcost['currency_value']);
                                                $tot_lapid_cost +=$price_in_def;
                                                $html_2 .= '<tr style="background-color: '.$bg_colr.'">
-                                                                   <td colspan="5"></td> 
+                                                                   <td colspan="6"></td> 
                                                                    <td>'.(($lcost['gem_issue_type_name']!='')?$lcost['gem_issue_type_name']:$lcost['lapidary_type']).'</td>
                                                                    <td>'.(($lcost['dropdown_value']!='')?$lcost['dropdown_value']:$lcost['lapidary_name']).'</td>
                                                                    <td align="right">'. number_format($price_in_def,2).'</td>
