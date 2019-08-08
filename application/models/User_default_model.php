@@ -321,7 +321,10 @@ class User_default_model extends CI_Model
                 }
             }
             
-            $connected = is_connected_internet($this->conection_url);
+            $this->load->library('encryption');  
+            $urpath = $this->encryption->decrypt($this->encrypteduripath); 
+            
+            $connected = (SYS_EXP_CON_CHECK=='1')?is_connected_internet($urpath):true;
             if($res1[0]['fl_remote_check_pass']==0 && $connected){ //check remte
                 
                 $remt_res = $this->zv_check_genuine();
@@ -399,10 +402,9 @@ class User_default_model extends CI_Model
 //        echo $remt_res; die;
     }
     
-    
-//    private $url = "http://localhost/Fl_zv_softcheck/index.php/Fl_softwarelst/check_software_is_genuine/";
-    private $url = "http://fahrylafir.website/fl_soft_check/fl_zv_softcheck/Fl_softwarelst/";
-    private $conection_url = "www.fahrylafir.website";
+    //fl uris for softcheck                
+    private $encrypteduriservcpath = "9cb9ff5e2f996c3c9a65ffd0a1fa4e314f1d394c6f19b7aa33fe92658f9ca1c75d75239cacc82e4c225c593c871e159d844ca88979cb2c5d63ca6f72c3d36109gZPMuv4gLYsFhlh94TAhRE+0TNrh+72TTarlC5yu8zNy3aAqFmQljee20W5dBsBmMU9raiZ3riyJoGqLB//gFpsRIqXmijgwD5dhXvPWH1Ydf/7+Zhke9zjyLl6UpYHf";
+    private $encrypteduripath = "3780599628a90a201ec0321182599870cd030eb26e606305115303b841765a96d8b851ecaa1a7d359f0eb1381396aeeb07a74c9f18563952394493b80868a6d2M6lUSsShxtKVhqx6NXupkeQMJr5pMknC2gBeTdtHx7HqvXv4NqXKfQW+iTLb6Xyd";
     
     public function zv_check_genuine(){ 
          
@@ -416,10 +418,13 @@ class User_default_model extends CI_Model
                                 'serever_info' => php_uname(),
                                 'server_address' => $_SERVER['SERVER_ADDR'],
                                 );
-//         echo '<pre>';        print_r($post_sub_array); die; 
        
+        $this->load->library('encryption');  
+        $urpath = $this->encryption->decrypt($this->encrypteduriservcpath); 
+        
+//         echo '<pre>';        print_r($urpath); die; 
         $this->load->library('Curl');
-        $this->curl->create($this->url);
+        $this->curl->create($urpath);
         $post_json = json_encode($post_sub_array);
         $encrypted_post_data = mc_encrypt($post_json, ENCRYPTION_KEY);
         //data serialize
