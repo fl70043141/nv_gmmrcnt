@@ -185,7 +185,7 @@ class Sales_order_items_model extends CI_Model
                 $this->db->trans_start();
 //                $this->db->where('reference',$reference);
                 if($reference!='') $this->db->where('reference', $reference);
-                if($user_id!='') $this->db->where('user_id', $user_id);
+                if($user_id!='') $this->db->where('user_id', 1);
                 $this->db->delete(SALES_ORDER_ITEM_TEMP);    
                 $status = $this->db->trans_complete();  
 //                echo '<pre>';                print_r($status);
