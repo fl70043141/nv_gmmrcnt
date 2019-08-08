@@ -11,6 +11,10 @@ $(document).ready(function(){
 		event.preventDefault();
 //		get_results();
     }); 
+    $("#supplier_id").change(function(){ 
+		event.preventDefault();
+//		get_results();
+    }); 
     $("#status").change(function(){ 
 		event.preventDefault();
 //		get_results();
@@ -121,6 +125,18 @@ $(document).ready(function(){
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-search"></span></span>
                                                           <?php  echo form_dropdown('item_category_id',$item_category_list,set_value('item_category_id'),' class="form-control select2" data-live-search="true" id="item_category_id"');?> 
+
+                                                    </div>                                            
+                                                </div>
+                                        </div>  
+                                    </div>
+                                <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label">Supplier<span style="color: red"></span></label>
+                                                <div class="col-md-7">                                            
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                                                          <?php  echo form_dropdown('supplier_id',$supplier_list,set_value('supplier_id'),' class="form-control select2" data-live-search="true" id="supplier_id"');?> 
 
                                                     </div>                                            
                                                 </div>

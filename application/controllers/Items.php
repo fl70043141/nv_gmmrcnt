@@ -17,6 +17,7 @@ class Items extends CI_Controller {
             $data['search_list'] = $this->Items_model->search_result('',50);
             $data['form_setup'] = $this->input->get();
             $data['item_category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Items Category'); 
+            $data['supplier_list'] = get_dropdown_data(SUPPLIERS,'supplier_name','id','No Supplier'); 
             $data['main_content']='items/search_items';  
             $this->load->view('includes/template',$data);
 	}
@@ -792,6 +793,7 @@ class Items extends CI_Controller {
 //                        echo '<pre>';            print_r($input); die;
 		$search_data=array( 'item_name' => $this->input->post('item_name'), 
                                     'item_category_id' => $this->input->post('item_category_id'),
+                                    'supplier_id' => $this->input->post('supplier_id'),
                                     'item_code' => $this->input->post('item_code'),
                                     'status' => (isset($input['status']))?1:0 
                                 ); 

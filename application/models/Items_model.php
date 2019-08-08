@@ -10,14 +10,18 @@ class Items_model extends CI_Model
             
 //            echo '<pre>';            print_r($data); die;
             $this->db->select('i.*');
+            $this->db->select('(select supplier_name from '.SUPPLIERS.' where id = si.supplier_id)  as supplier_name');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id)  as unit_abbreviation');
             $this->db->select('(select category_name from '.ITEM_CAT.' where id = i.item_category_id)  as category_name');
             $this->db->from(ITEMS." i");  
+            $this->db->join(SUPPLIER_INVOICE_DESC.' sd','sd.item_id = i.id'); 
+            $this->db->join(SUPPLIER_INVOICE." si", 'si.id = sd.supplier_invoice_id'); 
             $this->db->where('i.deleted',0);
              if(isset($data['status']) && $data['status']!='') $this->db->where('i.status',$data['status']);
              if(isset($data['item_name']) && $data['item_name']!='') $this->db->like('i.item_name',$data['item_name']);
              if(isset($data['item_code']) && $data['item_code']!='') $this->db->like('i.item_code',$data['item_code']);
              if(isset($data['item_category_id']) && $data['item_category_id']!='') $this->db->where('i.item_category_id',$data['item_category_id']);
+             if(isset($data['supplier_id']) && $data['supplier_id']!='') $this->db->where('si.supplier_id',$data['supplier_id']);
             
             if($limit!='') $this->db->limit($limit);
             $result = $this->db->get()->result_array();  
