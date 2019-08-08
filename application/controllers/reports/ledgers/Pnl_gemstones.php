@@ -137,7 +137,7 @@ class Pnl_gemstones extends CI_Controller {
                 if($item['partnership']>0 && $item['partnership']<1){
                     $pnl_shared= $pnl_amount*$item['partnership'];
                     $pnl_shared_tot +=$pnl_shared;
-                    $pnl_non_shared_tot += abs($pnl_amount)-abs($pnl_shared);
+                    $pnl_non_shared_tot += ($pnl_amount)-($pnl_shared);
                 }
               
                    $html .= '
@@ -154,7 +154,7 @@ class Pnl_gemstones extends CI_Controller {
                            <td style="width:10%;" align="right">'. number_format($item['total_lapidary_cost'],2).'</td>
                            <td style="width:12%;" align="right">'. number_format($cost,2).'</td>
                            <td style="width:12%;" align="right">'. number_format($item['item_sale_amount'],2).'</td>
-                            <td style="width:12%; text-align:right; color:'.(($pnl_amount<0)?'red':'').';" >'. number_format($pnl_amount,2).(($pnl_shared>0)?'<br>['. number_format($pnl_shared,2).']':'').'</td>
+                            <td style="width:12%; text-align:right; color:'.(($pnl_amount<0)?'red':'').';" >'. number_format($pnl_amount,2).(($pnl_shared!=0)?'<br>['. number_format($pnl_shared,2).']':'').'</td>
                       </tr>'; 
                    $i++;
                    $item_count++; 
@@ -180,7 +180,7 @@ class Pnl_gemstones extends CI_Controller {
                                 Total Sale: '.$def_cur['code'].' '. number_format($tot_sales,2).'<br>
                                 Total Cost: '.$def_cur['code'].' '. number_format($all_tot_amount,2).'<br>
                                 '.(($tot_pnl>0)?'Profit':'Lost').' Amount : '.$def_cur['code'].' '. number_format($tot_pnl,2).'<br>
-                                Calculated Profit/Lost: '.$def_cur['code'].' '. number_format((abs($tot_pnl)-abs($pnl_non_shared_tot)),2).'</td>
+                                Calculated Profit/Lost: '.$def_cur['code'].' '. number_format((($tot_pnl)-($pnl_non_shared_tot)),2).'</td>
                         </tr> 
                         
                         <tr><td colspan="3"></td></tr>
