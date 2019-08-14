@@ -410,7 +410,7 @@ class Items extends CI_Controller {
                                                                 'person_type' => 51, //lapidarist item quick entry for costing
                                                                 'person_id' => $cost_entry['lapiadrist_id'],
                                                                 'trans_ref' => $lapd_cost_id, //lapidary_cost_id
-                                                                'trans_date' => strtotime("now"),
+                                                                'trans_date' => strtotime($cost_entry['entry_date']),
                                                                 'account' => $gl_debit_acc_info['id'], 
                                                                 'account_code' => $gl_debit_acc_info['account_code'], 
                                                                 'memo' => 'LAPIDARY_COST',
@@ -424,7 +424,7 @@ class Items extends CI_Controller {
                                                                 'person_type' => 51, //lapidarist
                                                                 'person_id' => $cost_entry['lapiadrist_id'],
                                                                 'trans_ref' => $lapd_cost_id,
-                                                                'trans_date' => strtotime("now"),
+                                                                'trans_date' => strtotime($cost_entry['entry_date']),
                                                                 'account' => $gl_credit_acc_info['id'], 
                                                                 'account_code' => $gl_credit_acc_info['account_code'], 
                                                                 'memo' => 'LAPIDARY_COST',

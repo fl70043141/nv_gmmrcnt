@@ -333,7 +333,7 @@ class Purchasing_gemstones extends CI_Controller {
                                                 'person_type' => 20,
                                                 'person_id' => $inputs['supplier_id'],
                                                 'trans_ref' => $invoice_id,
-                                                'trans_date' => strtotime("now"),
+                                                'trans_date' => strtotime($inputs['invoice_date']),
                                                 'account' => 5, //5 inventory GL
                                                 'account_code' => 1510, //5 inventory GL
                                                 'memo' => '',
@@ -346,7 +346,7 @@ class Purchasing_gemstones extends CI_Controller {
                                                 'person_type' => 20,
                                                 'person_id' => $inputs['supplier_id'],
                                                 'trans_ref' => $invoice_id,
-                                                'trans_date' => strtotime("now"),
+                                                'trans_date' => strtotime($inputs['invoice_date']),
                                                 'account' => 14, //14 AC Payable GL
                                                 'account_code' => 2100, //inventory GL
                                                 'memo' => '',
@@ -363,7 +363,7 @@ class Purchasing_gemstones extends CI_Controller {
                                                 'person_type' => 20,
                                                 'person_id' => $inputs['supplier_id'],
                                                 'trans_ref' => $invoice_id,
-                                                'trans_date' => strtotime("now"),
+                                                'trans_date' => strtotime($inputs['invoice_date']),
                                                 'account' => 14, //14 AC Payable GL
                                                 'account_code' => 2100, 
                                                 'memo' => '',
@@ -377,7 +377,7 @@ class Purchasing_gemstones extends CI_Controller {
                                                 'person_type' => 20,
                                                 'person_id' => $inputs['supplier_id'],
                                                 'trans_ref' => $invoice_id,
-                                                'trans_date' => strtotime("now"),
+                                                'trans_date' => strtotime($inputs['invoice_date']),
                                                 'account' => 1, //2 petty cash
                                                 'account_code' => 1060,
                                                 'memo' => '',

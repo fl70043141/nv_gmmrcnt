@@ -184,7 +184,7 @@ class Sales_returns extends CI_Controller {
                                             'person_type' => 10,
                                             'person_id' => $inputs['customer_id'],
                                             'trans_ref' => $cn_id,
-                                            'trans_date' => strtotime("now"),
+                                            'trans_date' =>  strtotime($inputs['return_date']),
                                             'account' => 5, //5 inventory GL
                                             'account_code' => 1510, 
                                             'memo' => 'CN',
@@ -198,7 +198,7 @@ class Sales_returns extends CI_Controller {
                                             'person_type' => 10,
                                             'person_id' => $inputs['customer_id'],
                                             'trans_ref' => $cn_id,
-                                            'trans_date' => strtotime("now"),
+                                            'trans_date' =>  strtotime($inputs['return_date']),
                                             'account' => 14, //3 account Receivable GL
                                             'account_code' => 2100,
                                             'memo' => 'CN',

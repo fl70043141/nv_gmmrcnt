@@ -141,34 +141,67 @@ class Payments extends CI_Controller {
                                                    );
                         
                         //GL Entries
-                        $data['gl_trans'][] = array(
-                                                        'person_type' => $inputs['person_type'],
-                                                        'person_id' => $inputs['person_id'],
-                                                        'trans_ref' => $trans_id,
-                                                        'trans_date' => strtotime("now"),
-                                                        'account' => 14, //14 AC Payable GL
-                                                        'account_code' => 2100, 
-                                                        'memo' => 'Supp Pay ADD',
-                                                        'amount' => ($trans_ref['amount']),
-                                                        'currency_code' => $cur_det['code'], 
-                                                        'currency_value' => $cur_det['value'],
-                                                        'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
-                                                        'status' => 1,
-                                                );
-                        $data['gl_trans'][] = array(
-                                                        'person_type' => $inputs['person_type'],
-                                                        'person_id' => $inputs['person_id'],
-                                                        'trans_ref' => $trans_id,
-                                                        'trans_date' => strtotime("now"),
-                                                        'account' => 1, //2 petty cash
-                                                        'account_code' => 1060,
-                                                        'memo' => 'Supp Pay ADD',
-                                                        'amount' => (-$trans_ref['amount']),
-                                                        'currency_code' => $cur_det['code'], 
-                                                        'currency_value' => $cur_det['value'],
-                                                        'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
-                                                        'status' => 1,
-                                                );
+                        if($inputs['person_type']==20){ //supp
+                            $data['gl_trans'][] = array(
+                                                            'person_type' => $inputs['person_type'],
+                                                            'person_id' => $inputs['person_id'],
+                                                            'trans_ref' => $trans_id,
+                                                            'trans_date' => strtotime($inputs['trans_date']),
+                                                            'account' => 14, //14 AC Payable GL
+                                                            'account_code' => 2100, 
+                                                            'memo' => 'Supp Pay ADD',
+                                                            'amount' => ($trans_ref['amount']),
+                                                            'currency_code' => $cur_det['code'], 
+                                                            'currency_value' => $cur_det['value'],
+                                                            'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                            'status' => 1,
+                                                    );
+                            $data['gl_trans'][] = array(
+                                                            'person_type' => $inputs['person_type'],
+                                                            'person_id' => $inputs['person_id'],
+                                                            'trans_ref' => $trans_id,
+                                                            'trans_date' => strtotime($inputs['trans_date']),
+                                                            'account' => 1, //2 petty cash
+                                                            'account_code' => 1060,
+                                                            'memo' => 'Supp Pay ADD',
+                                                            'amount' => (-$trans_ref['amount']),
+                                                            'currency_code' => $cur_det['code'], 
+                                                            'currency_value' => $cur_det['value'],
+                                                            'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                            'status' => 1,
+                                                    );
+                        }else{//cust
+                            
+                            $data['gl_trans'][] = array(
+                                                            'person_type' => $inputs['person_type'],
+                                                            'person_id' => $inputs['person_id'],
+                                                            'trans_ref' => $trans_id,
+                                                            'trans_date' => strtotime($inputs['trans_date']),
+                                                            'account' => 3, //14 AC Payable GL
+                                                            'account_code' => 1200, 
+                                                            'memo' => 'Cust Pay ADD',
+                                                            'amount' => (-$trans_ref['amount']),
+                                                            'currency_code' => $cur_det['code'], 
+                                                            'currency_value' => $cur_det['value'],
+                                                            'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                            'status' => 1,
+                                                    );
+                            $data['gl_trans'][] = array(
+                                                            'person_type' => $inputs['person_type'],
+                                                            'person_id' => $inputs['person_id'],
+                                                            'trans_ref' => $trans_id,
+                                                            'trans_date' => strtotime($inputs['trans_date']),
+                                                            'account' => 1, //2 petty cash
+                                                            'account_code' => 1060,
+                                                            'memo' => 'Cust Pay ADD',
+                                                            'amount' => ($trans_ref['amount']),
+                                                            'currency_code' => $cur_det['code'], 
+                                                            'currency_value' => $cur_det['value'],
+                                                            'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                            'status' => 1,
+                                                    );
+                        }
+                        
                         $due_amount = $trans_ref['amount_due'] - $trans_ref['amount']; 
                         if($due_amount <= 0){
                            $data['trans_inv'][$trans_ref['inv_id']] = array('payment_settled'=>1);

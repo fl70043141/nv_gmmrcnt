@@ -193,7 +193,7 @@ class Purchasing_returns extends CI_Controller {
                                             'person_type' => 20,
                                             'person_id' => $inputs['supplier_id'],
                                             'trans_ref' => $cn_id,
-                                            'trans_date' => strtotime("now"),
+                                            'trans_date' =>  strtotime($inputs['return_date']),
                                             'account' => 5, //5 inventory GL
                                             'account_code' => 1510, 
                                             'memo' => 'CN',
@@ -207,7 +207,7 @@ class Purchasing_returns extends CI_Controller {
                                             'person_type' => 20,
                                             'person_id' => $inputs['supplier_id'],
                                             'trans_ref' => $cn_id,
-                                            'trans_date' => strtotime("now"),
+                                            'trans_date' =>  strtotime($inputs['return_date']),
                                             'account' => 3, //3 account Receivable GL
                                             'account_code' => 1200,
                                             'memo' => 'CN',
@@ -224,7 +224,7 @@ class Purchasing_returns extends CI_Controller {
                                             'person_type' => 20,
                                             'person_id' => $inputs['supplier_id'],
                                             'trans_ref' => $cn_id,
-                                            'trans_date' => strtotime("now"),
+                                            'trans_date' =>  strtotime($inputs['return_date']),
                                             'account' => 82, //82 For.ex losss
                                             'account_code' => 5510,
                                             'memo' => 'CN-ForEx Losss',
@@ -240,7 +240,7 @@ class Purchasing_returns extends CI_Controller {
                                             'person_type' => 20,
                                             'person_id' => $inputs['supplier_id'],
                                             'trans_ref' => $cn_id,
-                                            'trans_date' => strtotime("now"),
+                                            'trans_date' =>  strtotime($inputs['return_date']),
                                             'account' => 81, //81 //82 For.ex Gain
                                             'account_code' => 4450,
                                             'memo' => 'CN-ForEx Gain',
