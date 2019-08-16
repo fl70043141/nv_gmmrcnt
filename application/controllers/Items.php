@@ -324,7 +324,7 @@ class Items extends CI_Controller {
             if(!empty($res_itm_all_px_cert)){ //Certificates
                 foreach ($res_itm_all_px_cert as $itm_img_cert){
                     $all_images_cert[]=$itm_img_cert['name'];
-                    fl_image_resizer($itm_img_cert['name'], 800, '',$itm_img_cert['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/certificates_files/');
+//                    fl_image_resizer($itm_img_cert['name'], 800, '',$itm_img_cert['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/certificates_files/');
                 }
             }; 
             

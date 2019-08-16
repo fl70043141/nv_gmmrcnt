@@ -119,8 +119,12 @@ function load_item_info(item_id,init_id = 0,type='A',slideTo=true){ // A: append
                                     init_id = count;
                                 }
                                 var otr_images = []; 
+                                var cert_images = []; 
                                 if(item_obj.images!=""){
                                  otr_images = JSON.parse(item_obj.images); 
+                                }
+                                if(item_obj.certificates_files!=""){
+                                 cert_images = JSON.parse(item_obj.certificates_files); 
                                 }
                                 
                                 var cur_page = $('#curr_page_no').val();
@@ -140,6 +144,12 @@ function load_item_info(item_id,init_id = 0,type='A',slideTo=true){ // A: append
                                                                                         i++;
                                                                                     });
                                                                                 } 
+                                                                                if(cert_images.length>0){
+                                                                                    $.each(cert_images, function (key_cert, crt_img_name) {
+                                                                                        content +=   '<div class="tab-pane" id="'+item_obj.item_id+'-pic-'+i+'"><img style="width:'+(window.innerWidth)+'px;" src="'+img_dir+item_obj.item_id+'/certificates_files/'+crt_img_name+'" /></div>';
+                                                                                        i++;
+                                                                                    });
+                                                                                } 
                                                                             content +=   '</div>'+
                                                                                             '<ul class="preview-thumbnail nav nav-tabs">'+
                                                                                               '<li class="active"><a data-target="#'+item_obj.item_id+'-pic-1" data-toggle="tab"><img id="'+item_obj.item_id+'-img-1"  src="'+img_dir+item_obj.item_id+'/'+((item_obj.image!="")?item_obj.image:'../../default/default.jpg')+'"  class="tmb-img"/></a></li>';
@@ -147,6 +157,12 @@ function load_item_info(item_id,init_id = 0,type='A',slideTo=true){ // A: append
                                                                             if(otr_images.length > 0){
                                                                                 $.each(otr_images, function (key, otr_img_name_tmb) {
                                                                                     content +=   '<li><a data-target="#'+item_obj.item_id+'-pic-'+j+'" data-toggle="tab"><img id="'+item_obj.item_id+'-img-'+j+'" src="'+img_dir+item_obj.item_id+'/other/'+otr_img_name_tmb+'" class="tmb-img"/></a></li>';
+                                                                                    j++;
+                                                                                });
+                                                                                }
+                                                                            if(cert_images.length > 0){
+                                                                                $.each(cert_images, function (key, crt_img_name_tmb) {
+                                                                                    content +=   '<li><a data-target="#'+item_obj.item_id+'-pic-'+j+'" data-toggle="tab"><img id="'+item_obj.item_id+'-img-'+j+'" src="'+img_dir+item_obj.item_id+'/certificates_files/'+crt_img_name_tmb+'" class="tmb-img"/></a></li>';
                                                                                     j++;
                                                                                 });
                                                                                 }
