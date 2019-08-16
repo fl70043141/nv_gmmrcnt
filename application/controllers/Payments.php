@@ -163,7 +163,7 @@ class Payments extends CI_Controller {
                                                             'trans_date' => strtotime($inputs['trans_date']),
                                                             'account' => 1, //2 petty cash
                                                             'account_code' => 1060,
-                                                            'memo' => 'Supp Pay ADD',
+                                                            'memo' => 'Supp Pay ADD cash',
                                                             'amount' => (-$trans_ref['amount']),
                                                             'currency_code' => $cur_det['code'], 
                                                             'currency_value' => $cur_det['value'],
