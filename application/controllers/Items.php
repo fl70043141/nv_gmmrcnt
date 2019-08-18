@@ -260,9 +260,10 @@ class Items extends CI_Controller {
             if(!is_dir(ITEM_IMAGES.$item_id.'/')) mkdir(ITEM_IMAGES.$item_id.'/', 0777, TRUE); 
             if(!is_dir(ITEM_IMAGES.$item_id.'/other/')) mkdir(ITEM_IMAGES.$item_id.'/other/', 0777, TRUE);
             if(!is_dir(ITEM_IMAGES.$item_id.'/certificates_files/')) mkdir(ITEM_IMAGES.$item_id.'/certificates_files/', 0777, TRUE);
+            if(!is_dir(ITEM_IMAGES.$item_id.'/other_files/')) mkdir(ITEM_IMAGES.$item_id.'/other_files/', 0777, TRUE);
             if(!is_dir(ITEM_IMAGES.$item_id.'/videos/')) mkdir(ITEM_IMAGES.$item_id.'/videos/', 0777, TRUE);
             
-            $appendedFiles = $appendedVideos= $appendedCertificates = array();
+            $appendedFiles = $appendedVideos= $appendedCertificates = $appendedOthers =  array();
 
             // scan uploads directory for appended images
             $uploadsFiles = array_diff(scandir(ITEM_IMAGES.$item_id.'/other/'), array('.', '..'));
@@ -301,14 +302,32 @@ class Items extends CI_Controller {
                                     $appendedCertificates[] = $file_array_cert;
                                 }
             }       
+            // scan uploads directory for appended images --Other FIles
+            $uploadsFilesOther = array_diff(scandir(ITEM_IMAGES.$item_id.'/other_files/'), array('.', '..'));
+            foreach($uploadsFilesOther as $file2) { 
+                    $file_type2 = explode('/', get_mime_by_extension(ITEM_IMAGES.$item_id.'/other_files/' . $file2));
+                    if(is_dir($file2))// skip if directory
+                            continue; 
+                                $file_array_other = array(
+                                                    "name" => $file2,
+                                                    "type" => $file_type2,
+                                                    "size" => filesize(ITEM_IMAGES.$item_id.'/other_files/' . $file2),
+                                                    "file" => base_url(ITEM_IMAGES.$item_id.'/other_files/' . $file2),
+                                                    "data" => array("url" => base_url(ITEM_IMAGES.$item_id.'/other_files/' . $file2) )
+                                                     );
+                                
+                                if(isset($file_type2[0]) && $file_type2[0]=='image'){
+                                    $appendedOthers[] = $file_array_other;
+                                }
+            }       
             
             $this->load->library('fileuploads'); //file upoad library created by FL
             $def_image = $this->fileuploads->upload_all('image',ITEM_IMAGES.$item_id.'/');
             $res_itm_all_px = $this->fileuploads->upload_all('item_images',ITEM_IMAGES.$item_id.'/other/',$appendedFiles);
             $res_itm_all_px_cert = $this->fileuploads->upload_all('certificates_files',ITEM_IMAGES.$item_id.'/certificates_files/',$appendedCertificates);
+            $res_itm_all_px_other = $this->fileuploads->upload_all('other_files',ITEM_IMAGES.$item_id.'/other_files/',$appendedOthers);
             $res_itm_all_vdo = $this->fileuploads->upload_all('item_videos',ITEM_IMAGES.$item_id.'/videos/',$appendedVideos);
             
-//            echo '<pre>';            print_r($res_itm_all_px); die;
             //resize def image
             if(!empty($def_image))
                 fl_image_resizer($def_image[0]['name'], 400, '',$def_image[0]['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/');
@@ -324,7 +343,12 @@ class Items extends CI_Controller {
             if(!empty($res_itm_all_px_cert)){ //Certificates
                 foreach ($res_itm_all_px_cert as $itm_img_cert){
                     $all_images_cert[]=$itm_img_cert['name'];
-//                    fl_image_resizer($itm_img_cert['name'], 800, '',$itm_img_cert['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/certificates_files/');
+                    fl_image_resizer($itm_img_cert['name'], 800, '',$itm_img_cert['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/certificates_files/');
+                }
+            }; 
+            if(!empty($res_itm_all_px_other)){ //Other files or media
+                foreach ($res_itm_all_px_other as $itm_img_other){
+                    $all_images_other[]=$itm_img_other['name'];
                 }
             }; 
             
@@ -348,7 +372,7 @@ class Items extends CI_Controller {
                 }
             }
             
-//            echo '<pre>';            print_r($all_images);
+//            echo '<pre>';            print_r($def_image);
 //            echo '<pre>';            print_r($all_images_cert); die;
             $data['itm_tbl'] = array(
                             'item_code' => $inputs['item_code'],
@@ -375,10 +399,11 @@ class Items extends CI_Controller {
                             'updated_on' => date('Y-m-d'),
                             'images' => (isset($all_images))?json_encode($all_images):'',
                             'certificates_files' => (isset($all_images_cert))?json_encode($all_images_cert):'',
+                            'other_files' => (isset($all_images_other))?json_encode($all_images_other):'',
                             'videos' => (isset($all_videos))?json_encode($all_videos):'',
                             'updated_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
                         ); 
-                        if(!empty($def_image)) $data['image'] = $def_image[0]['name']; 
+                        if(!empty($def_image)) $data['itm_tbl']['image'] = $def_image[0]['name']; 
                     
 
                     //Quick entry Costing

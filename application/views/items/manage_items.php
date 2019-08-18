@@ -23,6 +23,7 @@
                         'image' => 'default.jpg', 
                         'images' => array(), 
                         'certificates_files' => array(), 
+                        'other_files' => array(), 
                         'status'=>"1",
             
                         'stock_unit'=>"0",
@@ -119,6 +120,28 @@ endswitch;
 
                 // convert our array into json string
                 if(isset($appendedFiles_cert))$result['certificates_files'] = json_encode($appendedFiles_cert);
+            }
+            
+                 ///Other files
+            if( isset($result['other_files']) && $result['other_files'] != null && $result['other_files'] != 'null'){
+                foreach(json_decode($result['other_files']) as $file2) {
+                        // skip if directory
+                        if(is_dir($file2))
+                                continue; 
+                        // add file to our array
+                        // !important please follow the structure below
+                        $appendedFiles_other[] = array(
+                                                "name" => $file2,
+                                                "type" => get_mime_by_extension(ITEM_IMAGES.$result['id'].'/other_files/'.$file2),
+                                                "size" => (file_exists(ITEM_IMAGES.$result['id'].'/other_files/'.$file2))?filesize(ITEM_IMAGES.$result['id'].'/other_files/'.$file2):'',
+                                                "file" => base_url(ITEM_IMAGES.$result['id'].'/other_files/'.$file2),
+                                                "data" => array(  "url" => base_url(ITEM_IMAGES.$result['id'].'/other_files/'.$file2)
+                                            )
+                        ); 
+                }
+
+                // convert our array into json string
+                if(isset($appendedFiles_other))$result['other_files'] = json_encode($appendedFiles_other);
             }
 //            echo '<pre>';            print_r($appendedFiles); die;
         
@@ -784,6 +807,19 @@ endswitch;
                                                             ?> 
 
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           <div class="col-md-12">
+                                               <br>
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">Other File</label>
+                                                    <div class="col-md-9">                                            
+                                                           
+                                                        <div class="fl_file_uploader2">
+                                                            <input type="file" name="other_files" class="fl_files" data-fileuploader-files='<?php echo $result['other_files'];?>'> 
+                                                        </div> 
+                                                        <span class="help-block"><?php echo form_error('other_files');?></span>
                                                     </div>
                                                 </div>
                                             </div>
