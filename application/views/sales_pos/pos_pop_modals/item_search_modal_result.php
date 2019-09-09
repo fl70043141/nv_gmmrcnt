@@ -1,5 +1,5 @@
 
-                 <table id="example1" class="table dataTable table-bordered table-striped">
+                 <table id="itm_tbl_search_res1" class="table  table-bordered table-striped">
                         <thead>
                            <tr>
                                <th>#</th> 
@@ -36,3 +36,9 @@
                            </tr>
                           </tfoot>
                         </table> 
+
+<script>
+    $(document).ready(function(){
+        $('#itm_tbl_search_res1').DataTable();
+    });
+</script>

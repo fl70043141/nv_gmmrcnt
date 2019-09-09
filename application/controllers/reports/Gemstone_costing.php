@@ -17,8 +17,7 @@ class Gemstone_costing extends CI_Controller {
 //            $this->add();
 //            $data['search_list'] = $this->Sales_invoices_model->search_result();
             $data['main_content']='reports_all/inventory/gemstone_costing/search_gemstone_costing_report'; 
-            $data['supplier_list'] = get_dropdown_data(SUPPLIERS,'supplier_name','id','No Supplier');
-            $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_name','id','No Location');
+            $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_name','id','Location');
             $data['item_cat_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Gem Category','is_gem = 1');
             
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
@@ -56,7 +55,6 @@ class Gemstone_costing extends CI_Controller {
             $item_stocks = $this->load_data(); 
             $inputs = $this->input->get();
 //            echo '<pre>';            print_r($this->input->get()); die;
-            $stock_stat = (isset($inputs['stock_stat']))?$inputs['stock_stat']:1; 
             $location_name = ($inputs['location_id'] != '')?get_single_row_helper(INV_LOCATION,'id = "'.$inputs['location_id'].'"')['location_name']:'All'; 
             $category_name = ($inputs['item_category_id'] != '')?get_single_row_helper(ITEM_CAT,'id = "'.$inputs['item_category_id'].'"')['category_name']:'All'; 
             $shape_name = ($inputs['shape_id'] != '')?get_single_row_helper(DROPDOWN_LIST,'id = "'.$inputs['shape_id'].'"')['dropdown_value']:'All'; 
@@ -126,14 +124,12 @@ class Gemstone_costing extends CI_Controller {
             $all_tot_units = $all_tot_units_2 = $all_tot_amount = $item_count = 0;
             $i = 1; 
             foreach ($item_stocks as $item){
-//                 if($item['item_code']== 'AZ0017')
-//                    echo '<pre>';            print_r($item);   
+//                echo '<pre>';            print_r($item); die;    
 
                 $tot_units = $item['units_available'] + $item['units_on_workshop'] + $item['units_on_consignee'];
                 $tot_units_2 = $item['units_available_2'] + $item['units_on_workshop_2'] + $item['units_on_consignee_2'];
-                $purch_cost = (($item['cost_amount'] / $item['ip_curr_value']));
-//                $purch_cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units);
-                $cost = $purch_cost+ $item['total_lapidary_cost'];
+                $purch_cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units);
+                $cost = (($item['price_amount'] / $item['ip_curr_value']) * $tot_units) + $item['total_lapidary_cost'];
 
 //                $cat_tot_units += $tot_units;
 //                $cat_tot_units_2 += $tot_units_2;
@@ -143,7 +139,7 @@ class Gemstone_costing extends CI_Controller {
                 $all_tot_units_2 += $tot_units_2;
                 $all_tot_amount += $cost;
 
-               if($stock_stat==2 || $item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
+               if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
                    $bg_colr = ($i%2==0)?'#F5F5F5':'#FFFFFF';
                    $html .= '
                        <tr>
@@ -152,7 +148,7 @@ class Gemstone_costing extends CI_Controller {
                            <td style="width:16%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].':'. float2rat($item['partnership']).')</b>':'').'</td>
                            <td style="width:12%;" align="center">'.$item['units_available'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
                            <td style="width:15%;" align="left">Purchase</td>
-                           <td style="width:13%;" align="left">'.$item['supp_name'].'</td> 
+                           <td style="width:13%;" align="left">Supplier</td> 
                            <td style="width:14%;" align="right">'. number_format($purch_cost,2).'</td>
                            <td style="width:14%; text-align:right; vertical-align:bottom;" rowspan="'.(count($item['lapidary_costs'])+1).'" >'. number_format($cost,2).'</td>
                       </tr>';
@@ -308,7 +304,7 @@ class Gemstone_costing extends CI_Controller {
                            <td style="width:13%;" align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                            <td style="width:12%;" align="center">'.$item['units_available'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
                            <td style="width:17%;" align="left">Purchase</td>
-                           <td style="width:13%;" align="left">'.$item['supp_name'].'</td> 
+                           <td style="width:14%;" align="left">Supplier</td> 
                            <td style="width:14%;" align="right">'. number_format($purch_cost,2).'</td>
                            <td style="width:14%; text-align:right; vertical-align:bottom;" rowspan="'.(count($item['lapidary_costs'])+1).'" >'. number_format($cost,2).'</td>
                       </tr>';

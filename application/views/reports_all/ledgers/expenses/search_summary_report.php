@@ -91,8 +91,8 @@ $(document).ready(function(){
                                         </div>  
                                         <div class="col-md-3">  
                                                 <div class="form-group pad">
-                                                    <label for="to_date">To</label>
-                                                    <?php  echo form_input('to_date',set_value('to_date',date('m/d/Y',$fiscyear_info['end'])),' class="form-control datepicker" readonly  id="to_date"');?>
+                                                    <label for="to_date">To <input type="checkbox" value="1" id="is_todate_apply" name="is_todate_apply"></label>
+                                                    <?php  echo form_input('to_date',set_value('to_date',date('m/d/Y')),' class="form-control datepicker" readonly  id="to_date"');?>
                                                 </div> 
                                         </div>     
                                         <div class="col-md-3">  

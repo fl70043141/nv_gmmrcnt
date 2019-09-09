@@ -45,6 +45,11 @@
 	break;
 endswitch;	 
 
+$get_input = $this->input->get();
+$sos_order_no= '';
+if(isset($get_input['so_no'])){
+    $sos_order_no = $get_input['so_no'];
+}
 //var_dump($result);
 ?> 
 <!-- Main content -->
@@ -136,7 +141,7 @@ endswitch;
                                         <div class="col-md-3">  
                                                 <div class="form-group pad">
                                                     <label for="sales_order_no">Order No</label>
-                                                    <?php  echo form_input('sales_order_no',set_value('sales_order_no'),' class="form-control" id="sales_order_no" placeholder="Search by Order Number"');?>
+                                                    <?php  echo form_input('sales_order_no',set_value('sales_order_no',$sos_order_no),' class="form-control" id="sales_order_no" placeholder="Search by Order Number"');?>
                                                 </div> 
                                         </div>  
                                         <div class="col-md-3">  
@@ -170,10 +175,10 @@ endswitch;
                                                <th width="15%"  style="text-align: center;">Item Desc</th> 
                                                <th width="12%"  style="text-align: center;">Estimation</th> 
                                                <th width="8%" style="text-align: center;">Weight(g)</th> 
-                                               <th width="14%" style="text-align: center;">Cost Price/g</th> 
-                                               <th width="8%" style="text-align: center;">Sale Price/g</th> 
-                                               <th width="10%" style="text-align: right;">Total Cost</th>   
-                                               <th width="10%" style="text-align: right;">Total SP</th> 
+                                               <th width="14%" style="text-align: center;">Cost Price</th> 
+                                               <th width="8%" style="text-align: center;">Sale Price</th> 
+                                               <th hidden width="10%" style="text-align: right;">Total Cost</th>   
+                                               <th hidden width="10%" style="text-align: right;">Total SP</th> 
                                                <th width="5%" style="text-align: center;"><input type="checkbox" value="1" id="selectall_tick">Action</th>
                                            </tr>
                                        </thead>
@@ -232,6 +237,7 @@ endswitch;
         </div>
 </div>
     
+<?php $this->load->view('order_submissions/os_modals/add_cost_modal'); ?>
 <script>
     
 $(document).keypress(function(e) {
@@ -277,6 +283,10 @@ $(document).ready(function(){
                 $('.remove_res_row').trigger('click');
             }
         });
+        
+    if($('#sales_order_no').val()!=''){ 
+        $('#search_order_btn').trigger('click');
+    }
 });
 
 function get_inv_items_res(){
@@ -302,6 +312,7 @@ function get_inv_items_res(){
 //                                    fl_alert('info',elment.item_quantity)
                                     var order_date = timeConverter(elment.order_date); 
                                     var required_date = timeConverter(elment.required_date); 
+//                                    var sub_tot =  parseFloat(elment.unit_price);
                                     var sub_tot = parseFloat(elment.units)* parseFloat(elment.unit_price);
                                     
                                     var exist_check = $("[name='inv_items_btm["+elment.id+"][order_no]']").val();
@@ -315,25 +326,27 @@ function get_inv_items_res(){
                                                         '<td style="text-align: center;">'+elment.item_code+'<input hidden id="'+elment.id+'_item_id" value="'+elment.item_id+'"><input hidden id="'+elment.id+'_item_code" value="'+elment.item_code+'"><input hidden id="'+elment.id+'_item_category_id" value="'+elment.item_category_id+'"></td>'+
                                                         '<td style="text-align: center;"><input  style="width:100px;" id="'+elment.id+'_new_item_code" value=""></td>'+
                                                         '<td style="text-align: center;">'+elment.item_desc+'<input hidden id="'+elment.id+'_item_description" value="'+elment.item_desc+'"><input hidden id="'+elment.id+'_item_description_memo" value="'+elment.description+'"></td>'+
-                                                        '<td style="text-align: left;"><li>Price: '+parseFloat(elment.unit_price).toFixed(2)+'</li><li>Weight: '+parseFloat(elment.units)+' '+elment.unit_abbreviation+'</li><input hidden id="'+elment.id+'_estimated_weight" value="'+elment.units+'"><input hidden id="'+elment.id+'_estimated_price" value="'+elment.unit_price+'"></td>'+
+                                                        '<td style="text-align: left;"><li>Price: '+parseFloat(sub_tot).toFixed(2)+'</li><li>Weight: '+parseFloat(elment.units)+' '+elment.unit_abbreviation+'</li><input hidden id="'+elment.id+'_estimated_weight" value="'+elment.units+'"><input hidden id="'+elment.id+'_estimated_price" value="'+elment.unit_price+'"></td>'+
                                                         '<td style="text-align: center;"><input  style="width:100px;" id="'+elment.id+'_new_units" value="'+elment.units+'">'+
                                                             '<input hidden  id="'+elment.id+'_uom_id" value="'+elment.unit_uom_id+'"><input hidden  id="'+elment.id+'_uom_abr" value="'+elment.unit_abbreviation+'">'+
                                                             '<input hidden  id="'+elment.id+'_uom_id_2" value="'+elment.secondary_unit_uom_id+'"><input hidden  id="'+elment.id+'_uom_abr_2" value="'+elment.unit_abbreviation_2+'"></td>'+
-                                                        '<td style="text-align: center;">'+
+                                                        '<td id="tdcost_'+elment.id+'" style="text-align: center;">'+
+                                                               '<a class="add_cost_btn" id="adcost__'+elment.id+'-'+elment.item_id+'" href="#"><span class="fa fa-plus"></span> Add Cost</a>'+
+                                                        '</td>'+
+                                                        '<td hidden style="text-align: center;">'+
                                                                 ' MTR: <input class="'+elment.id+'_cost_inputs"  style="width:80px;" id="'+elment.id+'_new_price_purchase_material" value="0">'+
                                                                 ' STN: <input class="'+elment.id+'_cost_inputs"  style="width:80px;" id="'+elment.id+'_new_price_purchase_stone" value="0">'+
                                                                 ' CMC: <input class="'+elment.id+'_cost_inputs"  style="width:80px;" id="'+elment.id+'_new_price_purchase_craftman" value="0">'+
                                                                 '<input hidden style="width:80px;" id="'+elment.id+'_new_price_purchase" value="0">'+
                                                             '</td>'+
-                                                        '<td style="text-align: center;"><input  style="width:100px;" id="'+elment.id+'_new_price_sale" value="'+elment.unit_price+'"></td>';
+                                                        '<td style="text-align: center;"><input  style="width:100px;" id="'+elment.id+'_new_price_sale" value="'+sub_tot+'"></td>';
                                         
-                                            newRow +=  '<td style="text-align: right;"><b>'+sub_tot.toFixed(2)+'<input hidden id="'+elment.id+'_sub_tot" value="'+sub_tot+'"></b></td>'+
-                                                       '<td style="text-align: right;"><b>'+sub_tot.toFixed(2)+'<input hidden id="'+elment.id+'_sub_tot" value="'+sub_tot+'"></b></td>'+
+                                            newRow +=  '<td hidden style="text-align: right;"><b>'+sub_tot.toFixed(2)+'<input hidden id="'+elment.id+'_sub_tot" value="'+sub_tot+'"></b></td>'+
+                                                       '<td hidden style="text-align: right;"><b>'+sub_tot.toFixed(2)+'<input hidden id="'+elment.id+'_sub_tot" value="'+sub_tot+'"></b></td>'+
                                                        '<td><span  id="'+elment.id+'" class="btn btn-success fa fa-plus add_res_row"></span></td>'+
                                                   '</tr>';
                                     jQuery('#bottom_rows_restbl').append(newRow); 
                                     calc_tots_osub()
-                                    
                                     $('.'+elment.id+'_cost_inputs').on('change',function (){
                                         var tot_costs = 0;
                                         $('.'+elment.id+'_cost_inputs').each(function(){
@@ -347,6 +360,10 @@ function get_inv_items_res(){
                              });
                              
                                     
+                                    $('.add_cost_btn').click(function(){ 
+                                        $('#or_item_id').val(this.id);
+                                       $('#add_cost_modal').modal({backdrop: 'static', keyboard: false }); 
+                                    });
                              
                                     $('.add_res_row').click(function(){
                                         
@@ -362,8 +379,11 @@ function get_inv_items_res(){
                                         var add_item_id = $("#"+add_id+"_item_id").val()
                                         var add_item_description = $("#"+add_id+"_item_description").val()
                                         var add_item_description_note = $("#"+add_id+"_item_description_memo").val()
-                                        var add_estimated_weight = $("#"+add_id+"_estimated_weight").val()
-                                        var add_estimated_price = $("#"+add_id+"_estimated_price").val()
+                                        
+                                        var add_estimated_weight = parseFloat($("#"+add_id+"_estimated_weight").val());
+                                        var add_estimated_price = parseFloat($("#"+add_id+"_estimated_price").val());
+                                        var add_estimated_subtot = add_estimated_weight * add_estimated_price;
+                                        
                                         var add_new_units = parseFloat($("#"+add_id+"_new_units").val());
                                         var add_new_price_purchase = $("#"+add_id+"_new_price_purchase").val()
                                         var add_new_price_purchase_material = $("#"+add_id+"_new_price_purchase_material").val();
@@ -377,46 +397,53 @@ function get_inv_items_res(){
                                         var add_uom_abr =  $("#"+add_id+"_uom_abr").val();
                                         var add_uom_abr_2 =  (typeof $("#"+add_id+"_uom_abr_2").val()!== 'undefined')?$("#"+add_id+"_uom_abr_2").val():0;
                                         
-                                        var add_sale_sub_tot = parseFloat(add_new_units)* (parseFloat(add_new_price_sale));
+                                        var add_sale_sub_tot = (parseFloat(add_new_price_sale));
+//                                        var add_sale_sub_tot = parseFloat(add_new_units)* (parseFloat(add_new_price_sale));
                                         var add_purch_sub_tot = parseFloat(add_new_units)* (parseFloat(add_new_price_purchase));
 //                                     fl_alert('info',add_new_item_code) 
 //                                     
                                         //new itemcode validation
-                                       if(add_new_item_code=='' || add_new_item_code==null){
-                                           fl_alert('danger','Please enter valid Item Code!');
-                                           return false;
-                                       }else{
-                                           check_item_code_unique(add_new_item_code,add_id);
-                                       }
-                                       
+//                                       if(add_new_item_code=='' || add_new_item_code==null){
+//                                           fl_alert('danger','Please enter valid Item Code!');
+//                                           return false;
+//                                       }else{
+//                                           check_item_code_unique(add_new_item_code,add_id);
+//                                       }  
+                                        check_item_code_unique(add_new_item_code,add_id);
+                                        
                                        //weigght Validation
                                        if(add_new_units<=0){ 
                                            fl_alert('danger','Weight Invalid!');return false;
                                        }
                                        //cost validation
-                                       var tot_cost = parseFloat(add_new_price_purchase_material) +parseFloat(add_new_price_purchase_material)+ parseFloat(add_new_price_purchase_stone);
+//                                       var tot_cost = parseFloat(add_new_price_purchase_material) +parseFloat(add_new_price_purchase_material)+ parseFloat(add_new_price_purchase_stone);
+                                       var tot_cost = 0;
+                                       $('#rowb_'+add_id+' .cost_entries input').each(function(){
+                                           tot_cost += parseFloat(this.value);
+                                       });
                                        if(tot_cost<=0){
-                                           fl_alert('danger','Cost amount invalid! Please check the Cost Price/g field!');return false; 
-                                       }
+                                           fl_alert('danger','Cost amount invalid! Please check the Cost Price field!');return false; 
+                                       } 
+                                       var costsdiv = '';
+                                       $('#rowb_'+add_id+' .cost_entries input').each(function(){
+                                           var idss = (this.id).split('__')[0];
+                                           var cost_type_id = idss.split('-')[1];     
+                                          costsdiv += '<input hidden name="inv_items_btm['+add_id+'][costs]['+cost_type_id+']" value="'+parseFloat(this.value).toFixed(2)+'">'  
+                                       });
                                         var newRow = '<tr id="rowt_'+add_id+'">'+
                                                         '<td style="text-align: center;">'+add_cm_submission_no+'<input hidden name="inv_items_btm['+add_id+'][submission_no]" value="'+add_cm_submission_no+'"><input hidden name="inv_items_btm['+add_id+'][submission_id]" value="'+add_cm_submission_id+'"></td>'+
                                                         '<td style="text-align: center;">'+add_order_no+'<input hidden name="inv_items_btm['+add_id+'][order_no]" value="'+add_order_no+'"><input hidden name="inv_items_btm['+add_id+'][order_id]" value="'+add_order_id+'"><input hidden name="inv_items_btm['+add_id+'][so_desc_id]" value="'+add_so_desc_id+'"></td>'+
                                                         '<td style="text-align: center;">'+add_item_code+'<input hidden name="inv_items_btm['+add_id+'][item_code]" value="'+add_item_code+'"><input hidden name="inv_items_btm['+add_id+'][item_id]" value="'+add_item_id+'"><input hidden name="inv_items_btm['+add_id+'][item_category_id]" value="'+add_item_category_id+'"></td>'+
                                                         '<td style="text-align: center;">'+add_new_item_code+'<input hidden name="inv_items_btm['+add_id+'][new_item_code]" value="'+add_new_item_code+'"><input hidden name="inv_items_btm['+add_id+'][item_description_note]" value="'+add_item_description_note+'"></td>'+
                                                         '<td style="text-align: center;">'+add_item_description+'<input hidden name="inv_items_btm['+add_id+'][item_description]" value="'+add_item_description+'"></td>'+
-                                                        '<td style="text-align: left;"><li>Price: '+parseFloat(add_estimated_price).toFixed(2)+'</li><li>Weight: '+parseFloat(add_estimated_weight)+' '+add_uom_abr+'</li><input hidden name="inv_items_btm['+add_id+'][estimated_units]" value="'+add_estimated_weight+'"><input hidden name="inv_items_btm['+add_id+'][estimated_price]" value="'+add_estimated_price+'"></td>'+
+                                                        '<td style="text-align: left;"><li>Price: '+parseFloat(add_estimated_subtot).toFixed(2)+'</li><li>Weight: '+parseFloat(add_estimated_weight)+' '+add_uom_abr+'</li><input hidden name="inv_items_btm['+add_id+'][estimated_units]" value="'+add_estimated_weight+'"><input hidden name="inv_items_btm['+add_id+'][estimated_price]" value="'+add_estimated_price+'"></td>'+
                                                         '<td style="text-align: center;">'+add_new_units+' '+add_uom_abr+'<input hidden id="qty_'+add_id+'" class="tot_weight1" name="inv_items_btm['+add_id+'][new_units]" value="'+add_new_units+'">'+
                                                             '<input hidden  name="inv_items_btm['+add_id+'][uom_id]" value="'+add_uom_id+'"><input hidden  name="inv_items_btm['+add_id+'][uom_abr]" value="'+add_uom_abr+'">'+
                                                             '<input hidden  name="inv_items_btm['+add_id+'][uom_id_2]" value="'+add_uom_id_2+'"><input hidden  name="inv_items_btm['+add_id+'][uom_abr_2]" value="'+add_uom_abr_2+'"></td>'+
-                                                        '<td style="text-align: right;">'+parseFloat(add_new_price_purchase).toFixed(2)+
-                                                            '<input hidden name="inv_items_btm['+add_id+'][new_purch_unit_price]" value="'+parseFloat(add_new_price_purchase).toFixed(2)+'">'+
-                                                            '<input hidden name="inv_items_btm['+add_id+'][new_price_purchase_material]" value="'+parseFloat(add_new_price_purchase_material).toFixed(2)+'">'+
-                                                            '<input hidden name="inv_items_btm['+add_id+'][new_price_purchase_stone]" value="'+parseFloat(add_new_price_purchase_stone).toFixed(2)+'">'+
-                                                            '<input hidden name="inv_items_btm['+add_id+'][new_price_purchase_craftman]" value="'+parseFloat(add_new_price_purchase_craftman).toFixed(2)+'">'+
-                                                        '</td>'+
+                                                        '<td style="text-align: right;">'+parseFloat(tot_cost).toFixed(2)+costsdiv+'</td>'+
                                                         '<td style="text-align: right;">'+parseFloat(add_new_price_sale).toFixed(2)+'<input hidden name="inv_items_btm['+add_id+'][new_sale_unit_price]" value="'+parseFloat(add_new_price_sale).toFixed(2)+'"></td>'+
-                                                        '<td style="text-align: right;">'+parseFloat(add_purch_sub_tot).toFixed(2)+'<input hidden name="inv_items_btm['+add_id+'][purch_sub_tot]" value="'+parseFloat(add_purch_sub_tot).toFixed(2)+'"></td>'+
-                                                        '<td style="text-align: right;">'+parseFloat(add_sale_sub_tot).toFixed(2)+'<input hidden name="inv_items_btm['+add_id+'][sale_sub_tot]" value="'+parseFloat(add_sale_sub_tot).toFixed(2)+'"></td>'+
+                                                        '<td  hidden  style="text-align: right;">'+parseFloat(add_purch_sub_tot).toFixed(2)+'<input hidden name="inv_items_btm['+add_id+'][purch_sub_tot]" value="'+parseFloat(add_purch_sub_tot).toFixed(2)+'"></td>'+
+                                                        '<td hidden style="text-align: right;">'+parseFloat(add_sale_sub_tot).toFixed(2)+'<input hidden name="inv_items_btm['+add_id+'][sale_sub_tot]" value="'+parseFloat(add_sale_sub_tot).toFixed(2)+'"></td>'+
                                                         '<td><span  id="add_'+add_id+'" class="btn btn-primary fa fa-pencil remove_res_row"></span>'+'<input hidden id="add_'+add_id+'_remove" value="'+add_id+'"></td>'+
                                                   '</tr>'; 
                                             jQuery('#top_rows_restbl').append(newRow); 

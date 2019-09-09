@@ -39,6 +39,7 @@ $inv_trans = $inv_data['inv_transection'];
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], 'Payments', 'add'))?'<a id="add_payment_inv" href="#" class="btn btn-app "><i class="fa fa-money"></i>Payments</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'delete'))?'<a href="'.base_url($this->router->fetch_class().'/delete/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-trash"></i>Delete Invoice</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'sales_invoice_print'))?'<a id="inv_print_btn"  class="btn btn-app "><i class="fa fa-print"></i>Print Invoice</a>':''; ?>
+            <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'sales_invoice_print_pp'))?'<a id="inv_print_btn_a5"  class="btn btn-app "><i class="fa fa-print"></i>Print Invoice A5</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'send_mail'))?'<a  id="send_mail_btn" class="btn btn-app "><i class="fa fa-envelope"></i>Send Invoice</a>':''; ?>
 
         </div>
@@ -305,6 +306,15 @@ $(document).ready(function(){
             });
             var get_var = JSON.stringify(selected_cats)  
            window.open("<?php echo base_url($this->router->fetch_class().'/sales_invoice_print/'.$user_data['id']).'?prnt_optn=';?>"+get_var);
+           return false;
+        });
+        $('#inv_print_btn_a5').click(function(){
+            var selected_cats = new Array(); 
+            $.each($("input[name='item_cat_slct[]']:checked"), function() {
+                selected_cats.push($(this).val());
+            });
+            var get_var = JSON.stringify(selected_cats)  
+           window.open("<?php echo base_url($this->router->fetch_class().'/sales_invoice_print_pp/'.$user_data['id']).'?prnt_optn=';?>"+get_var);
            return false;
         });
         

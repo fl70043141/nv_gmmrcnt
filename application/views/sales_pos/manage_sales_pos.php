@@ -287,7 +287,7 @@ $(document).ready(function(){
          $.ajax({
 			url: "<?php echo site_url('Sales_invoices/fl_ajax?function_name=get_single_item');?>",
 			type: 'post',
-			data : {function_name:'get_single_item', item_code:$('#item_code').val(), price_type_id:$('#price_type_id').val()},
+			data : {function_name:'get_single_item', item_code:$('#item_code').val(),location_id:$('#location_id').val(), price_type_id:$('#price_type_id').val()},
 			success: function(result){
                             
                             set_list_items(result);
@@ -349,6 +349,7 @@ $(document).ready(function(){
             //                                $('#item_discount').val(0);
                                             var units2 = (parseFloat(res1.stock.units_available_2)==0)?1:parseFloat(res1.stock.units_available_2);
                                             var calc_qty = parseFloat(res1.stock.units_available)/units2;
+                                            $('#prce_unit_name').text(res1.unit_abbreviation);
                                             $('#item_quantity').val(calc_qty);
 
             //                                $("#result_search").html(result);
@@ -445,6 +446,10 @@ $(document).ready(function(){
                                     res2.stock = temp_inv_data.stock;
                                 }
                                 
+                                var unit_cost_val = parseFloat($('#item_unit_cost').val());
+                                if (!$('#is_price_per_unit').is(":checked")){
+                                    unit_cost_val = parseFloat($('#item_unit_cost').val()) / parseFloat($('#item_quantity').val())
+                                }
 //                                fl_alert('info',isNaN(parseFloat(unit_cost1)));
                                 if(parseFloat(unit_cost1)<=0 || isNaN(parseFloat(unit_cost1)) ){
                                     unit_cost1 =0;
@@ -473,7 +478,7 @@ $(document).ready(function(){
                                 }
                                 var rowCount = $('#invoice_list_tbl tr').length;
                                 var counter = rowCount+1;
-                                var qtyXprice = parseFloat(unit_cost1) * parseFloat(item_qty1);
+                                var qtyXprice = unit_cost_val * parseFloat(item_qty1);
 //                                var line_disc_amount = (parseFloat($('#item_discount').val())* 0.01 * qtyXprice); //discount percentage
                                 var line_disc_amount = parseFloat(item_discount1);
                                 var item_total = qtyXprice - line_disc_amount;
@@ -494,7 +499,7 @@ $(document).ready(function(){
                                 if(res2.unit_abbreviation_2!=null && res2.unit_abbreviation_2!=0){
                                     row_str = row_str + ' | ' + item_qty2+' '+res2.unit_abbreviation_2+'<input hidden name="inv_items['+rowCount+'_'+item_code1+'][unit_abbreviation_2]" value="'+res2.unit_abbreviation_2+'">';
                                 }                                                                                                                                                                                                                                                                        
-                                row_str = row_str + '</td> <td  id="price__'+rowCount+'_'+item_code1+'" class="input_price_td" align="right"><input  class="input_price_field" hidden name="inv_items['+rowCount+'_'+item_code1+'][item_unit_cost]" value="'+unit_cost1+'"><span class="price_text">'+parseFloat(unit_cost1).toFixed(2)+'</span></td>'+ 
+                                row_str = row_str + '</td> <td  id="price__'+rowCount+'_'+item_code1+'" class="input_price_td" align="right"><input  class="input_price_field" hidden name="inv_items['+rowCount+'_'+item_code1+'][item_unit_cost]" value="'+unit_cost_val+'"><span class="price_text">'+parseFloat(unit_cost_val).toFixed(2)+'</span></td>'+ 
                                                         '<td  id="dscnt__'+rowCount+'_'+item_code1+'" class="input_dscnt_td" align="right"><input  class="input_dscnt_field" class="item_line_discount" hidden name="inv_items['+rowCount+'_'+item_code1+'][item_line_discount]" value="'+item_discount1+'"><span class="dscnt_text">'+line_disc_amount.toFixed(2)+'</span></td>'+
                                                         '<td align="right"><input class="item_tots" hidden name="inv_items['+rowCount+'_'+item_code1+'][item_total]" value="'+item_total+'"><span class="item_total_txt">'+item_total.toFixed(2)+'</span></td>'+
                                                         '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+

@@ -128,7 +128,7 @@ $show_edit = ($action=='Edit')?'':'hidden';
                                    <td width="15%" style="text-align: center;">'.$inv_itm['item_code'].'</td>  
                                    <td width="20%" style="text-align: left;">'.$inv_itm['item_desc'].'</td>  
                                    <td width="12%" style="text-align: center;">'.$inv_itm['units'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['unit_uom_id']!=0)?' | '.$inv_itm['secondary_unit'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
-                                   <td width="13%" style="text-align: center;">'.$inv_itm['order_no'].'</td>  
+                                   <td width="13%" style="text-align: center;"><a href="'. base_url('Sales_orders/view/'.$inv_itm['sales_order_id']).'">'.$inv_itm['order_no'].'</a></td>  
                                    <td width="30%" style="text-align: left;">'.$inv_itm['description'].'</td>  
                                    <td '.$show_edit.' width="30%" style="text-align: left;"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></td>  
                                     

@@ -98,8 +98,16 @@ class Ledger_reports extends CI_Controller {
         
         function load_expensess_data(){
             $trans_group = array();
-            $input_post = $this->input->post(); $input = (empty($input_post))? $this->input->get():$this->input->post();   
+            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();   
             
+//            echo '<pre>';            print_r($inputs); die; 
+            if(isset($input['is_todate_apply'])){
+                $input['from_date'] = $input['to_date'].' 00:00';
+                $input['to_date'] = $input['to_date'].' 23:59:59';
+            }else{
+                $input['from_date'] = $input['from_date'].' 00:00';
+                $input['to_date'] = $input['to_date'].' 23:59:59';
+            }
                 $search_data=array( 
                                     'from_date' => ($input['from_date']>0)?strtotime($input['from_date']):'',
                                     'to_date' => ($input['to_date']>0)?strtotime($input['to_date']):'',
@@ -122,7 +130,7 @@ class Ledger_reports extends CI_Controller {
         }
         public function  search_ledger_month(){ // view month ledger
             $trans_group = array();
-            $input_post = $this->input->post(); $input = (empty($input_post))? $this->input->get():$this->input->post();  
+            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();  
 //                echo '<pre>';            print_r($input); die;
 //            $timestamp    = strtotime($input['date_month']);
 //            $first_day =  strtotime(date('01-m-Y 00:00:00', $timestamp));
@@ -151,7 +159,7 @@ class Ledger_reports extends CI_Controller {
         
         public function  search_ledger_day(){ // view month ledger
             $trans_group = array();
-            $input_post = $this->input->post(); $input = (empty($input_post))? $this->input->get():$this->input->post();  
+            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();  
             $timestamp    = strtotime($input['date_day']);
             $begin_time =  strtotime(date('01-m-Y 00:00:00', $timestamp));
             $end_time  =  strtotime(date('t-m-Y 23:59:59', $timestamp));  
@@ -179,13 +187,22 @@ class Ledger_reports extends CI_Controller {
         
         public function  search_expenses(){ 
             $trans_group = array();
-            $input_post = $this->input->post(); $input = (empty($input_post))? $this->input->get():$this->input->post();   
+            $input = (empty($this->input->post()))? $this->input->get():$this->input->post();
             
-                $search_data=array( 
-                                    'from_date' => ($input['from_date']>0)?strtotime($input['from_date']):'',
-                                    'to_date' => ($input['to_date']>0)?strtotime($input['to_date']):'',
-                                    'quick_entry_acc_id' => $input['quick_entry_acc'],   
-                                    ); 
+            if(isset($input['is_todate_apply'])){
+                $input['from_date'] = $input['to_date'].' 00:00';
+                $input['to_date'] = $input['to_date'].' 23:59:59';
+            }else{
+                $input['from_date'] = $input['from_date'].' 00:00';
+                $input['to_date'] = $input['to_date'].' 23:59:59';
+            }
+            
+            $search_data=array( 
+                                'from_date' => ($input['from_date']>0)?strtotime($input['from_date']):'',
+                                'to_date' => ($input['to_date']>0)?strtotime($input['to_date']):'',
+                                'quick_entry_acc_id' => $input['quick_entry_acc'],     
+                                );  
+//                echo '<pre>';            print_r(date('Y-m-d H:i:s',$search_data['from_date']).'  ==== '.date('Y-m-d H:i:s',$search_data['to_date'])); die;
                  
                 $expenses_list = $this->Reports_all_model->get_expenses($search_data);
                 $data['search_list'] = $expenses_list;
@@ -414,6 +431,14 @@ class Ledger_reports extends CI_Controller {
             $this->load->model('Items_model');
             $def_cur = get_single_row_helper(CURRENCY,'code="'.$this->session->userdata(SYSTEM_CODE)['default_currency'].'"');
 //            
+//            echo '<pre>';            print_r($inputs); die; 
+            if(isset($inputs['is_todate_apply'])){
+                $inputs['from_date'] = $inputs['to_date'].' 00:00';
+                $inputs['to_date'] = $inputs['to_date'].' 23:59:59';
+            }else{
+                $inputs['from_date'] = $inputs['from_date'].' 00:00';
+                $inputs['to_date'] = $inputs['to_date'].' 23:59:59';
+            }
             $date_from = date(SYS_DATE_FORMAT, strtotime($inputs['from_date']));
             $date_to = date(SYS_DATE_FORMAT, strtotime($inputs['to_date']));
             // create new PDF document

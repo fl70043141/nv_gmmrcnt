@@ -1,4 +1,6 @@
-
+<?php 
+    $fiscyear_info = get_single_row_helper(GL_FISCAL_YEARS,'id = '.$this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id']);
+ ?>
 <script>
     
 $(document).ready(function(){  
@@ -94,21 +96,19 @@ $(document).ready(function(){
                                               
                                                 </div> 
                                         </div>    
-                                        
+                                         <div class="col-md-3">  
+                                                <div class="form-group pad  no-pad-top">
+                                                    <label for="from_date">From</label>
+                                                    <?php  echo form_input('from_date',set_value('from_date',date('m/d/Y',$fiscyear_info['begin'])),' class="form-control datepicker" readonly  id="from_date"');?>
+                                                </div> 
+                                        </div>  
+                                         
                                         <div class="col-md-3">  
                                                 <div class="form-group pad  no-pad-top">
-                                                    <label for="treatment_id">Treatment</label>
-                                                     <?php echo form_dropdown('treatment_id',$treatments_list,set_value('treatment_id'),' class="form-control select2" id="treatment_id"');?>
-                                              
+                                                    <label for="to_date">To <input type="checkbox" value="1" id="is_todate_apply" name="is_todate_apply"></label>
+                                                    <?php  echo form_input('to_date',set_value('to_date',date('m/d/Y')),' class="form-control datepicker" readonly  id="to_date"');?>
                                                 </div> 
-                                        </div>   
-                                        <div class="col-md-3">  
-                                                <div class="form-group pad  no-pad-top">
-                                                    <label for="item_type_id">Purchasing Type</label>
-                                                     <?php echo form_dropdown('item_type_id',$item_type_list,set_value('item_type_id'),' class="form-control select2" id="item_type_id"');?>
-                                              
-                                                </div> 
-                                        </div>   
+                                        </div>  
                                     </div>
                               
                         </div>

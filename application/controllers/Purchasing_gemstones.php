@@ -256,7 +256,6 @@ class Purchasing_gemstones extends CI_Controller {
                 $total += $inv_item['item_quantity']*$inv_item['item_unit_cost'];
                 
                 $item_add_res = $this->new_items_insertion($inv_item);
-//            echo '<pre>';            print_r($inv_item); die; 
                 
                 $data['inv_desc'][] = array(
                                             'supplier_invoice_id' => $invoice_id,

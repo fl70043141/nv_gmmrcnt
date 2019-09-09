@@ -15,10 +15,6 @@ $(document).ready(function(){
 		event.preventDefault();
 		get_results();
     });
-    $("#show_type").change(function(){
-		event.preventDefault();
-		get_results();
-    });
     $("#search_btn").click(function(){
 		event.preventDefault();
 		get_results();
@@ -93,37 +89,30 @@ $(document).ready(function(){
                             <div class="row col-md-12 ">  
                                         
                                         <div class="col-md-3">  
-                                                <div class="form-group pad no-pad-top">
+                                                <div class="form-group pad">
                                                     <label for="customer_id">Customer</label>
                                                      <?php echo form_dropdown('customer_id',$customer_list,set_value('customer_id'),' class="form-control select2" id="customer_id"');?>
                                               
                                                 </div> 
                                         </div>  
                                         <div class="col-md-3">  
-                                                <div class="form-group pad no-pad-top">
+                                                <div class="form-group pad">
                                                     <label for="sales_invoice_no">Invoice No</label>
                                                     <?php  echo form_input('sales_invoice_no',set_value('sales_invoice_no'),' class="form-control" id="sales_invoice_no" placeholder="Search by Invoice Number"');?>
                                                 </div> 
                                         </div>  
                                         <div class="col-md-3">  
-                                                <div class="form-group pad no-pad-top">
+                                                <div class="form-group pad">
                                                     <label for="sales_from_date">From</label>
                                                     <?php  echo form_input('sales_from_date',set_value('sales_from_date',date('m/d/Y',$fiscyear_info['begin'])),' class="form-control datepicker" readonly  id="sales_from_date"');?>
                                                 </div> 
                                         </div>  
                                         <div class="col-md-3">  
-                                                <div class="form-group pad no-pad-top">
+                                                <div class="form-group pad">
                                                     <label for="sales_to_date">To</label>
                                                     <?php  echo form_input('sales_to_date',set_value('sales_to_date',date('m/d/Y',$fiscyear_info['end'])),' class="form-control datepicker" readonly  id="sales_to_date"');?>
                                                 </div> 
-                                        </div>   
-                                        <div class="col-md-3">  
-                                                <div class="form-group pad no-pad-top">
-                                                    <label for="show_type">Show Type</label>
-                                                     <?php echo form_dropdown('show_type',array(''=>'All Result',1=>'Due & Outstanding', 2=>'Due Only'),set_value('show_type'),' class="form-control select2" id="show_type"');?>
-                                              
-                                                </div> 
-                                        </div>   
+                                        </div>    
                                     </div>
                               
                         </div>

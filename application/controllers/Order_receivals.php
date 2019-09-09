@@ -132,6 +132,7 @@ class Order_receivals extends CI_Controller {
         }
 	function create(){   
             $inputs = $this->input->post();
+//            echo '<pre>';            print_r($inputs); die;
             $cmr_id = get_autoincrement_no(CRAFTMANS_RECEIVE);
             $cmr_no = gen_id(CRF_REC_NO_PREFIX, CRAFTMANS_RECEIVE, 'id'); 
             $cur_code = (isset($inputs['currency_code']))?$inputs['currency_code']:$this->session->userdata(SYSTEM_CODE)['default_currency']; 
@@ -182,8 +183,17 @@ class Order_receivals extends CI_Controller {
             $next_item_id = get_autoincrement_no(ITEMS); 
             $total=0;
             foreach ($inputs['inv_items_btm'] as $so_desc_id => $inv_item){
-                $total += $inv_item['new_units']*$inv_item['new_purch_unit_price'];
+                $tot_cost_item = 0;
+                if(isset($inv_item['costs']) && !empty($inv_item['costs'])){
+                    foreach ($inv_item['costs'] as $cost_item){
+                        $tot_cost_item += $cost_item;
+                    }
+                }
+                $inv_item['new_sale_unit_price'] = $inv_item['sale_sub_tot']/$inv_item['new_units'];
+                $inv_item['new_purch_unit_price'] = $tot_cost_item/$inv_item['new_units'];
+//                echo '<pre>';                print_r($inv_item); die;
                 
+                $total += $tot_cost_item;
                 $item_id = $next_item_id;
                 $next_item_id++;
                 $item_code = ($inv_item['new_item_code']=='')?gen_id_for_no(ITEMCODE_PREFIX, $item_id, 'id',4):$inv_item['new_item_code'];
@@ -199,9 +209,6 @@ class Order_receivals extends CI_Controller {
                                     'addon_type_id' => 0,
                                     'sales_excluded' => 1,
                                     'purchases_excluded' => 1, 
-                                    'cost_material' =>$inv_item['new_price_purchase_material'], 
-                                    'cost_stone' =>$inv_item['new_price_purchase_stone'], 
-                                    'cost_craftman' =>$inv_item['new_price_purchase_craftman'], 
                                     'status' => 1, 
                                     'added_on' => date('Y-m-d'),
                                     'added_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
@@ -209,7 +216,7 @@ class Order_receivals extends CI_Controller {
                 $data['item_prices_purch'][] =   array( //purch price
                                                     'item_id' => $item_id,
                                                     'item_price_type' => 1, //1 purchasing price
-                                                    'price_amount' =>$inv_item['new_purch_unit_price'],
+                                                    'price_amount' => $inv_item['new_purch_unit_price'],
                                                     'currency_code' =>$cur_det['code'],
                                                     'currency_value' =>$cur_det['value'], 
                                                     'supplier_id' => $supp_id,
@@ -544,6 +551,7 @@ class Order_receivals extends CI_Controller {
             $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_code','id',''); //14 for sales type
             $data['item_category_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','Agent Type');
             $data['currency_list'] = get_dropdown_data(CURRENCY,'code','code','Currency');
+            $data['osr_cost_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 23');
 
             return $data;
 	}	

@@ -47,6 +47,11 @@
 	break;
 endswitch;	 
 
+$get_input = $this->input->get();
+$sos_order_no= '';
+if(isset($get_input['so_no'])){
+    $sos_order_no = $get_input['so_no'];
+}
 //var_dump($result);
 ?> 
 <!-- Main content -->
@@ -141,7 +146,7 @@ endswitch;
                                         <div class="col-md-3 col-md-offset-1">  
                                                 <div class="form-group pad">
                                                     <label for="sales_order_no">Order No</label>
-                                                    <?php  echo form_input('sales_order_no',set_value('sales_order_no'),' class="form-control" id="sales_order_no" placeholder="Search by Order Number"');?>
+                                                    <?php  echo form_input('sales_order_no',set_value('sales_order_no',$sos_order_no),' class="form-control" id="sales_order_no" placeholder="Search by Order Number"');?>
                                                 </div> 
                                         </div>  
                                         <div class="col-md-2">  
@@ -287,6 +292,9 @@ $(document).ready(function(){
                 $('.remove_res_row').trigger('click');
             }
         });
+    if($('#sales_order_no').val()!=''){ 
+        $('#search_order_btn').trigger('click');
+    }
 });
 
 function get_inv_items_res(){

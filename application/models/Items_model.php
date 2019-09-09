@@ -128,7 +128,7 @@ class Items_model extends CI_Model
             $this->db->join(ITEMS.' itm','itm.id = is.item_id','left');
             $this->db->from(ITEM_STOCK.' is');     
 //            $this->db->where('is.units_available >',0);
-            $this->db->where('is.units_available > 0 OR is.units_on_consignee > 0  OR is.units_on_workshop > 0');
+            $this->db->where('(is.units_available > 0 OR is.units_on_consignee > 0  OR is.units_on_workshop > 0)');
             $this->db->where('is.units_available > is.units_on_reserve');
             $this->db->where('is.deleted',0);
             $this->db->where('is.status',1);
@@ -138,9 +138,37 @@ class Items_model extends CI_Model
             if($limit!='') $this->db->limit($limit);
             $result = $this->db->get()->result_array();  
 //            echo $this->db->last_query(); die;
-//            echo '<pre>';            print_r($result); die;
+//            echo '<pre>';            print_r($result);die;
             return $result;
 	}
+        public function get_available_items_pos($data, $where='',$limit=''){
+//            echo '<pre>';            print_r($data); die;
+            $this->db->select("is.*,itm.item_code,itm.item_category_id,CONCAT(itm.item_name,'-',itm.item_code) as item_name");
+            $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
+            $this->db->select('(select location_name from '.INV_LOCATION.' where id = is.location_id)  as location_name');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id)  as uom_name');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id_2)  as uom_name_2');
+            $this->db->join(ITEMS.' itm','itm.id = is.item_id','left');
+            $this->db->join(ITEM_CAT.' itmc','itmc.id = item_category_id','left');
+            $this->db->from(ITEM_STOCK.' is');     
+            $this->db->where('is.units_available >',0);
+            $this->db->where('is.units_available > is.units_on_reserve');
+            $this->db->where('is.deleted',0);
+            $this->db->where('is.status',1);
+            $this->db->where('itm.sales_excluded',0);
+            $this->db->where('itm.item_type_id !=',4);
+            if($where!='') $this->db->where($where);
+            if($limit!='') $this->db->limit($limit);
+            
+            if(isset($data['item_cat_id']) && $data['item_cat_id']!='') $this->db->where('(itm.item_category_id = '.$data['item_cat_id'].' OR itmc.parent_cat_id = '.$data['item_cat_id'].' )');
+            if(isset($data['item_desc']) && $data['item_desc']!='') $this->db->where("(itm.item_name like '%".$data['item_desc']."%' OR itm.item_tags like '%".$data['item_desc']."%')");
+            if(isset($data['item_code']) && $data['item_code']!='') $this->db->like('itm.item_code',$data['item_code']);
+           
+            $result = $this->db->get()->result_array();  
+//            echo $this->db->last_query(); die;
+//            echo '<pre>';            print_r($result); die;
+            return $result;
+	} 
                         
         public function add_db_item_price($data){     
 //            echo '<pre>';            print_r('$data'); die;

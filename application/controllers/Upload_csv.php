@@ -25,7 +25,7 @@ class Upload_csv extends CI_Controller {
                                         
 	  
         function validate(){
-//            echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
+ //           echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
             $this->load->model('Purchasing_items_model');
             $file = $_FILES["file"]["tmp_name"];
             $file_open = fopen($file, "r");
@@ -41,7 +41,7 @@ class Upload_csv extends CI_Controller {
                 }
                 $j++;
             }
-                              
+                           
                     
             if(!empty($purch_data)){
                 
@@ -117,8 +117,8 @@ class Upload_csv extends CI_Controller {
                                     if(!is_dir(ITEM_IMAGES.$item_id.'/')) mkdir(ITEM_IMAGES.$item_id.'/', 0777, TRUE); 
                                     if(!is_dir(ITEM_IMAGES.$item_id.'/other/')) mkdir(ITEM_IMAGES.$item_id.'/other/', 0777, TRUE);
 
-                                    $dir_path = "F:/ZV_GEMS_CSV111/images/".$cat_id.'/'.$shape;
-                                    //$dir_path = "E:/My Study/Project11/PROJECTS NVELOOP/NVELOOP/JWL_POS/CSV_UPLOAD/product_list/".$item_code;
+                                    $dir_path = "F:/ZV_GEMS_CSV/images/".$cat_id.'/'.$shape;
+                                    //$dir_path = "E:/My Study/Project/PROJECTS NVELOOP/NVELOOP/POS/CSV UPLOAD/20190821_CSV_UPLOAD/CSV_UPLOAD_JEWELRY/20190727/product_list/".$item_code;
                                     $file_in = $all_images = array();
                                     if(is_dir($dir_path))
                                         $file_in = scandir($dir_path,1);

@@ -10,7 +10,6 @@
                                     <th>#</th>
                                     <th style="text-align:center;">Code</th> 
                                     <th style="text-align:center;">Desc</th>  
-                                    <th style="text-align:center;">Shape/CDC</th>  
                                     <th style="text-align:center;">Unit 1</th> 
                                     <th style="text-align:center;">Unit 2</th>   
                                     <th style="text-align:left;">Type</th>    
@@ -36,7 +35,7 @@
                                                $price_in_def = $lcost['amount_cost'] * ($def_cur['value'] / $lcost['currency_value']);
                                                $tot_lapid_cost +=$price_in_def;
                                                $html_2 .= '<tr style="background-color: '.$bg_colr.'">
-                                                                   <td colspan="6"></td> 
+                                                                   <td colspan="5"></td> 
                                                                    <td>'.(($lcost['gem_issue_type_name']!='')?$lcost['gem_issue_type_name']:$lcost['lapidary_type']).'</td>
                                                                    <td>'.(($lcost['dropdown_value']!='')?$lcost['dropdown_value']:$lcost['lapidary_name']).'</td>
                                                                    <td align="right">'. number_format($price_in_def,2).'</td>
@@ -61,8 +60,7 @@
                                              <tr style="background-color: '.$bg_colr.'">
                                                  <td>'.($i+1).'</td> 
                                                  <td align="center">'.$item['item_code'].'</td>
-                                                 <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].':'. float2rat($item['partnership']).')</b>':'').'</td>
-                                                 <td align="center">'.$item['shape_name'].(($item['treatment_name']!='' && $item['shape_name']!='')?'/':'').$item['treatment_name'].'</td>
+                                                 <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                                                  <td align="center">'.$item['units_available'].' '.$item['uom_name'].'</td>
                                                  <td align="center">'.(($item['uom_id_2']!=0)?$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
                                                  <td align="left">Purchase</td>

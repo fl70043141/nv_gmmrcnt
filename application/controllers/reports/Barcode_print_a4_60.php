@@ -242,7 +242,7 @@ class Barcode_print_a4_60 extends CI_Controller {
         }
         public function  load_data_barcode(){
             $invoices = array();
-            $input_post = $this->input->post(); $input = (empty($input_post))? $this->input->get():$this->input->post(); 
+            $input = (empty($this->input->post()))? $this->input->get():$this->input->post(); 
             $this->load->model("Purchasing_invoices_model");
             $purch_info = $this->Purchasing_invoices_model->get_invc_desc($input['prc_id']);
              

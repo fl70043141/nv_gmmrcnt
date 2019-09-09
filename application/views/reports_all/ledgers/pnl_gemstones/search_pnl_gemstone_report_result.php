@@ -2,8 +2,7 @@
 <table id="example1" class="table  dataTable table-bordered table-striped">
               <?php
               $html_row = "";
-              $tot_sales = $tot_pnl = $all_tot_units = $all_tot_units_2 = $all_tot_amount = $item_count = 0;
-              $pnl_shared=0;$pnl_shared_tot=0;$pnl_non_shared_tot=0;
+              $tot_sales = $tot_sales_disc = $tot_pnl = $all_tot_units = $all_tot_units_2 = $all_tot_amount = $item_count = 0;
               $def_cur = get_single_row_helper(CURRENCY,'code="'.$this->session->userdata(SYSTEM_CODE)['default_currency'].'"');
 //              echo '<pre>';              print_r($def_cur); die;
               $html_row .= '<thead>
@@ -14,6 +13,7 @@
                                     <th style="text-align:center;">Unit</th>    
                                     <th style="text-align:right;">Total Cost</th>    
                                     <th style="text-align:right;">Sales</th>    
+                                    <th style="text-align:right;">Discount Given</th>    
                                     <th style="text-align:center;">PNL</th>    
                                     <th style="text-align:right;">P/L Amount</th>    
                                 </tr>
@@ -27,38 +27,33 @@
 
                                      $tot_units = $item['item_quantity'];
                                      $tot_units_2 = $item['item_quantity_2'] ; 
-                                     $cost = $item['purch_standard_cost'] + $item['total_lapidary_cost'];
+                                     $cost = $item['std_cost_on_sale']*$tot_units ;
                                      
                                      $all_tot_units += $tot_units;
                                      $all_tot_units_2 += $tot_units_2;
                                      $all_tot_amount += $cost;
                                      $tot_sales += $item['item_sale_amount'];
+                                     $tot_sales_disc+= $item['item_sale_discount'];
                                      
-                                     $pnl_amount = $item['item_sale_amount'] - $cost;
+                                     $pnl_amount = ($item['item_sale_amount']-$item['item_sale_discount']) - $cost;
                                      $tot_pnl += $pnl_amount;
-                                      
-                                   
-                                    $pnl_shared=0;
-                                    if($item['partnership']>0 && $item['partnership']<1){
-                                        $pnl_shared= $pnl_amount*$item['partnership'];
-                                        $pnl_shared_tot +=$pnl_shared;
-                                        $pnl_non_shared_tot += ($pnl_amount)-($pnl_shared);
-                                    }
+                                     
                                          $html_row .= '
                                              <tr>
                                                  <td>'.($i+1).'</td> 
                                                  <td align="center">'.$item['item_code'].'</td>
-                                                 <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].':'.float2rat($item['partnership']).')</b>':'').'</td>
-                                                 <td align="center">'.$item['total_sold_qty'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['total_sold_qty_2'].' '.$item['uom_name_2']:'-');
+                                                 <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                                                 <td align="center">'.($item['total_sold_qty']+0).' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['total_sold_qty_2'].' '.$item['uom_name_2']:'');
                                                     if(($item['units_available']) > 0){
-                                                        $html_row .= '<br> In Stock :'.$item['units_available'].' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'-');
+//                                                        $html_row .= '<br> In Stock :'.($item['units_available']+0).' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'');
                                                     }
                                         $html_row .='
                                                 </td>
                                                  <td align="right">'. number_format($cost,2).'</td>
                                                  <td align="right">'. number_format($item['item_sale_amount'],2).'</td>
+                                                 <td align="right">'. number_format($item['item_sale_discount'],2).'</td>
                                                  <td align="center">'.(($pnl_amount>0)?'<p style="color:green;">PROFIT</p>':'<p style="color:red;">LOST</p>').'</td>
-                                                 <td align="right" style="vertical-align: bottom;">'. number_format(($pnl_amount),2).(($pnl_shared!=0)?'<br>['. number_format($pnl_shared,2).']':'').'</td>
+                                                 <td align="right" style="vertical-align: bottom;">'. number_format(abs($pnl_amount),2).'</td>
                                             </tr>';
                                          
                                          $i++;
@@ -69,11 +64,8 @@
                                             <td align="right" colspan="4"><b>TOTAL</b></td> 
                                             <td align="right"><b>'. number_format($all_tot_amount,2).'</b></td>
                                             <td align="right"><b>'. number_format($tot_sales,2).'</b></td>
+                                            <td align="right"><b>'. number_format($tot_sales_disc,2).'</b></td>
                                             <td align="right" colspan="2" ><b style="color:'.(($tot_pnl>0)?'':'red').';">'. number_format($tot_pnl,2).'</b></td>
-                                    </tr>
-                                    <tr '.(($pnl_non_shared_tot!=0)?'':'hidden').'>
-                                            <td colspan="6"></td>
-                                            <td align="right" colspan="2"><b>Calculated: '.number_format((($tot_pnl)-($pnl_non_shared_tot)),2).'</b></td>
                                     </tr>';
                     }else{
                             $html_row .= '<tr>
@@ -90,7 +82,7 @@
                             
                             <div class="col-md-4">
                                 <dl class="dl-horizontal">
-                                    <dt>Units: </dt><dd>'.$all_tot_units.' '.((isset($item)?$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:'-'):'')).' </dd>
+                                    <dt>Units: </dt><dd>'.$all_tot_units.' '.((isset($item)?$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' |  '.$all_tot_units_2.' '.$item['uom_name_2']:''):'')).' </dd>
                                 </dl> 
                             </div>
                                 

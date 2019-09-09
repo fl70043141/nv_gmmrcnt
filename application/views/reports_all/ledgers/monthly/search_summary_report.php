@@ -15,7 +15,7 @@ $(document).ready(function(){
 		get_results();
     });
     $("#print_btn").click(function(){
-        var post_data = jQuery('#form_search').serialize(); 
+        var post_data = jQuery('#form_search').serialize();  
 //        var json_data = JSON.stringify(post_data) 
         window.open('../<?php echo $this->router->fetch_class()."/print_report?";?>'+post_data,'ZV VINDOW',width=600,height=300)
     });
@@ -92,11 +92,11 @@ $(document).ready(function(){
                                                     <label for="date_from">From</label>
                                                     <?php  echo form_input('date_from',set_value('date_from',date('m/d/Y',$fiscyear_info['begin'])),' class="form-control datepicker" readonly  id="date_from"');?>
                                                 </div> 
-                                        </div>  
+                                        </div> 
                                         <div class="col-md-3">  
                                                 <div class="form-group pad">
-                                                    <label for="date_to">To</label>
-                                                    <?php  echo form_input('date_to',set_value('date_to',date('m/d/Y',$fiscyear_info['end'])),' class="form-control datepicker" readonly  id="date_to"');?>
+                                                    <label for="date_to">To <input type="checkbox" value="1" id="is_todate_apply" name="is_todate_apply"></label>
+                                                    <?php  echo form_input('date_to',set_value('date_to',date('m/d/Y')),' class="form-control datepicker" readonly  id="date_to"');?>
                                                 </div> 
                                         </div> 
                                         <div class="col-md-3">  

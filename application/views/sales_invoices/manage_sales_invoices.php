@@ -249,8 +249,9 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
 //                                                            echo '<pre>';print_r($so_item);  
                                                             echo '
                                                                 <tr style="padding:10px" id="trso_'.$so_item['id'].'">
-                                                                    <td><input hidden="" name="inv_items['.$row_count.'][item_code]" value="'.$so_item['new_itemcode'].'">'.$so_item['new_itemcode'].'</td>
-                                                                    <td><input hidden="" name="inv_items['.$row_count.'][item_desc]" value="'.$so_item['item_desc'].'"><input hidden="" name="inv_items['.$row_count.'][item_id]" value="'.$so_item['new_item_id'].'">'.$so_item['item_desc'].'</td>
+                                                                    <td><span id="'.$row_count.'_row_cntr" class="row_counter_cls">'.$i.'</span></td>
+                                                                    <td align="center"><input hidden="" name="inv_items['.$row_count.'][item_code]" value="'.$so_item['new_itemcode'].'">'.$so_item['new_itemcode'].'</td>
+                                                                    <td align="center"><input hidden="" name="inv_items['.$row_count.'][item_desc]" value="'.$so_item['item_desc'].'"><input hidden="" name="inv_items['.$row_count.'][item_id]" value="'.$so_item['new_item_id'].'">'.$so_item['item_desc'].'</td>
                                                                     <td align="right"><input hidden="" name="inv_items['.$row_count.'][item_quantity]" value="'.$so_item['actual_units'].'"><input hidden="" name="inv_items['.$row_count.'][item_quantity_2]" value="'.$so_item['secondary_unit'].'"><input hidden="" name="inv_items['.$row_count.'][item_quantity_uom_id]" value="'.$so_item['unit_uom_id'].'"><input hidden="" name="inv_items['.$row_count.'][item_quantity_uom_id_2]" value="'.$so_item['secondary_unit_uom_id'].'">'.$so_item['actual_units'].' '.$so_item['unit_abbreviation'].' '.(($so_item['secondary_unit']>0)?'| '.$so_item['secondary_unit'].' '.$so_item['unit_abbreviation_2']:'').'</td> 
                                                                     <td align="right"><input hidden="" name="inv_items['.$row_count.'][item_unit_cost]" value="'.$so_item['sale_unit_price'].'">'. number_format($so_item['sale_unit_price'],2).'</td>
                                                                     <td align="right"><input class="item_line_discount" hidden="" name="inv_items['.$row_count.'][item_line_discount]" value="'.$so_item['discount_percent'].'">'. number_format($so_item['discount_percent'],2).'%</td>
@@ -941,13 +942,13 @@ $(document).ready(function(){
                                     $('#inv_tbl_footer').html('');
                                     if(required_payment>0){
                                         var row_str = '<tr>'+
-                                                            '<td style="color:red" colspan="5" align="right">Need to pay for settle invoice</td>'+
+                                                            '<td style="color:red" colspan="6" align="right">Need to pay for settle invoice</td>'+
                                                             '<td align="right">'+Math.abs(required_payment).toFixed(2)+'</td>'+
                                                         '</tr>';
                                                var row_str1 = '';
                                         if(parseFloat(obj2.releasable_amount)>0){
                                              row_str1 = '<tr>'+
-                                                                '<td style="color:blue" colspan="5" align="right">releasable Order Advance</td>'+
+                                                                '<td style="color:blue" colspan="6" align="right">releasable Order Advance</td>'+
                                                                 '<td align="right">'+Math.abs(obj2.releasable_amount).toFixed(2)+'</td>'+
                                                             '</tr>';
                                                 }

@@ -22,7 +22,7 @@
                                         <th style="text-align:right;">Total</th> 
                                         <th style="text-align:right;">Settled</th> 
                                         <th style="text-align:center;">Due Date</th>
-                                        <th style="text-align:right;">Total Outstanding</th>
+                                        <th style="text-align:right;">Balace</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -34,8 +34,7 @@
                          $i = 0; 
                          if(!empty($search['invoices'])){
                              foreach ($search['invoices'] as $invoice){
-//                                 echo '<pre>';                                print_r($this->input->post()); die;
-//                                 echo '<pre>';                                print_r($invoice); die;
+ //                                echo '<pre>';                                print_r($invoice); die;
                                  $due_date = $invoice['invoice_date']+(60*60*24*$invoice['days_after']);
                                  $invoice_total = $invoice['invoice_desc_total'];
 

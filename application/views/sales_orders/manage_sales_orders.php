@@ -221,7 +221,7 @@ endswitch;
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div class="form-group pad">
-                                                            <label for="item_unit_cost">Unit Cost</label>
+                                                            <label for="item_unit_cost">Unit Cost <span id="cur_code_lineform"></span>/<span id="prce_unit_name"></span> <input type="checkbox" name="is_price_per_unit" id="is_price_per_unit" value="1" ></label>
                                                             <input type="text" name="item_unit_cost" class="form-control add_item_inpt" id="item_unit_cost" placeholder="Unit Cost for item">
                                                         </div>
                                                     </div>
@@ -261,12 +261,13 @@ endswitch;
                                                 $so_total= 0;
                                                 if(isset($so_order_items)){
                                                     foreach ($so_order_items as $so_item){
+                                                        $link_to='';
 //                                                        echo '<pre>';   print_r($so_item); 
                                                         $cfs_ret_date = ($so_item['return_date'] !='')?date(SYS_DATE_FORMAT,$so_item['return_date']):'-';
                                                         $cfs_sub_no = ($so_item['cm_submission_no'] !='')?$so_item['cm_submission_no']:'-'; 
                                                         switch ($so_item['craftman_status']){
-                                                            case 0: $cfs_status = 'Pending'; break;
-                                                            case 1: $cfs_status = 'In Progress'; break;
+                                                            case 0: $cfs_status = 'Pending'; $link_to = base_url('Order_submissions/add?so_no='.$result['sales_order_no']); break;
+                                                            case 1: $cfs_status = 'In Progress';  $link_to = base_url('Order_receivals/add?so_no='.$result['sales_order_no']); break;
                                                             case 2: $cfs_status = 'Done'; break;
                                                             default: $cfs_status = '-';
                                                         }
@@ -293,7 +294,7 @@ endswitch;
                                                                 <td><input hidden="" name="inv_items['.$row_count.'][item_desc]" value="'.$so_item['item_desc'].'"><input hidden="" name="inv_items['.$row_count.'][item_id]" value="1">'.$so_item['item_desc'].'</td>
                                                                 <td><input hidden="" name="inv_items['.$row_count.'][description]" value="'.$so_item['description'].'">'.$so_item['description'].'</td>
                                                                 <td align="LEFT">'.$estimation.'</td>
-                                                                <td align="center" style=" background-color: #dceaf3;">'.$cfs_status.'</td>
+                                                                <td align="center" style=" background-color: #dceaf3;"><a style="cursor:pointer;" '.(($link_to=='')?'':'target="_blank" ').' href="'.$link_to.'">'.$cfs_status.'</a></td>
                                                                 <td align="center" style=" background-color: #dceaf3;">'.$cfs_ret_date.'</td>
                                                                 <td align="center" style=" background-color: #dceaf3;">'.$cfs_sub_no.'</td>
                                                                 <td align="center"><input hidden="" name="inv_items['.$row_count.'][item_quantity]" value="'.$act_units.'"><input hidden="" name="inv_items['.$row_count.'][item_quantity_2]" value="'.$so_item['secondary_unit'].'"><input hidden="" name="inv_items['.$row_count.'][item_quantity_uom_id]" value="'.$so_item['unit_uom_id'].'"><input hidden="" name="inv_items['.$row_count.'][item_quantity_uom_id_2]" value="'.$so_item['secondary_unit_uom_id'].'">'.$act_units.' '.$so_item['unit_abbreviation'].' '.(($so_item['secondary_unit']>0)?'| '.$so_item['secondary_unit'].' '.$so_item['unit_abbreviation_2']:'').'</td> 
@@ -548,7 +549,10 @@ $(document).ready(function(){
                                 }
                                 var rowCount = $('#invoice_list_tbl tr').length; 
                                 var counter = rowCount+1;
-                                var qtyXprice = parseFloat($('#item_unit_cost').val()) * parseFloat($('#item_quantity').val());
+                                var unit_cost1 =  parseFloat($('#item_unit_cost').val());
+                                if (!$('#is_price_per_unit').is(":checked")) unit_cost1 = parseFloat($('#item_unit_cost').val()) / parseFloat($('#item_quantity').val());
+                                    
+                                var qtyXprice =unit_cost1 * parseFloat($('#item_quantity').val());
 //                                var item_total = qtyXprice - (parseFloat($('#item_discount').val())* 0.01 * qtyXprice);
                                 var item_total = qtyXprice;
                                 var item_desc_note = $('#description').val(); 
@@ -571,7 +575,7 @@ $(document).ready(function(){
                                     row_str = row_str + ' | ' + $('#item_quantity_2').val()+' '+res2.unit_abbreviation_2;
                                 }                                                                                                                                                                                                                                                                        
                                 row_str = row_str + '</td>'+
-                                                        '<td align="right"><input hidden name="inv_items['+rowCount+'][item_unit_cost]" value="'+$('#item_unit_cost').val()+'">'+parseFloat($('#item_unit_cost').val()).toFixed(2)+'</td>'+ 
+                                                        '<td align="right"><input hidden name="inv_items['+rowCount+'][item_unit_cost]" value="'+unit_cost1+'">'+parseFloat(unit_cost1).toFixed(2)+'</td>'+ 
                                                         '<td align="right"><input class="item_tots" hidden name="inv_items['+rowCount+'][item_total]" value="'+item_total+'">'+item_total.toFixed(2)+'</td>'+
                                                         '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
                                                     '</tr>';

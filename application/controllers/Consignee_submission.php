@@ -380,6 +380,7 @@ class Consignee_submission extends CI_Controller {
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
             $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
             $data['color_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Color','dropdown_id = 17'); //17 for Color
+            $data['supplier_list'] = get_dropdown_data(SUPPLIERS, 'supplier_name', 'id','');
             
             return $data;
 	}	
@@ -417,19 +418,22 @@ class Consignee_submission extends CI_Controller {
 //            echo '<pre>';            print_r($data); die;
             echo json_encode($data);
         }
-        function sales_invoice_print($inv_id){
-//            echo '<pre>';            print_r($this->get_invoice_info(2)); die;
-            $inv_data = $this->get_invoice_info($inv_id);
+        function submission_note_print($inv_id){
+            $first_page_header_only=0;
+            $inv_data = $this->get_submission_info($inv_id);
             $inv_dets = $inv_data['invoice_dets'];
             $inv_desc = $inv_data['invoice_desc'];
-            $inv_trans = $inv_data['inv_transection'];
+//            $inv_trans = $inv_data['inv_transection'];
             $this->load->library('Pdf'); 
             $this->load->model('Items_model');
             
             // create new PDF document
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-            $pdf->fl_header='header_am';//invice bg
-            
+           
+            $pdf->fl_header= ($first_page_header_only==1)?'header_empty':'header_jewel';//invice bg
+            $pdf->fl_header_title='C.S. SHEET';//invice bg
+            $pdf->fl_header_title_RTOP='Consignee Submission';//invice bg
+            //
             // set document information
             $pdf->SetCreator(PDF_CREATOR);
             $pdf->SetAuthor('Fahry Lafir');
@@ -448,7 +452,7 @@ class Consignee_submission extends CI_Controller {
             $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
             // set margins
-            $pdf->SetMargins(PDF_MARGIN_LEFT, 50, PDF_MARGIN_RIGHT);
+            $pdf->SetMargins(PDF_MARGIN_LEFT, (($first_page_header_only==1)?10:50), PDF_MARGIN_RIGHT);
             $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
             $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -458,11 +462,10 @@ class Consignee_submission extends CI_Controller {
             // set image scale factor
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
                     
-            // set font
-            $pdf->SetFont('times', '', 11);
         
         
-            $pdf->AddPage();   
+            $pdf->SetFont('times', '', 9);
+            $pdf->AddPage();      
             
             
             
@@ -470,22 +473,23 @@ class Consignee_submission extends CI_Controller {
             
             $html = '<table>
                         <tr>
-                            <td>Invoiced Date: '.date('m/d/Y',$inv_dets['invoice_date']).'</td>
-                            <td align="right">Invoiced by: '.$inv_dets['sales_person'].'</td>
-                        </tr>
-                        <tr> 
-                            <td colspan="2" align="center"><h1>INVOICE</h1></td>
+                            <td>Submission No: '.$inv_dets['cs_no'].'</td>
+                            <td align="right"></td>
                         </tr> 
                         <tr>
-                            <td><b>Bill To:</b> </td>
+                            <td>Submission Date: '.date('m/d/Y',$inv_dets['submitted_date']).'</td>
+                            <td align="right">Submitted by: '.$inv_dets['sales_person'].'</td>
+                        </tr> 
+                        <tr>
+                            <td><b>To:</b> </td>
                             <td align="right"></td>
                         </tr>
                         <tr>
-                            <td>'.$inv_dets['customer_name'].'</td>
+                            <td>'.$inv_dets['consignee_name'].'</td>
                             <td align="right"></td>
                         </tr>
                         <tr>
-                            <td>'.$inv_dets['address'].' '.$inv_dets['city'].', <br>'.$inv_dets['phone'].'</td>
+                            <td>'.$inv_dets['address'].', <br>'.$inv_dets['phone'].'</td>
                             <td align="right"></td>
                         </tr>
                         <tr><td  colspan="5"><br></td></tr>
@@ -493,37 +497,36 @@ class Consignee_submission extends CI_Controller {
                 ';
            
 //            echo '<pre>';            print_r($inv_data); die;
-            foreach ($inv_desc as $inv_itms){ 
-                     $html .= '<table id="example1" class="table-line" border="0">
-                                <thead>
-                                    <tr class="colored_bg" style="background-color:#E0E0E0;">
-                                         <th colspan="5">'.$inv_data['item_cats'][$inv_itms[0]['item_category']].'</th> 
-                                     </tr>
+            $html .= '<table id="example1" class="table-line" border="0">
+                                <thead> 
                                     <tr style="">
-                                         <th width="15%" style="text-align: left;"><u><b>NL No</b></u></th>  
-                                         <th width="40%" style="text-align: left;"><u><b>Description</b></u></th> 
-                                         <th  width="10%"><u><b>Qty</b></u></th>  
+                                         <th width="10%" style="text-align: left;"><u><b>Code</b></u></th>  
+                                         <th width="20%" style="text-align: left;"><u><b>Description</b></u></th> 
+                                         <th  width="20%"><u><b>Qty</b></u></th>  
                                          <th width="15%" style="text-align: right;"><u><b>Rate</b></u></th>  
-                                         <th width="19%" style="text-align: right;"><u><b>Total</b></u></th> 
+                                         <th width="15%" style="text-align: right;"><u><b>Cons.Amount</b></u></th> 
+                                         <th width="20%" style="text-align: right;"><u><b>Total</b></u></th> 
                                      </tr>
                                 </thead>
                             <tbody>';
-                     
+            $tot_cons_amount=0;
+            foreach ($inv_desc as $inv_itms){ 
                      foreach ($inv_itms as $inv_itm){
 //                         $item_info = $this->Items_model->get_single_row($inv_itm['id'])[0];
 //                                     echo '<pre>';            print_r($inv_itm); die;
-
+                         $tot_cons_amount +=$inv_itm['consignment_amount'];
                          $html .= '<tr>
-                                        <td width="15%" style="text-align: left;">'.$inv_itm['item_code'].'</td> 
-                                        <td width="40%" style="text-align: left;">'.$inv_itm['item_description'].'</td> 
-                                        <td width="10%">'.$inv_itm['item_quantity'].'</td>  
-                                        <td width="15%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td> 
-                                         <td width="19%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
+                                        <td width="10%" style="text-align: left;">'.$inv_itm['item_code'].'</td> 
+                                        <td width="20%" style="text-align: left;">'.$inv_itm['item_description'].'</td> 
+                                        <td width="20%">'.$inv_itm['item_quantity'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['item_quantity_uom_id_2']>0)?$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td>  
+                                        <td width="15%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td>  
+                                        <td width="15%" style="text-align: right;">'. number_format($inv_itm['consignment_amount'],2).' '.(($inv_itm['consignment_type_id']==1 || $inv_itm['consignment_type_id']==2)?'('. $inv_itm['consignment_rate'].'%)':'').'</td> 
+                                         <td width="20%" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
                                     </tr> ';
                      }
-                     $html .= '
-                                <tr><td  colspan="5"></td></tr></tbody></table>'; 
             }
+                     $html .= '
+                                <tr><td  colspan="6"></td></tr></tbody></table>'; 
             $html .= '
                     
                     <table id="example1" class="table-line" border="0">
@@ -531,16 +534,13 @@ class Consignee_submission extends CI_Controller {
                        <tbody>
 
                                 <tr class="td_ht">
+                                    <td style="text-align: right;" colspan="4"><b> Consignment Amount:</b></td> 
+                                    <td  width="19%"  style="text-align: right;"><b>'. number_format($tot_cons_amount,2).'</b></td> 
+                                </tr>
+                                <tr class="td_ht">
                                     <td style="text-align: right;" colspan="4"><b> Total</b></td> 
                                     <td  width="19%"  style="text-align: right;"><b>'. number_format($inv_data['invoice_desc_total'],2).'</b></td> 
                                 </tr>'; 
-                        foreach ($inv_trans as $inv_tran){
-                            $html .= '<tr>
-                                            <td  style="text-align: right;" colspan="4">'.$inv_tran['name'].'</td> 
-                                            <td  width="19%"  style="text-align: right;">'. number_format($inv_tran['transection_amount'],2).'</td> 
-                                        </tr> ';
-
-                        }
                         $html .= '
                         </tbody>
                     </table>
@@ -568,7 +568,7 @@ class Consignee_submission extends CI_Controller {
             
             $pdf->SetFont('times', '', 12.5, '', false);
             $pdf->SetTextColor(255,125,125);           
-            $pdf->Text(160,20,$inv_dets['invoice_no']);
+            $pdf->Text(160,20,$inv_dets['cs_no']);
             // force print dialog
             $js = 'this.print();';
 //            $js = 'print(true);';

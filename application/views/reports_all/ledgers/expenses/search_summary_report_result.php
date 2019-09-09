@@ -4,6 +4,7 @@
                 <th>#</th>
                 <th>Account_name </th> 
                 <th>Type</th> 
+                <th>Entry Date</th> 
                 <th style="text-align: right;">Amount Entered</th> 
                 <th style="text-align: right;">Amount</th>  
             </tr>
@@ -17,8 +18,9 @@
                        $html_row .= '
                            <tr>
                                <td>'.($i+1).'</td>
-                               <td>'.$search['account_name'].'</td>
+                               <td>'.$search['account_name'].(($search['memo']!='')?' ('.$search['memo'].')':'').' </td>
                                <td>'.$search['type_name'].'</td>
+                               <td>'. date(SYS_DATE_FORMAT,$search['entry_date']).'</td>
                                <td align="right">'.$search['symbol_left'].' '. number_format($search['amount'],2).' '.$search['symbol_right'].'</td>
                                <td align="right">'.$search['cur_left_symbol'].' '. number_format($search['expense_amount'],2).' '.$search['cur_right_symbol'].'</td>';
                        $i++;

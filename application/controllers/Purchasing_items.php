@@ -119,7 +119,7 @@ class Purchasing_items extends CI_Controller {
             if(!empty($item)){ 
                     
                     $item_id = get_autoincrement_no(ITEMS); 
-                    $item_code = ($item['item_code']=='')?gen_id(ITEMCODE_PREFIX, ITEMS, 'id',4):$item['item_code'];
+                    $item_code = (isset($item['item_code']) && $item['item_code']!="")?$item['item_code']:gen_id(ITEMCODE_PREFIX, ITEMS, 'id',4);
                     $inputs['status'] = (isset($inputs['status']))?1:0;
                     $inputs['sales_excluded'] = (isset($inputs['sales_excluded']))?1:0;
                     $inputs['purchases_excluded'] = (isset($inputs['purchases_excluded']))?1:0;
@@ -197,7 +197,7 @@ class Purchasing_items extends CI_Controller {
                                 );
             $data['inv_desc'] = array(); 
             $data['item_stock_transection'] = array(); //stock transection purchasing
-            
+            ksort($inputs['inv_items']);
             $total = 0;
             foreach ($inputs['inv_items'] as $inv_item){
                 $total += $inv_item['item_quantity']*$inv_item['item_unit_cost'];
@@ -279,7 +279,7 @@ class Purchasing_items extends CI_Controller {
                                                 'person_type' => 20,
                                                 'person_id' => $inputs['supplier_id'],
                                                 'trans_ref' => $invoice_id,
-                                                'trans_date' => strtotime("now"),
+                                                'trans_date' => strtotime($inputs['invoice_date']),
                                                 'account' => 5, //5 inventory GL
                                                 'account_code' => 1510, //5 inventory GL
                                                 'memo' => '',
@@ -292,7 +292,7 @@ class Purchasing_items extends CI_Controller {
                                                 'person_type' => 20,
                                                 'person_id' => $inputs['supplier_id'],
                                                 'trans_ref' => $invoice_id,
-                                                'trans_date' => strtotime("now"),
+                                                'trans_date' => strtotime($inputs['invoice_date']),
                                                 'account' => 14, //14 AC Payable GL
                                                 'account_code' => 2100, //inventory GL
                                                 'memo' => '',
@@ -308,7 +308,7 @@ class Purchasing_items extends CI_Controller {
                                                 'person_type' => 20,
                                                 'person_id' => $inputs['supplier_id'],
                                                 'trans_ref' => $invoice_id,
-                                                'trans_date' => strtotime("now"),
+                                                'trans_date' => strtotime($inputs['invoice_date']),
                                                 'account' => 14, //14 AC Payable GL
                                                 'account_code' => 2100, 
                                                 'memo' => '',
@@ -322,7 +322,7 @@ class Purchasing_items extends CI_Controller {
                                                 'person_type' => 20,
                                                 'person_id' => $inputs['supplier_id'],
                                                 'trans_ref' => $invoice_id,
-                                                'trans_date' => strtotime("now"),
+                                                'trans_date' => strtotime($inputs['invoice_date']),
                                                 'account' => 1, //2 petty cash
                                                 'account_code' => 1060,
                                                 'memo' => '',

@@ -5,7 +5,7 @@
                                         <th style="text-align:left;">Customer</th> 
                                         <th style="text-align:left;">City</th> 
                                         <th style="text-align:right;">Total Invoices</th> 
-                                        <th style="text-align:right;">Settled Amount</th> 
+                                        <th style="text-align:right;">Settled AMpont</th> 
                                         <th style="text-align:right;">Outstanding Amount</th>  
                                     </tr>
                                 </thead>

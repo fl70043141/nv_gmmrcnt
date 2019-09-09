@@ -35,7 +35,7 @@ $inv_trans = $inv_data['inv_transection'];
             <a href="<?php echo base_url($this->router->fetch_class().'/add');?>" class="btn btn-app "><i class="fa fa-plus"></i>Create New</a>
             <a href="<?php echo base_url($this->router->class);?>" class="btn btn-app "><i class="fa fa-search"></i>Search</a>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], 'Customer_payments', 'add_customer_payment'))?'<a href="'.base_url('Customer_payments/add_customer_payment/'.$inv_dets['id'].'/20').'" class="btn btn-app "><i class="fa fa-money"></i>Payments</a>':''; ?>
-            <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'delete'))?'<a href="'.base_url($this->router->fetch_class().'/delete/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-trash"></i>Delete Invoice</a>':''; ?>
+            <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'split_purch_item'))?'<a href="'.base_url($this->router->fetch_class().'/delete/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-trash"></i>Delete Invoice</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'supplier_invoice_print'))?'<a target="_blank" href="'.base_url($this->router->fetch_class().'/supplier_invoice_print/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-print"></i>Print Invoice</a>':''; ?>
 
         </div>
@@ -165,7 +165,7 @@ $inv_trans = $inv_data['inv_transection'];
                         $item_info = get_single_row_helper(ITEMS, 'id='.$inv_itm['item_id']);
 //echo '<pre>';print_r($item_info);  
                          echo     '<tr>
-                                        <td width="" style="text-align: left;">'.$inv_itm['item_code'].'</td> 
+                                        <td width="" style="text-align: left;">'.$inv_itm['item_code'].($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'split_purch_item')?' <a class="fa fa-unlink" style="cursor:pointer;" title="Split Item"></a>':'').'</td> 
                                         <td width="" style="text-align: left;">'.$inv_itm['supplier_item_desc'].'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['treatment']>0)?get_dropdown_value($item_info['treatment']):'').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['item_type_id']==5 && $item_info['partnership']>0 && $item_info['partnership']<1)?'P - '.float2rat($item_info['partnership']):'-').'</td>   

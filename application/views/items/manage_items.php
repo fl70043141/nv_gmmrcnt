@@ -665,6 +665,10 @@ endswitch;
                                                                                                 <label for="misc_cost_id">Other Cost  <span id="misccost_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
                                                                                                 <?php  echo form_dropdown('misc_cost_id',$misc_cost_list,set_value('misc_cost_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="misc_cost_id"');?>
                                                                                             </div>
+                                                                                            <div hidden id="jwl_cost_div"  class="form-group">
+                                                                                                <label for=jwl_cost_id">Other Cost  <span id="jwlcost_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
+                                                                                                <?php  echo form_dropdown('jwl_cost_id',$jwl_cost_list,set_value('jwl_cost_id'),' class="form-control add_item_inpt select2" style="width:100%;" data-live-search="true" id="jwl_cost_id"');?>
+                                                                                            </div>
                                                                                         </div>
                                                                                    </td> 
 
@@ -937,7 +941,7 @@ endswitch;
     </section> 
  
  
-<?php $this->load->view('gem_issue//gem_issue_modals/add_dropdown_modal'); ?>   
+<?php $this->load->view('gem_issue/gem_issue_modals/add_dropdown_modal'); ?>   
 <!--     //image Lightbox-->
      <div tabindex="-1" class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog">
@@ -1032,6 +1036,7 @@ $(document).ready(function(){
         $('#polishing_div').hide();
         $('#lab_div').hide();
         $('#misc_cost_div').hide();
+        $('#jwl_cost_div').hide();
         switch(gi_type){
             case '1': $('#gem_cutter_div').show(); break; //facetting
             case '2': $('#lab_div').show(); break; //Verbal Check
@@ -1041,6 +1046,7 @@ $(document).ready(function(){
             case '6': $('#gem_cutter_div').show(); break; //Recut
             case '7': $('#lab_div').show(); break; //Cert lab
             case '8': $('#misc_cost_div').show(); break; //Cert lab
+            case '9': $('#jwl_cost_div').show(); break; //jwl cost
         }
         
         $('.select2').select2();
@@ -1070,6 +1076,7 @@ $(document).ready(function(){
             case '6': lapidarist_id = $('#gem_cutter_id').val(); lapidarist_name = $('#gem_cutter_id option:selected').text(); break; //Recut
             case '7': lapidarist_id = $('#gem_lab_id').val(); lapidarist_name = $('#gem_lab_id option:selected').text(); break; //Cert lab
             case '8': lapidarist_id = $('#misc_cost_id').val(); lapidarist_name = $('#misc_cost_id option:selected').text(); break; //Cert lab
+            case '9': lapidarist_id = $('#jwl_cost_id').val(); lapidarist_name = $('#jwl_cost_id option:selected').text(); break; //Cert lab
                 
         }
         

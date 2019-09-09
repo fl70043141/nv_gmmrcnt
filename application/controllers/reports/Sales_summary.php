@@ -50,7 +50,7 @@ class Sales_summary extends CI_Controller {
             $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
             $pdf->fl_header='header_jewel';//invice bg
             $pdf->fl_header_title='Report';//invice bg
-            $pdf->fl_header_title_RTOP='Sales Summary & Out Standing';//invice bg
+            $pdf->fl_header_title_RTOP='Sales Summary';//invice bg
             
             
             // set document information
@@ -242,7 +242,6 @@ class Sales_summary extends CI_Controller {
                 $search_data=array( 
                                     'customer_id' => $cust['id'],
                                     'invoice_no' => $input['sales_invoice_no'],  
-                                    'show_type' => $input['show_type'],  
                                     'from_date' => strtotime($input['sales_from_date']),  
                                     'to_date' => strtotime($input['sales_to_date'])  
                                     ); 

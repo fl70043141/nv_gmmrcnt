@@ -53,6 +53,10 @@
 
 <script>
     $(document).ready(function(){
+        $('#search_customer_id').val($('#customer_id').val()).change();
+        var cur_custm = $("#search_customer_id option:selected").text();
+        $('#customer_display_name').val(cur_custm);
+//        alert(cur_custm)
        $('#top_customer_search').click(function(){ 
           $('#customer_search_modal').modal({backdrop: 'static', keyboard: false }); 
        });
@@ -91,10 +95,16 @@
                                 set_temp_invoice();
                                 get_customers_addons();
                                 $('#customer_search_modal').modal('toggle'); 
+                                
+                                var cur_custm = $("#search_customer_id option:selected").text();
+                                $('#customer_display_name').val(cur_custm);
                             });
                     }
                     
 		});
+                
+            var cur_custm = $("#search_customer_id option:selected").text();
+            $('#customer_display_name').val(cur_custm);
        }
     });
         

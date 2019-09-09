@@ -1,6 +1,7 @@
-<div class="row"> 
-    <div class="col-md-2"> 
-        <input readonly id="barcode_input" type="text" class="form-control input-lg " style="width: 180px;;height: 59px;">
+<div class="row">  
+    <div class="col-md-2 col-sm-2"> 
+        <input readonly id="barcode_input" type="text" class="form-control input-lg " style="width: 180px;;height: 30px;">
+        <input readonly id="customer_display_name" type="text" class="form-control input-lg " style="width: 180px;;height: 29px;">
     </div>
     <div style="text-align: right" class="col-md-10">
         <a id="top_item_search" class="btn btn-app">

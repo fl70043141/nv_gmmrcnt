@@ -101,9 +101,10 @@ $show_edit = ($action=='Edit')?'':'hidden';
                     <div class="col-md-12 col-md-offset-0">
                         <table width="100%" id="example1" class="table table-bordered table-striped " border="0"> 
                         <?php // echo '<pre>'; print_r($ret_dets_desc);  
-                            foreach ($ret_dets_desc as $ret_desc){ ?> 
+                            foreach ($ret_dets_desc as $ret_desc){ 
+                            //            echo '<pre>';            print_r($ret_item); ?> 
                                 <tr class="colored_bg" style="background-color:#E0E0E0;">
-                                    <th  width="100%" style="text-align: left;"><u><b>Order #<?php echo $ret_desc[0]['order_no'];?></b></u></th>  
+                                    <th  width="100%" style="text-align: left;"><a href="<?php echo base_url('Sales_orders/view/'.$ret_desc[0]['order_id']);?>"><u><b>Order #<?php echo $ret_desc[0]['order_no'];?></b></u></a></th>  
                                 </tr>
                                 <tr>
                                     <td width="100%"> 

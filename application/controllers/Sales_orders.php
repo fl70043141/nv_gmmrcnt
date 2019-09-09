@@ -678,6 +678,326 @@ class Sales_orders extends CI_Controller {
             $inv_data = $this->get_salesorder_info($inv_id);
             $inv_dets = $inv_data['order_dets'];
             $inv_desc = $inv_data['order_desc']; 
+            
+//            echo '<pre>';            print_r($inv_dets); die; 
+            
+            $cust_html = '
+                            <table style="padding:2;" border="0"> 
+                                <tr><td>
+                                    <table style="padding:0 50 2 0;">  
+                                    <tr>
+                                        <td style="padding:10px;">'.$inv_dets['customer_name'].' ('.$inv_dets['branch_short_name'].')</td> 
+                                    </tr>   
+                                    <tr>
+                                        <td style="padding:10px;">'.(($inv_dets['delivery_address']!='')?$inv_dets['delivery_address']:'').'</td> 
+                                    </tr>   
+                                    <tr>
+                                        <td style="padding:10px;">'.(($inv_dets['customer_phone']!='')?''.$inv_dets['customer_phone']:'').'</td> 
+                                    </tr> 
+                        </table> 
+                    </td></tr>
+                    </table> ';
+            $this->load->library('Pdf');
+            
+            // create new PDF document
+            $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, array(210,148), true, 'UTF-8', false);
+            $pdf->fl_header='header_jewel_a5';//invice bg
+            $pdf->fl_header_title='ORDER';//invice bg
+            $pdf->fl_header_title_RTOP='CUSTOMER COPY';//invice bg
+            $pdf->fl_footer_text=0;//invice bg
+            $pdf->fl_footer_margin=-6;//invice bg
+            $pdf->fl_cust_html=$cust_html;//cust_info
+            
+            // set document information
+            $pdf->SetCreator(PDF_CREATOR);
+            $pdf->SetAuthor('Fahry Lafir');
+            $pdf->SetTitle('PDF JWL Invoice');
+            $pdf->SetSubject('JWL Invoice');
+            $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+            
+            // set default header data
+            $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+
+            // set header and footer fonts
+            $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+            $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+            // set default monospaced font
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+            // set margins
+            $pdf->SetMargins(5, 50, 5);
+            $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+//            $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+            // set auto page breaks
+            $pdf->SetAutoPageBreak(TRUE, 30);
+
+            // set image scale factor
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+                    
+            // set font 
+            $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Regular.ttf', 'TrueTypeUnicode', '', 96);
+            $pdf->SetFont($fontname, 'I', 9);
+//            $pdf->SetFont('times', '', 11);
+                        
+            $pdf->AddPage('L', array(210,148)); 
+                        
+            $so_invoices_html = $payment = $old_gold = '';
+            $payment_tot = $old_gold_tot = $tot_redeem_full = $tot_inv_payment_full = 0;
+            $pdf->SetTextColor(32,32,32);    
+                        
+            if(isset($inv_data['so_invoices']) && !empty($inv_data['so_invoices'])){
+                        
+                $so_invoices_html = '
+                           <table id="example1" class="" style="padding:5px;" border="0">
+
+                              <tbody> 
+                               <tr><td width="65%" style="border-bottom: 1px solid #00000;text-align: left;"  colspan="2">Invoice Summary</td></tr>
+                              '; 
+
+                               $so_invoices_html .= '<thead><tr style="background-color:#F5F5F5;">
+                                           <th style="text-align: left;"  width="14%"><b>Invoice#</b></th> 
+                                           <th style="text-align: right;"  width="12%"><b>Received</b></th> 
+                                           <th style="text-align: right;"  width="14%"><b>Order Redeemed</b></th> 
+                                           <th style="text-align: right;"  width="12%"><b>Invoice Total</b></th> 
+                                           <th style="text-align: right;"  width="13%"><b>Balance</b></th> 
+                                       </tr></thead><tbody> ';
+                                           foreach ($inv_data['so_inv_trans'] as $so_inv_trans){//invoice Trans
+                                               $tot_redeem = 0;
+                                               if(isset($inv_data['so_inv_redeem_pay']) && !empty($inv_data['so_inv_redeem_pay'])){//inv  redeemed
+                                                    foreach ($inv_data['so_inv_redeem_pay'] as $redeemed){
+                                                        if($redeemed['redeemed_inv_id'] == $so_inv_trans['reference_id'] )
+                                                            $tot_redeem += $redeemed['transection_amount'];
+                                                    }
+                                                }
+                                                
+//                                                    echo '<pre>';                    print_r($inv_data['so_invoices'][$so_inv_trans['reference_id']]['sub_total']); die;
+                                               $inv_sub_total = $inv_data['so_invoices'][$so_inv_trans['reference_id']]['sub_total'];
+                                               $inv_balance = $inv_sub_total - $so_inv_trans['trans_amount'];
+                                               
+                                               $tot_inv_payment_full += $so_inv_trans['trans_amount'];
+                                               $tot_redeem_full += $tot_redeem;
+                                               
+                                               $so_invoices_html .= '<tr style="line-height: 10px;">
+                                                   <td style="text-align: left;"  width="14%">'.$so_inv_trans['invoice_no'].'</td> 
+                                                   <td style="text-align: right;"  width="12%">'.number_format($so_inv_trans['trans_amount'],2).'</td> 
+                                                   <td style="text-align: right;"  width="14%">'.number_format($tot_redeem,2).'</td> 
+                                                   <td style="text-align: right;"  width="12%">'.number_format($inv_sub_total,2).'</td> 
+                                                   <td style="text-align: right;"  width="13%">'.number_format($inv_balance,2).'</td> 
+                                               </tr> ';
+                                           }
+                               $so_invoices_html .= '<tr><td width="65%" style="border-top: 1px solid #00000;text-align: right;"  colspan="2"></td></tr></tbody>
+                           </table>  ';
+           } 
+            if(isset($inv_data['so_transection_pay']) && !empty($inv_data['so_transection_pay'])){
+                $payment = '
+                           <table id="example1" class="" style="padding:5px;" border="0">
+
+                              <tbody> 
+                               <tr><td width="65%" style="border-bottom: 1px solid #00000;text-align: left;"  colspan="2">Payments</td></tr>
+                              '; 
+
+                               $payment .= '<thead><tr style="background-color:#F5F5F5;">
+                                           <th style="text-align: left;"  width="15%"><b>Paid Date</b></th> 
+                                           <th style="text-align: center;"  width="15%"><b>Paymet ID</b></th> 
+                                           <th style="text-align: center;"  width="15%"><b>Payment Method</b></th> 
+                                           <th style="text-align: right;"  width="20%"><b>Amount</b></th> 
+                                       </tr></thead><tbody> ';
+                                           foreach ($inv_data['so_transection_pay'] as $payment_info){
+                                               $payment_tot += $payment_info['transection_amount'];
+                                               $payment .= '<tr style="line-height: 10px;">
+                                                   <td style="text-align: left;"  width="15%">'. date(SYS_DATE_FORMAT,$payment_info['trans_date']).'</td> 
+                                                   <td style="text-align: center;"  width="15%">'.$payment_info['id'].'</td> 
+                                                   <td style="text-align: center;"  width="15%">'.$payment_info['payment_method'].'</td> 
+                                                   <td style="text-align: right;"  width="20%">'.number_format($payment_info['transection_amount'],2).'</td> 
+                                               </tr> ';
+                                           }
+                               $payment .= '<tr><td width="65%" style="border-top: 1px solid #00000;text-align: right;"  colspan="2"></td></tr></tbody>
+                           </table>  ';
+           } 
+            if(isset($inv_data['so_og_info']) && !empty($inv_data['so_og_info'])){
+                 $old_gold = '
+                            <table id="example1" class="" style="padding:5px;" border="0">
+
+                               <tbody> 
+                                <tr><td width="65%" style="border-bottom: 1px solid #00000;text-align: left;"  colspan="2">Old Gold</td></tr>
+                               '; 
+
+                                $old_gold .= '<thead><tr style="background-color:#F5F5F5;">
+                                            <th style="text-align: left;"  width="22%"><b>Date</b></th> 
+                                            <th style="text-align: center;"  width="23%"><b>OG No</b></th>  
+                                            <th style="text-align: right;"  width="20%"><b>Amount</b></th> 
+                                        </tr></thead><tbody> ';
+                                            foreach ($inv_data['so_og_info'] as $og){
+                                                $old_gold_tot += $og['og_amount'];
+                //            echo '<pre>';            print_r($payment); die;
+                                                $old_gold .= '<tr style="line-height: 10px;">
+                                                    <td style="text-align: left;"  width="22%">'. date(SYS_DATE_FORMAT,$og['og_date']).'</td> 
+                                                    <td style="text-align: center;"  width="23%">'.$og['og_no'].'</td>  
+                                                    <td style="text-align: right;"  width="20%">'.number_format($og['og_amount'],2).'</td> 
+                                                </tr> ';
+                                            }
+                                $old_gold .= '<tr><td width="65%" style="border-top: 1px solid #00000;text-align: right;"  colspan="2"></td></tr></tbody>
+                            </table>  ';
+            }
+                        
+                        
+            $html = '';
+//            $html = '<text>Customer Details:</text><br>';
+//            $html .= '<table style="padding:2;" border="0.4"> 
+//                        <tr><td>
+//                            <table style="padding:0 50 2 0;">
+//                            <tr>
+//                                <td style="padding:10px;">Customer Code: '.$inv_dets['branch_short_name'].'</td> 
+//                            </tr>   
+//                            <tr>
+//                                <td style="padding:10px;">Full Name: '.$inv_dets['customer_name'].'</td> 
+//                            </tr>   
+//                            <tr>
+//                                <td style="padding:10px;">Address: '.$inv_dets['delivery_address'].'</td> 
+//                            </tr>   
+//                        </table> 
+//                    </td></tr>
+//                    </table> ';
+            $html .= '<table border="0"> 
+                            <tr>
+                                <td align="center">TRX Type: Order</td> 
+                                <td align="center">Date '.date('m/d/Y',$inv_dets['order_date']).'</td> 
+                                <td align="center">Order No: '.$inv_dets['sales_order_no'].'</td> 
+                            </tr>  
+                            <tr><td  colspan="3"><br></td></tr>
+                        </table>  ';
+           
+                     $html .= '<table border="0" style=""><tr><td>
+                                            <table id="example1" class="table-line" border="0">
+                                                <thead> 
+                                                    <tr style=""> 
+                                                        <th width="33%" style="text-align: left;"><u><b>Article Description</b></u></th>  
+                                                        <th width="12%" style="text-align: left;"><u><b>Category</b></u></th>  
+                                                        <th width="12%" style="text-align: left;"><u><b>Item code</b></u></th> 
+                                                        <th  width="23%" style="text-align: center;" ><u><b>Weight</b></u></th>  
+                                                        <th width="20%" style="text-align: right;"><u><b>Price</b></u></th> 
+                                                     </tr>
+                                                </thead>
+                                            <tbody>';
+                                     $order_total = 0;
+                                     foreach ($inv_desc as $inv_itm){
+//            echo '<pre>';            print_r($inv_itm); die; 
+                                         $html .= '<tr>
+                                                        <td width="33%" style="text-align: left;">'.$inv_itm['item_desc'].'</td> 
+                                                        <td width="12%" style="text-align: left;">'.$inv_itm['item_cat_name'].'</td>  
+                                                        <td width="12%">'.(($inv_itm['new_itemcode']!='')?$inv_itm['new_itemcode']:$inv_itm['item_code']).'</td>  
+                                                        <td width="23%" style="text-align: center;">'.(($inv_itm['actual_units']!='')?$inv_itm['actual_units']:$inv_itm['units']).' '.$inv_itm['unit_abbreviation'].'</td> 
+                                                        <td width="20%" style="text-align: right;"> '. number_format(($inv_itm['actual_sub_total']!='')?$inv_itm['actual_sub_total']:$inv_itm['sub_total'],2).'</td> 
+                                                    </tr> ';
+                                         $order_total+=(($inv_itm['actual_sub_total']!='')?$inv_itm['actual_sub_total']:$inv_itm['sub_total']);
+                                     }
+                                     $balance = $order_total;
+                                     $html .= '
+                                                <tr><td  colspan="5"></td></tr></tbody></table>';  
+            $html .= '
+                    
+                    <table id="example1" class="table-line" border="0">
+                        
+                       <tbody> '; 
+                    
+                        $html .= '<tr>
+                                    <td  style="text-align: right;" colspan="4"><b>Total</b></td> 
+                                    <td width="20%"  style="border-top: 1px solid #00000;text-align: right;"><b> '. number_format($order_total,2).'</b></td> 
+                                </tr>';
+                        if($payment_tot>0){
+                            $balance -= $payment_tot;
+                            $html .= '<tr>
+                                        <td  style="text-align: right;" colspan="4"><b>Payments</b></td> 
+                                        <td width="20%"  style="text-align: right;"><b> '. number_format($payment_tot,2).'</b></td> 
+                                    </tr>';
+                        }
+                        if($old_gold_tot>0){
+                            $balance -= $old_gold_tot;
+                            $html .= '<tr>
+                                        <td  style="text-align: right;" colspan="4"><b>Old Gold</b></td> 
+                                        <td width="20%"  style="text-align: right;"><b> '. number_format($old_gold_tot,2).'</b></td> 
+                                    </tr>';
+                        }
+                        if($tot_inv_payment_full>0){
+                            $balance -= $tot_inv_payment_full;
+                            $html .= '<tr>
+                                        <td  style="text-align: right;" colspan="4"><b>Invoice Payments</b></td> 
+                                        <td width="20%"  style="text-align: right;"><b> '. number_format($tot_inv_payment_full,2).'</b></td> 
+                                    </tr>';
+                        }
+                        if($tot_redeem_full>0){
+                            $balance += $tot_redeem_full;
+                            $html .= '<tr>
+                                        <td  style="text-align: right;" colspan="4"><b>Order Payment Redeemed</b></td> 
+                                        <td width="20%"  style="text-align: right;"><b> [-]'. number_format($tot_redeem_full,2).'</b></td> 
+                                    </tr>';
+                        }
+                        
+                        $html .= '<tr>
+                                    <td  style="text-align: right;" colspan="4"><b>Balance</b></td> 
+                                    <td width="20%" style="border-top: 1px solid #00000;text-align: right;" ><b> '. number_format($balance,2).'</b></td> 
+                                </tr>';
+                        $html .= '</tbody>
+                    </table>
+                                </td></tr></table>                               
+                ';
+                        
+                        
+            $html .= $payment.$old_gold.$so_invoices_html;
+            
+//            $html .= '<table border="0">
+//                            <tr style="line-height:80px;"><td  colspan="2"><br></td></tr>
+//                            <tr>
+//                                <td  align="center">Fahry</td> 
+//                                <td align="center"></td> 
+//                            </tr>  
+//                            <tr style="line-height:5px;">
+//                                <td  align="center">...............................................</td> 
+//                                <td align="center">...............................................</td> 
+//                            </tr>  
+//                            <tr>
+//                                <td align="center">Sales Person</td> 
+//                                <td align="center">Customer Signature</td> 
+//                            </tr>   
+//                           </table>  ';            
+            
+            $html .= '
+            <style>
+            .colored_bg{
+                background-color:#E0E0E0;
+            }
+            .table-line th, .table-line td {
+                padding-bottom: 2px;
+                border-bottom: 1px solid #ddd; 
+            }
+            .text-right,.table-line.text-right{
+                text-align:right;
+            }
+            .table-line tr{
+                line-height: 15px;
+            }
+            </style>
+                    ';
+            $pdf->writeHTML($html);
+            
+            $pdf->SetFont('times', '', 12.5, '', false);
+            $pdf->SetTextColor(255,125,125);           
+//            $pdf->Text(160,20,$inv_dets['sales_order_no']);
+            // force print dialog
+            $js = 'this.print();';
+            $js = 'print(true);';
+            // set javascript
+//            $pdf->IncludeJS($js);
+            $pdf->Output('ORDER_'.$inv_dets['sales_order_no'].'.pdf', 'I'); 
+        }
+        
+         function print_sales_order_old($inv_id){ //a4
+//            echo '<pre>';            print_r($this->get_salesorder_info(1)); die;
+            $inv_data = $this->get_salesorder_info($inv_id);
+            $inv_dets = $inv_data['order_dets'];
+            $inv_desc = $inv_data['order_desc']; 
             $this->load->library('Pdf');
             
             // create new PDF document
@@ -971,6 +1291,7 @@ class Sales_orders extends CI_Controller {
 //            $pdf->IncludeJS($js);
             $pdf->Output('ORDER_'.$inv_dets['sales_order_no'].'.pdf', 'I'); 
         }
+       
         
         function get_salesorder_info($order_id){
             if($order_id!=''){

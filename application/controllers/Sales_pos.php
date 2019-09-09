@@ -32,7 +32,7 @@ class Sales_pos extends CI_Controller {
 //            echo '<pre>';            print_r($data); die;
             $data['action']		= 'Add';
             $data['main_content']='sales_pos/manage_sales_pos';    
-            $this->load->view('includes/template_rep',$data);
+            $this->load->view('includes/template_pos',$data);
 	}
 	
 	function edit($id){ 
@@ -166,14 +166,14 @@ class Sales_pos extends CI_Controller {
             $data['transection'] = array(); //payments transection 
             $data['gl_trans'] = array(); //payments transection 
             
-            $total_stnd = $total = 0;
+            $total_stnd = $total = $total_disc = 0;
             foreach ($inputs['inv_items'] as $inv_item){
                 $standard_price_info = $this->Sales_pos_model->get_item_standard_prices($inv_item['item_id']);
                 $standard_price = (!empty($standard_price_info))?$standard_price_info[0]['price_amount']:'';
                 
                 $total += ($inv_item['item_quantity']*$inv_item['item_unit_cost']) - $inv_item['item_line_discount'];
                 $total_stnd += $inv_item['item_quantity']*$standard_price;
-                
+                $total_disc += $inv_item['item_line_discount'];
 //                $total += $inv_item['item_quantity']*$inv_item['item_unit_cost']*(100-$inv_item['item_line_discount'])*0.01;
                 $data['inv_desc'][] = array(
                                             'invoice_id' => $invoice_id,
@@ -185,6 +185,7 @@ class Sales_pos extends CI_Controller {
                                             'item_quantity_uom_id_2' => $inv_item['item_quantity_uom_id_2'],
                                             'unit_price' => $inv_item['item_unit_cost'],
                                             'discount_fixed' => $inv_item['item_line_discount'],
+                                            'std_cost_on_sale' => $standard_price,
                                             'location_id' => $inputs['location_id'],
                                             'status' => 1,
                                             'deleted' => 0,
@@ -270,7 +271,7 @@ class Sales_pos extends CI_Controller {
                                                             'person_type' => 10,
                                                             'person_id' => $inputs['customer_id'],
                                                             'trans_ref' => $invoice_id,
-                                                            'trans_date' => strtotime("now"),
+                                                            'trans_date' => strtotime($inputs['invoice_date']),
                                                             'account' => 14, //14 AC Payable GL
                                                             'account_code' => 2100, 
                                                             'memo' => 'RET_REFUND',
@@ -284,7 +285,7 @@ class Sales_pos extends CI_Controller {
                                                             'person_type' => 10,
                                                             'person_id' => $inputs['customer_id'],
                                                             'trans_ref' => $invoice_id,
-                                                            'trans_date' => strtotime("now"),
+                                                            'trans_date' => strtotime($inputs['invoice_date']), 
                                                             'account' => 1, //2 petty cash
                                                             'account_code' => 1060,
                                                             'memo' => 'RET_REFUND',
@@ -330,7 +331,7 @@ class Sales_pos extends CI_Controller {
                                                    'person_type' => 10,
                                                    'person_id' => $inputs['customer_id'],
                                                    'trans_ref' => $invoice_id,
-                                                   'trans_date' => strtotime("now"),
+                                                   'trans_date' => strtotime($inputs['invoice_date']), 
                                                    'account' => $debit_gl['id'], 
                                                    'account_code' => $debit_gl['account_code'],
                                                    'memo' => $addon_info[0]['addon_name'],
@@ -346,7 +347,7 @@ class Sales_pos extends CI_Controller {
                                                    'person_type' => 10,
                                                    'person_id' => $inputs['customer_id'],
                                                    'trans_ref' => $invoice_id,
-                                                   'trans_date' => strtotime("now"),
+                                                   'trans_date' => strtotime($inputs['invoice_date']), 
                                                    'account' => $credit_gl['id'], 
                                                    'account_code' => $credit_gl['account_code'],
                                                    'memo' => $addon_info[0]['addon_name'],
@@ -378,7 +379,7 @@ class Sales_pos extends CI_Controller {
                                                     'person_type' => 10,
                                                     'person_id' => $inputs['customer_id'],
                                                     'trans_ref' => $invoice_id,
-                                                    'trans_date' => strtotime("now"),
+                                                    'trans_date' => strtotime($inputs['invoice_date']), 
                                                     'account' => 5, //5 inventory GL
                                                     'account_code' => 1510, //5 inventory GL
                                                     'memo' => 'SALES_POS',
@@ -392,7 +393,7 @@ class Sales_pos extends CI_Controller {
                                                     'person_type' => 10,
                                                     'person_id' => $inputs['customer_id'],
                                                     'trans_ref' => $invoice_id,
-                                                    'trans_date' => strtotime("now"),
+                                                    'trans_date' => strtotime($inputs['invoice_date']), 
                                                     'account' => 43, //43 COGS id
                                                     'account_code' => 5010, //COGS GL
                                                     'memo' => 'SALES_POS',
@@ -402,11 +403,25 @@ class Sales_pos extends CI_Controller {
                                                     'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
                                                     'status' => 1,
                                             );
+                    $data['gl_trans'][] = array(
+                                                    'person_type' => 10,
+                                                    'person_id' => $inputs['customer_id'],
+                                                    'trans_ref' => $invoice_id,
+                                                    'trans_date' =>  strtotime($inputs['invoice_date']),
+                                                    'account' => 48, //48 DISCOUNT ON SALE
+                                                    'account_code' => 5060,
+                                                    'memo' => 'SALES_POS_DISC',
+                                                    'amount' => (+$total_disc),
+                                                    'currency_code' => $cur_det['code'], 
+                                                    'currency_value' => $cur_det['value'], 
+                                                    'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+                                                    'status' => 1,
+                                            );
                 $data['gl_trans'][] = array(
                                                     'person_type' => 10,
                                                     'person_id' => $inputs['customer_id'],
                                                     'trans_ref' => $invoice_id,
-                                                    'trans_date' => strtotime("now"),
+                                                    'trans_date' => strtotime($inputs['invoice_date']), 
                                                     'account' => 37, //14  SALES GL
                                                     'account_code' => 4010, 
                                                     'memo' => 'SALES_POS',
@@ -420,7 +435,7 @@ class Sales_pos extends CI_Controller {
                                                     'person_type' => 10,
                                                     'person_id' => $inputs['customer_id'],
                                                     'trans_ref' => $invoice_id,
-                                                    'trans_date' => strtotime("now"),
+                                                    'trans_date' => strtotime($inputs['invoice_date']), 
                                                     'account' => 3, //3 AC RECEIVBLE
                                                     'account_code' => 1200,
                                                     'memo' => 'SALES_POS',
@@ -436,7 +451,7 @@ class Sales_pos extends CI_Controller {
                                                     'person_type' => 10,
                                                     'person_id' => $inputs['customer_id'],
                                                     'trans_ref' => $invoice_id,
-                                                    'trans_date' => strtotime("now"),
+                                                    'trans_date' => strtotime($inputs['invoice_date']), 
                                                     'account' => 3, //14 AC Receivable GL
                                                     'account_code' => 1200, 
                                                     'memo' => '',
@@ -450,7 +465,7 @@ class Sales_pos extends CI_Controller {
                                                     'person_type' => 10,
                                                     'person_id' => $inputs['customer_id'],
                                                     'trans_ref' => $invoice_id,
-                                                    'trans_date' => strtotime("now"),
+                                                    'trans_date' => strtotime($inputs['invoice_date']), 
                                                     'account' => 1, //1 petty cash
                                                     'account_code' => 1060,
                                                     'memo' => '',
@@ -962,7 +977,7 @@ class Sales_pos extends CI_Controller {
                 }
 //                echo '<pre>';            print_r($data); die;
         }
-        function get_item_search_modal(){ 
+        function get_item_search_modal11(){ 
                 $inputs = $this->input->post();
 //                echo '<pre>';            print_r($inputs); die;
                 $this->load->model('Items_model');
@@ -972,6 +987,14 @@ class Sales_pos extends CI_Controller {
                 $cat_qry_str .= ($inputs['shape_id']!='')?"itm.shape = ".$inputs['shape_id']." AND ":'';
 //                $item_res = $this->Items_model->get_available_items("itm.item_category_id = ".$inputs['item_cat_id']." AND itm.item_code like '%".$inputs['item_code']."%' AND itm.item_name LIKE '%".$inputs['item_desc']."'%");
                 $data['item_res'] = $this->Items_model->get_available_items($cat_qry_str."itm.item_code like '%".$inputs['item_code']."%'  AND itm.item_name like '%".$inputs['item_desc']."%'",SELECT2_ROWS_LOAD);
+                
+                $this->load->view('sales_pos/pos_pop_modals/item_search_modal_result',$data);
+//                echo '<pre>';            print_r($data); die;
+        }
+        function get_item_search_modal(){ 
+                $inputs = $this->input->post();
+                $this->load->model('Items_model');
+                $data['item_res'] = $this->Items_model->get_available_items_pos($inputs,'',SELECT2_ROWS_LOAD);
                 
                 $this->load->view('sales_pos/pos_pop_modals/item_search_modal_result',$data);
 //                echo '<pre>';            print_r($data); die;

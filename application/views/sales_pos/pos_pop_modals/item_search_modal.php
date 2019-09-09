@@ -31,8 +31,8 @@
                         <input  type="search_item_code" name="search_item_code" class="form-control input-lg" id="search_item_code" placeholder="Search by code">
                     </div> 
                 </div>
-                
-              <div hidden class="col-md-12 no-padding" id="gem_search_div">
+                 
+              <div  class="col-md-12 no-padding" id="gem_search_div">
                   <div class="col-md-4"> 
                         <div class="form-group">
                             <label for="search_item_treatment_id" class=" control-label">Treatments</label>
@@ -96,7 +96,7 @@
        });
        $('#search_item_desc').keyup(function(){ 
             get_modal_item_search()
-       });
+       }); 
        
         function get_modal_item_search(category='',item_desc='',item_code=''){
             $.ajax({
@@ -105,6 +105,7 @@
 			data : {function_name:'get_category_info',item_cat_id:$('#search_item_category_id').val()},
 			success: function(result){
                             var cat_info =  JSON.parse(result); 
+                                $('#gem_search_div').show();
                             if(cat_info.is_gem == '1'){
                                 $('#gem_search_div').show();
                             }else{

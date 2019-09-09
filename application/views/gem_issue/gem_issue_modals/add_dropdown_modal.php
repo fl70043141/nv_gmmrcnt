@@ -76,6 +76,7 @@
                 case 'heater': dd_id = 21; elm_title = 'Heater'; break;
                 case 'polish': dd_id = 20; elm_title = 'Polishing Lapidrist'; break; 
                 case 'misccost': dd_id = 22; elm_title = 'Misc. Transport'; break; 
+                case 'jwlcost': dd_id = 23; elm_title = 'Jewelry Costs'; break; 
             }
             $('.name_title').text(elm_title)
             $('#dropdown_id').val(dd_id);
@@ -128,6 +129,7 @@
                                     case '20': $select = $('#gem_polishing_id'); break;
                                     case '21': $select = $('#gem_heater_id'); break; 
                                     case '22': $select = $('#misc_cost_id'); break; 
+                                    case '23': $select = $('#jwl_cost_id'); break; 
                                 }
                                 $select.empty();
                                 if(dd_data!=''){

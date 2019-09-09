@@ -36,6 +36,12 @@
       </div> 
       <div class="modal-body form-horizontal">
             <div class="box-body">
+              <div class="form-group checkout_form ">
+                <label for="amount_tendered_cash" class="col-sm-3 control-label">Invoice Date</label>
+                <div class="col-sm-9">
+                     <input  type="invoice_date" value="<?php echo date(SYS_DATE_FORMAT);?>" name="invoice_date" class="form-control input-lg datepicker" id="invoice_date" readonly>
+                </div>
+              </div> 
               <div class="form-group return_refund_hide">
                 <label for="pos_return_note_no" class="col-sm-3 control-label">Return Note No</label>
                 <div class="col-sm-9">
