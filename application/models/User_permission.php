@@ -6,11 +6,17 @@ class USer_permission extends CI_Model
             parent::__construct(); 
  	}
 	 
-        function getPermissionGroup(){
+        function getPermissionGroup($id=''){
+            $cur_user_role = $this->session->userdata(SYSTEM_CODE); 
             $this->db->select("*");
             $this->db->from(USER_ROLE);
+            if($cur_user_role['user_role_ID']!=1){
+                $this->db->where('id != 1');
+            }
+            if($id!=''){$this->db->where('id',$id);}
+            
             $res = $this->db->get()->result_array();
-              return $res;
+            return $res;
         }
         
 	 

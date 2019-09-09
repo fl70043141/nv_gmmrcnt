@@ -243,7 +243,7 @@ class Users extends CI_Controller {
             }
             
 //            $data['user_data'] = $this->User_model->get_single_user($id); 
-            $data['user_role_list'] = get_dropdown_data(USER_ROLE,'user_role','id','','id != 1'); 
+            $data['user_role_list'] = get_dropdown_data(USER_ROLE,'user_role','id','','id != 1 and id != 9'); 
 
             return $data;	
 	}	

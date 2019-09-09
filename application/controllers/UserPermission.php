@@ -22,6 +22,7 @@ class UserPermission extends CI_Controller {
 	}
         
 	function edit($id){ 
+            $data['user_permission_list'] = $this->User_permission->getPermissionGroup($id); 
             $data['permission_data']   = $this->get_permission_data($id); 
             $this->permission_instertion_ur($id); 
 

@@ -69,7 +69,7 @@
 	break;
 endswitch;	 
 
-//echo '<pre>'; print_r($permission_data); 
+//echo '<pre>'; print_r($user_permission_list); die;
 ?>
  <div class="row">
                         <div class="col-md-12">
@@ -96,7 +96,7 @@ endswitch;
                             <?php echo form_open_multipart("userPermission/validate/".$urole_id.""); ?> 
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title"><strong><?=$action?></strong> User Permissions</h3>
+                                    <h3 class="panel-title"><strong><?=$action?></strong> User Permissions [<?php echo $user_permission_list[0]['user_role'];?>]</h3>
                                 </div>
                                  
                                 <div class="panel-body">                                                                        
