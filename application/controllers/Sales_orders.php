@@ -705,7 +705,7 @@ class Sales_orders extends CI_Controller {
             $pdf->fl_header_title='ORDER';//invice bg
             $pdf->fl_header_title_RTOP='CUSTOMER COPY';//invice bg
             $pdf->fl_footer_text=0;//invice bg
-            $pdf->fl_footer_margin=-6;//invice bg
+            $pdf->fl_footer_margin=-7;//invice bg
             $pdf->fl_cust_html=$cust_html;//cust_info
             
             // set document information
@@ -731,7 +731,7 @@ class Sales_orders extends CI_Controller {
 //            $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
             // set auto page breaks
-            $pdf->SetAutoPageBreak(TRUE, 30);
+            $pdf->SetAutoPageBreak(TRUE, 20);
 
             // set image scale factor
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);

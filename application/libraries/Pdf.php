@@ -57,7 +57,7 @@ class Pdf extends TCPDF
 //        $this->Cell(0, 0, 'Solution by: '.SYSTEM_POWERED_BY.' | '.SYSTEM_POWERED_BY_WEB, 0, false, 'R', 0, '', 0, false, 'T', 'M');
        //        $this->Cell(0, 0, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
         $image_zv = DEFAULT_IMAGE_LOC.'small_zv.png';
-        $footer_line_html = '<img style="height:10px; padding:10px;" src="'.$image_zv.'"> '.'Solution by: '.SYSTEM_POWERED_BY.' | '.SYSTEM_POWERED_BY_WEB;
+        $footer_line_html = ''.'Solution by: '.SYSTEM_POWERED_BY.' | '.SYSTEM_POWERED_BY_WEB;
         $this->writeHTML( $footer_line_html,TRUE,FALSE,FALSE,TRUE,'R');
 
 //        echo $this->getPageHeight(); die;
@@ -287,7 +287,7 @@ class Pdf extends TCPDF
 //        $this->writeHTMLCell(130,20,40,23,$header_info); 
 //        $this->writeHTMLCell(90,20,60,23,$header_info); 
         
-        $this->SetAutoPageBreak(false, 0);
+//        $this->SetAutoPageBreak(false, 0);
 //        $this->Image(DEFAULT_IMAGE_LOC.'a5_inv.jpg', 0, 0,  210, '', 'JPG', '', 'T', false, 72, '', false, false, 0, false, false, false);
         $this->SetFontSize(8);
         $this->SetTextColor(0,0,0);
