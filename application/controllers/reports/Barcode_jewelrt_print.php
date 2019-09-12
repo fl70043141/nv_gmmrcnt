@@ -111,7 +111,7 @@ class Barcode_jewelrt_print extends CI_Controller {
                                     <table border="0">';
                                         foreach($tag_list as $tag){
                                              
-                                            require_once dirname(__FILE__) . '\..\..\libraries\tcpdf\tcpdf_barcodes_1d.php';
+                                            require_once dirname(__FILE__) . '/../../libraries/tcpdf/tcpdf_barcodes_1d.php';
                                             $barcodeobj = new TCPDFBarcode($tag['code'], 'C128');
                                             $img =  $barcodeobj->getBarcodePngData(1.5,20); 
                                             $base64 = 'data:image/png;base64,' . base64_encode($img);  
