@@ -422,7 +422,7 @@ endswitch;
                                                     <span class="help-block"><?php echo form_error('image');?></span>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <img id="def_img_holder" class="profile-user-img img-responsive img-circle thumbnail" src="<?php echo base_url(ITEM_IMAGES.(($result['image']!="")?$result['id'].'/'.$result['image']:'../default/default.jpg')); ?>" alt="User profile picture">
+                                                    <img id="def_img_holder" class="profile-user-img img-responsive img-circle thumbnail" src="<?php echo base_url(ITEM_IMAGES.(($result['image']!="")?$result['id'].'/'.$result['image']:'../default/default.jpg')); ?>" alt="Item picture">
                                                 </div>
                                             </div>
                                           

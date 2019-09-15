@@ -100,7 +100,7 @@ endswitch;
                             <div class="">
                                 <div id='add_item_form' class="col-md-12">
                                     
-                                    <h4 class="">Add Expense entry</h4> 
+                                    <h4 class="">Add Expense Entry</h4> 
                                     <table id="example1" class="table bg-gray-light table-bordered table-striped">
                                         <thead>
                                            <tr>

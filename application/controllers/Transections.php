@@ -16,7 +16,7 @@ class Transections extends CI_Controller {
         function view_search($datas=''){
             $data['search_list'] = $this->Transection_model->search_result();
             $data['main_content']='transections/search_transections';  
-            $data['category_list'] = get_dropdown_data(TRANSECTION_TYPES,'name','id','Agent Type');
+            $data['category_list'] = get_dropdown_data(TRANSECTION_TYPES,'name','id','No Transection Type');
 //            echo '<pre>'; print_r($data); die;
             $this->load->view('includes/template',$data);
 	}

@@ -101,7 +101,7 @@ $(document).ready(function(){
                                     <div class="col-md-8">                                            
                                         <div class="input-group">
                                             <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
-                                            <?php echo form_input('gem_receival_no', set_value('gem_receival_no'), 'id="gem_receival_no" class="form-control" placeholder="Search by Gem Issue No"'); ?>
+                                            <?php echo form_input('gem_receival_no', set_value('gem_receival_no'), 'id="gem_receival_no" class="form-control" placeholder="Search by Gem Receival No"'); ?>
                                        </div>                                             
                                     </div>
                                 </div>  

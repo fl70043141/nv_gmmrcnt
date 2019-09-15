@@ -155,7 +155,7 @@ endswitch;
                             <div class="">
                                 <div id='add_item_form' class="col-md-12 fl_scrollable_x bg-light-blue-gradient">
                                     
-                                    <h4 class="">Search for Purchase return Return</h4> 
+                                    <h4 class="">Search for Purchase Return</h4> 
                                     <div class="row col-md-12 ">  
                                         
                                         <div class="col-md-3 col-md-offset-1">  
