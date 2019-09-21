@@ -45,6 +45,8 @@ class Item_stock_model extends CI_Model
          public function get_stock_by_code($item_code='',$location_id='',$where=''){ 
             $this->db->select('itm.item_code,is.*');
             $this->db->select('is.*,SUM(is.units_available) as tot_units_1, SUM(is.units_available_2) as tot_units_2');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id)  as uom_name');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id_2)  as uom_name_2');
             $this->db->join(ITEMS.' itm','itm.id = is.item_id'); 
             $this->db->from(ITEM_STOCK.' is'); 
             if($location_id!='')$this->db->where('is.location_id',$location_id);
