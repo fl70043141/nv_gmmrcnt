@@ -109,8 +109,10 @@ class Barcode_jewelrt_print extends CI_Controller {
                             <tr> 
                                 <td class="left-tbl-td" width="34mm">
                                     <table border="0">';
+                                        $this->load->model('Item_stock_model');
                                         foreach($tag_list as $tag){
-                                             
+                                            $item_prc_data = $this->Item_stock_model->get_stock_by_code($tag['code']);
+//                                            echo '<pre>'; print_r($item_prc_data); die;
                                             require_once dirname(__FILE__) . '/../../libraries/tcpdf/tcpdf_barcodes_1d.php';
                                             $barcodeobj = new TCPDFBarcode($tag['code'], 'C128');
                                             $img =  $barcodeobj->getBarcodePngData(1.5,20); 
@@ -126,6 +128,9 @@ class Barcode_jewelrt_print extends CI_Controller {
                                                                     'item_serial'=>$item_seriel,
                                                                     'item_desc'=>$item_desc,
                                                                     'supcode'=>$supcode,
+                                                                    'units'=> (isset($item_prc_data['units_available']))?$item_prc_data['units_available']:'',
+                                                                    'unit_abr1'=> (isset($item_prc_data['uom_name']))?$item_prc_data['uom_name']:'',
+                                                                    'unit_abr2'=> (isset($item_prc_data['uom_name_2']))?$item_prc_data['uom_name_2']:'',
                                                                     );
                                                 $count++;
                                             }
@@ -139,7 +144,7 @@ class Barcode_jewelrt_print extends CI_Controller {
                                                         <td style="line-height:11.8mm;">
                                                             <table>
                                                                 <tr><td style=" text-align:center;line-height:7mm"><img style="width:45px;" src="'.$bc["base64"].'"></td></tr>
-                                                                <tr><td style="font-size:8px; text-align:center; line-height:1mm">'.$bc['item_serial'].'</td></tr>
+                                                                <tr><td style="font-size:8px; text-align:center; line-height:1mm">'.$bc['item_serial'].' / '.$bc['item_desc'].'</td></tr>
                                                             </table>
                                                         </td>
                                                         <td style="font-size:5px; text-align:center;line-height:11.8mm;">
@@ -149,7 +154,7 @@ class Barcode_jewelrt_print extends CI_Controller {
                                                                      
                                                                 </tr>
                                                                 <tr>
-                                                                    <td style="font-size:6px; text-align:center;line-height:5.5mm;">'.$bc['item_desc'].'</td>
+                                                                    <td style="font-size:6px; text-align:center;line-height:5.5mm;">'.(($bc['units']>0)?'('.$bc['units'].' '.$bc['unit_abr1'].')':'').'</td>
                                                                     <td style="font-size:6px; text-align:center;line-height:5.5mm;">'.$bc['supcode'].'</td>
                                                                 </tr>
                                                             </table>
@@ -173,7 +178,7 @@ class Barcode_jewelrt_print extends CI_Controller {
                                                                     <td style="line-height:11.8mm;">
                                                                         <table>
                                                                             <tr><td style=" text-align:center;line-height:7mm"><img style="width:45px;" src="'.$bc["base64"].'"></td></tr>
-                                                                            <tr><td style="font-size:8px; text-align:center; line-height:1mm">'.$bc['item_serial'].'</td></tr>
+                                                                            <tr><td style="font-size:7px; text-align:center; line-height:1mm">'.$bc['item_serial'].' / '.$bc['item_desc'].'</td></tr>
                                                                         </table>
                                                                     </td>
                                                                     <td style="font-size:5px; text-align:center;line-height:11.8mm;">
@@ -183,7 +188,7 @@ class Barcode_jewelrt_print extends CI_Controller {
 
                                                                             </tr>
                                                                             <tr>
-                                                                                <td style="font-size:6px; text-align:center;line-height:5.5mm;">'.$bc['item_desc'].'</td>
+                                                                                <td style="font-size:6px; text-align:center;line-height:5.5mm;">'.(($bc['units']>0)?'('.$bc['units'].' '.$bc['unit_abr1'].')':'').'</td>
                                                                                 <td style="font-size:6px; text-align:center;line-height:5.5mm;">'.$bc['supcode'].'</td>
                                                                             </tr>
                                                                         </table>
