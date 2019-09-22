@@ -26,6 +26,7 @@ class Upload_csv extends CI_Controller {
 	  
         function validate(){
  //           echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
+            $this->load->model('Items_model');
             $this->load->model('Purchasing_items_model');
             $file = $_FILES["file"]["tmp_name"];
             $file_open = fopen($file, "r");
@@ -76,10 +77,10 @@ class Upload_csv extends CI_Controller {
 //                    $insert_stat = true;
                      $i=0;
         //            if(true){
-                    if($insert_stat){
+                    if($insert_stat){ 
                         $total=0;
                         foreach($purch_inv_desc as $itm) {
-                             
+//                            echo '<pre>';                            print_r($itm); die;
                                     $item_code = $itm[0];
                                     $item_desc = $itm[1];
                                     $cat_id = $itm[2];
@@ -87,13 +88,16 @@ class Upload_csv extends CI_Controller {
                                     $purch_price = $itm[4];
                                     $supplier_id= $itm[5];
                                     $qty= $itm[6];
-                                    $uom_id= $itm[7];
+                                    $uom_id= 3;
+//                                    $uom_id= $itm[7];
                                     $qty_2= $itm[8];
-                                    $uom_id_2= $itm[9];
+                                    $uom_id_2= 7;
+//                                    $uom_id_2= $itm[9];
                                     $sales_excluded= $itm[11];
                                     $purchase_exclude= $itm[12];
 
-                                    $purch_price = $purch_price/$qty;
+                                    $purch_price = $purch_price;
+//                                    $purch_price = $purch_price/$qty;
 
                                     //GEMS 
                                     $color = $itm[13];
@@ -106,7 +110,11 @@ class Upload_csv extends CI_Controller {
                                     $sales_price2 = $itm[19];
                                     $sales_price2_id = $itm[20];
                                     $partnerhip = $itm[21];
-
+                                    
+                                    //jewelry Charges
+                                    $crft_charge = $itm[23];
+                                    $stine_charge = $itm[24];
+                                    
                                     $item_id = get_autoincrement_no(ITEMS); 
         //                            $item_code = gen_id(ITEMCODE_PREFIX, ITEMS, 'id',4);
                                     $inputs['status'] = (isset($inputs['status']))?1:0;
@@ -260,6 +268,116 @@ class Upload_csv extends CI_Controller {
                                                                             'status' =>1,
                                                                             ); 
                                         }
+                                        
+                                        
+//                            $lapd_cost_id = get_autoincrement_no(GEM_LAPIDARY_COSTING);  
+//                            $lapd_cost_id2=$lapd_cost_id;
+//                            //Quick entry Costing
+//                                if($crft_charge>0){
+//                                    $lapd_cost_id2++;
+//                                        $data['lpd_costs'][] = array(
+//                                                                    'id' => $lapd_cost_id,
+//                                                                    'item_id' => $item_id,
+//                                                                    'gem_issue_type_id' => 9, //Jewelry costing
+//                                                                    'lapidarist_id' => 92, //craftman charge
+//                                                                    'cost_entry_date' =>strtotime("now"),
+//                                                                    'amount_cost' =>$crft_charge,
+//                                                                    'currency_code' => $cur_det['code'],
+//                                                                    'currency_value' => $cur_det['value'],
+//                                                                    'status' => 1,
+//                                                                    'added_on' => strtotime("now"),
+//                                                                    'deleted' => 0,
+//                                                                    );
+//                                        //gl entry
+//                                        $gem_issue_type_info = get_single_row_helper(GEM_ISSUE_TYPES,'id = 9');
+//                                        $gl_credit_acc_id = $gem_issue_type_info['gl_credit_delay'];
+//                                        $gl_debit_acc_info = get_single_row_helper(GL_CHART_MASTER, 'id = '.$gem_issue_type_info['gl_debit']);
+//                                        $gl_credit_acc_info = get_single_row_helper(GL_CHART_MASTER, 'id = '.$gl_credit_acc_id);
+//
+//                                        $data['gl_trans'][] = array(
+//                                                                        'person_type' => 51, //lapidarist item quick entry for costing
+//                                                                        'person_id' => 92,
+//                                                                        'trans_ref' => $lapd_cost_id, //lapidary_cost_id
+//                                                                        'trans_date' => strtotime("now"),
+//                                                                        'account' => $gl_debit_acc_info['id'], 
+//                                                                        'account_code' => $gl_debit_acc_info['account_code'], 
+//                                                                        'memo' => 'LAPIDARY_COST',
+//                                                                        'amount' => ($crft_charge),
+//                                                                        'currency_code' => $cur_det['code'], 
+//                                                                        'currency_value' => $cur_det['value'], 
+//                                                                        'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+//                                                                        'status' => 1,
+//                                                                );
+//                                        $data['gl_trans'][] = array(
+//                                                                        'person_type' => 51, //lapidarist
+//                                                                        'person_id' => 92,
+//                                                                        'trans_ref' => $lapd_cost_id,
+//                                                                        'trans_date' => strtotime("now"),
+//                                                                        'account' => $gl_credit_acc_info['id'], 
+//                                                                        'account_code' => $gl_credit_acc_info['account_code'], 
+//                                                                        'memo' => 'LAPIDARY_COST',
+//                                                                        'amount' => (-$crft_charge),
+//                                                                        'currency_code' => $cur_det['code'], 
+//                                                                        'currency_value' => $cur_det['value'], 
+//                                                                        'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+//                                                                        'status' => 1,
+//                                                                );
+//                                        $lapd_cost_id++; 
+//
+//                                }      
+//                            //Quick entry Costing stomne costing
+//                                if($stine_charge>0){   
+// 
+//                                        $data['lpd_costs'][] = array(
+//                                                                    'id' => $lapd_cost_id2,
+//                                                                    'item_id' => $item_id,
+//                                                                    'gem_issue_type_id' => 9, //Jewelry costing
+//                                                                    'lapidarist_id' => 90, //craftman charge
+//                                                                    'cost_entry_date' =>strtotime("now"),
+//                                                                    'amount_cost' =>$stine_charge,
+//                                                                    'currency_code' => $cur_det['code'],
+//                                                                    'currency_value' => $cur_det['value'],
+//                                                                    'status' => 1,
+//                                                                    'added_on' => strtotime("now"),
+//                                                                    'deleted' => 0,
+//                                                                    );
+//                                        //gl entry
+//                                        $gem_issue_type_info = get_single_row_helper(GEM_ISSUE_TYPES,'id = 9');
+//                                        $gl_credit_acc_id = $gem_issue_type_info['gl_credit_delay'];
+//                                        $gl_debit_acc_info = get_single_row_helper(GL_CHART_MASTER, 'id = '.$gem_issue_type_info['gl_debit']);
+//                                        $gl_credit_acc_info = get_single_row_helper(GL_CHART_MASTER, 'id = '.$gl_credit_acc_id);
+//
+//                                        $data['gl_trans'][] = array(
+//                                                                        'person_type' => 51, //lapidarist item quick entry for costing
+//                                                                        'person_id' => 90,
+//                                                                        'trans_ref' => $lapd_cost_id2, //lapidary_cost_id
+//                                                                        'trans_date' => strtotime("now"),
+//                                                                        'account' => $gl_debit_acc_info['id'], 
+//                                                                        'account_code' => $gl_debit_acc_info['account_code'], 
+//                                                                        'memo' => 'LAPIDARY_COST',
+//                                                                        'amount' => ($stine_charge),
+//                                                                        'currency_code' => $cur_det['code'], 
+//                                                                        'currency_value' => $cur_det['value'], 
+//                                                                        'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+//                                                                        'status' => 1,
+//                                                                );
+//                                        $data['gl_trans'][] = array(
+//                                                                        'person_type' => 51, //lapidarist
+//                                                                        'person_id' => 90,
+//                                                                        'trans_ref' => $lapd_cost_id2,
+//                                                                        'trans_date' => strtotime("now"),
+//                                                                        'account' => $gl_credit_acc_info['id'], 
+//                                                                        'account_code' => $gl_credit_acc_info['account_code'], 
+//                                                                        'memo' => 'LAPIDARY_COST',
+//                                                                        'amount' => (-$stine_charge),
+//                                                                        'currency_code' => $cur_det['code'], 
+//                                                                        'currency_value' => $cur_det['value'], 
+//                                                                        'fiscal_year'=> $this->session->userdata(SYSTEM_CODE)['active_fiscal_year_id'],
+//                                                                        'status' => 1,
+//                                                                );
+//                                        $lapd_cost_id++; 
+//
+//                                }
 
 
                                         $total += $purch_price*$qty;
@@ -267,7 +385,7 @@ class Upload_csv extends CI_Controller {
 
 //                                        echo '<pre>';        print_r($data); die;
                         //            if(!empty($def_image)) $data['image'] = $def_image[0]['name'];
-                //                                            echo '<pre>';                                print_r($data); die;
+//                                                            echo '<pre>';                                print_r($data); die;
 
                                     $add_stat = $this->Items_CSV_model->add_db_item($data); 
                                     if($add_stat[0]){
