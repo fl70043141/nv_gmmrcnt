@@ -450,7 +450,7 @@ class Reports_all_model extends CI_Model
             $this->db->join(ITEM_STOCK.' is','is.item_id = itm.id AND is.units_available>0', 'left');  
             $this->db->where('i.deleted',0);  
             $this->db->group_by('itm.id',0); 
-            $this->db->order_by('i.id',0); 
+            $this->db->order_by('itm.id',0); 
             
             if(isset($data['supplier_invoice_no']) && $data['supplier_invoice_no']!='') $this->db->like('i.supplier_invoice_no',$data['supplier_invoice_no']);
             if(isset($data['supplier_id']) && $data['supplier_id']!='') $this->db->where('i.supplier_id',$data['supplier_id']);
