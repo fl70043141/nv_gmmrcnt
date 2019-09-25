@@ -3994,7 +3994,7 @@ INSERT INTO `modules` (`id`, `module_name`, `page_id`, `link`, `img_class`, `is_
 (49, 'Suppliers', 'Suppliers', '', 'fa fa-download', 0, 13, 0, 1, 32),
 (35, 'Drop Down lists', 'DropDownList', '', 'fa fa-list', 0, 60, 0, 1, 86),
 (36, 'Customer Payments', 'Payments', '/add/10', 'fa fa-money', 0, 44, 0, 1, 24),
-(37, 'Void Transection', 'Transections', '', 'fa fa-exchange', 0, 4, 0, 1, 81),
+(37, 'Void Transaction', 'Transections', '', 'fa fa-exchange', 0, 4, 0, 1, 81),
 (38, 'Items & Inventory', '#', '', 'fa fa-cubes', 1, 0, 0, 1, 30),
 (39, 'Item Management', 'Items', '', 'fa fa-cube', 0, 38, 0, 1, 31),
 (40, 'Inventory Location', 'Inventory_location', '', 'fa fa-building', 0, 102, 0, 1, 33),
