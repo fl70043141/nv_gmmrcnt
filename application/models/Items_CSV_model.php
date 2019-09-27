@@ -30,6 +30,9 @@ class Items_CSV_model extends CI_Model
                         $this->db->update(ITEM_STOCK, array('units_available'=>$data['item_stock']['new_units_available'],'units_available_2'=>$data['item_stock']['new_units_available_2']));
                   
                 }
+                
+		if(!empty($data['lpd_costs']))$this->db->insert_batch(GEM_LAPIDARY_COSTING, $data['lpd_costs']);
+		if(!empty($data['gl_trans']))$this->db->insert_batch(GL_TRANS, $data['gl_trans']); 
 		$status[0]=$this->db->trans_complete();
 		return $status;
 	}

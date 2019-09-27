@@ -206,7 +206,7 @@ endswitch;
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group pad">
-                                                <label for="og_item_unit_cost">Unit Cost<span id="per_amount_text"></span></label>
+                                                <label for="og_item_unit_cost">Unit Cost<span id="per_amount_text"></span><input type="checkbox" name="is_price_per_unit_og" id="is_price_per_unit_og" value="1" ></label>
                                                 <input type="text" name="og_item_unit_cost" value="0" class="form-control add_item_inpt" id="og_item_unit_cost" placeholder="Unit Cost for item">
                                             </div>
                                         </div>
@@ -342,7 +342,11 @@ endswitch;
                                 res2.item_name = $('#og_item_desc').val();
                                 var rowCount = $('#og_invoice_list_tbl tr').length;
                                 var counter = rowCount+1;
-                                var qtyXprice = parseFloat($('#og_item_unit_cost').val()) * parseFloat($('#og_item_quantity').val());
+                                
+                                var unit_cost_og = $('#og_item_unit_cost').val();
+                                if (!$('#is_price_per_unit_og').is(":checked")) unit_cost_og = parseFloat($('#og_item_unit_cost').val()) / parseFloat($('#og_item_quantity').val());
+                                
+                                 var qtyXprice = unit_cost_og * parseFloat($('#og_item_quantity').val());
 //                                var item_total = qtyXprice - (parseFloat($('#item_discount').val())* 0.01 * qtyXprice);
                                 var item_total = qtyXprice;
                                 
@@ -356,7 +360,7 @@ endswitch;
                                 if(res2.unit_abbreviation_2!=null && res2.unit_abbreviation_2!=0){
                                     row_str = row_str + ' | ' + $('#og_item_quantity_2').val()+' '+res2.unit_abbreviation_2;
                                 }                                                                                                                                                                                                                                                                        
-                                row_str = row_str + '</td> <td align="right"><input hidden name="og_items['+rowCount+'][item_unit_cost]" value="'+$('#og_item_unit_cost').val()+'">'+parseFloat($('#og_item_unit_cost').val()).toFixed(2)+'</td>'+ 
+                                row_str = row_str + '</td> <td align="right"><input hidden name="og_items['+rowCount+'][item_unit_cost]" value="'+unit_cost_og+'">'+parseFloat(unit_cost_og).toFixed(2)+'</td>'+ 
                                                         '<td align="right"><input class="og_item_tots" hidden name="og_items['+rowCount+'][item_total]" value="'+item_total+'">'+item_total.toFixed(2)+'</td>'+
                                                         '<td width="5%"><button id="del_btn" type="button" class="og_del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
                                                     '</tr>';

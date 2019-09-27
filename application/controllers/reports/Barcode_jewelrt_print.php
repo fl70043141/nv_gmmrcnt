@@ -416,7 +416,7 @@ class Barcode_jewelrt_print extends CI_Controller {
              
             $list['search'] = $this->Reports_all_model->get_purchased_items($input);
             //search invoices  
-//            echo '<pre>';            print_r($invoice_list); die; 
+//            echo '<pre>';            print_r($list); die; 
             return $list;
         }
         public function  load_data_barcode(){
