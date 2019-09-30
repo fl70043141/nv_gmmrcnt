@@ -59,7 +59,7 @@
                                          $html_1 = '
                                              <tr style="background-color: '.$bg_colr.'">
                                                  <td>'.($i+1).'</td> 
-                                                 <td align="center">'.$item['item_code'].'</td>
+                                                 <td align="center"><a target="_blank" href="'. base_url("Items/edit/".$item["item_id"]).'">'.$item['item_code'].'</a></td>
                                                  <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                                                  <td align="center">'.$item['units_available'].' '.$item['uom_name'].'</td>
                                                  <td align="center">'.(($item['uom_id_2']!=0)?$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>

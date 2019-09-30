@@ -152,6 +152,14 @@ $(document).ready(function(){
                                               
                                                 </div> 
                                         </div> 
+                                
+                                        <div class="col-md-3">  
+                                                <div class="form-group pad  no-pad-top">
+                                                    <label for="supplier_id">Supplier</label>
+                                                     <?php echo form_dropdown('supplier_id',$supplier_list,set_value('supplier_id'),' class="form-control select2" id="supplier_id"');?>
+                                              
+                                                </div> 
+                                        </div> 
                                     </div>
                               
                         </div>

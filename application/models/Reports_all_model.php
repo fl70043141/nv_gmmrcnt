@@ -47,6 +47,7 @@ class Reports_all_model extends CI_Model
         $this->db->select('sum((glc.amount_cost/glc.currency_value) * '.$cur_det['value'].') as total_lapidary_cost'); 
         $this->db->select('ip.item_price_type, ip.price_amount,ip.currency_code as ip_curr_code, ip.currency_value as ip_curr_value'); 
         $this->db->select('itm.item_name,itm.item_code,itm.item_category_id,ityp.item_type_name,ityp.type_short_name,itm.partnership'); 
+        $this->db->select('(select supplier_name from '.SUPPLIERS.' where id = si.supplier_id)  as supp_name');
         $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
         $this->db->select('(select location_name from '.INV_LOCATION.' where id = is.location_id)  as location_name');
         $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id)  as uom_name');
@@ -73,6 +74,7 @@ class Reports_all_model extends CI_Model
         if(isset($data['item_id']) && $data['item_id'] !='')$this->db->like('itm.id',$data['item_id']);
         if(isset($data['color_id']) && $data['color_id'] !='')$this->db->where('itm.color',$data['color_id']);
         if(isset($data['shape_id']) && $data['shape_id'] !='')$this->db->where('itm.shape',$data['shape_id']);
+        if(isset($data['supplier_id']) && $data['supplier_id'] !='')$this->db->where('si.supplier_id',$data['supplier_id']);
         
         if(isset($data['max_weight_check']) && $data['max_weight_check']==1){
             if(isset($data['min_weight']) && $data['min_weight'] >0)$this->db->where('is.units_available >',$data['min_weight']);
