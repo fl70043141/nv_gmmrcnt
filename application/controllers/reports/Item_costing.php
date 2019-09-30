@@ -17,6 +17,7 @@ class Item_costing extends CI_Controller {
 //            $this->add();
 //            $data['search_list'] = $this->Sales_invoices_model->search_result();
             $data['main_content']='reports_all/inventory/gemstone_costing/search_gemstone_costing_report'; 
+            $data['supplier_list'] = get_dropdown_data(SUPPLIERS,'supplier_name','id','No Supplier');
             $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_name','id','Location');
             $data['item_cat_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Gem Category','is_gem = 1');
             
