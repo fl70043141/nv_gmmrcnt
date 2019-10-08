@@ -80,7 +80,7 @@ endswitch;
               <!-- general form elements -->
               <div class="box box-primary">
                 <div class="box-header with-border">
-                  <h3 class="box-title"><?php echo $action;?> Customer Type</h3>
+                  <h3 class="box-title"><?php echo $action;?> Currency</h3>
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
