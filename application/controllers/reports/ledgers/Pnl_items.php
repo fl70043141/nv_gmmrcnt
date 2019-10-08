@@ -50,7 +50,7 @@ class Pnl_items extends CI_Controller {
 //            $this->input->post() = 'aa';
             $item_stocks = $this->load_data(); 
             $inputs = $this->input->get();
-//            echo '<pre>';            print_r($this->input->get()); die;
+        //    echo '<pre>';            print_r($this->input->get()); die;
             $category_name = ($inputs['item_category_id'] != '')?get_single_row_helper(ITEM_CAT,'id = "'.$inputs['item_category_id'].'"')['category_name']:'All'; 
              
             if(isset($inputs['is_todate_apply'])){
@@ -133,6 +133,8 @@ class Pnl_items extends CI_Controller {
                     $tot_units = $item['item_quantity'];
                     $tot_units_2 = $item['item_quantity_2'] ; 
                     $cost = $item['std_cost_on_sale']*$tot_units ;
+                    if($cost==0)
+                        $cost = $item['purch_standard_cost']*$tot_units;
 
                     $all_tot_units += $tot_units;
                     $all_tot_units_2 += $tot_units_2;
