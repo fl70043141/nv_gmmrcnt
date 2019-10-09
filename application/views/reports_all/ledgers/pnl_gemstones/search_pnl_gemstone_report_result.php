@@ -29,7 +29,7 @@
                                      $tot_units_2 = $item['item_quantity_2'] ; 
                                      $cost = $item['std_cost_on_sale']*$tot_units ;
                                      if($cost==0)
-                                         $cost = $item['purch_standard_cost']*$tot_units;
+                                         $cost = $item['purch_standard_cost'];
                                      
                                      $all_tot_units += $tot_units;
                                      $all_tot_units_2 += $tot_units_2;
