@@ -33,7 +33,7 @@
           </div>
         </div>
         <!-- ./col -->
-        
+
         <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
           <!-- small box -->
@@ -68,21 +68,21 @@
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
-        <!-- Left col --> 
+        <!-- Left col -->
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("Items");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-diamond"></i> Master Inventory</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/Sales_summary");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-user"></i> Customer Balance</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/Gemstone_costing");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-money"></i> Gem Costing Report</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/Ledger_reports/expenses");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-dollar"></i> Expenses Report</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/ledgers/Pnl_General");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-bar-chart"></i> P&L Report</a></div>
-        <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("Order_ecatalog");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-image"></i> E-Catelog</a></div>
-             
+        <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("Order_ecatalog");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-image"></i> E-Catalog</a></div>
+
       </div>
       <!-- Main row -->
       <div class="row">
         <!-- Left col -->
         <section class="col-lg-7 connectedSortable">
           <!-- Custom tabs (Charts with tabs)-->
-         
+
           <!-- BAR CHART -->
           <div class="box box-success">
             <div class="box-header with-border">
@@ -101,7 +101,7 @@
           </div>
           <!-- /.box -->
           <!-- /.nav-tabs-custom -->
-   
+
 
         </section>
         <!-- /.Left col -->
@@ -123,7 +123,7 @@
               <div class="chart" id="sales-chart" style="height: 300px; position: relative;"></div>
             </div>
             <!-- /.box-body -->
-          </div> 
+          </div>
         </section>
         <section class="col-lg-6 connectedSortable">
 
@@ -169,14 +169,14 @@
                 </div>
                 <!-- /.col -->
                 <div class="col-md-4 col-sm-4">
-                    
+
                   <div class="pad box-pane-right bg-green" style="min-height: 300px">
                     <br
                 ><?php
                     $i=1;
                      foreach ($map_data as $map){
                          echo '
-                                <div class="description-block margin-bottom"> 
+                                <div class="description-block margin-bottom">
                                   <h4>'.$map['tot_available'].'</h4>
                                   <span class="description-text">'.$map['location_code'].'</span>
                                   '.(($i==3)?'':'<hr>').'
@@ -200,28 +200,28 @@
           <!-- /.box -->
           </div>
           <!-- /.box -->
- 
-       
+
+
         <!-- right col -->
       </div>
       <!-- /.row (main row) -->
 
     </section>
-    <!-- /.content --> 
+    <!-- /.content -->
   <!-- /.content-wrapper -->
-  
- 
+
+
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
   <div class="control-sidebar-bg"></div>
-  
-<script src="<?php echo base_url('templates/plugins/flot/jquery.flot.min.js');?>"></script> 
+
+<script src="<?php echo base_url('templates/plugins/flot/jquery.flot.min.js');?>"></script>
 <!-- ./wrapper -->
 <script>
-    
+
 $(function () {
-     
-   
+
+
   // Donut Chart
   var donut = new Morris.Donut({
     element  : 'sales-chart',
@@ -234,18 +234,18 @@ $(function () {
     ],
     hideHover: 'auto'
   });
-  
+
     //BAR CHART
     var bar = new Morris.Bar({
       element: 'bar-chart',
       resize: true,
       data: [
         <?php
-            
+
             foreach ($barchart as $bc_info){
                 echo "{y: '".$bc_info['month']."', a: ".$bc_info['res'].", b: ".$bc_info['inv']."},";
             }
-        ?> 
+        ?>
       ],
       barColors: ['#3c8dbc', '#f56954'],
       xkey: 'y',
@@ -253,8 +253,8 @@ $(function () {
       labels: ['Purchase Invoices', 'Sales Invoices'],
       hideHover: 'auto'
     });
-    
-    
+
+
 
     /*
      * FULL WIDTH STATIC AREA CHART
@@ -267,7 +267,7 @@ $(function () {
                                     echo ' ['.$key.', '.$chartdata['total'].'],';
                                 }
                             }
-                        ?> 
+                        ?>
                     ];
     $.plot("#area-chart", [areaData], {
       grid: {
@@ -289,8 +289,8 @@ $(function () {
     });
 
     /* END AREA CHART */
-    
-    
+
+
     get_sales_info();
     get_purch_info();
 //    get_quick_entry_info();
@@ -333,25 +333,25 @@ $(function () {
             foreach ($map_data as $map){
                 echo "{latLng: [".$map['long'].",  ".$map['latt']."], name: '".$map['location_name']." (".$map['tot_available'].")'},";
             }
-        ?> 
+        ?>
     ]
   });
-    
+
 });
 
 
     function get_sales_info(){
-        $('#top_sale_box').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Loading...');    
-         
+        $('#top_sale_box').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Loading...');
+
         $.ajax({
-                    url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>", 
+                    url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>",
                     type: 'post',
                     data : {function_name:'get_sales_info'},
-                    success: function(result){ 
-//                             $("#result1").html(result); 
-                        var res2 = JSON.parse(result); 
+                    success: function(result){
+//                             $("#result1").html(result);
+                        var res2 = JSON.parse(result);
                         var sale_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
-                        
+
                         var html_sale = '<div class="inner">'+
                                         '<h4>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+sale_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h4>'+
                                         '<p style="font-size:20px;">SALES</p>'+
@@ -360,24 +360,24 @@ $(function () {
                                 '<i class="fa fa-shopping-basket"></i>'+
                              '</div>'+
                              '<a href="<?php echo base_url('Sales_invoices');?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
-                     
-                        $('#top_sale_box').html(html_sale); 
+
+                        $('#top_sale_box').html(html_sale);
                     }
             });
     }
 
     function get_purch_info(){
-        $('#top_purch_box').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Loading...');    
-         
+        $('#top_purch_box').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Loading...');
+
         $.ajax({
-                    url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>", 
+                    url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>",
                     type: 'post',
                     data : {function_name:'get_purch_info'},
-                    success: function(result){ 
+                    success: function(result){
 //                             $("#result1").html(result); return false;
-                        var res2 = JSON.parse(result); 
+                        var res2 = JSON.parse(result);
                         var purch_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
-                        
+
                         var html_purch = '<div class="inner">'+
                                         '<h4>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+purch_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h4>'+
                                         '<p style="font-size:20px;">PURCHASING</p>'+
@@ -386,23 +386,23 @@ $(function () {
                                 '<i class="fa fa-suitcase"></i>'+
                              '</div>'+
                              '<a href="<?php echo base_url('Purchasing_gemstones');?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
-                     
-                        $('#top_purch_box').html(html_purch); 
+
+                        $('#top_purch_box').html(html_purch);
                     }
             });
     }
-    
+
     function get_quick_entry_info(){
-        $('#top_quick_entry_box').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Loading...');    
-         
+        $('#top_quick_entry_box').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Loading...');
+
         $.ajax({
-                    url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>", 
+                    url: "<?php echo site_url($this->router->directory.$this->router->fetch_class().'/fl_ajax');?>",
                     type: 'post',
                     data : {function_name:'get_expenses_info'},
-                    success: function(result){ 
+                    success: function(result){
 //                        alert()
 //                             $("#result1").html(result); return false;
-                        var res2 = JSON.parse(result); 
+                        var res2 = JSON.parse(result);
                         var exp_amount = addCommas(Math.abs(parseFloat(res2['total']).toFixed(0)));
                         var html_exp = '<div class="inner">'+
                                         '<h4>'+((typeof(res2['symbol_left'])=='undefined')?'':res2['symbol_left'])+' '+exp_amount+' '+((typeof(res2['symbol_right'])=='undefined')?'':res2['symbol_right'])+'</h4>'+
@@ -412,8 +412,8 @@ $(function () {
                                 '<i class="fa fa-money"></i>'+
                              '</div>'+
                              '<a href="<?php echo base_url('reports/Ledger_reports/expenses');?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
-                     
-                        $('#top_quick_entry_box').html(html_exp); 
+
+                        $('#top_quick_entry_box').html(html_exp);
                     }
             });
     }
