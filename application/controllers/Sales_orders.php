@@ -1294,7 +1294,7 @@ class Sales_orders extends CI_Controller {
        
         
         function get_salesorder_info($order_id){
-            if($order_id!=''){
+            if($order_id!='0'){
                  $data['order_dets'] = $this->Sales_orders_model->get_single_row($order_id); 
                 if(empty($data['order_dets'])){
                     $this->session->set_flashdata('error','INVALID! Please use the System Navigation');

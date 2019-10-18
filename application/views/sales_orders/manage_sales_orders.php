@@ -1,7 +1,7 @@
 <?php
 
 	$result = array(
-                        'id'=>"",
+                        'id'=>"0",
                         'customer_id'=>"",
                         'sales_order_no'=>"",
                         'customer_branch_id'=>"",
@@ -85,7 +85,7 @@ endswitch;
             <a href="<?php echo base_url($this->router->fetch_class().'/print_sales_order/'.$result['id']);?>" class="btn btn-app  pull-right <?php echo $add_hide;?>" target="_blank"><i class="fa fa-print"></i>Print SO</a>
             <a href="#" id="add_old_gold" class="btn btn-app  pull-right"><i class="fa fa-chain "></i>Old Gold</a>
             <a href="#" id="add_payment_so" class="btn btn-app  pull-right "><i class="fa fa-money"></i>Payment</a>
-            <!--<a href="<?php echo base_url('Sales_order_items/add_item_by_cat/');?>" class="pull-right btn btn-app success "><i class="fa fa-list"></i>New Item</a>-->
+            <a href="<?php echo base_url('Jewelry_ecatalog/');?>" class="pull-right btn btn-app success "><i class="fa fa-list"></i>New Item</a>
 
         </div>
     </div>
@@ -255,6 +255,9 @@ endswitch;
                                                <th width="4%" style="text-align: center;">Action</th>
                                            </tr>
                                        </thead>
+                                       
+                                       <tbody  id="tbody_list">
+                                       </tbody>
                                        <tbody>
                                            <?php
                                                 $row_count = 3;$i=1;
@@ -459,6 +462,7 @@ $(document).keypress(function(e) {
         }
     });
 $(document).ready(function(){
+    load_temp_order();
     $('#item_code').focus();
     $('.select2').on("select2:close", function () { $(this).focus(); });
 
@@ -1001,6 +1005,55 @@ $(document).ready(function(){
                                    location.reload()
                                }
                            }, 200);
+    }
+    function load_temp_order(){
+         $.ajax({
+                           url: "<?php echo site_url('Jewelry_ecatalog/fl_ajax');?>",
+                           type: 'post',
+                           data : {function_name:'get_temp_so_open',order_id:"<?php echo $result['id'];?>"},
+                           success: function(result){ 
+//                                       $("#search_result_1").html(result);;
+                                       var temp_res = JSON.parse(result);
+                                       var apnd_html = "";
+                                       var rowCount = $('#invoice_list_tbl tr').length;
+                                       
+//                                       console.log(temp_res);
+                                        $.each(temp_res,function(itm_id,itm_obj){
+                                                var item_total = parseFloat(itm_obj.temp_info.unit_price) * parseFloat(itm_obj.temp_info.units);
+                                                    
+                                                 apnd_html = apnd_html + '<tr style="background:#ffc4c4;padding:10px" id="tr_'+itm_id+rowCount+'">'+ 
+                                                                         '<td><input hidden name="inv_items['+itm_id+rowCount+'][item_code]" value="'+itm_obj.item_code+'">'+itm_obj.item_code+'</td>'+
+                                                                         '<td align="center">-</td>'+
+                                                                         '<td><input hidden name="inv_items['+itm_id+rowCount+'][item_desc]" value="'+itm_obj.item_name+'"><input hidden name="inv_items['+itm_id+rowCount+'][item_id]" value="'+itm_id+'">'+itm_obj.item_name+'</td>'+
+                                                                         '<td><input hidden name="inv_items['+itm_id+rowCount+'][description]" value="'+itm_obj.description+'">'+itm_obj.description+'</td>'+
+                                                                         '<td align="center">-</td>'+
+                                                                         '<td align="center">-</td>'+
+                                                                         '<td align="center">-</td>'+
+                                                                         '<td align="center">-</td>'+
+                                                                         '<td align="right"><input hidden name="inv_items['+itm_id+rowCount+'][item_quantity]" value="'+itm_obj.temp_info.units+'"><input hidden name="inv_items['+itm_id+rowCount+'][item_quantity_2]" value="'+((itm_obj.temp_info.units==null)?0:itm_obj.temp_info.units)+'">'+
+                                                                         '<input hidden name="inv_items['+itm_id+rowCount+'][item_quantity_uom_id]" value="'+itm_obj.item_uom_id+'"><input hidden name="inv_items['+itm_id+rowCount+'][item_quantity_uom_id_2]" value="'+itm_obj.item_uom_id_2+'">'+
+                                                                                                                                                                                                                                                                                                 itm_obj.temp_info.units+' '+itm_obj.unit_abbreviation;
+                                                 if(itm_obj.unit_abbreviation_2!=null && itm_obj.unit_abbreviation_2!=0){
+//                                                     apnd_html = apnd_html + ' | ' + $('#item_quantity_2').val()+' '+res2.unit_abbreviation_2;
+                                                 }                                                                                                                                                                                                                                                                        
+                                                 apnd_html = apnd_html + '</td> <td align="right"><input hidden name="inv_items['+itm_id+rowCount+'][item_unit_cost]" value="'+itm_obj.temp_info.unit_price+'">'+parseFloat(itm_obj.temp_info.unit_price).toFixed(2)+'</td>'+ 
+                                                                         '<td align="right"><input class="item_tots" hidden name="inv_items['+itm_id+rowCount+'][item_total]" value="'+item_total+'">'+item_total.toFixed(2)+'</td>'+
+                                                                         '<td width="5%"><button id="'+itm_id+'__'+'del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
+                                                                     '</tr>';
+//                                                             console.log(apnd_html);
+                                            });
+                                                $('#invoice_list_tbl #tbody_list').append(apnd_html);
+                                                //delete row
+                                                $('.del_btn_inv_row').click(function(){
+                                                    var del_itemid = (this.id).split('__')[0]; 
+                                                    remove_temp_so_item(del_itemid);
+                                                    $(this).closest('tr').remove();
+                                                    calc_total();
+                                                });
+                                                calc_total();
+                                        
+                           }
+               });
     }
     $(document).ready(function(){
         //Dynamic itemloader for select2

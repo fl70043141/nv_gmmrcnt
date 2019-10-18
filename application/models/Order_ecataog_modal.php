@@ -42,6 +42,7 @@ class Order_ecataog_modal extends CI_Model
             $this->db->join(ITEM_STOCK.' is', 'is.item_id = i.id and is.units_available > 0','right');
             $this->db->from(ITEMS.' i');
             $this->db->where('i.deleted',0); 
+            $this->db->where('i.item_type_id',4); //4 catelog item
             $this->db->where('i.status',1); 
             
             if(isset($data['category_id']) && $data['category_id']!='') $this->db->where('i.item_category_id',$data['category_id']);
