@@ -51,6 +51,15 @@ class Sales_returns extends CI_Controller {
             $this->load->view('includes/template',$data); 
 	}
 	
+	function view($id){ 
+            $data  			= $this->load_data($id);
+            $data['action']		= 'View';
+            $data['main_content']='sales_returns/view_sales_returns'; 
+            $data['inv_data'] = $this->get_invoice_info($id);
+//            echo '<pre>';            print_r($data); die; 
+            $this->load->view('includes/template_pos',$data);  
+	}
+	
 	function view_POS($id){ 
             $data  			= $this->load_data($id);
             $data['action']		= 'View';
