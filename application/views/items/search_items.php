@@ -130,6 +130,19 @@ $(document).ready(function(){
                                                 </div>
                                         </div>  
                                     </div>
+                            
+                                <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label">Item Type<span style="color: red"></span></label>
+                                                <div class="col-md-7">                                            
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><span class="fa fa-search"></span></span>
+                                                          <?php  echo form_dropdown('item_type_id',$item_type_list,set_value('item_type_id'),' class="form-control select2" data-live-search="true" id="item_type_id"');?> 
+
+                                                    </div>                                            
+                                                </div>
+                                        </div>  
+                                    </div>
                                 <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="col-md-5 control-label">Supplier<span style="color: red"></span></label>

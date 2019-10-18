@@ -4,8 +4,10 @@
                 <th>#</th>
                 <th>Image</th> 
                 <th>Item code</th> 
-                <th>Variety</th> 
+                <th>Item</th> 
+                <th>Category</th> 
                 <th>Supplier</th>  
+                <th>Units</th>
                 <th>Unit of Measure</th>
                 <th>Action</th>
             </tr>
@@ -14,14 +16,15 @@
               <?php
                   $i = 0;
                    foreach ($search_list as $search){ 
-//            echo '<pre>';            print_r($search); die; 
                        echo '
                            <tr>
                                <td>'.($i+1).'</td>
                                <td><img style="width:30px;height:30px;" src="'. base_url(ITEM_IMAGES.(($search['image']!="")?$search['id'].'/'.$search['image']:'../default/default.jpg')).'"></td> 
                                <td>'.$search['item_code'].'</td> 
                                <td>'.$search['item_name'].'</td> 
-                               <td>'.$search['supplier_name'].'</td> 
+                               <td>'.$search['category_name'].'</td> 
+                               <td>'.((isset($search['supplier_name']))?$search['supplier_name']:'--').'</td> 
+                               <td>'.((isset($search['purchasing_unit']))?$search['purchasing_unit'].' '.$search['unit_abbreviation'].' '.((isset($search['secondary_unit']) && $search['secondary_unit']>0 )?$search['secondary_unit'].' '.$search['unit_abbreviation_2']:'--'):'--').'</td> 
                                <td>'.$search['unit_abbreviation'].'</td>
                                <td>'; 
                                     echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'view'))?'<a href="'. base_url($this->router->fetch_class().'/view/'.$search['id']).'" title="View" class="btn btn-primary btn-xs"><span class="fa fa-eye"></span></a> ':'';
@@ -39,7 +42,9 @@
                 <th>Image</th> 
                 <th>Item code</th> 
                 <th>Item name</th> 
-                <th>Category</th>  
+                <th>Category</th> 
+                <th>Supplier</th>  
+                <th>Units</th>
                 <th>Unit of Measure</th>
                 <th>Action</th>
            </tr>
