@@ -26,8 +26,42 @@ class Order_ecataog_modal extends CI_Model
         }
         
         public function search_items($data='',$limit='',$limit_from=''){
+        //    echo '<pre>';            print_r($data); die;
+            $this->db->select('i.*,i.id as item_id');
+            
+            // $this->db->select('is.*,SUM(is.units_available) as tot_units_1, SUM(is.units_available_2) as tot_units_2');
+            // $this->db->select('is.*,SUM(is.units_available) as tot_units_1, SUM(is.units_available_2) as tot_units_2');
+            $this->db->select('ic.category_name, ic.category_code, ic.is_gem'); 
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.color)  as color_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.shape)  as shape_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.treatment)  as treatment_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.certification)  as certification_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.origin)  as origin_name');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id)  as unit_abbreviation');
+            $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id_2)  as unit_abbreviation_2');
+            $this->db->join(ITEM_CAT.' ic', 'ic.id = i.item_category_id','left');
+            // $this->db->join(ITEM_STOCK.' is', 'is.item_id = i.id and is.units_available > 0','right');
+            $this->db->from(ITEMS.' i');
+            $this->db->where('i.deleted',0); 
+            $this->db->where('i.item_type_id',4); //4 catelog item
+            $this->db->where('i.status',1); 
+            
+            if(isset($data['category_id']) && $data['category_id']!='') $this->db->where('i.item_category_id',$data['category_id']);
+            if(isset($data['item_code']) && $data['item_code']!='') $this->db->like('i.item_code',$data['item_code']);
+            if(isset($data['item_id']) && $data['item_id']!='') $this->db->where('i.id',$data['item_id']);
+            if($limit!='') $this->db->limit($limit,$limit_from);
+            $this->db->group_by('i.id');
+            $result = $this->db->get()->result_array();
+            
+                //    echo '<pre>';            print_r($result); die;
+//            echo $this->db->last_query();die;
+            return $result;
+        }
+         
+        
+        public function search_items_stock($data='',$limit='',$limit_from=''){
 //            echo '<pre>';            print_r($data); die;
-            $this->db->select('i.*');
+            $this->db->select('i.*,i.id');
             
             $this->db->select('is.*,SUM(is.units_available) as tot_units_1, SUM(is.units_available_2) as tot_units_2');
             $this->db->select('ic.category_name, ic.category_code, ic.is_gem'); 
@@ -50,7 +84,9 @@ class Order_ecataog_modal extends CI_Model
             if(isset($data['item_id']) && $data['item_id']!='') $this->db->where('i.id',$data['item_id']);
             if($limit!='') $this->db->limit($limit,$limit_from);
             $this->db->group_by('i.id');
-            $result = $this->db->get()->result_array();  
+            $result = $this->db->get()->result_array();
+            
+                   echo '<pre>';            print_r($result); die;
 //            echo $this->db->last_query();die;
             return $result;
         }

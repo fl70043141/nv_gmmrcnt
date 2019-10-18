@@ -93,10 +93,10 @@ class Jewelry_ecatalog extends CI_Controller {
             if(!empty($item_res)){
                 foreach ($item_res as $item){ 
 //                    echo '<pre>';            print_r($item); die;
-                    if($item['tot_units_1'] > 0){
+                    // if($item['tot_units_1'] > 0){
                         $data['item_res'][$item['item_id']] = $item; 
                         $data['item_res'][$item['item_id']]['price_info'] = $this->Order_ecataog_modal->get_item_price($item['id'],$input['price_type_id']); 
-                    }
+                    // }
                 }
             }
             $data['category_id1'] =$input['item_category_id'];
@@ -163,11 +163,11 @@ class Jewelry_ecatalog extends CI_Controller {
                     if(isset($input['itm_id']) && $item['item_id']==$input['itm_id']){
                         $exist_item=1;
                     }
-                    if($item['tot_units_1'] > 0){
+                    // if($item['tot_units_1'] > 0){
                         $data['item_res'][$item['item_id']] = $item; 
                         $data['item_res'][$item['item_id']]['item_price_info'] = $this->Order_ecataog_modal->get_item_price($item['item_id'],$input['price_type_id']); 
                         $data['item_res'][$item['item_id']]['item_stock_info'] = $this->Order_ecataog_modal->get_item_stock($item['item_id']); 
-                    }
+                    // }
                 }
                 if(isset($input['itm_id']) && $input['itm_id']!='' && $exist_item==0){    
                     $item_exist = $this->Order_ecataog_modal->search_items(array('item_id'=>$input['itm_id']));
