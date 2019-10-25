@@ -36,15 +36,24 @@
                                      $all_tot_amount += $cost;
                                      $tot_sales += $item['item_sale_amount'];
                                      $tot_sales_disc+= $item['item_sale_discount'];
+
                                      
-                                     $pnl_amount = ($item['item_sale_amount']-$item['item_sale_discount']) - $cost;
+                                     $CI =& get_instance();
+                                     $CI->load->model('reports_all_model');
+                                     
+                                     $sales_return = $CI->reports_all_model->sales_return_item_code($item['item_code'],$item['invoice_no']);
+                                    // echo '<pre>'; print_r($sales_return);
+                                    $return_amount = (!empty($sales_return))?($sales_return['tot_return_amont']-$cost):0;
+
+                                     $pnl_amount = ($item['item_sale_amount']-$item['item_sale_discount']) - ($cost) - $return_amount;
+                    
                                      $tot_pnl += $pnl_amount;
                                      
                                          $html_row .= '
                                              <tr>
                                                  <td>'.($i+1).'</td> 
                                                  <td align="center">'.$item['item_code'].'</td>
-                                                 <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                                                 <td align="left">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                                                  <td align="center">'.($item['total_sold_qty']+0).' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['total_sold_qty_2'].' '.$item['uom_name_2']:'');
                                                     if(($item['units_available']) > 0){
 //                                                        $html_row .= '<br> In Stock :'.($item['units_available']+0).' '.$item['uom_name'].(($item['item_quantity_uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'');
@@ -57,7 +66,12 @@
                                                  <td align="center">'.(($pnl_amount>0)?'<p style="color:green;">PROFIT</p>':'<p style="color:red;">LOST</p>').'</td>
                                                  <td align="right" style="vertical-align: bottom;">'. number_format(abs($pnl_amount),2).'</td>
                                             </tr>';
-                                         
+                                            if((!empty($sales_return))){
+                                                $html_row.= '<tr>
+                                                              <td colspan="2"></td>
+                                                              <td colspan="7">[Returned - '.number_format($sales_return['tot_return_amont'],2).' - '.$sales_return['units'].$item['uom_name'].' '.$sales_return['secondary_units'].' '.$item['uom_name_2'].']</td>
+                                                          </tr>';
+                                              }
                                          $i++;
                                          $item_count++; 
                                     

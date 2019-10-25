@@ -125,29 +125,33 @@ $inv_desc = $inv_data['invoice_desc'];
                     <?php
                             
                     foreach ($inv_desc as $inv_itms){
-//            echo '<pre>';            print_r($inv_itms); die; 
+        //    echo '<pre>';            print_r($inv_itms); die; 
                          echo '<table width="100%" id="example1" class="table-line" border="0">
                                     <thead>
                                         <tr class="colored_bg" style="background-color:#E0E0E0;">
-                                             <th colspan="5">'.$inv_data['item_cats'][$inv_itms[0]['item_category']].'</th> 
+                                             <th colspan="7">'.$inv_data['item_cats'][$inv_itms[0]['item_category']].'</th> 
                                          </tr>
                                         <tr style="">
-                                             <th  width="15%"><u><b>Qty</b></u></th> 
-                                             <th width="30%" style="text-align: left;"><u><b>Description</b></u></th>  
-                                             <th width="15%" style="text-align: right;"><u><b>Rate</b></u></th>  
-                                             <th width="13%" style="text-align: right;"><u><b>Disc Refund</b></u></th>  
-                                             <th width="16%" style="text-align: right;"><u><b>Total</b></u></th> 
+                                             <th  width="15%"><u><b>Item Code</b></u></th> 
+                                             <th width="18%" style="text-align: left;"><u><b>Description</b></u></th>  
+                                             <th  width="15%" style="text-align: left;"><u><b>Sales invoice#</b></u></th> 
+                                             <th  width="12%"><u><b>Qty</b></u></th>  
+                                             <th width="12%" style="text-align: right;"><u><b>Rate</b></u></th>  
+                                             <th width="12%" style="text-align: right;"><u><b>Disc Refund</b></u></th>  
+                                             <th width="14%" style="text-align: right;"><u><b>Total</b></u></th> 
                                          </tr>
                                     </thead>
                                 <tbody>';
 
                      foreach ($inv_itms as $inv_itm){
                          echo     '<tr>
-                                        <td width="10%">'.$inv_itm['units'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['uom_id']!=0)?' | '.$inv_itm['secondary_units'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
-                                        <td width="30%" style="text-align: left;">'.$inv_itm['item_desc'].'</td>  
-                                        <td width="15%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td>  
-                                        <td width="13%" style="text-align: right;">'. number_format($inv_itm['disc_tot_refund'],2).'</td>  
-                                        <td width="16%" style="text-align: right;">'. number_format(($inv_itm['sub_total']-$inv_itm['disc_tot_refund']),2).'</td> 
+                                        <td width="15%" style="text-align: center;">'.$inv_itm['item_code'].'</td> 
+                                        <td width="18%" style="text-align: left;">'.$inv_itm['item_desc'].'</td>   
+                                        <td width="15%" style="text-align: left;">'.$inv_itm['invoice_no'].'</td>
+                                        <td width="12%">'.$inv_itm['units'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['uom_id']!=0)?' | '.$inv_itm['secondary_units'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
+                                        <td width="12%" style="text-align: right;">'. number_format($inv_itm['unit_price'],2).'</td>  
+                                        <td width="12%" style="text-align: right;">'. number_format($inv_itm['disc_tot_refund'],2).'</td>  
+                                        <td width="14%" style="text-align: right;">'. number_format(($inv_itm['sub_total']-$inv_itm['disc_tot_refund']),2).'</td> 
                                     </tr> ';
                      }
                      echo       ' <tr><td  colspan="5"></td></tr></tbody></table>'; 

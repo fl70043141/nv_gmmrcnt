@@ -141,8 +141,13 @@ class Pnl_items extends CI_Controller {
                     $all_tot_amount += $cost;
                     $tot_sales += $item['item_sale_amount'];
                     $tot_sales_disc+= $item['item_sale_discount'];
+                    
+                    $this->load->model('reports_all_model');
+                    $sales_return = $this->reports_all_model->sales_return_item_code($item['item_code'],$item['invoice_no']);
+                    // echo '<pre>'; print_r($sales_return);
+                    $return_amount = (!empty($sales_return))?($sales_return['tot_return_amont']-$cost):0;
 
-                    $pnl_amount = ($item['item_sale_amount']-$item['item_sale_discount']) - $cost;
+                    $pnl_amount = ($item['item_sale_amount']-$item['item_sale_discount']) - ($cost) - $return_amount;
                     $tot_pnl += $pnl_amount;
                                      
 
@@ -163,6 +168,13 @@ class Pnl_items extends CI_Controller {
                            <td style="width:10%;" align="right">'. number_format($item['discount_fixed'],2).'</td>
                             <td style="width:10%; text-align:right; color:'.(($pnl_amount<0)?'red':'').';" >'. number_format($pnl_amount,2).'</td>
                       </tr>'; 
+                      
+                      if((!empty($sales_return))){
+                        $html.= '<tr>
+                                      <td colspan="2"></td>
+                                      <td colspan="7">[Returned - '.number_format($sales_return['tot_return_amont'],2).' - '.$sales_return['units'].$item['uom_name'].' '.$sales_return['secondary_units'].' '.$item['uom_name_2'].']</td>
+                                  </tr>';
+                      }
                    $i++;
                    $item_count++; 
             } 

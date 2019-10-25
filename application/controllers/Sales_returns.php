@@ -208,7 +208,7 @@ class Sales_returns extends CI_Controller {
                                             'person_id' => $inputs['customer_id'],
                                             'trans_ref' => $cn_id,
                                             'trans_date' =>  strtotime($inputs['return_date']),
-                                            'account' => 14, //3 account Receivable GL
+                                            'account' => 1, //1 cash
                                             'account_code' => 2100,
                                             'memo' => 'CN',
                                             'amount' => (-$inputs['invoice_total']),
