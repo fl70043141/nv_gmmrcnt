@@ -330,14 +330,14 @@ class Items extends CI_Controller {
             $res_itm_all_vdo = $this->fileuploads->upload_all('item_videos',ITEM_IMAGES.$item_id.'/videos/',$appendedVideos);
             
             //resize def image
-            if(!empty($def_image))
-                fl_image_resizer($def_image[0]['name'], 1000, '',$def_image[0]['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/');
+            // if(!empty($def_image))
+                // fl_image_resizer($def_image[0]['name'], 1000, '',$def_image[0]['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/');
                         
                         
             if(!empty($res_itm_all_px)){ //images
                 foreach ($res_itm_all_px as $itm_img){
                     $all_images[]=$itm_img['name'];
-                    fl_image_resizer($itm_img['name'], 800, '',$itm_img['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/other/');
+                    // fl_image_resizer($itm_img['name'], 800, '',$itm_img['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/other/');
                 }
             }; 
                         
