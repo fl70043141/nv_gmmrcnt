@@ -6,6 +6,7 @@
                         'item_name'=>"",
                         'treatment'=>"",
                         'color'=>"",
+                        'clearity'=>"",
                         'certification'=>"",
                         'certification_no'=>"",
                         'length'=>0,
@@ -312,6 +313,14 @@ endswitch;
                                                     <div class="col-md-9">
                                                        	 <?php  echo form_dropdown('shape',$shape_list,set_value('shape',$result['shape']),' class="form-control select2" data-live-search="true" id="shape" '.$o_dis.'');?>
 														<?php echo form_error('shape');?>&nbsp;
+                                                    </div>
+                                                </div>
+
+                                                <div  <?php echo $show_gem;?> class="form-group gem_field">
+                                                    <label class="col-md-3 control-label">Clearity<span style="color: red"></span></label>
+                                                    <div class="col-md-9">
+                                                       	 <?php  echo form_dropdown('clearity',$clearity_list,set_value('clearity',$result['clearity']),' class="form-control select2" data-live-search="true" id="clearity" '.$o_dis.'');?>
+														<?php echo form_error('clearity');?>&nbsp;
                                                     </div>
                                                 </div>
 

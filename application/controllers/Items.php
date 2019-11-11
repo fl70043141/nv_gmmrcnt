@@ -390,6 +390,7 @@ class Items extends CI_Controller {
                             'height' => $inputs['height'],
                             'treatment' => $inputs['treatment'],
                             'shape' => $inputs['shape'],
+                            'clearity' => $inputs['clearity'],
                             'item_type_id' => $inputs['item_type_id'],
                             'partnership' => ($inputs['item_type_id']==5 && $inputs['partnership']<1 && $inputs['partnership']>0)?$inputs['partnership']:1,
                             'description' => $inputs['description'],
@@ -810,6 +811,7 @@ class Items extends CI_Controller {
             $data['heater_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 21'); //21 Heater
             $data['misc_cost_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 22'); //22 Misc Costs
             $data['jwl_cost_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 23'); //23 Jewelry Costs
+            $data['clearity_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No clearity','dropdown_id = 24'); //24 clearity
             
 //            echo '<pre>';            print_r($data); die;
             return $data;

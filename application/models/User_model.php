@@ -15,6 +15,8 @@ class User_model extends CI_Model
             $this->db->join(USER_ROLE.' urm', 'urm.id = ua.user_role_id');
                         
             $this->db->where('ua.id!=1 and ua.id!=2'); 
+            $this->db->where('urm.id!=',1); 
+            $this->db->where('urm.id!=',9); 
             
             if($data !=''){
                         
