@@ -95,7 +95,7 @@ class Inventory_stock_check extends CI_Controller {
             $pdf->SetTextColor(32,32,32);     
             $html = '<table border="0">
                         <tr>
-                            <td><b>Report: Gemstone Stock Summary </b></td>
+                            <td><b>Report: Stock check Summary </b></td>
                             <td align="right">Printed on : '.date(SYS_DATE_FORMAT).'</td>
                         </tr>
                         <tr>
@@ -104,87 +104,45 @@ class Inventory_stock_check extends CI_Controller {
                         </tr> 
                     </table> ';
             $i=1; 
-            
-            foreach ($item_stocks_cat as $item_stocks){
-//            echo '<pre>';            print_r($item_stocks); die;
-            $html .= '<table  class="table-line" border="0">
+            $html .= '<table class="table table-line">
                         <thead>
-                            <tr class="">
-                                <th align="left" colspan="6"></th>
-                            </tr>
-                            <tr class="">
-                                <th align="left" colspan="6">'.$i.'. <u>'.$item_stocks['item_category_name'].'</u></th>
-                            </tr>
-                            <tr class="colored_bg">
-                                <th width="12%" align="center">Code</th> 
-                                <th width="15%" align="center">Desc</th> 
-                                <th width="9%" align="center">Treatment</th> 
-                                <th width="8%" align="center">color</th> 
-                                <th width="8%" align="center">shape</th> 
-                                <th width="16%" align="center" colspan="2">In Stock</th> 
-                                <th width="16%" align="center" colspan="2">On Reserved</th>  
-                                <th width="16%" align="center" colspan="2">Available</th>
-                            </tr>
-                            <tr class="colored_bg">
-                                <th width="12%" align="center"></th> 
-                                <th width="15%" align="center"></th> 
-                                <th width="9%" align="center"></th> 
-                                <th width="8%" align="center"></th> 
-                                <th width="8%" align="center"></th> 
-                                <th width="8%" align="right">Weight</th> 
-                                <th width="8%" align="center">Qty</th>   
-                                <th width="8%" align="right">Weight</th> 
-                                <th width="8%" align="center">Qty</th>   
-                                <th width="8%" align="right">Weight</th> 
-                                <th width="8%" align="center">Qty</th>    
-                            </tr>
-                        </thead>
-                        <tbody>';
-                       foreach ($item_stocks['item_list'] as $item){  
-                                            if($item['units_available']>0){
-                                            $html .= '<tr>
-                                                        <td width="12%" align="center" style="border-right: 1px solid #cdd0d4;border-left: 1px solid #cdd0d4;">'.$item['item_code'].'</td>
-                                                        <td width="15%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['item_name'].'</td>
-                                                        <td width="9%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['treatment_name'].'</td>
-                                                        <td width="8%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['color_name'].'</td>
-                                                        <td width="8%" align="center" style="border-right: 1px solid #cdd0d4;">'.$item['shape_name'].'</td>
-                                                        <td width="8%" align="right" style="border-right: 1px solid #cdd0d4;" >'.$item['units_available'].' '.$item['uom_name'].'</td>
-                                                        <td width="8%" align="center" style="border-right: 1px solid #cdd0d4;">'.(($item['uom_id_2']!=0)?$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
-                                                        <td width="8%" align="right">'.$item['units_on_reserve'].' '.$item['uom_name'].'</td>
-                                                        <td width="8%" align="center" style="border-right: 1px solid #cdd0d4;">'.(($item['uom_id_2']!=0)?$item['units_on_reserve_2'].' '.$item['uom_name_2']:'').'</td>
-                                                        <td width="8%" align="right">'.($item['units_available']-$item['units_on_reserve']).' '.$item['uom_name'].'</td>
-                                                        <td width="8%" align="center" style="border-right: 1px solid #cdd0d4;">'.($item['units_available_2']-$item['units_on_reserve_2']).' '.$item['uom_name_2'].'</td>
-
-                                                    </tr>';
-                                            }
-                                        }      
-            $html .= '</tbody> 
-                    </table> 
-                ';               
-                $i++;
-            } 
+                        <tr class="colored_bg">
+                            <th width="15%" align="center">Category</th> 
+                            <th width="12%" align="center">Code</th> 
+                            <th width="38%" align="center">Desc</th> 
+                            <th width="15%" align="center">Location</th> 
+                            <th width="20%" align="center">In Stock</th> 
+                        </tr>
+                        </thead><tbody>';
+            foreach ($item_stocks_cat['item_list'] as $item_stock){
+                // echo '<pre>';            print_r($item_stock); die;
+                $html .= '<tr>
+                                <td width="15%" align="center">'.$item_stock['item_category_name'].'</td>
+                                <td width="12%" align="center">'.$item_stock['item_code'].'</td>
+                                <td width="38%" align="center">'.$item_stock['item_name'].'</td>
+                                <td width="15%" align="center">'.$item_stock['location_name'].'</td>
+                                <td width="20%" align="center">'.$item_stock['units_available'].' '.$item_stock['uom_name'].(($item_stock['units_available_2']>0)?$item_stock['units_available_2'].' '.$item_stock['uom_name_2']:'').'</td>
+                        </tr>';
+                
+            }
             
             
-            $html .= '
-                    <style>
-                    .colored_bg{
-                        background-color:#E0E0E0;
-                    }
-                    .table-line th, .table-line td {
-                        padding-bottom: 2px;
-                        border-bottom: 1px solid #ddd;
-                        text-align:center; 
-                    }
-                    .text-right,.table-line.text-right{
-                        text-align:right;
-                    }
-                    .table-line tr{
-                        line-height: 20px;
-                    }
-                    .table-line td{ 
-                        font-size: 6px;;
-                    }
-                    </style>';
+            $html .= '</tbody></table>
+                        <style>
+                        .colored_bg{
+                            background-color:#E0E0E0;
+                        }
+                        .table-line th, .table-line td {
+                            padding-bottom: 2px;
+                            border-bottom: 1px solid #ddd; 
+                        }
+                        .text-right,.table-line.text-right{
+                            text-align:right;
+                        }
+                        .table-line tr{
+                            line-height: 20px;
+                        }
+                        </style>';
             $pdf->writeHTMLCell(190,'',10,'',$html);
             
             $pdf->SetFont('times', '', 12.5, '', false);
@@ -194,7 +152,7 @@ class Inventory_stock_check extends CI_Controller {
 //            $js = 'print(true);';
             // set javascript
 //            $pdf->IncludeJS($js);
-            $pdf->Output('Purchase_Summary.pdf', 'I');
+            $pdf->Output('Stock_check_'.date('Ymd').'.pdf', 'I');
         }
         
         public function  load_data(){
