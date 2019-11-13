@@ -120,7 +120,7 @@ class Inventory_stock_check extends CI_Controller {
                 if($item_stock['units_available']>0){
                 // echo '<pre>';            print_r($item_stock); die;
                     $html .= '<tr>
-                                    <td width="15%" align="center">'.$j.'</td>
+                                    <td width="4%" align="center">'.$j.'</td>
                                     <td width="15%" align="center">'.$item_stock['item_category_name'].'</td>
                                     <td width="12%" align="center">'.$item_stock['item_code'].'</td>
                                     <td width="38%" align="center">'.$item_stock['item_name'].'</td>
