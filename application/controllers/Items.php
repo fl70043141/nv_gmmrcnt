@@ -811,7 +811,7 @@ class Items extends CI_Controller {
             $data['heater_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 21'); //21 Heater
             $data['misc_cost_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 22'); //22 Misc Costs
             $data['jwl_cost_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','','dropdown_id = 23'); //23 Jewelry Costs
-            $data['clearity_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No clearity','dropdown_id = 24'); //24 clearity
+            $data['clearity_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No clarity','dropdown_id = 24'); //24 clearity
             
 //            echo '<pre>';            print_r($data); die;
             return $data;

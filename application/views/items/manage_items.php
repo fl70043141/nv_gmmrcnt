@@ -317,7 +317,7 @@ endswitch;
                                                 </div>
 
                                                 <div  <?php echo $show_gem;?> class="form-group gem_field">
-                                                    <label class="col-md-3 control-label">Clearity<span style="color: red"></span></label>
+                                                    <label class="col-md-3 control-label">Clarity<span style="color: red"></span></label>
                                                     <div class="col-md-9">
                                                        	 <?php  echo form_dropdown('clearity',$clearity_list,set_value('clearity',$result['clearity']),' class="form-control select2" data-live-search="true" id="clearity" '.$o_dis.'');?>
 														<?php echo form_error('clearity');?>&nbsp;
