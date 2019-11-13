@@ -107,23 +107,27 @@ class Inventory_stock_check extends CI_Controller {
             $html .= '<table class="table table-line">
                         <thead>
                         <tr class="colored_bg">
+                            <th width="4%" align="center">#</th> 
                             <th width="15%" align="center">Category</th> 
                             <th width="12%" align="center">Code</th> 
-                            <th width="38%" align="center">Desc</th> 
+                            <th width="34%" align="center">Desc</th> 
                             <th width="15%" align="center">Location</th> 
                             <th width="20%" align="center">In Stock</th> 
                         </tr>
                         </thead><tbody>';
+                        $j=1;
             foreach ($item_stocks_cat['item_list'] as $item_stock){
                 if($item_stock['units_available']>0){
                 // echo '<pre>';            print_r($item_stock); die;
                     $html .= '<tr>
+                                    <td width="15%" align="center">'.$j.'</td>
                                     <td width="15%" align="center">'.$item_stock['item_category_name'].'</td>
                                     <td width="12%" align="center">'.$item_stock['item_code'].'</td>
                                     <td width="38%" align="center">'.$item_stock['item_name'].'</td>
                                     <td width="15%" align="center">'.$item_stock['location_name'].'</td>
                                     <td width="20%" align="center">'.$item_stock['units_available'].' '.$item_stock['uom_name'].(($item_stock['units_available_2']>0)?$item_stock['units_available_2'].' '.$item_stock['uom_name_2']:'').'</td>
                             </tr>';
+                        $j++;
                 }
                 
             }
