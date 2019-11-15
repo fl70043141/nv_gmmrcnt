@@ -663,6 +663,11 @@ class Purchasing_gemstones extends CI_Controller {
             $barcodeobj = new TCPDFBarcode($item_info['item_code'], 'C128');
             $img =  $barcodeobj->getBarcodePngData(1.5,20); 
             $base64 = 'data:image/png;base64,' . base64_encode($img);  
+            
+            $imageContent = file_get_contents($base64);
+            $path = tempnam(sys_get_temp_dir(), 'prefix');
+
+            file_put_contents ($path, $imageContent);
                 
             $dimension = $item_info['length'].'x'.$item_info['width'].'x'.$item_info['height'].' mm';
             $purch_price = (!empty($item_standard_price_info))?$item_standard_price_info[0]:0;
@@ -696,7 +701,7 @@ class Purchasing_gemstones extends CI_Controller {
                             <td align="right" colspan="1"> '.$item_info['item_code'].'</td>
                         </tr>
                         <tr>
-                            <td  colspan="2"><img style="width:100px;" src="'.$base64.'"></td>
+                            <td  colspan="2"><img style="width:100px;" src="'.$path.'"></td>
                         </tr>
                     </table>
             ';
