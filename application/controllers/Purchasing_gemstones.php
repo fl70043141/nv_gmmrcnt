@@ -660,7 +660,7 @@ class Purchasing_gemstones extends CI_Controller {
             // echo '<pre>' ; print_r($item_info);die; 
             // Barcode
             require_once dirname(__FILE__) . '/../libraries/tcpdf/tcpdf_barcodes_1d.php';
-            $barcodeobj = new TCPDFBarcode('1234', 'C128');
+            $barcodeobj = new TCPDFBarcode($item_info['item_code'], 'C128');
             $img =  $barcodeobj->getBarcodePngData(1.5,20); 
             $base64 = 'data:image/png;base64,' . base64_encode($img);  
                 
