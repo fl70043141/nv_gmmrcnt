@@ -165,7 +165,7 @@ $inv_trans = $inv_data['inv_transection'];
                         $item_info = get_single_row_helper(ITEMS, 'id='.$inv_itm['item_id']);
 //echo '<pre>';print_r($item_info);  
                          echo     '<tr>
-                                        <td width="" style="text-align: left;">'.$inv_itm['item_code'].($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'split_purch_item')?' <a class="fa fa-unlink" style="cursor:pointer;" title="Split Item"></a>':'').'</td> 
+                                        <td width="" style="text-align: left;"> '.$inv_itm['item_code'].($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'print_barcode_purchase')?' <a href="'.base_url('Purchasing_gemstones/print_barcode_purchase/'.$item_info['id']).'" class="fa fa-barcode" style="cursor:pointer;" title="Split Item"></a>':'').'</td> 
                                         <td width="" style="text-align: left;">'.$inv_itm['supplier_item_desc'].'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['treatment']>0)?get_dropdown_value($item_info['treatment']):'').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['item_type_id']==5 && $item_info['partnership']>0 && $item_info['partnership']<1)?'P - '.float2rat($item_info['partnership']):'-').'</td>   

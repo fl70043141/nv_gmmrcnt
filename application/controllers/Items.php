@@ -333,7 +333,7 @@ class Items extends CI_Controller {
             // if(!empty($def_image))
                 // fl_image_resizer($def_image[0]['name'], 1000, '',$def_image[0]['name'], BASEPATH.'.'.ITEM_IMAGES.$item_id.'/');
                         
-                        
+            $all_videos=array();
             if(!empty($res_itm_all_px)){ //images
                 foreach ($res_itm_all_px as $itm_img){
                     $all_images[]=$itm_img['name'];

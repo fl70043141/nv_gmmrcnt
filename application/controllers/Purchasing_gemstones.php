@@ -631,6 +631,83 @@ class Purchasing_gemstones extends CI_Controller {
 //            log_message('error', 'Some variable did not contain a value.');
         } 
         
+        function print_barcode_purchase($item_id,$purch_id=''){
+            $this->load->model("Items_model");
+            //load library
+            $this->load->library('Pdf');
+            $pdf = new Pdf('L', 'mm', array('32','25'), true, 'UTF-8', false);
+            
+            $pdf->setPrintHeader(false);  // remove default header 
+            $pdf->setPrintFooter(false);  // remove default footer 
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);// set default monospaced font
+            $pdf->SetMargins(10, 15, 10); // set margins
+            $pdf->SetAutoPageBreak(TRUE, 0); // set auto page breaks
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);// set image scale factor
+                    
+            // ---------------------------------------------------------
+            $pdf->SetDisplayMode('fullpage', 'SinglePage', 'UseNone');
+            $pdf->SetFont('helveticaB','',4.5);  // set font 
+            $pdf->AddPage('L',array('32','25'));
+
+            
+            $company_info = get_single_row_helper(COMPANIES,'id='.$this->session->userdata(SYSTEM_CODE)['company_id']);
+            $item_info = $this->Items_model->get_single_row($item_id);
+            $item_stock = $this->Items_model->get_item_status($item_id);
+            $item_standard_price_info = $this->Items_model->get_item_purch_prices($item_id, 'ip.item_price_type=3'); //std cost type=1
+            $item_sale__price_info = $this->Items_model->get_item_purch_prices($item_id, 'ip.item_price_type=2 AND ip.sales_type_id=15'); //sale type=2
+            $item_info = $item_info[0];
+
+            // echo '<pre>' ; print_r($item_info);die; 
+            // Barcode
+            require_once dirname(__FILE__) . '/../libraries/tcpdf/tcpdf_barcodes_1d.php';
+            $barcodeobj = new TCPDFBarcode('1234', 'C128');
+            $img =  $barcodeobj->getBarcodePngData(1.5,20); 
+            $base64 = 'data:image/png;base64,' . base64_encode($img);  
+                
+            $dimension = $item_info['length'].'x'.$item_info['width'].'x'.$item_info['height'].' mm';
+            $purch_price = (!empty($item_standard_price_info))?$item_standard_price_info[0]:0;
+            $sale_price = (!empty($item_sale__price_info))?$item_sale__price_info[0]:0;
+            $html ='
+            
+                    <table border="0">
+                        <tr>
+                            <td align="center"  colspan="2"><h3>'.$this->session->userdata(SYSTEM_CODE)['company_name'].'</h3></td>
+                        </tr>
+                        <tr>
+                            <td  colspan="2">'.$item_info['item_name'].(($item_info['color']!='')?' ('.$item_info['color'].')':'').' </td>
+                        </tr>
+                        <tr>
+                            <td  colspan="2">Dimension: '.$dimension.'</td>
+                        </tr>
+                        <tr>
+                            <td  colspan="2">Treatment: '.$item_info['treatment'].'</td>
+                        </tr>
+                        <tr>
+                            <td  colspan="2">Ref No: '.(($purch_price!=0)?$purch_price['supplier_invoice_no']:'').' </td>
+                        </tr>
+                        <tr>
+                            <td  colspan="2">Cost: PLS_GIVE_CODE</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Price: '.(($sale_price!=0)?$sale_price['symbol_left'].$sale_price['cost_amount']:'-').'</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"> '.$item_stock[0]['units_available'].$item_stock[0]['uom_name'].' '.(($item_stock[0]['units_available_2']>0)?$item_stock[0]['units_available_2'].' '.$item_stock[0]['uom_name_2']:'').'</td>
+                            <td align="right" colspan="1"> '.$item_info['item_code'].'</td>
+                        </tr>
+                        <tr>
+                            <td  colspan="2"><img style="width:100px;" src="'.$base64.'"></td>
+                        </tr>
+                    </table>
+            ';
+
+
+            
+            $pdf->writeHTMLCell(30, 22, 0.5, 0.5, $html); 
+
+            $pdf_output = $pdf->Output('barcode_purch.pdf', 'I');
+        }
+
         function supplier_invoice_print($inv_id){ 
             $inv_data = $this->get_invoice_info($inv_id);
             $inv_dets = $inv_data['invoice_dets'];
