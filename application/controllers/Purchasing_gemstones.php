@@ -671,16 +671,16 @@ class Purchasing_gemstones extends CI_Controller {
             
                     <table border="0">
                         <tr>
-                            <td align="center"  colspan="2"><h3>'.$this->session->userdata(SYSTEM_CODE)['company_name'].'</h3></td>
+                            <td align="center"  colspan="2"><h3>'.SYSTEM_NAME.'</h3></td>
                         </tr>
                         <tr>
-                            <td  colspan="2">'.$item_info['item_name'].(($item_info['color']!='')?' ('.$item_info['color'].')':'').' </td>
+                            <td  colspan="2">'.$item_info['item_name'].(($item_info['color']!='')?' ('.$item_info['color_name'].')':'').' </td>
                         </tr>
                         <tr>
                             <td  colspan="2">Dimension: '.$dimension.'</td>
                         </tr>
                         <tr>
-                            <td  colspan="2">Treatment: '.$item_info['treatment'].'</td>
+                            <td  colspan="2">Treatment: '.$item_info['treatment_name'].'</td>
                         </tr>
                         <tr>
                             <td  colspan="2">Ref No: '.(($purch_price!=0)?$purch_price['supplier_invoice_no']:'').' </td>

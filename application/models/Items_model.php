@@ -33,6 +33,11 @@ class Items_model extends CI_Model
 	
           public function get_single_row($id){
             $this->db->select('i.*');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.color)  as color_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.shape)  as shape_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.treatment)  as treatment_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.certification)  as certification_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.origin)  as origin_name');
             $this->db->select('(select id from '.ITEMS.' where id = (select min(id) from '.ITEMS.' where id > i.id)) as next_id');
             $this->db->select('(select id from '.ITEMS.' where id = (select max(id) from '.ITEMS.' where id < i.id)) as prev_id');
             $this->db->select('ic.is_gem');
