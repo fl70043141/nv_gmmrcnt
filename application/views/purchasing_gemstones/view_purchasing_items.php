@@ -177,7 +177,7 @@ $inv_trans = $inv_data['inv_transection'];
                                         <td width="" style="text-align: left;">'. (($item_info['certification']>0)?get_dropdown_value($item_info['certification']):'-').'</td>   
                                         <td width="">'.$inv_itm['purchasing_unit'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['secondary_unit_uom_id']>0)?' | '.$inv_itm['secondary_unit'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
                                         <td width="" style="text-align: right;">'. number_format($inv_itm['purchasing_unit_price'],2).'</td> 
-                                        <td width="" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).' ('.$item_info['cost_code'].')</td> 
+                                        <td width="" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).(($item_info['cost_code']!='')?' ('.$item_info['cost_code'].')':"").'</td> 
                                     </tr> ';
                      }
                      echo       ' <tr><td  colspan="5"></td></tr></tbody></table>'; 
