@@ -37,7 +37,7 @@ $inv_trans = $inv_data['inv_transection'];
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], 'Customer_payments', 'add_customer_payment'))?'<a href="'.base_url('Customer_payments/add_customer_payment/'.$inv_dets['id'].'/20').'" class="btn btn-app "><i class="fa fa-money"></i>Payments</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'split_purch_item'))?'<a href="'.base_url($this->router->fetch_class().'/delete/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-trash"></i>Delete Invoice</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'supplier_invoice_print'))?'<a target="_blank" href="'.base_url($this->router->fetch_class().'/supplier_invoice_print/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-print"></i>Print Invoice</a>':''; ?>
-            <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'print_barcode_purchase'))?'<a target="_blank" href="'.base_url($this->router->fetch_class().'/print_barcode_purchase/0/'.$inv_dets['id']).'" class="btn hide btn-app "><i class="fa fa-barcode"></i>Print Barcodes</a>':''; ?>
+            <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'print_barcode_purchase'))?'<a target="_blank" href="'.base_url($this->router->fetch_class().'/print_barcode_purchase/0/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-barcode"></i>Print Barcodes</a>':''; ?>
 
         </div>
     </div>
@@ -143,14 +143,14 @@ $inv_trans = $inv_data['inv_transection'];
                          echo '<table width="100%" id="example1" class="table-line" border="0">
                                     <thead>
                                         <tr class="colored_bg" style="background-color:#E0E0E0;">
-                                             <th colspan="11">'.$inv_data['item_cats'][$inv_itms[0]['item_category']].'</th> 
+                                             <th colspan="12">'.$inv_data['item_cats'][$inv_itms[0]['item_category']].'</th> 
                                          </tr>
                                         <tr style="">
                                             <th width="" style="text-align: left;"><u><b>Item Code</b></u></th>  
                                             <th width="" style="text-align: left;"><u><b>Gemstone</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>NH/H</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>Partnership</b></u></th>  
-                                             <th hidden width="" style="text-align: left;"><u><b>Dimesnion(LxWxH)</b></u></th>  
+                                             <th width="" style="text-align: left;"><u><b>Dimesnion(LxWxH)</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>Shape</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>Color</b></u></th>  
                                              <th width="" style="text-align: left;"><u><b>Origin</b></u></th>  
@@ -164,20 +164,20 @@ $inv_trans = $inv_data['inv_transection'];
 
                      foreach ($inv_itms as $inv_itm){
                         $item_info = get_single_row_helper(ITEMS, 'id='.$inv_itm['item_id']);
-//echo '<pre>';print_r($item_info);  
+// echo '<pre>';print_r($item_info);  
                          echo     '<tr>
                                         <td width="" style="text-align: left;"> '.$inv_itm['item_code'].($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'print_barcode_purchase')?' <a target="blank" href="'.base_url('Purchasing_gemstones/print_barcode_purchase/'.$item_info['id']).'" class="fa fa-barcode" style="cursor:pointer;" title="Split Item"></a>':'').'</td> 
                                         <td width="" style="text-align: left;">'.$inv_itm['supplier_item_desc'].'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['treatment']>0)?get_dropdown_value($item_info['treatment']):'').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['item_type_id']==5 && $item_info['partnership']>0 && $item_info['partnership']<1)?'P - '.float2rat($item_info['partnership']):'-').'</td>   
-                                        <td hidden width="" style="text-align: left;">'.(($item_info['length']!='')?$item_info['length']:'-').' x '.(($item_info['width']!='')?$item_info['width']:'-').' x '.(($item_info['height']!='')?$item_info['height']:'-').' mm</td>   
+                                        <td width="" style="text-align: left;">'.(($item_info['length']!='')?$item_info['length']:'-').' x '.(($item_info['width']!='')?$item_info['width']:'-').' x '.(($item_info['height']!='')?$item_info['height']:'-').' mm</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['shape']>0)?get_dropdown_value($item_info['shape']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['color']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['origin']>0)?get_dropdown_value($item_info['origin']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['certification']>0)?get_dropdown_value($item_info['certification']):'-').'</td>   
                                         <td width="">'.$inv_itm['purchasing_unit'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['secondary_unit_uom_id']>0)?' | '.$inv_itm['secondary_unit'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
                                         <td width="" style="text-align: right;">'. number_format($inv_itm['purchasing_unit_price'],2).'</td> 
-                                        <td width="" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).'</td> 
+                                        <td width="" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).' ('.$item_info['cost_code'].')</td> 
                                     </tr> ';
                      }
                      echo       ' <tr><td  colspan="5"></td></tr></tbody></table>'; 

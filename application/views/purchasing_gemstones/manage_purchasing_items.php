@@ -166,7 +166,7 @@ endswitch;
                             <div class="">
                                 <div id='add_item_form' class="col-md-12  bg-light-blue-gradient">
                                      
-                                    <div class="row col-md-12 col-md-offset-1">
+                                    <div class="row col-md-12 ">
                                         <div id="first_col_form" class="col-md-2">
                                             <div class="form-group pad1">
                                                 <label for="item_category_id">Description</label>
@@ -179,12 +179,6 @@ endswitch;
                                                 <?php echo form_dropdown('shape',$shape_list,set_value('shape'),' class="form-control add_item_inpt select2 " style="width:100%;" data-live-search="true" id="shape"');?>
                                             </div>
                                         </div>
-                                        <div  hidden id="" class="col-md-2">
-                                            <div class="form-group pad1">
-                                                <label for="item_code">Dimension(LxHxW)</label>
-                                                <?php echo form_input('dimension',set_value('dimension'),' class="form-control add_item_inpt " style="width:100%;" id="dimension" placeholder="Eg;  1.2 x 3.1 x 2.3"');?>
-                                            </div>
-                                        </div> 
                                         <div hidden id="" class="col-md-2">
                                             <div class="form-group pad1">
                                                 <label for="item_code">Item Code</label>
@@ -204,6 +198,13 @@ endswitch;
                                                 <?php echo form_dropdown('treatments',$treatments_list,set_value('treatments'),' class="form-control add_item_inpt  " style="width:100%;" data-live-search="true" id="treatments"');?>
                                             </div>
                                         </div>
+                                        
+                                        <div id="first_col_form" class="col-md-2">
+                                            <div class="form-group pad1">
+                                                <label for="color">color &nbsp;&nbsp;&nbsp;<span id="color_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
+                                                <?php echo form_dropdown('color',$color_list,set_value('color'),' class="form-control add_item_inpt  select2" style="width:100%;" data-live-search="true" id="color"');?>
+                                            </div>
+                                        </div>
                                         <div id="uom_div">
                                             
                                         </div>
@@ -215,19 +216,19 @@ endswitch;
                                         </div>
                                     </div>
                                     
-                                    <div class="row col-md-12  col-md-offset-1"> 
-                                        <div class="col-md-2">
+                                    <div class="row col-md-12 "> 
+                                        <div id="" class="col-md-2">
                                             <div class="form-group pad1">
-                                                <label for="partnership_value">Partnership <input type="checkbox" name="is_partnership" id="is_partnership" value="1" ></label>
-                                                <input type="text" name="partnership_value" class="form-control add_item_inpt" value="1" id="partnership_value" placeholder="Enter Partnership Ratio">
+                                                <label for="item_code">Dimension(LxHxW)</label>
+                                                <?php echo form_input('dimension',set_value('dimension'),' class="form-control add_item_inpt " style="width:100%;" id="dimension" placeholder="Eg;  1.2 x 3.1 x 2.3"');?>
                                             </div>
-                                        </div>
-                                        <div id="first_col_form" class="col-md-2">
+                                        </div> 
+                                        <div id="" class="col-md-2">
                                             <div class="form-group pad1">
-                                                <label for="color">color &nbsp;&nbsp;&nbsp;<span id="color_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
-                                                <?php echo form_dropdown('color',$color_list,set_value('color'),' class="form-control add_item_inpt  select2" style="width:100%;" data-live-search="true" id="color"');?>
+                                                <label for="item_cost_code">Cost code</label>
+                                                <?php echo form_input('item_cost_code',set_value('item_cost_code'),' class="form-control add_item_inpt " style="width:100%;" id="item_cost_code" placeholder="Enter item cost xode"');?>
                                             </div>
-                                        </div>
+                                        </div> 
                                         <div id="first_col_form" class="col-md-2">
                                             <div class="form-group pad1">
                                                 <label for="origin">Origin &nbsp;&nbsp;&nbsp;<span id="origin_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
@@ -238,6 +239,12 @@ endswitch;
                                             <div class="form-group pad1">
                                                 <label for="certification">Cert. &nbsp;&nbsp;&nbsp;<span id="cert_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
                                                 <?php echo form_dropdown('certification',$certification_list,set_value('certification'),' class="form-control add_item_inpt select2 " style="width:100%;" data-live-search="true" id="certification"');?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group pad1">
+                                                <label for="partnership_value">Partnership <input type="checkbox" name="is_partnership" id="is_partnership" value="1" ></label>
+                                                <input type="text" name="partnership_value" class="form-control add_item_inpt" value="1" id="partnership_value" placeholder="Enter Partnership Ratio">
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -318,7 +325,7 @@ endswitch;
                                                <th hidden width="7%"  style="text-align: left;">Code</th> 
                                                <th width="6%" style="text-align: center;">N/H</th> 
                                                <th width="9%" style="text-align: center;">Partnership</th> 
-<!--                                               <th width="9%" style="text-align: center;">Dimension(mm)</th> -->
+                                               <th width="9%" style="text-align: center;">Dimension(mm)</th>
                                                <th width="7%" style="text-align: center;">Shape</th> 
                                                <th width="8%" style="text-align: center;">Color</th> 
                                                <th width="10%" style="text-align: center;">Cert</th> 
@@ -488,7 +495,7 @@ $(document).ready(function(){
                                                         '<td><input hidden name="inv_items['+rowCount+'][item_desc]" value="'+res2.item_name+'"><input hidden name="inv_items['+rowCount+'][cat_id]" value="'+res2.id+'">'+res2.item_name+'</td>'+
                                                         '<td hidden><input hidden name="inv_items['+rowCount+'][item_code]" class="item_code_row" value="'+$('#item_code').val()+'">'+$('#item_code').val()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_treatments]" value="'+$('#treatments').val()+'">'+$("#treatments option:selected" ).text()+'</td>'+
-                                                        '<td hidden align="center"><input hidden name="inv_items['+rowCount+'][dimension]" value="'+$('#dimension').val()+'">'+$("#dimension").val()+'</td>'+
+                                                        '<td align="center"><input hidden name="inv_items['+rowCount+'][dimension]" value="'+$('#dimension').val()+'">'+$("#dimension").val()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][partnership_ratio]" value="'+$('#partnership_value').val()+'"><input hidden name="inv_items['+rowCount+'][is_partnership]" value="'+(($("#is_partnership").prop('checked'))?1:0)+'">'+(($("#is_partnership").prop('checked') && $("#partnership_value").val()!='1')?'P-'+$("#partnership_value").val():'-')+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][shape]" value="'+$('#shape').val()+'">'+$("#shape option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][color]" value="'+$('#color').val()+'">'+$("#color option:selected" ).text()+'</td>'+
@@ -501,7 +508,7 @@ $(document).ready(function(){
                                     row_str = row_str + ' | ' + $('#item_quantity_2').val()+' '+res2.unit_abbreviation_2;
                                 }                                                                                                                                                                                                                                                                        
                                 row_str = row_str + '</td> <td align="right"><input hidden name="inv_items['+rowCount+'][item_unit_cost]" value="'+unit_cost_val+'">'+parseFloat(unit_cost_val).toFixed(2)+'</td>'+ 
-                                                        '<td align="right"><input class="item_tots" hidden name="inv_items['+rowCount+'][item_total]" value="'+item_total+'">'+item_total.toFixed(2)+'</td>'+
+                                                        '<td align="right"><input class="item_tots" hidden name="inv_items['+rowCount+'][item_total]" value="'+item_total+'"><input class="item_tots"  hidden name="inv_items['+rowCount+'][item_cost_code]" value="'+$('#item_cost_code').val()+'">'+item_total.toFixed(2)+'<br>('+$('#item_cost_code').val()+')</td>'+
                                                         '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
                                                     '</tr>';
                                 var newRow = $(row_str);

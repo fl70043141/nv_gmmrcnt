@@ -125,7 +125,7 @@ class Purchasing_gemstones extends CI_Controller {
             
             $cur_det = $this->Purchasing_items_model->get_currency_for_code($this->input->post('currency_code'));
             
-//                    echo '<pre>';            print_r($this->input->post()); die; 
+                //    echo '<pre>';            print_r($this->input->post()); die; 
             if(!empty($item)){ 
                     
                     $item_id = get_autoincrement_no(ITEMS); 
@@ -168,6 +168,7 @@ class Purchasing_gemstones extends CI_Controller {
                                                     'treatment' => $item['item_treatments'],
                                                     'shape' => $item['shape'],
                                                     'origin' => $item['origin'],
+                                                    'cost_code' => $item['item_cost_code'],
                                                     'length' => (isset($dim) && is_array($dim) && count($dim)==3)?$dim[0]:'', 
                                                     'width' => (isset($dim) && is_array($dim) && count($dim)==3)?$dim[1]:'', 
                                                     'height' => (isset($dim) &&  is_array($dim) && count($dim)==3)?$dim[2]:'', 

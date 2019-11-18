@@ -46,7 +46,7 @@ function barcode_print_items($item_id, $purchase_id=''){
                 $img =  $barcodeobj->getBarcodePngData(1.5,20); 
                 $base64 = 'data:image/png;base64,' . base64_encode($img);  
                     
-                $dimension = $item_info['length'].'x'.$item_info['width'].'x'.$item_info['height'].' mm';
+                $dimension = $item_info['length'].' x '.$item_info['width'].' x '.$item_info['height'].' mm';
                 $purch_price = (!empty($item_standard_price_info))?$item_standard_price_info[0]:0;
                 $sale_price = (!empty($item_sale__price_info))?$item_sale__price_info[0]:0;
                 $html ='
@@ -68,7 +68,7 @@ function barcode_print_items($item_id, $purchase_id=''){
                                 <td  colspan="2">Ref No: '.(($purch_price!=0)?$purch_price['supplier_invoice_no']:'').' </td>
                             </tr>
                             <tr>
-                                <td  colspan="2">Cost: PLS_GIVE_CODE</td>
+                                <td  colspan="2">'.$item_info['cost_code'].'</td>
                             </tr>
                             <tr>
                                 <td colspan="2">Price: '.(($sale_price!=0)?$sale_price['symbol_left'].$sale_price['cost_amount']:'-').'</td>
