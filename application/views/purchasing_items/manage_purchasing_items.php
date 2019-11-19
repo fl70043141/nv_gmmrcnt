@@ -460,7 +460,7 @@ $(document).ready(function(){
 
                                 var row_str = '<tr style="padding:10px" id="tr_'+rowCount+'">'+ 
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][cat_id]" value="'+res2.id+'">'+res2.category_name+'</td>'+
-                                                        '<td align="center"><input hidden name="inv_items['+rowCount+'][item_code]" value="'+$('#item_code').val()+'">'+$('#item_code').val()+'</td>'+
+                                                        '<td align="center"><input hidden name="inv_items['+rowCount+'][item_code]" class="item_code_row" value="'+$('#item_code').val()+'">'+$('#item_code').val()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_desc]" value="'+res2.item_name+'">'+res2.item_name+'</td>'+
                                                         '<td><input hidden name="inv_items['+rowCount+'][description]" value="'+$('#description').val()+'">'+$('#description').val()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_quantity]" value="'+$('#item_quantity').val()+'"><input hidden name="inv_items['+rowCount+'][item_quantity_2]" value="'+(($('#item_quantity_2').val()==null)?0:$('#item_quantity_2').val())+'">'+
