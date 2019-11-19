@@ -226,7 +226,7 @@ endswitch;
                                         <div id="" class="col-md-2">
                                             <div class="form-group pad1">
                                                 <label for="item_cost_code">Cost code</label>
-                                                <?php echo form_input('item_cost_code',set_value('item_cost_code'),' class="form-control add_item_inpt " style="width:100%;" id="item_cost_code" placeholder="Enter item cost xode"');?>
+                                                <?php echo form_input('item_cost_code',set_value('item_cost_code'),' class="form-control add_item_inpt " style="width:100%;" id="item_cost_code" placeholder="Enter item cost code"');?>
                                             </div>
                                         </div> 
                                         <div id="first_col_form" class="col-md-2">

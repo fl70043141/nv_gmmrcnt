@@ -406,7 +406,7 @@ $(document).ready(function(){
          $.ajax({
 			url: "<?php echo site_url('Purchasing_items/fl_ajax');?>",
 			type: 'post',
-			data : {function_name:'get_single_category', item_category_id:$('#item_category_id').val()},
+			data : {function_name:'get_single_category', item_category_id:$('#item_category_id').val(), item_code:$('#item_code').val()},
 			success: function(result){
                                 var res2 = JSON.parse(result);
 //                                $("#search_result_1").html(result);
@@ -427,6 +427,37 @@ $(document).ready(function(){
                                 var item_total = qtyXprice;
                                 
                                 
+                                if($('#item_code').val()==''){
+                                   fl_alert('info','Please enter item code!');
+                                   return false;
+                               }else{
+                                   if(res2.item_code != null){
+                                       fl_alert('warning','Item code already exist in Database! Please Try with another code.');
+                                       return false;
+                                   }
+                                   var duplicate_code=0;
+                                   $('.item_code_row').each(function(){
+                                       if($('#item_code').val() == this.value){
+                                           duplicate_code = 1;
+                                           fl_alert('warning','You are duplicated the Item Code.');
+                                           return false
+                                       }
+                                   });
+                                   if(duplicate_code==1){
+                                       return false;
+                                   }
+                               }
+                                if(item_total<=0){
+                                    fl_alert('info','Item Weight or cost not valid! Please Recheck before add.');
+                                    return false;
+                                }
+                                
+
+
+
+
+
+
                                 var row_str = '<tr style="padding:10px" id="tr_'+rowCount+'">'+ 
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][cat_id]" value="'+res2.id+'">'+res2.category_name+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_code]" value="'+$('#item_code').val()+'">'+$('#item_code').val()+'</td>'+

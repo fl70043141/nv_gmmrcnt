@@ -799,7 +799,8 @@ class Purchasing_items extends CI_Controller {
         function get_single_category(){
             $inputs = $this->input ->post();
 //            echo '<pre>';            print_r($inputs); die;
-            $data = $this->Purchasing_items_model->get_single_category($inputs['item_category_id']); 
+            $item_code = ((isset($inputs['item_code']))?$inputs['item_code']:'');
+            $data = $this->Purchasing_items_model->get_single_category($inputs['item_category_id'],'',$item_code); 
             echo json_encode($data);
         }
 }
