@@ -165,12 +165,16 @@ $inv_trans = $inv_data['inv_transection'];
                      foreach ($inv_itms as $inv_itm){
                         $item_info = get_single_row_helper(ITEMS, 'id='.$inv_itm['item_id']);
 // echo '<pre>';print_r($item_info);  
+                        
+                        $dimension = (($item_info['length']>0)?$item_info['length'].' x ':'').(($item_info['width']>0)?$item_info['width'].' x ':'').(($item_info['length']>0)?$item_info['height']:'');
+                        $dimension = ($dimension!="")?$dimension.' mm '.$item_info['size']:$item_info['size'];
+
                          echo     '<tr>
                                         <td width="" style="text-align: left;"> '.$inv_itm['item_code'].($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'print_barcode_purchase')?' <a target="blank" href="'.base_url('Purchasing_gemstones/print_barcode_purchase/'.$item_info['id']).'" class="fa fa-barcode" style="cursor:pointer;" title="Split Item"></a>':'').'</td> 
                                         <td width="" style="text-align: left;">'.$inv_itm['supplier_item_desc'].'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['treatment']>0)?get_dropdown_value($item_info['treatment']):'').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['item_type_id']==5 && $item_info['partnership']>0 && $item_info['partnership']<1)?'P - '.float2rat($item_info['partnership']):'-').'</td>   
-                                        <td width="" style="text-align: left;">'.(($item_info['length']!='')?$item_info['length']:'-').' x '.(($item_info['width']!='')?$item_info['width']:'-').' x '.(($item_info['height']!='')?$item_info['height']:'-').' mm</td>   
+                                        <td width="" style="text-align: left;">'.(($dimension!='')?$dimension:'--').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['shape']>0)?get_dropdown_value($item_info['shape']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['color']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['origin']>0)?get_dropdown_value($item_info['origin']):'-').'</td>   

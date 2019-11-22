@@ -25,7 +25,7 @@ class Upload_csv extends CI_Controller {
                                         
 	  
         function validate(){
- //           echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
+        //    echo 'INITIAL SETUPS FOR CSV UPLOAD<br> 01. REQUIRED TO SET SUPPLIER ID <br>02. REQUIRED TO SET LOCATION ID';die;
             $this->load->model('Items_model');
             $this->load->model('Purchasing_items_model');
             $file = $_FILES["file"]["tmp_name"];
@@ -74,13 +74,13 @@ class Upload_csv extends CI_Controller {
                                         ); 
                     
                         $insert_stat = $this->Items_CSV_model->add_db_purch_invoice($sdata);
-//                    $insert_stat = true;
+                //    $insert_stat = true;
                      $i=0;
         //            if(true){
                     if($insert_stat){ 
                         $total=0;
                         foreach($purch_inv_desc as $itm) {
-//                            echo '<pre>';                            print_r($itm); die;
+                        //    echo '<pre>';                            print_r($itm); die;
                                     $item_code = $itm[0];
                                     $item_desc = $itm[1];
                                     $cat_id = $itm[2];
@@ -88,10 +88,10 @@ class Upload_csv extends CI_Controller {
                                     $purch_price = $itm[4];
                                     $supplier_id= $itm[5];
                                     $qty= $itm[6];
-                                    $uom_id= 3;
+                                    $uom_id= 1;
 //                                    $uom_id= $itm[7];
                                     $qty_2= $itm[8];
-                                    $uom_id_2= 7;
+                                    $uom_id_2= 2;
 //                                    $uom_id_2= $itm[9];
                                     $sales_excluded= $itm[11];
                                     $purchase_exclude= $itm[12];
@@ -114,6 +114,11 @@ class Upload_csv extends CI_Controller {
                                     //jewelry Charges
                                     $crft_charge = $itm[23];
                                     $stine_charge = $itm[24];
+                                    
+                                    //DIMENSION-25 & GRADE_26
+                                    $dimension = $itm[25]; //assign ti size instead LWH
+                                    $grade = $itm[26];
+                                    
                                     
                                     $item_id = get_autoincrement_no(ITEMS); 
         //                            $item_code = gen_id(ITEMCODE_PREFIX, ITEMS, 'id',4);
@@ -182,6 +187,8 @@ class Upload_csv extends CI_Controller {
                                     if($treatment!='' && isset($treatment)){$data['item']['treatment'] = $treatment;}
                                     if($shape!='' && isset($shape)){$data['item']['shape'] = $shape;}
                                     if($origin!='' && isset($origin)){$data['item']['origin'] = $origin;}
+                                    if($dimension!='' && isset($dimension)){$data['item']['size'] = $dimension;}
+                                    if($grade!='' && isset($grade)){$data['item']['clearity'] = $grade;}
 
                                     
                                         $supplier_inv_desc_id = get_autoincrement_no(SUPPLIER_INVOICE_DESC);

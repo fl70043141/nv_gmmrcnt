@@ -46,7 +46,9 @@ function barcode_print_items($item_id, $purchase_id=''){
                 $img =  $barcodeobj->getBarcodePngData(1.5,20); 
                 $base64 = 'data:image/png;base64,' . base64_encode($img);  
                     
-                $dimension = $item_info['length'].' x '.$item_info['width'].' x '.$item_info['height'].' mm';
+                $dimension = (($item_info['length']>0)?$item_info['length'].' x ':'').(($item_info['width']>0)?$item_info['width'].' x ':'').(($item_info['length']>0)?$item_info['height']:'');
+                $dimension = ($dimension!="")?$dimension.' mm '.$item_info['size']:$item_info['size'];
+
                 $purch_price = (!empty($item_standard_price_info))?$item_standard_price_info[0]:0;
                 $sale_price = (!empty($item_sale__price_info))?$item_sale__price_info[0]:0;
                 $html ='
@@ -59,7 +61,7 @@ function barcode_print_items($item_id, $purchase_id=''){
                                 <td  colspan="2">'.$item_info['item_name'].(($item_info['color']!='')?' ('.$item_info['color_name'].')':'').' </td>
                             </tr>
                             <tr>
-                                <td  colspan="2">Dimension: '.$dimension.'</td>
+                                <td  colspan="2">Size: '.(($dimension!="")?$dimension:'--').'</td>
                             </tr>
                             <tr>
                                 <td  colspan="2">Treatment: '.$item_info['treatment_name'].'</td>

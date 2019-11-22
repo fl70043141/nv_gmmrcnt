@@ -115,7 +115,7 @@ class DropDownList extends CI_Controller {
                     $new_data = $this->Dropdown_model->get_single_row($add_stat[1]);
                     add_system_log(DROPDOWN_LIST, $this->router->fetch_class(), __FUNCTION__, '', $new_data);
                     $this->session->set_flashdata('warn',RECORD_ADD);
-                    redirect(base_url($this->router->fetch_class())); 
+                    redirect(base_url($this->router->fetch_class().'/add')); 
                 }else{
                     $this->session->set_flashdata('warn',ERROR);
                     redirect(base_url($this->router->fetch_class()));

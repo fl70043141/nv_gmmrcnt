@@ -156,8 +156,11 @@ endswitch;
           </div> 
     </section> 
   
-
-
+  <script>
+       $(function() {
+        $("input:text:visible:first").focus();
+        });
+  </script>
 
 
  
