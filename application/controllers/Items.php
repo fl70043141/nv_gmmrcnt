@@ -391,6 +391,8 @@ class Items extends CI_Controller {
                             'treatment' => $inputs['treatment'],
                             'shape' => $inputs['shape'],
                             'clearity' => $inputs['clearity'],
+                            'cost_code' => $inputs['cost_code'],
+                            'size' => $inputs['size'],
                             'item_type_id' => $inputs['item_type_id'],
                             'partnership' => ($inputs['item_type_id']==5 && $inputs['partnership']<1 && $inputs['partnership']>0)?$inputs['partnership']:1,
                             'description' => $inputs['description'],

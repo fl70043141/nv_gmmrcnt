@@ -7,6 +7,8 @@
                         'treatment'=>"",
                         'color'=>"",
                         'clearity'=>"",
+                        'size'=>"",
+                        'cost_code'=>"",
                         'certification'=>"",
                         'certification_no'=>"",
                         'length'=>0,
@@ -354,7 +356,21 @@ endswitch;
                                                         &nbsp;
                                                     </div>
                                                 </div>
-
+                                            
+                                            <div <?php echo $show_gem;?>  class="form-group gem_field">
+                                                <label class="col-md-3 control-label">Size<span style="color: red"></span></label>
+                                                <div class="col-md-9">
+                                                    <?php echo form_input('size', set_value('size', $result['size']), 'id="size" class="form-control" style=" text-transform:capitalize;"  placeholder="Enter Size or measurement info"'.$dis.' '.$o_dis.' '); ?>
+                                                    <?php echo form_error('size');?>&nbsp;
+                                                </div>
+                                            </div>
+                                            <div <?php echo $show_gem;?>  class="form-group gem_field">
+                                                <label class="col-md-3 control-label">Cost code<span style="color: red"></span></label>
+                                                <div class="col-md-9">
+                                                    <?php echo form_input('cost_code', set_value('cost_code', $result['cost_code']), 'id="cost_code" class="form-control" style=" text-transform:capitalize;"  placeholder="Enter custom cost code"'.$dis.' '.$o_dis.' '); ?>
+                                                    <?php echo form_error('cost_code');?>&nbsp;
+                                                </div>
+                                            </div>
                                             <div <?php echo $show_gem;?> class="form-group gem_field">
                                                 <label class="col-md-3 control-label">Certification<span style="color: red"></span></label>
                                                 <div class="col-md-9">
