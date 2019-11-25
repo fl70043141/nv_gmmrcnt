@@ -214,6 +214,18 @@ class Purchasing_gemstones extends CI_Controller {
                                                     'currency_value' =>$cur_det['value'], 
                                                     'status' =>1,
                                                     );
+
+                    if(isset($item['selling_price'])){
+                        $data['sale_price'] = array(
+                                                        'item_id' => $item_id,
+                                                        'item_price_type' => 2, //2 Sale
+                                                        'price_amount' =>$item['selling_price'],
+                                                        'currency_code' =>$cur_det['code'],
+                                                        'currency_value' =>$cur_det['value'], 
+                                                        'sales_type_id' =>15, 
+                                                        'status' =>1,
+                                                        );
+                    }
                     
 //                echo '<pre>';                                                    print_r($data); die;
                     $ins_res = $this->Purchasing_items_model->add_new_invoice_item($data);
@@ -223,7 +235,7 @@ class Purchasing_gemstones extends CI_Controller {
         }
 	function create(){   
             $inputs = $this->input->post();
-//                echo '<pre>';                                                    print_r($inputs); die;
+            //    echo '<pre>';                                                    print_r($inputs); die;
             $invoice_id = get_autoincrement_no(SUPPLIER_INVOICE);
             $invoice_no = gen_id(SUP_INVOICE_NO_PREFIX, SUPPLIER_INVOICE, 'id');
             

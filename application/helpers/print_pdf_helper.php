@@ -42,8 +42,8 @@ function barcode_print_items($item_id, $purchase_id=''){
                 $item_info = $item_info[0];
 
                 // echo '<pre>' ; print_r($item_info);die; 
-                $barcodeobj = new TCPDFBarcode($item_info['item_code'], 'C128');
-                $img =  $barcodeobj->getBarcodePngData(1.5,20); 
+                $barcodeobj = new TCPDFBarcode($item_info['item_code'], 'C39');
+                $img =  $barcodeobj->getBarcodePngData(1.5,35, array(25,25,25)); 
                 $base64 = 'data:image/png;base64,' . base64_encode($img);  
                     
                 $dimension = (($item_info['length']>0)?$item_info['length'].' x ':'').(($item_info['width']>0)?$item_info['width'].' x ':'').(($item_info['length']>0)?$item_info['height']:'');
@@ -73,7 +73,7 @@ function barcode_print_items($item_id, $purchase_id=''){
                                 <td  colspan="2">'.$item_info['cost_code'].'</td>
                             </tr>
                             <tr>
-                                <td colspan="2">Price: '.(($sale_price!=0)?$sale_price['symbol_left'].$sale_price['cost_amount']:'-').'</td>
+                                <td colspan="2">Price: '.(($sale_price!=0)?$sale_price['symbol_left'].number_format($sale_price['cost_amount'],2):'-').'</td>
                             </tr>
                             <tr>
                                 <td colspan="1"> '.$item_stock[0]['units_available'].$item_stock[0]['uom_name'].' '.(($item_stock[0]['units_available_2']>0)?$item_stock[0]['units_available_2'].' '.$item_stock[0]['uom_name_2']:'').'</td>

@@ -229,6 +229,12 @@ endswitch;
                                                 <?php echo form_input('item_cost_code',set_value('item_cost_code'),' class="form-control add_item_inpt " style="width:100%;" id="item_cost_code" placeholder="Enter item cost code"');?>
                                             </div>
                                         </div> 
+                                        <div id="" class="col-md-2">
+                                            <div class="form-group pad1">
+                                                <label for="selling_price">Selling price/<span id="prce_unit_name_sale"></span> <input type="checkbox" name="is_price_per_unit_sale" id="is_price_per_unit_sale" value="1" ></label>
+                                                <?php echo form_input('selling_price',set_value('selling_price'),' class="form-control add_item_inpt " style="width:100%;" id="selling_price" placeholder="Enter item selling price"');?>
+                                            </div>
+                                        </div> 
                                         <div id="first_col_form" class="col-md-2">
                                             <div class="form-group pad1">
                                                 <label for="origin">Origin &nbsp;&nbsp;&nbsp;<span id="origin_add_new" style="font-size: 18px;"class="fa fa-plus-circle add_new_btn"></span></label>
@@ -330,6 +336,7 @@ endswitch;
                                                <th width="8%" style="text-align: center;">Color</th> 
                                                <th width="10%" style="text-align: center;">Cert</th> 
                                                <th width="8%" style="text-align: center;">Origin</th> 
+                                               <th width="8%" style="text-align: center;">Selling Prc/unit</th> 
                                                <th width="12%" style="text-align: center;">Carat Weight</th>   
                                                <th width="8%" style="text-align: right;">Rate</th> 
                                                <th width="10%" style="text-align: right;">Total</th> 
@@ -348,7 +355,7 @@ endswitch;
                                             </tr>-->
                                             
                                             <tr>
-                                                <th colspan="9"></th>
+                                                <th colspan="11"></th>
                                                 <th  style="text-align: right;">Total</th>
                                                 <th  style="text-align: right;"><input hidden value="0" name="invoice_total" id="invoice_total"><span id="inv_total">0</span></th>
                                             </tr> 
@@ -488,7 +495,21 @@ $(document).ready(function(){
                                     fl_alert('info','Item Weight or cost not valid! Please Recheck before add.');
                                     return false;
                                 }
-                                
+                                var selling_price = parseFloat($('#selling_price').val());
+                                if($('#selling_price').val()==''){
+                                    selling_price=0;
+                                } 
+                                if(isNaN(selling_price)){
+                                    selling_price=0;
+                                    fl_alert('info','Invalid selling price')
+                                    return false;
+                                }
+
+                                unit_selling_price = selling_price
+                                if (!$('#is_price_per_unit_sale').is(":checked")){
+                                    unit_selling_price = selling_price / parseFloat($('#item_quantity').val())
+                                }
+
 //                                alert($("#is_partnership").prop('checked'))
                                 var row_str = '<tr style="pad1ding:10px" id="tr_'+rowCount+'">'+ 
                                                         '<td><span id="'+rowCount+'_row_cntr" class="row_counter_cls"></span></td>'+
@@ -501,6 +522,7 @@ $(document).ready(function(){
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][color]" value="'+$('#color').val()+'">'+$("#color option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][certification]" value="'+$('#certification').val()+'">'+$("#certification option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][origin]" value="'+$('#origin').val()+'">'+$("#origin option:selected" ).text()+'</td>'+
+                                                        '<td align="center"><input hidden name="inv_items['+rowCount+'][selling_price]" value="'+unit_selling_price+'">'+unit_selling_price.toFixed(2)+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_quantity]" value="'+$('#item_quantity').val()+'"><input hidden name="inv_items['+rowCount+'][item_quantity_2]" value="'+(($('#item_quantity_2').val()==null)?0:$('#item_quantity_2').val())+'">'+
                                                         '<input hidden name="inv_items['+rowCount+'][item_quantity_uom_id]" value="'+res2.item_uom_id+'"><input hidden name="inv_items['+rowCount+'][item_quantity_uom_id_2]" value="'+res2.item_uom_id_2+'">'+
                                                                                                                                                                                                                                                                                 $('#item_quantity').val()+' '+res2.unit_abbreviation;
@@ -508,7 +530,7 @@ $(document).ready(function(){
                                     row_str = row_str + ' | ' + $('#item_quantity_2').val()+' '+res2.unit_abbreviation_2;
                                 }                                                                                                                                                                                                                                                                        
                                 row_str = row_str + '</td> <td align="right"><input hidden name="inv_items['+rowCount+'][item_unit_cost]" value="'+unit_cost_val+'">'+parseFloat(unit_cost_val).toFixed(2)+'</td>'+ 
-                                                        '<td align="right"><input class="item_tots" hidden name="inv_items['+rowCount+'][item_total]" value="'+item_total+'"><input class="item_tots"  hidden name="inv_items['+rowCount+'][item_cost_code]" value="'+$('#item_cost_code').val()+'">'+item_total.toFixed(2)+'<br>('+$('#item_cost_code').val()+')</td>'+
+                                                        '<td align="right"><input class="item_tots" hidden name="inv_items['+rowCount+'][item_total]" value="'+item_total+'"><input  hidden name="inv_items['+rowCount+'][item_cost_code]" value="'+$('#item_cost_code').val()+'">'+item_total.toFixed(2)+'<br>'+(($('#item_cost_code').val()!="")?'('+$('#item_cost_code').val()+')':'')+'</td>'+
                                                         '<td width="5%"><button id="del_btn" type="button" class="del_btn_inv_row btn btn-danger"><i class="fa fa-trash"></i></button></td>'+
                                                     '</tr>';
                                 var newRow = $(row_str);
@@ -588,6 +610,7 @@ $(document).ready(function(){
                                 (res1.price_amount==null)? $('#item_unit_cost').val(0):$('#item_unit_cost').val(res1.price_amount);
                                 $('#unit_abbr').text(res1.unit_abbreviation);
                                 $('#prce_unit_name').text(res1.unit_abbreviation);
+                                $('#prce_unit_name_sale').text(res1.unit_abbreviation);
                                 $('#unit_abbr_2').text(res1.unit_abbreviation_2);
 //                                $('#item_discount').val(0);
                                 $('#item_quantity').val(1);

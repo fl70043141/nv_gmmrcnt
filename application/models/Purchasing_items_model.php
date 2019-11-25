@@ -178,6 +178,7 @@ class Purchasing_items_model extends CI_Model
 		$this->db->insert(ITEMS, $data['item']);   
 		$this->db->insert(ITEM_PRICES, $data['purchase_price']); 
 		$this->db->insert(ITEM_PRICES, $data['standard_price']); 
+		if(isset($data['sale_price'])) $this->db->insert(ITEM_PRICES, $data['sale_price']); 
                 
 		$status[0]=$this->db->trans_complete();
 		$status[1]=$data['item']['id']; 
