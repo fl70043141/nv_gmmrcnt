@@ -219,7 +219,7 @@ endswitch;
                                     <div class="row col-md-12 "> 
                                         <div id="" class="col-md-2">
                                             <div class="form-group pad1">
-                                                <label for="item_code">Dimension(LxHxW)</label>
+                                                <label for="item_code">Dimension(LxWxH)</label>
                                                 <?php echo form_input('dimension',set_value('dimension'),' class="form-control add_item_inpt " style="width:100%;" id="dimension" placeholder="Eg;  1.2 x 3.1 x 2.3"');?>
                                             </div>
                                         </div> 
