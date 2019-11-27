@@ -488,7 +488,7 @@ endswitch;
                                                                     <td>'.$sale_type.'</td>
                                                                     <td>'.form_dropdown('prices[sales]['.$key.'][currency_id]',$currency_list,set_value('prices["sales"]currency_id['.$key.']',(isset($sale_price_arr['currency_code'])?$sale_price_arr['currency_code']:0)),' class="form-control" data-live-search="true" id="prices["sales"]currency_id['.$key.']" '.$o_dis.''). form_hidden('prices[sales]['.$key.'][sales_type_id]',$key).' </td>
                                                                     <td>'.form_input('prices[sales]['.$key.'][amount]', set_value('prices["sales"]amount['.$key.']', number_format((isset($sale_price_arr['price_amount'])?$sale_price_arr['price_amount']:0),2,'.','')), 'id="prices["sales"]amount['.$key.']" class="form-control" placeholder="Enter Short name"'.$dis.' '.$o_dis.' ').'</td>
-                                                                    <td align="right">'.(number_format($selling_unit*$sale_price_arr['price_amount'],2)).'</td>
+                                                                    <td align="right">'.(number_format($selling_unit*((isset($sale_price_arr['price_amount'])?$sale_price_arr['price_amount']:0)),2)).'</td>
                                                                   </tr>
                                                             ';
                                                     }
