@@ -61,10 +61,10 @@ function barcode_print_items($item_id, $purchase_id=''){
                                 <td  colspan="2">'.$item_info['item_name'].(($item_info['color']!='')?' ('.$item_info['color_name'].')':'').' </td>
                             </tr>
                             <tr>
-                                <td  colspan="2">Size: '.(($dimension!="")?$dimension:'--').'</td>
+                                <td  colspan="2">'.$dimension.' '.$item_info['shape_name'].'</td>
                             </tr>
                             <tr>
-                                <td  colspan="2">Treatment: '.$item_info['treatment_name'].'</td>
+                                <td  colspan="2">'.$item_info['treatment_name'].'</td>
                             </tr>
                             <tr>
                                 <td  colspan="2">Ref No: '.(($purch_price!=0)?$purch_price['supplier_invoice_no']:'').' </td>
@@ -73,10 +73,10 @@ function barcode_print_items($item_id, $purchase_id=''){
                                 <td  colspan="2">'.$item_info['cost_code'].'</td>
                             </tr>
                             <tr>
-                                <td colspan="2">Price: '.(($sale_price!=0)?$sale_price['symbol_left'].number_format($sale_price['cost_amount'],2):'-').'</td>
+                                <td colspan="2">'.(($sale_price!=0)?$sale_price['symbol_left'].number_format($sale_price['cost_amount'],2):'-').'</td>
                             </tr>
                             <tr>
-                                <td colspan="1"> '.$item_stock[0]['units_available'].$item_stock[0]['uom_name'].' '.(($item_stock[0]['units_available_2']>0)?$item_stock[0]['units_available_2'].' '.$item_stock[0]['uom_name_2']:'').'</td>
+                                <td colspan="1">'.$item_stock[0]['units_available'].$item_stock[0]['uom_name'].' '.(($item_stock[0]['units_available_2']>0)?'| '.$item_stock[0]['units_available_2'].' '.$item_stock[0]['uom_name_2']:'').'</td>
                                 <td align="right" colspan="1"> '.$item_info['item_code'].'</td>
                             </tr>
                             <tr>
