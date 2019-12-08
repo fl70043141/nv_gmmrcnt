@@ -211,6 +211,7 @@ class Jewelry_ecatalog extends CI_Controller {
 //            echo '<pre>';            print_r($insert_arr); die;
                 $ret_res = $this->Order_ecataog_modal->insert_temp_item($insert_arr);
             }else{
+                $inputs['unit_price'] = $inputs['unit_price']/$inputs['units'];
                 $open_curr_value = json_decode($open_tmp_order['value'],true);
                 if(isset($open_curr_value[$inputs['item_id']]) && !empty($open_curr_value[$inputs['item_id']])){ //alrady item added to temp
                     $open_curr_value[$inputs['item_id']]['units'] = ($open_curr_value[$inputs['item_id']]['units']+$inputs['units']);

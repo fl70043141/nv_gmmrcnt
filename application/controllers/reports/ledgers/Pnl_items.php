@@ -136,6 +136,12 @@ class Pnl_items extends CI_Controller {
                     if($cost==0)
                         $cost = $item['purch_standard_cost'];
 
+                    if(count($item['lapidary_costs'])>0){
+                        foreach($item['lapidary_costs'] as $lapidary){
+                            $cost+=$lapidary['amount_cost'];
+                        }
+                    }
+                    
                     $all_tot_units += $tot_units;
                     $all_tot_units_2 += $tot_units_2;
                     $all_tot_amount += $cost;
@@ -248,7 +254,14 @@ class Pnl_items extends CI_Controller {
             $this->load->model("Reports_all_model");
             $item_stocks = $this->Reports_all_model->get_sales_profit($input);
             
-//            echo '<pre>';            print_r($item_stocks); die;  
-            return $item_stocks;
+            $ret_arr = array();
+            $tot_lpid_cost = 0;
+            foreach ($item_stocks as $item_stock){
+                $ret_arr[$item_stock['item_id']] = $item_stock;
+                $ret_arr[$item_stock['item_id']]['lapidary_costs'] = $this->Reports_all_model->get_gemstone_lapidary_costing($item_stock['item_id']);
+                
+            } 
+        //    echo '<pre>';            print_r($ret_arr); die;  
+            return $ret_arr;
         }
 }
