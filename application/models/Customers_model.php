@@ -17,6 +17,7 @@ class Customers_model extends CI_Model
                 if(isset($data['category']) && $data['category']!='') $this->db->like('a.customer_type_id', $data['category']); 
                 if(isset($data['code']) && $data['code']!='') $this->db->like('a.short_name', $data['code']); 
                 if(isset($data['costomer_phone']) && $data['costomer_phone']!='') $this->db->like('a.phone', $data['costomer_phone']); 
+                if(isset($data['customer_id']) && $data['customer_id']!='') $this->db->like('a.id', $data['customer_id']); 
             } 
                
             if($where!='')$this->db->where($where);
