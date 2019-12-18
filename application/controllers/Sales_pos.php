@@ -1023,7 +1023,7 @@ class Sales_pos extends CI_Controller {
                 $this->load->model('Customers_model');
                 $search_arry = array(
                                         'customer_id' => $inputs['search_customer_id'],
-                                        'short_name' => $inputs['costemer_code'],
+                                        'code' => $inputs['costemer_code'],
                                         'costomer_phone' => $inputs['costomer_phone'],
                                     );
                 $data['item_res'] = $this->Customers_model->search_result($search_arry);

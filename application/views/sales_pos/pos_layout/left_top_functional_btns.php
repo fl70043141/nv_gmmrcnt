@@ -34,6 +34,12 @@
     </div>
 </div>
 <script>
+
+$(document).ready(function(){
+    $('#customer_display_name').click(function(){
+        $('#top_customer_search').trigger('click'); 
+    });
+});
 $(document).scannerDetection({
     
   //https://github.com/kabachello/jQuery-Scanner-Detection
