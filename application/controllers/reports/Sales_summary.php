@@ -233,17 +233,26 @@ class Sales_summary extends CI_Controller {
             $input_post = $this->input->post();
             $input_get = $this->input->get();
             $input = (empty($input_post))? $input_get:$input_post; 
-//            echo '<pre>';            print_r($input); die; 
+        //    echo '<pre>';            print_r($input); die; 
+
+            if(isset($input['is_todate_apply'])){
+                $input['sales_from_date'] = strtotime($input['sales_to_date'].' 00:00');
+                $input['sales_to_date'] = strtotime($input['sales_to_date'].' 23:59:59');
+            }else{
+                $input['sales_from_date'] = strtotime($input['sales_from_date'].' 00:00');
+                $input['sales_to_date'] = strtotime($input['sales_to_date'].' 23:59:59');
+            }
             $this->load->model("Payments_model");
             $cust_list = $this->Sales_summary_model->get_customers($input['customer_id']);
             
+        //    echo '<pre>';            print_r($input); die; 
             //search invoices 
             foreach ($cust_list as $cust){
                 $search_data=array( 
                                     'customer_id' => $cust['id'],
                                     'invoice_no' => $input['sales_invoice_no'],  
-                                    'from_date' => strtotime($input['sales_from_date']),  
-                                    'to_date' => strtotime($input['sales_to_date'])  
+                                    'from_date' => ($input['sales_from_date']),  
+                                    'to_date' => ($input['sales_to_date'])  
                                     ); 
                 
                 $invoices['rep_data'][$cust['id']]['customer'] = $cust;

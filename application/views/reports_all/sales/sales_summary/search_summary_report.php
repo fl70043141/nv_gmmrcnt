@@ -109,7 +109,7 @@ $(document).ready(function(){
                                         </div>  
                                         <div class="col-md-3">  
                                                 <div class="form-group pad">
-                                                    <label for="sales_to_date">To</label>
+                                                    <label for="sales_to_date">To <input type="checkbox" value="1" id="is_todate_apply" name="is_todate_apply"></label>
                                                     <?php  echo form_input('sales_to_date',set_value('sales_to_date',date('m/d/Y',$fiscyear_info['end'])),' class="form-control datepicker" readonly  id="sales_to_date"');?>
                                                 </div> 
                                         </div>    
