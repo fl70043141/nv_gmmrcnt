@@ -46,7 +46,7 @@ class Reports_all_model extends CI_Model
         $this->db->select('is.*'); 
         $this->db->select('sum((glc.amount_cost/glc.currency_value) * '.$cur_det['value'].') as total_lapidary_cost'); 
         $this->db->select('ip.item_price_type, ip.price_amount,ip.currency_code as ip_curr_code, ip.currency_value as ip_curr_value'); 
-        $this->db->select('itm.item_name,itm.item_code,itm.item_category_id,ityp.item_type_name,ityp.type_short_name,itm.partnership'); 
+        $this->db->select('itm.deleted as item_delete_status, itm.item_name,itm.item_code,itm.item_category_id,ityp.item_type_name,ityp.type_short_name,itm.partnership'); 
         $this->db->select('(select supplier_name from '.SUPPLIERS.' where id = si.supplier_id)  as supp_name');
         $this->db->select('(select category_name from '.ITEM_CAT.' where id = itm.item_category_id)  as item_category_name');
         $this->db->select('(select location_name from '.INV_LOCATION.' where id = is.location_id)  as location_name');
@@ -432,7 +432,7 @@ class Reports_all_model extends CI_Model
 ---------------------------------------------------------------------
               GET IEMS FOR PURCHASE
 ----------------------------------------------------------------------*/
-        public function get_purchased_items($data=''){ 
+        public function get_purchased_items($data='', $where=''){ 
 //            echo '<pre>';            print_r($data); die;
             $data['purchase_from_date'] = strtotime($data['purchase_from_date']);
             $data['purchase_to_date'] = strtotime($data['purchase_to_date']);
@@ -451,6 +451,7 @@ class Reports_all_model extends CI_Model
             $this->db->join(SUPPLIERS.' c','c.id = i.supplier_id','left');  
             $this->db->join(ITEM_STOCK.' is','is.item_id = itm.id AND is.units_available>0', 'left');  
             $this->db->where('i.deleted',0);  
+            if($where!='') $this->db->where($where);  
             $this->db->group_by('itm.id',0); 
             $this->db->order_by('itm.id',0); 
             

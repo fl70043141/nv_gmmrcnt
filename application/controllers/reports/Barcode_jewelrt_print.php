@@ -414,7 +414,7 @@ class Barcode_jewelrt_print extends CI_Controller {
             $input = (empty($input_post))? $input_get:$input_post; 
             $this->load->model("Payments_model"); 
              
-            $list['search'] = $this->Reports_all_model->get_purchased_items($input);
+            $list['search'] = $this->Reports_all_model->get_purchased_items($input,"itm.deleted = 0");
             //search invoices  
 //            echo '<pre>';            print_r($list); die; 
             return $list;
