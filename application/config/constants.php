@@ -27,6 +27,7 @@ define('SYSTEM_NAME', 'NVELOOP GEMS');
 define('SYSTEM_CODE', 'NV_GEM_MERCH_DEV');
 define('SYSTEM_SHOTR_NAME', 'NV GEMS');
 define('SYSTEM_POWERED_BY', 'Nveloop Solution');
+define('SYSTEM_POWERED_BY_WEB', 'nveloop.com');
 define('SYS_DATE_FORMAT', 'm/d/Y');
 define('NO_GEM', '0'); //jewelry only ->1
 define('SYS_EXP', '2021-06-30 23:58'); //jewelry only ->1
