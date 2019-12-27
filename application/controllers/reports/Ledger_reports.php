@@ -484,48 +484,50 @@ class Ledger_reports extends CI_Controller {
             $html =""; 
             
             $total_expenses = $item_count =0;
-            foreach ($expense_data['expenses_group'] as $expense_type){
-//                    echo '<pre>';            print_r($expense_type); die; 
-                $html .=' <table id="example1" class="table table-line " border="0">
-                                <thead> 
-                                    <tr style=""> 
-                                        <th colspan="5" style="text-align: left;"><h3>'.$expense_type['name'].'</h3></th>   
-                                     </tr>
-                                    <tr style=""> 
-                                        <th width="8%" style="text-align: left;"><u><b>#</b></u></th>  
-                                        <th width="40%" style="text-align: left;"><u><b>Expenses</b></u></th>  
-                                        <th width="12%" style="text-align: center;"><u><b>Date</b></u></th> 
-                                        <th width="20%" style="text-align: right;"><u><b>Amount</b></u></th> 
-                                        <th width="20%" style="text-align: right;"><u><b>Amount ('.$def_cur['code'].')</b></u></th> 
-                                     </tr>
-                                </thead>
-                            <tbody>';
+            if(isset($expense_data['expenses_group'] )){
+                foreach ($expense_data['expenses_group'] as $expense_type){
+    //                    echo '<pre>';            print_r($expense_type); die; 
+                    $html .=' <table id="example1" class="table table-line " border="0">
+                                    <thead> 
+                                        <tr style=""> 
+                                            <th colspan="5" style="text-align: left;"><h3>'.$expense_type['name'].'</h3></th>   
+                                        </tr>
+                                        <tr style=""> 
+                                            <th width="8%" style="text-align: left;"><u><b>#</b></u></th>  
+                                            <th width="40%" style="text-align: left;"><u><b>Expenses</b></u></th>  
+                                            <th width="12%" style="text-align: center;"><u><b>Date</b></u></th> 
+                                            <th width="20%" style="text-align: right;"><u><b>Amount</b></u></th> 
+                                            <th width="20%" style="text-align: right;"><u><b>Amount ('.$def_cur['code'].')</b></u></th> 
+                                        </tr>
+                                    </thead>
+                                <tbody>';
 
-                $i = 1; $tot_type=0;
-                foreach ($expense_type['data'] as $expense){
-                    $item_count++;
-                    $tot_type +=$expense['expense_amount']; 
-//                    echo '<pre>';            print_r($expense); die;
-                    $total_expenses += $expense['expense_amount'];
-                       $html .= '
-                           <tr>
-                               <td style="width:8%;">'.$i.'</td> 
-                               <td style="width:40%;" align="left">'.$expense['account_name'].' '.(($expense['memo']!='')?'('.$expense['memo'].')':'').'</td>
-                               <td style="width:12%;" align="center">'. date(SYS_DATE_FORMAT, $expense['entry_date']).'</td>
-                               <td style="width:20%;" align="right">'.$expense['currency_code'].' '. number_format($expense['amount'],2).'</td>
-                               <td style="width:20%;" align="right">'. number_format($expense['expense_amount'],2).'</td>
-                          </tr>'; 
-                       $i++; 
-                } 
-                
-                $html .= '<tr>
-                            <td colspan="2"><b>Total '.$expense_type['name'].' - ('.$expense['def_cur_code'].') </b></td>
-                            <td colspan="3" align="right;"><b>'. number_format($tot_type,2).'</b></td>
-                         </tr>';
-                $html .= '<tr> 
-                            <td colspan="5" align="right;" style="border-bottom: 1px solid #fff; ;"><br></td>
-                         </tr>';
-                $html .= '</tbody></table>';
+                    $i = 1; $tot_type=0;
+                    foreach ($expense_type['data'] as $expense){
+                        $item_count++;
+                        $tot_type +=$expense['expense_amount']; 
+    //                    echo '<pre>';            print_r($expense); die;
+                        $total_expenses += $expense['expense_amount'];
+                        $html .= '
+                            <tr>
+                                <td style="width:8%;">'.$i.'</td> 
+                                <td style="width:40%;" align="left">'.$expense['account_name'].' '.(($expense['memo']!='')?'('.$expense['memo'].')':'').'</td>
+                                <td style="width:12%;" align="center">'. date(SYS_DATE_FORMAT, $expense['entry_date']).'</td>
+                                <td style="width:20%;" align="right">'.$expense['currency_code'].' '. number_format($expense['amount'],2).'</td>
+                                <td style="width:20%;" align="right">'. number_format($expense['expense_amount'],2).'</td>
+                            </tr>'; 
+                        $i++; 
+                    } 
+                    
+                    $html .= '<tr>
+                                <td colspan="2"><b>Total '.$expense_type['name'].' - ('.$expense['def_cur_code'].') </b></td>
+                                <td colspan="3" align="right;"><b>'. number_format($tot_type,2).'</b></td>
+                            </tr>';
+                    $html .= '<tr> 
+                                <td colspan="5" align="right;" style="border-bottom: 1px solid #fff; ;"><br></td>
+                            </tr>';
+                    $html .= '</tbody></table>';
+                }
             }
             
             $html = '<table border="0">
