@@ -18,7 +18,7 @@ class Pnl_items extends CI_Controller {
 //            $data['search_list'] = $this->Sales_invoices_model->search_result();
             $data['main_content']='reports_all/ledgers/pnl_gemstones/search_pnl_gemstone_report'; 
             $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_name','id','Location');
-            $data['item_cat_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Gem Category','is_gem = 1');
+            $data['item_cat_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Gem Category');
             
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
             $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
