@@ -385,7 +385,7 @@ $(function () {
                                     '<div class="icon">'+
                                 '<i class="fa fa-suitcase"></i>'+
                              '</div>'+
-                             '<a href="<?php echo base_url('Purchasing_gemstones');?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
+                             '<a href="<?php echo base_url(( (NO_GEM=='1')?'Purchasing_items':'Purchasing_gemstones'));?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
 
                         $('#top_purch_box').html(html_purch);
                     }
