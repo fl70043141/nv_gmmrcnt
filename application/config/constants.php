@@ -260,6 +260,48 @@ define('SMTP_PORT','465');
 
 /*
 |--------------------------------------------------------------------------
+| CONFIDENTIAL INVOICE DATA TOP LEFT
+|--------------------------------------------------------------------------
+|
+| These constant may have raw data json
+|
+*/
+define('BANK_INFO', '{
+                        "bank_name": {
+                            "Bank Name": "Hatton National Bank"
+                        },
+                        "bank_code": {
+                            "Swift Code": "HBLILKLX"
+                        },
+                        "branch_name": {
+                            "Branch Name": "Beruwala"
+                        },
+                        "space1": {
+                            "": ""
+                        },
+                        "branch_address": {
+                            "Branch Address": "123, Galle Road, Beruwala, Sri Lanka"
+                        },
+                        "account_name": {
+                            "Account Name": "Nveloop Solution"
+                        },
+                        "account_no": {
+                            "Account No": "287298327"
+                        },
+                        "account_holder_address": {
+                            "Account Holder Address": "195\/8, Main street, Dharga Town"
+                        },
+                        "account_holder_id": {
+                            "Account Holder NIC": "9102121212V"
+                        },
+                        "contact": {
+                            "Account Holder Contact": "0775440889"
+                        }
+                    }');
+
+
+/*
+|--------------------------------------------------------------------------
 | File Stream Modes
 |--------------------------------------------------------------------------
 |
