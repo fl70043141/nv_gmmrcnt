@@ -23,16 +23,17 @@ defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);
 | of this setting
 |
 */
-define('SYSTEM_NAME', 'NVELOOP GEMS');
-define('SYSTEM_CODE', 'NV_GEM_MERCH_DEV');
+define('SYSTEM_NAME', 'BANGRAK GEMS');
+define('SYSTEM_CODE', 'NV_BANGRAK_LIVE');
 define('SYSTEM_SHOTR_NAME', 'NV GEMS');
 define('SYSTEM_POWERED_BY', 'Nveloop Solution');
+define('SYSTEM_POWERED_BY_WEB', 'nveloop.com');
 define('SYS_DATE_FORMAT', 'm/d/Y');
 define('NO_GEM', '0'); //jewelry only ->1
-define('SYS_EXP', '2021-06-30 23:58'); //jewelry only ->1
+define('SYS_EXP', '2022-06-30 23:58'); //jewelry only ->1
 define('SYS_EXP_CON_CHECK', '1'); //1 for check-link exist
  
-define('ITEMCODE_PREFIX', 'AZ');
+define('ITEMCODE_PREFIX', 'BG');
 
 define('INVOICE_NO_PREFIX', 'NI'. date('my'));
 define('TEMP_INVOICE_NO_PREFIX', 'TMP');
@@ -59,7 +60,7 @@ define('GM_RECEIVE_PREFIX', 'GR'. date('my')); // Gem Issue No
 |
  */
 //  1--> enabed; 0-->disabled 
-define('SYSTEM_LOG_ENABLE', 0);
+define('SYSTEM_LOG_ENABLE', 1);
 define('SELECT2_ROWS_LOAD', 25);
 
 /*
@@ -253,7 +254,7 @@ define('ADMIN_EMAIL','fahrylafir@gmail.com');
 
 /******** Temp config for gmail config **/
 define('SMTP_USER','fahrycc@gmail.com');
-define('SMTP_PWD','a715889595A');
+define('SMTP_PWD','#');
 define('SMTP_HOST','ssl://smtp.gmail.com');
 define('SMTP_PORT','465');
 

@@ -1,0 +1,8 @@
+[13-Nov-2019 11:48:30 Asia/Colombo] PHP Fatal error:  Class 'ZipArchive' not found in /home/nveloop/public_html/nveloop/software/application/controllers/Backup.php on line 66
+[13-Nov-2019 12:42:43 Asia/Colombo] PHP Fatal error:  Class 'ZipArchive' not found in /home/nveloop/public_html/nveloop/software/application/controllers/Backup.php on line 66
+[13-Nov-2019 12:49:31 Asia/Colombo] PHP Fatal error:  Class 'ZipArchive' not found in /home/nveloop/public_html/nveloop/software/application/controllers/Backup.php on line 66
+[13-Nov-2019 12:49:58 Asia/Colombo] PHP Fatal error:  Class 'ZipArchive' not found in /home/nveloop/public_html/nveloop/software/application/controllers/Backup.php on line 66
+[13-Nov-2019 12:55:02 Asia/Colombo] PHP Fatal error:  Class 'ZipArchive' not found in /home/nveloop/public_html/nveloop/software/application/controllers/Backup.php on line 66
+[02-Dec-2019 22:08:40 Asia/Colombo] PHP Fatal error:  Class 'ZipArchive' not found in /home/nveloop/public_html/nveloop/software/application/controllers/Backup.php on line 66
+[09-Dec-2019 10:32:32 Asia/Colombo] PHP Parse error:  syntax error, unexpected ')' in /home/nveloop/public_html/nveloop/software/application/helpers/fl_helper.php(496) : runtime-created function on line 1
+[09-Dec-2019 10:32:32 Asia/Colombo] PHP Fatal error:  Function name must be a string in /home/nveloop/public_html/nveloop/software/application/helpers/fl_helper.php on line 497
