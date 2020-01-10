@@ -198,7 +198,7 @@ $(document).ready(function(){
     if($('input[name=prn_id]').val()!=''){
         var prn_id = $('input[name=prn_id]').val();
         $('input[name=prn_id]').val('');
-        window.open("<?php echo base_url("Sales_invoices");?>/sales_invoice_print/"+prn_id,'ZV VINDOW',width=600,height=300)
+        window.open("<?php echo base_url("Sales_invoices");?>/sales_invoice_print_pp/"+prn_id,'ZV VINDOW',width=600,height=300)
     }
     
         get_load_temp_invoice_open(); // Load temp invoice Open status for current user

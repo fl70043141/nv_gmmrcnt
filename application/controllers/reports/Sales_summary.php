@@ -99,85 +99,87 @@ class Sales_summary extends CI_Controller {
                     </table> ';
             $i=1;
             $g_tot_settled = $g_inv_total = $g_tot_balance=0;
-            foreach ($invoices['rep_data'] as $cust_dets){
-                if(isset($cust_dets['invoices']) && count($cust_dets['invoices'])>0){
-//            echo '<pre>';            print_r($cust_dets); die;
-            $html .= '<table  class="table-line" border="0">
-                        <thead>
-                            <tr class="">
-                                <th align="left" colspan="6"></th>
-                            </tr>
-                            <tr class="">
-                                <th align="left" colspan="6">'.$i.'. <u>'.$cust_dets['customer']['customer_name'].'- '.$cust_dets['customer']['city'].(($cust_dets['customer']['short_name']!='')?' ['.$cust_dets['customer']['short_name'].']':'').'</u></th>
-                            </tr>
-                            <tr class="colored_bg">
-                                <th width="20%" align="center">Invoice No</th> 
-                                <th width="15%" align="center">Date</th> 
-                                <th width="17%" align="right">Total</th> 
-                                <th width="17%" align="right">Settled</th> 
-                                <th width="14%" align="center">Due Date</th> 
-                                <th width="17%" align="right">Balance</th> 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="6">
-                                    <table>';
-                                        $tot_settled = $inv_total = $tot_balance=0;
-                                        if(isset($cust_dets['invoices'])){
-                                            foreach ($cust_dets['invoices'] as $invoice){
-                                                $due_date = $invoice['invoice_date']+(60*60*24*$invoice['days_after']);
-                                                $invoice_total = $invoice['invoice_desc_total'];
-                                                
-                                                //addons
-                                                $CI =& get_instance();
-                                                $CI->load->model("Sales_pos_model");
-                                                $invoice_addons = $CI->Sales_pos_model->get_invoice_addons($invoice['id']); 
-                                                if(!empty($invoice_addons)){
-                                                    foreach ($invoice_addons as $invoice_addon){
-                                                        $invoice_total += $invoice_addon['addon_amount'];
+            if(isset($invoices['rep_data'])){
+                foreach ($invoices['rep_data'] as $cust_dets){
+                    if(isset($cust_dets['invoices']) && count($cust_dets['invoices'])>0){
+    //            echo '<pre>';            print_r($cust_dets); die;
+                $html .= '<table  class="table-line" border="0">
+                            <thead>
+                                <tr class="">
+                                    <th align="left" colspan="6"></th>
+                                </tr>
+                                <tr class="">
+                                    <th align="left" colspan="6">'.$i.'. <u>'.$cust_dets['customer']['customer_name'].'- '.$cust_dets['customer']['city'].(($cust_dets['customer']['short_name']!='')?' ['.$cust_dets['customer']['short_name'].']':'').'</u></th>
+                                </tr>
+                                <tr class="colored_bg">
+                                    <th width="20%" align="center">Invoice No</th> 
+                                    <th width="15%" align="center">Date</th> 
+                                    <th width="17%" align="right">Total</th> 
+                                    <th width="17%" align="right">Settled</th> 
+                                    <th width="14%" align="center">Due Date</th> 
+                                    <th width="17%" align="right">Balance</th> 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6">
+                                        <table>';
+                                            $tot_settled = $inv_total = $tot_balance=0;
+                                            if(isset($cust_dets['invoices'])){
+                                                foreach ($cust_dets['invoices'] as $invoice){
+                                                    $due_date = $invoice['invoice_date']+(60*60*24*$invoice['days_after']);
+                                                    $invoice_total = $invoice['invoice_desc_total'];
+                                                    
+                                                    //addons
+                                                    $CI =& get_instance();
+                                                    $CI->load->model("Sales_pos_model");
+                                                    $invoice_addons = $CI->Sales_pos_model->get_invoice_addons($invoice['id']); 
+                                                    if(!empty($invoice_addons)){
+                                                        foreach ($invoice_addons as $invoice_addon){
+                                                            $invoice_total += $invoice_addon['addon_amount'];
+                                                        }
                                                     }
+                                                    
+                                                    $cust_payments = (!empty($invoice['transections']))?$invoice['transections'][0]['total_amount']:0;
+                                                    $pending = $invoice_total-$cust_payments;
+
+                                                    $inv_total += $invoice_total/$invoice['currency_value'];
+                                                    $tot_settled += $cust_payments/$invoice['currency_value'];
+                                                    $tot_balance += $pending/$invoice['currency_value'];
+
+                                                    $g_inv_total += $invoice_total/$invoice['currency_value'];
+                                                    $g_tot_settled += $cust_payments/$invoice['currency_value'];
+                                                    $g_tot_balance += $pending/$invoice['currency_value'];
+    
+
+                                                    $html .= '<tr>
+                                                                <td width="20%" align="center">'.$invoice['invoice_no'].'</td>
+                                                                <td width="15%" align="center">'.date(SYS_DATE_FORMAT,$invoice['invoice_date']).'</td>
+                                                                <td width="17%" align="right">'.number_format($invoice_total/$invoice['currency_value'],2).'</td>
+                                                                <td width="17%" align="right">'.number_format($cust_payments/$invoice['currency_value'],2).'</td>
+                                                                <td width="14%" align="center">'. date(SYS_DATE_FORMAT,$due_date).'</td>
+                                                                <td width="17%" align="right">'.number_format($pending/$invoice['currency_value'],2).'</td>
+                                                            </tr>';
                                                 }
-                                                
-                                                $cust_payments = (!empty($invoice['transections']))?$invoice['transections'][0]['total_amount']:0;
-                                                $pending = $invoice_total-$cust_payments;
-
-                                                $inv_total += $invoice_total/$invoice['currency_value'];
-                                                $tot_settled += $cust_payments/$invoice['currency_value'];
-                                                $tot_balance += $pending/$invoice['currency_value'];
-
-                                                $g_inv_total += $invoice_total/$invoice['currency_value'];
-                                                $g_tot_settled += $cust_payments/$invoice['currency_value'];
-                                                $g_tot_balance += $pending/$invoice['currency_value'];
- 
-
-                                                $html .= '<tr>
-                                                            <td width="20%" align="center">'.$invoice['invoice_no'].'</td>
-                                                            <td width="15%" align="center">'.date(SYS_DATE_FORMAT,$invoice['invoice_date']).'</td>
-                                                            <td width="17%" align="right">'.number_format($invoice_total/$invoice['currency_value'],2).'</td>
-                                                            <td width="17%" align="right">'.number_format($cust_payments/$invoice['currency_value'],2).'</td>
-                                                            <td width="14%" align="center">'. date(SYS_DATE_FORMAT,$due_date).'</td>
-                                                            <td width="17%" align="right">'.number_format($pending/$invoice['currency_value'],2).'</td>
-                                                        </tr>';
                                             }
-                                        }
-                                        $html .= '<tr>
-                                                        <td width="20%" align="center"></td>
-                                                        <td width="15%" align="center"></td>
-                                                        <td width="17%" align="right"><b>'.number_format($inv_total,2).'</b></td>
-                                                        <td width="17%" align="right"><b>'.number_format($tot_settled,2).'</b></td>
-                                                        <td width="14%" align="center"></td>
-                                                        <td width="17%" align="right"><b>'.number_format($tot_balance,2).'</b></td>
-                                                    </tr>';
-                                        
-                                    $html .= '</table>
-                                </td>
-                            </tr>
-                        </tbody> 
-                    </table> 
-                ';               
-                $i++;
-            }
+                                            $html .= '<tr>
+                                                            <td width="20%" align="center"></td>
+                                                            <td width="15%" align="center"></td>
+                                                            <td width="17%" align="right"><b>'.number_format($inv_total,2).'</b></td>
+                                                            <td width="17%" align="right"><b>'.number_format($tot_settled,2).'</b></td>
+                                                            <td width="14%" align="center"></td>
+                                                            <td width="17%" align="right"><b>'.number_format($tot_balance,2).'</b></td>
+                                                        </tr>';
+                                            
+                                        $html .= '</table>
+                                    </td>
+                                </tr>
+                            </tbody> 
+                        </table> 
+                    ';               
+                    $i++;
+                }
+                }
             }
             $html .= '
                     <table>
@@ -233,17 +235,26 @@ class Sales_summary extends CI_Controller {
             $input_post = $this->input->post();
             $input_get = $this->input->get();
             $input = (empty($input_post))? $input_get:$input_post; 
-//            echo '<pre>';            print_r($input); die; 
+        //    echo '<pre>';            print_r($input); die; 
+
+            if(isset($input['is_todate_apply'])){
+                $input['sales_from_date'] = strtotime($input['sales_to_date'].' 00:00');
+                $input['sales_to_date'] = strtotime($input['sales_to_date'].' 23:59:59');
+            }else{
+                $input['sales_from_date'] = strtotime($input['sales_from_date'].' 00:00');
+                $input['sales_to_date'] = strtotime($input['sales_to_date'].' 23:59:59');
+            }
             $this->load->model("Payments_model");
             $cust_list = $this->Sales_summary_model->get_customers($input['customer_id']);
             
+        //    echo '<pre>';            print_r($input); die; 
             //search invoices 
             foreach ($cust_list as $cust){
                 $search_data=array( 
                                     'customer_id' => $cust['id'],
                                     'invoice_no' => $input['sales_invoice_no'],  
-                                    'from_date' => strtotime($input['sales_from_date']),  
-                                    'to_date' => strtotime($input['sales_to_date'])  
+                                    'from_date' => ($input['sales_from_date']),  
+                                    'to_date' => ($input['sales_to_date'])  
                                     ); 
                 
                 $invoices['rep_data'][$cust['id']]['customer'] = $cust;

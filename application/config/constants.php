@@ -260,6 +260,33 @@ define('SMTP_PORT','465');
 
 /*
 |--------------------------------------------------------------------------
+| CONFIDENTIAL INVOICE DATA TOP LEFT
+|--------------------------------------------------------------------------
+|
+| These constant may have raw data json
+|
+*/
+define('BANK_INFO', '{
+                        "terms": {
+                            "Terms": "T/T"
+                        },
+                        "directly_to": {
+                            "Directly to": "Swift BOC xxxx"
+                        },
+                        "bank": {
+                            "": "BOC Bank Ltd,"
+                        },
+                        "branch_address": {
+                            "": "Kalutara, Srim Lanka"
+                        },
+                        "account_no": {
+                            "A/C No": "xxxxxxx"
+                        }
+                    }');
+
+
+/*
+|--------------------------------------------------------------------------
 | File Stream Modes
 |--------------------------------------------------------------------------
 |

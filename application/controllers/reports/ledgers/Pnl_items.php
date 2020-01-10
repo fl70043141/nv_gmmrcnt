@@ -18,7 +18,7 @@ class Pnl_items extends CI_Controller {
 //            $data['search_list'] = $this->Sales_invoices_model->search_result();
             $data['main_content']='reports_all/ledgers/pnl_gemstones/search_pnl_gemstone_report'; 
             $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_name','id','Location');
-            $data['item_cat_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Gem Category','is_gem = 1');
+            $data['item_cat_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Gem Category');
             
             $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
             $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
@@ -136,6 +136,12 @@ class Pnl_items extends CI_Controller {
                     if($cost==0)
                         $cost = $item['purch_standard_cost'];
 
+                    if(count($item['lapidary_costs'])>0){
+                        foreach($item['lapidary_costs'] as $lapidary){
+                            $cost+=$lapidary['amount_cost'];
+                        }
+                    }
+                    
                     $all_tot_units += $tot_units;
                     $all_tot_units_2 += $tot_units_2;
                     $all_tot_amount += $cost;
@@ -248,7 +254,14 @@ class Pnl_items extends CI_Controller {
             $this->load->model("Reports_all_model");
             $item_stocks = $this->Reports_all_model->get_sales_profit($input);
             
-//            echo '<pre>';            print_r($item_stocks); die;  
-            return $item_stocks;
+            $ret_arr = array();
+            $tot_lpid_cost = 0;
+            foreach ($item_stocks as $item_stock){
+                $ret_arr[$item_stock['item_id']] = $item_stock;
+                $ret_arr[$item_stock['item_id']]['lapidary_costs'] = $this->Reports_all_model->get_gemstone_lapidary_costing($item_stock['item_id']);
+                
+            } 
+        //    echo '<pre>';            print_r($ret_arr); die;  
+            return $ret_arr;
         }
 }

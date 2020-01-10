@@ -1149,7 +1149,40 @@ class Sales_invoices extends CI_Controller {
             echo json_encode($data);
         }
         
+
         function sales_invoice_print($inv_id,$tmp_mail=''){
+
+            $this->load->model('Sales_orders_model');
+            $this->load->helper('invoice_print_helper');
+            
+            $inv_data = $this->get_invoice_info($inv_id);
+            inv_print_congiguration($inv_data,SYSTEM_CODE, $tmp_mail);
+                                
+        } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function sales_invoice_print_del($inv_id,$tmp_mail=''){
             $this->load->model('Sales_orders_model');
             $print_option = $this->input->get();
 			if(isset($print_option['prnt_optn']) && !empty($print_option['prnt_optn']))

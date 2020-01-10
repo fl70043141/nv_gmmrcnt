@@ -174,6 +174,9 @@ class Pdf extends TCPDF
 //        echo '<pre>'; print_r($company_dets); die;
         $header_info = '<table border="0"> 
                             <tr>
+                                <td align="center" style="font-size:30px; color:#0b133e">'. $company_dets[0]['company_name'].'</td>
+                            </tr> 
+                            <tr>
                                 <td align="center">'.$company_dets[0]['street_address'].', '.$company_dets[0]['city'].', '.$company_dets[0]['country_name'].'.</td>
                             </tr> 
                             <tr>
@@ -185,10 +188,10 @@ class Pdf extends TCPDF
                                 </tr>';
         }
         $header_info .=    '<tr>
-                                <td align="center">Email: '.(($company_dets[0]['email']!='')?$company_dets[0]['email']:'').'</td>
+                                <td align="center">'.(($company_dets[0]['email']!='')?'Email: '.$company_dets[0]['email']:'').'</td>
                             </tr>
                             <tr>
-                                <td align="center">Website: '.(($company_dets[0]['website']!='')?$company_dets[0]['website']:'').'</td>
+                                <td align="center">'.(($company_dets[0]['website']!='')?'Website: '.$company_dets[0]['website']:'').'</td>
                             </tr>
                             
                         </table> ';
@@ -216,13 +219,13 @@ class Pdf extends TCPDF
         $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/CanelaBarkBold_PERSONAL.ttf', 'TrueTypeUnicode', '', 96);
         // use the font
         $this->SetFont($fontname, '', 35, '', false);
-        $this->SetTextColor(48,75,105);
-        $this->Text('60', 9, $company_dets[0]['company_name'], false, false, true, 0, 0, 'center', false,'',1);
+        // $this->SetTextColor(48,75,105);
+        // $this->Text('60', 9, $company_dets[0]['company_name'], false, false, true, 0, 0, 'center', false,'',1);
         
         $this->SetTextColor(96,96,96);
         $fontname = TCPDF_FONTS::addTTFfont('storage/fonts/Lato-Light.ttf', 'TrueTypeUnicode', '', 96);
         $this->SetFont($fontname, 'I', 10.5);
-        $this->writeHTMLCell(130,20,40,23,$header_info); 
+        $this->writeHTMLCell(130,20,40,10,$header_info); 
 //        $this->writeHTMLCell(90,20,60,23,$header_info); 
         
         $this->writeHTMLCell(45,20,155,9,$header_right_info); 

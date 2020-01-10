@@ -239,9 +239,11 @@ class Gemstone_costing extends CI_Controller {
 //            echo '<pre>';            print_r($item_stocks); die; 
             $ret_arr = array();
             foreach ($item_stocks as $item_stock){
-                $ret_arr[$item_stock['item_id']] = $item_stock;
-                $ret_arr[$item_stock['item_id']]['lapidary_costs'] = $this->Reports_all_model->get_gemstone_lapidary_costing($item_stock['item_id']);
-                
+                if($item_stock['item_delete_status'] == '0'){
+                    $ret_arr[$item_stock['item_id']] = $item_stock;
+                    $ret_arr[$item_stock['item_id']]['lapidary_costs'] = $this->Reports_all_model->get_gemstone_lapidary_costing($item_stock['item_id']);
+                    
+                }
             } 
             
 //            echo '<pre>';            print_r($ret_arr); die; 

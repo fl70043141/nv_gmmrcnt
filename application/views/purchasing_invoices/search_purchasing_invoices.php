@@ -12,16 +12,16 @@ $(document).ready(function(){
 		event.preventDefault();
 		get_results();
     });
-//    $("#status").change(function(){
-//		event.preventDefault();
-//		get_results();
-//    });
+   $("#search_btn").click(function(){
+		event.preventDefault();
+		get_results();
+   });
 	
 	
 	function get_results(){
         $("#result_search").html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> Retrieving Data..');    
         $.ajax({
-			url: "<?php echo site_url('Purchasing_invoices/search');?>",
+			url: "<?php echo site_url('Purchasing_gemstones/search');?>",
 			type: 'post',
 			data : jQuery('#form_search').serializeArray(),
 			success: function(result){
@@ -93,6 +93,19 @@ $(document).ready(function(){
                                         </div>
                                     </div> 
                             </div>
+                            <div class="col-md-6"> 
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Item code:</label>
+                                        <div class="col-md-9">                                            
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+                                                <?php echo form_input('item_code', set_value('item_code'), 'id="item_code" class="form-control" placeholder="Search by Item code"'); ?>
+
+                                            </div>                                            
+                                            <span class="help-block"><?php echo form_error('item_code');?></span>
+                                        </div>
+                                    </div> 
+                            </div>
 <!--                             <div class="col-md-6">
                                 <div class="form-group">
                                        <label class="col-md-3 control-label">Active</label>
@@ -110,7 +123,7 @@ $(document).ready(function(){
                             </div>-->
                             <div class="col-md-6"> 
                                 <div class="form-group">
-                                       <label class="col-md-3 control-label">Customer</label>
+                                       <label class="col-md-3 control-label">Supplier</label>
                                            <div class="col-md-9">                                            
                                                <div class="input-group">
                                                    <span class="input-group-addon"><span class="fa fa-search"></span></span>

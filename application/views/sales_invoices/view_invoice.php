@@ -75,9 +75,11 @@ $inv_trans = $inv_data['inv_transection'];
                 <!-- form start -->
                <div class="row header_form_sales"> 
                             <div class="col-md-12">
-                                Invoice  Print Options: 
-                                <!--<label><input type="checkbox" name="item_cat_slct[]" value="bank"> Include Bank info</label> &nbsp;&nbsp;&nbsp;-->
-                                <label><input type="checkbox" name="item_cat_slct[]" value="cert">Include Certificates</label>
+                                <?php if(NO_GEM==0) {?>
+                                    Invoice  Print Options:     
+                                    <label><input type="checkbox" name="item_cat_slct[]" value="bank"> Include Bank info</label> &nbsp;&nbsp;&nbsp;
+                                    <label><input type="checkbox" name="item_cat_slct[]" value="cert">Include Certificates</label>
+                                <?php } ?>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">

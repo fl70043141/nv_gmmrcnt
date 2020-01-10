@@ -30,7 +30,13 @@
                                      $cost = $item['std_cost_on_sale']*$tot_units ;
                                      if($cost==0)
                                          $cost = $item['purch_standard_cost'];
-                                     
+                                    
+                                    if(count($item['lapidary_costs'])>0){
+                                    foreach($item['lapidary_costs'] as $lapidary){
+                                        $cost+=$lapidary['amount_cost'];
+                                    }
+                                    }
+                                    
                                      $all_tot_units += $tot_units;
                                      $all_tot_units_2 += $tot_units_2;
                                      $all_tot_amount += $cost;

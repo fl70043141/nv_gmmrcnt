@@ -1,5 +1,5 @@
 
-                 <table id="example1" class="table dataTable table-bordered table-striped">
+                 <table id="customer_tbl_rslt" class="table table-bordered table-striped">
                         <thead>
                            <tr>
                                <th>#</th> 
@@ -25,6 +25,7 @@
                                                 <td><a id="customer-search-pick_'.$item['id'].'" class="btn btn-success btn-xs "><span class="fa fa-user-plus"></span></a></td>
                                            </tr> 
                                         ';
+                                        $i++;
                                 }
                            ?>
                             
@@ -40,3 +41,8 @@
                            </tr>
                           </tfoot>
                         </table> 
+<script>
+    $(document).ready(function() {
+    $('#customer_tbl_rslt').DataTable();
+} );
+</script>

@@ -29,7 +29,7 @@
             <div class="icon">
               <i class="fa fa-users"></i>
             </div>
-            <a href="<?php echo base_url('Purchasing_gemstones');?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo base_url(( (NO_GEM=='1')?'Purchasing_items':'Purchasing_gemstones'));?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -71,7 +71,7 @@
         <!-- Left col -->
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("Items");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-diamond"></i> Master Inventory</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/Sales_summary");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-user"></i> Customer Balance</a></div>
-        <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/Gemstone_costing");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-money"></i> Gem Costing Report</a></div>
+        <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/".((NO_GEM==1)?'Item_costing':'Gemstone_costing'));?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-money"></i> Item Costing Report</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/Ledger_reports/expenses");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-dollar"></i> Expenses Report</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("reports/ledgers/Pnl_General");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-bar-chart"></i> P&L Report</a></div>
         <div class="col-md-2 margin-bottom"><a href="<?php echo base_url("Order_ecatalog");?>" class="btn btn-block btn-social btn-default">  <i class="fa fa-image"></i> E-Catalog</a></div>
@@ -385,7 +385,7 @@ $(function () {
                                     '<div class="icon">'+
                                 '<i class="fa fa-suitcase"></i>'+
                              '</div>'+
-                             '<a href="<?php echo base_url('Purchasing_gemstones');?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
+                             '<a href="<?php echo base_url(( (NO_GEM=='1')?'Purchasing_items':'Purchasing_gemstones'));?>" class="small-box-footer">More info<i class="fa fa-arrow-circle-right"></i></a>';
 
                         $('#top_purch_box').html(html_purch);
                     }

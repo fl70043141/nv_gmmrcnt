@@ -657,7 +657,7 @@ class Gems_receival extends CI_Controller {
         }
         function get_search_res_issued_items(){
             $inputs = $this->input->post(); 
-//            echo '<pre>';            print_r($inputs); die;  
+        //    echo '<pre>';            print_r($inputs); die;  
             $search_data = array(
                                     'item_code' => $inputs['item_code'],
                                     'category_id' => $inputs['category_id'],
@@ -667,10 +667,10 @@ class Gems_receival extends CI_Controller {
                                     'gem_issue_no' => $inputs['gem_issue_no'], 
                 
                                     'gem_issue_type_id' => $inputs['gem_issue_type_id'], 
-                                    'gem_cutter_id' => $inputs['gem_cutter_id'], 
-                                    'gem_polishing_id' => $inputs['gem_polishing_id'], 
-                                    'gem_heater_id' => $inputs['gem_heater_id'], 
-                                    'gem_lab_id' => $inputs['gem_lab_id'], 
+                                    'gem_cutter_id' => isset($inputs['gem_cutter_id'])?$inputs['gem_cutter_id']:'', 
+                                    'gem_polishing_id' => isset($inputs['gem_polishing_id'])?$inputs['gem_polishing_id']:'', 
+                                    'gem_heater_id' => isset($inputs['gem_heater_id'])?$inputs['gem_heater_id']:'', 
+                                    'gem_lab_id' => isset($inputs['gem_lab_id'])? $inputs['gem_lab_id']:'', 
                                 );  
             $limit = '';
             if(isset($inputs['res_count_check']))
