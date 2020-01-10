@@ -76,7 +76,7 @@ $inv_trans = $inv_data['inv_transection'];
                <div class="row header_form_sales"> 
                             <div class="col-md-12">
                                 Invoice  Print Options: 
-                                <!-- <label><input type="checkbox" name="item_cat_slct[]" value="bank"> Include Bank info</label> &nbsp;&nbsp;&nbsp; -->
+                                <label><input type="checkbox" name="item_cat_slct[]" value="bank"> Include Bank info</label> &nbsp;&nbsp;&nbsp;
                                 <!-- <label><input type="checkbox" name="item_cat_slct[]" value="cert">Include Certificates</label> -->
                             </div>
                             <div class="col-md-4">

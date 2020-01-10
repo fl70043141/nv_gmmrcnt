@@ -1156,7 +1156,7 @@ class Sales_invoices extends CI_Controller {
             $this->load->helper('invoice_print_helper');
             
             $inv_data = $this->get_invoice_info($inv_id);
-            inv_print_congiguration($inv_data,'', $tmp_mail);
+            inv_print_congiguration($inv_data,SYSTEM_CODE, $tmp_mail);
                                 
         } 
 
