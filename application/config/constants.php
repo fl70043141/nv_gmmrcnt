@@ -271,16 +271,16 @@ define('BANK_INFO', '{
                             "Terms": "T/T"
                         },
                         "directly_to": {
-                            "Directly to": "Swift CodeBKKBTHBK"
+                            "Directly to": "Swift BOC xxxx"
                         },
                         "bank": {
-                            "": "Bangkok Bank Ltd,"
+                            "": "BOC Bank Ltd,"
                         },
                         "branch_address": {
-                            "": "Silom Branch, Bangkok 10500"
+                            "": "Kalutara, Srim Lanka"
                         },
                         "account_no": {
-                            "A/C No": "118 321 080 4 Solution"
+                            "A/C No": "xxxxxxx"
                         }
                     }');
 
