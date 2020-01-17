@@ -75,7 +75,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
+	'hostname' => '127.0.0.1',
 	'username' => 'nveloop_software',
 	'password' => 'n0x3?vEg+Xfa', 
 	'database' => 'nveloop_bangkarak_gms',

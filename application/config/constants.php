@@ -266,21 +266,22 @@ define('SMTP_PORT','465');
 | These constant may have raw data json
 |
 */
+
 define('BANK_INFO', '{
                         "terms": {
                             "Terms": "T/T"
                         },
                         "directly_to": {
-                            "Directly to": "Swift BOC xxxx"
+                            "Directly to": "Swift CodeBKKBTHBK"
                         },
                         "bank": {
-                            "": "BOC Bank Ltd,"
+                            "": "Bangkok Bank Ltd,"
                         },
                         "branch_address": {
-                            "": "Kalutara, Srim Lanka"
+                            "": "Silom Branch, Bangkok 10500"
                         },
                         "account_no": {
-                            "A/C No": "xxxxxxx"
+                            "A/C No": "118 321 080 4 Solution"
                         }
                     }');
 

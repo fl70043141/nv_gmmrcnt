@@ -58,7 +58,7 @@ function barcode_print_items($item_id, $purchase_id=''){
                                 <td align="center"  colspan="2"><h3>'.SYSTEM_NAME.'</h3></td>
                             </tr>
                             <tr>
-                                <td  colspan="2">'.$item_info['item_name'].(($item_info['color']!='')?' ('.$item_info['color_name'].')':'').' </td>
+                                <td  colspan="2">'.$item_info['item_name'].(($item_info['color']!='')?' ('.$item_info['color_name'].')':'').(($item_info['certification']>0)?' - C':'').' </td>
                             </tr>
                             <tr>
                                 <td  colspan="2">'.$dimension.' '.$item_info['shape_name'].'</td>
@@ -73,7 +73,7 @@ function barcode_print_items($item_id, $purchase_id=''){
                                 <td  colspan="2">'.$item_info['cost_code'].'</td>
                             </tr>
                             <tr>
-                                <td colspan="2">'.(($sale_price!=0)?$sale_price['symbol_left'].number_format($sale_price['cost_amount'],2):'-').'</td>
+                                <td colspan="2"><h3>'.(($sale_price!=0)?$sale_price['symbol_left'].number_format($sale_price['cost_amount'],2):'-').'</h3></td>
                             </tr>
                             <tr>
                                 <td colspan="1">'.$item_stock[0]['units_available'].$item_stock[0]['uom_name'].' '.(($item_stock[0]['units_available_2']>0)?'| '.$item_stock[0]['units_available_2'].' '.$item_stock[0]['uom_name_2']:'').'</td>

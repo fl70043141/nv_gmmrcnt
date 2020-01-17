@@ -59,7 +59,7 @@
                                          $html_1 = '
                                              <tr style="background-color: '.$bg_colr.'">
                                                  <td>'.($i+1).'</td> 
-                                                 <td align="center"><a target="_blank" href="'. base_url("Items/edit/".$item["item_id"]).'">'.$item['item_code'].'</a></td>
+                                                 <td align="center"><a target="_blank" href="'. base_url("Items/edit/".$item["item_id"]).'">'.$item['item_code'].'</a> '.($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], 'Purchasing_gemstones', 'print_barcode_purchase')?' <a target="blank" href="'.base_url('Purchasing_gemstones/print_barcode_purchase/'.$item['item_id']).'" class="fa fa-barcode" style="cursor:pointer;" title="Print barcode"></a>':'').'</td>
                                                  <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
                                                  <td align="center">'.$item['units_available'].' '.$item['uom_name'].'</td>
                                                  <td align="center">'.(($item['uom_id_2']!=0)?$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
