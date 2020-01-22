@@ -53,6 +53,7 @@ class Reports_all_model extends CI_Model
         $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id)  as uom_name');
         $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = is.uom_id_2)  as uom_name_2');
         $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.treatment)  as treatment_name');
+        $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.certification)  as certification_name');
         $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.color)  as color_name');
         $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = itm.shape)  as shape_name');
         $this->db->select('(ip.price_amount * sd.purchasing_unit) as cost_amount, sd.purchasing_unit as supp_inits,sd.secondary_unit as supp_inits_2,si.invoice_date,si.supplier_invoice_no'); 
@@ -70,6 +71,7 @@ class Reports_all_model extends CI_Model
         if(isset($data['location_id']) && $data['location_id'] !='')$this->db->where('is.location_id',$data['location_id']);
         if(isset($data['item_category_id']) && $data['item_category_id'] !='')$this->db->where('itm.item_category_id',$data['item_category_id']);
         if(isset($data['treatment_id']) && $data['treatment_id'] !='')$this->db->where('itm.treatment',$data['treatment_id']);
+        if(isset($data['certificate_id']) && $data['certificate_id'] !='')$this->db->where('itm.certification',$data['certificate_id']);
         if(isset($data['item_code']) && $data['item_code'] !='')$this->db->like('itm.item_code',$data['item_code']);
         if(isset($data['item_id']) && $data['item_id'] !='')$this->db->like('itm.id',$data['item_id']);
         if(isset($data['color_id']) && $data['color_id'] !='')$this->db->where('itm.color',$data['color_id']);

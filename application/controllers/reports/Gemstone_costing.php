@@ -21,7 +21,8 @@ class Gemstone_costing extends CI_Controller {
             $data['location_list'] = get_dropdown_data(INV_LOCATION,'location_name','id','Location');
             $data['item_cat_list'] = get_dropdown_data(ITEM_CAT,'category_name','id','No Gem Category','is_gem = 1');
             
-            $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for treatments
+            $data['treatments_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Treatment','dropdown_id = 5'); //14 for sales type
+            $data['certificate_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Certification','dropdown_id = 4'); //4 for certifiate
             $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
             $data['color_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Color','dropdown_id = 17'); //17 for Color
             $data['item_type_list'] = get_dropdown_data(ITEM_TYPES,'item_type_name','id','No Item Type'); 

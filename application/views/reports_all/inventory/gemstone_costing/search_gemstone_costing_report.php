@@ -125,6 +125,13 @@ $(document).ready(function(){
                                                 </div> 
                                         </div>  
                                         <div class="col-md-3">  
+                                                <div class="form-group pad  no-pad-top">
+                                                    <label for="certificate_id">Cerification</label>
+                                                     <?php echo form_dropdown('certificate_id',$certificate_list,set_value('certificate_id'),' class="form-control select2" id="certificate_id"');?>
+                                              
+                                                </div> 
+                                        </div>  
+                                        <div class="col-md-3">  
                                                 <div class="form-group pad no-pad-top">
                                                     <label for="color_id">Color.</label>
                                                      <?php echo form_dropdown('color_id',$color_list,set_value('color_id'),' class="form-control select2" id="color_id"');?>
