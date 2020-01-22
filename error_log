@@ -8,3 +8,4 @@
 [09-Dec-2019 10:32:32 Asia/Colombo] PHP Fatal error:  Function name must be a string in /home/nveloop/public_html/nveloop/software/application/helpers/fl_helper.php on line 497
 [17-Jan-2020 15:42:56 Asia/Colombo] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 262144 bytes) in /home/nveloop/public_html/nveloop/software/application/libraries/tcpdf/tcpdf.php on line 18777
 [17-Jan-2020 15:46:33 Asia/Colombo] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/nveloop/public_html/nveloop/software/application/libraries/tcpdf/include/tcpdf_static.php on line 1218
+[21-Jan-2020 09:40:34 Asia/Colombo] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/nveloop/public_html/nveloop/software/application/libraries/tcpdf/include/tcpdf_static.php on line 1218

@@ -9,7 +9,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th style="text-align:center;">Code</th> 
-                                    <th style="text-align:center;">Desc</th>  
+                                    <th style="text-align:center;">Desc</th>'.((NO_GEM==0)?'<th style="text-align:center;">Item-info</th>':'').'  
                                     <th style="text-align:center;">Unit 1</th> 
                                     <th style="text-align:center;">Unit 2</th>   
                                     <th style="text-align:left;">Type</th>    
@@ -44,6 +44,10 @@
                                            }
                                         }
                                         
+                                        $gem_info_arr = array($item['treatment_name'], $item['color_name'],$item['shape_name'],$item['certification_name']);
+                                        $gem_info_arr = array_filter($gem_info_arr);
+                                        $gem_info_str = implode(' - ', $gem_info_arr);
+
                                         $tot_units = $item['units_available'] + $item['units_on_workshop'] + $item['units_on_consignee'];
                                         $tot_units_2 = $item['units_available_2'] + $item['units_on_workshop_2'] + $item['units_on_consignee_2'];
                                         $purch_cost = ($item['cost_amount'] / $item['ip_curr_value'])*$def_cur['value'];
@@ -61,6 +65,7 @@
                                                  <td>'.($i+1).'</td> 
                                                  <td align="center"><a target="_blank" href="'. base_url("Items/edit/".$item["item_id"]).'">'.$item['item_code'].'</a> '.($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], 'Purchasing_gemstones', 'print_barcode_purchase')?' <a target="blank" href="'.base_url('Purchasing_gemstones/print_barcode_purchase/'.$item['item_id']).'" class="fa fa-barcode" style="cursor:pointer;" title="Print barcode"></a>':'').'</td>
                                                  <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                                                 '.((NO_GEM==0)?'<td align="center">'.$gem_info_str.'</td>':'').'
                                                  <td align="center">'.$item['units_available'].' '.$item['uom_name'].'</td>
                                                  <td align="center">'.(($item['uom_id_2']!=0)?$item['units_available_2'].' '.$item['uom_name_2']:'-').'</td>
                                                  <td align="left">Purchase</td>
