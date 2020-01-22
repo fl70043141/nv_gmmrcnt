@@ -6,7 +6,7 @@ function barcode_print_items($item_id, $purchase_id=''){
     $CI->load->model("Items_model");
     //load library
     $CI->load->library('Pdf');
-    $pdf = new Pdf('L', 'mm', array('32','25'), true, 'UTF-8', false);
+    $pdf = new Pdf('L', 'mm', array('40','40'), true, 'UTF-8', false);
     
     $pdf->setPrintHeader(false);  // remove default header 
     $pdf->setPrintFooter(false);  // remove default footer 
@@ -17,7 +17,7 @@ function barcode_print_items($item_id, $purchase_id=''){
             
     // ---------------------------------------------------------
     $pdf->SetDisplayMode('fullpage', 'SinglePage', 'UseNone');
-    $pdf->SetFont('helveticaB','',4.5);  // set font
+    $pdf->SetFont('helvetica','',6);  // set font
 
 
     // Barcode
@@ -34,7 +34,7 @@ function barcode_print_items($item_id, $purchase_id=''){
         if(!empty($inv_items)){
             foreach($inv_items as $item){
                 $item_id = $item['item_id'];
-                $pdf->AddPage('L',array('32','25'));
+                $pdf->AddPage('L',array('40','40'));
                 $item_info = $CI->Items_model->get_single_row($item_id);
                 $item_stock = $CI->Items_model->get_item_status($item_id);
                 $item_standard_price_info = $CI->Items_model->get_item_purch_prices($item_id, 'ip.item_price_type=3'); //std cost type=1
@@ -43,7 +43,7 @@ function barcode_print_items($item_id, $purchase_id=''){
 
                 // echo '<pre>' ; print_r($item_info);die; 
                 $barcodeobj = new TCPDFBarcode($item_info['item_code'], 'C39');
-                $img =  $barcodeobj->getBarcodePngData(1.5,35, array(25,25,25)); 
+                $img =  $barcodeobj->getBarcodePngData(1.5,40, array(25,25,25)); 
                 $base64 = 'data:image/png;base64,' . base64_encode($img);  
                     
                 $dimension = (($item_info['length']>0)?$item_info['length'].' x ':'').(($item_info['width']>0)?$item_info['width'].' x ':'').(($item_info['length']>0)?$item_info['height']:'');
@@ -55,10 +55,11 @@ function barcode_print_items($item_id, $purchase_id=''){
                 
                         <table border="0">
                             <tr>
-                                <td align="center"  colspan="2"><h3>'.SYSTEM_NAME.'</h3></td>
+                                <td align="center"  colspan="2"><h2>'.SYSTEM_NAME.'</h2></td>
                             </tr>
+                            <tr><td colspan="2" style="line-height:5px;"></td></tr>
                             <tr>
-                                <td  colspan="2">'.$item_info['item_name'].(($item_info['color']!='')?' ('.$item_info['color_name'].')':'').(($item_info['certification']>0)?' - C':'').' </td>
+                                <td  colspan="2"><b>'.$item_info['item_name'].(($item_info['color']!='')?' ('.$item_info['color_name'].')':'').(($item_info['certification']>0)?' - C':'').' </b></td>
                             </tr>
                             <tr>
                                 <td  colspan="2">'.$dimension.' '.$item_info['shape_name'].'</td>
@@ -73,19 +74,24 @@ function barcode_print_items($item_id, $purchase_id=''){
                                 <td  colspan="2">'.$item_info['cost_code'].'</td>
                             </tr>
                             <tr>
-                                <td colspan="2"><h3>'.(($sale_price!=0)?$sale_price['symbol_left'].number_format($sale_price['cost_amount'],2):'-').'</h3></td>
+                                <td colspan="2" style="line-height:15px;"><h3>'.(($sale_price['cost_amount']>0)?$sale_price['symbol_left'].number_format($sale_price['cost_amount'],2):'-').'</h3></td>
                             </tr>
                             <tr>
-                                <td colspan="1">'.$item_stock[0]['units_available'].$item_stock[0]['uom_name'].' '.(($item_stock[0]['units_available_2']>0)?'| '.$item_stock[0]['units_available_2'].' '.$item_stock[0]['uom_name_2']:'').'</td>
+                                <td colspan="1"><b>'.$item_stock[0]['units_available'].$item_stock[0]['uom_name'].' '.(($item_stock[0]['units_available_2']>0)?'| '.$item_stock[0]['units_available_2'].' '.$item_stock[0]['uom_name_2']:'').'</b></td>
                                 <td align="right" colspan="1"> '.$item_info['item_code'].'</td>
                             </tr>
                             <tr>
-                                <td  colspan="2"><img style="width:100px;" src="'.$base64.'"></td>
+                                <td  colspan="2"><img style="width:200px;" src="'.$base64.'"></td>
                             </tr>
                         </table>
+                        <style>
+                            td{
+                                line-height:10.5px;
+                            }
+                        </style>
                 ';
                 
-                $pdf->writeHTMLCell(30, 22, 0.5, 0.5, $html); 
+                $pdf->writeHTMLCell(39, 38, 0.5, 0.5, $html); 
             }
         }
     
