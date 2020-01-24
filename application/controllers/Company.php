@@ -145,13 +145,15 @@ class Company extends CI_Controller {
 	
 	function update(){
             $inputs = $this->input->post();
+
+            // echo "<pre>"; print_r($inputs); die;
             
             if(isset($inputs['status'])){
                 $inputs['status'] = 1;
             } else{
                 $inputs['status'] = 0;
             }
-            $data = array(
+            $data['company'] = array(
                             'company_name' => $inputs['company_name'],
                             'street_address' => $inputs['street_address'],
                             'city' => $inputs['city'],
@@ -172,10 +174,21 @@ class Company extends CI_Controller {
                             'updated_on' => date('Y-m-d'),
                             'updated_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
                         ); 
+                $data['bank'] = array(
+                    'bank_name'=>$inputs['bank_name'],
+                    'bank_code'=>$inputs['bank_code'],
+                    'swift_code'=>$inputs['swift_name'],
+                    'bank_account_number'=>$inputs['bank_account_number'],
+                    'bank_account_name'=>$inputs['bank_account_name'],
+                    'bank_account_branch'=>$inputs['bank_account_branch'],
+                    'bank_account_branch_code'=>$inputs['bank_account_branch_code'],
+                    'bank_account_branch_address'=>$inputs['bank_account_branch_address'],
+                );
+
                     
                     $fupload = $this->do_upload('logo','logo_'.$inputs['id']); 
                     if($fupload!=''){
-                        $data['logo'] = $fupload;
+                        $data['company']['logo'] = $fupload;
                     } 
                     
             //old data for log update
