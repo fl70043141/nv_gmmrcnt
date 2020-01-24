@@ -772,7 +772,7 @@ function inv_html_generator_bangrak($inv_data, $tmp_mail=''){
                     <tbody>';
         $html .= $gem_list_html;
         $html .= '<tr>
-                        <td  style="text-align: right;" colspan="4"><b>Total units: </b></td> 
+                        <td  style="text-align: right;" colspan="5"><b>Total units: </b></td> 
                         <td  style="border-top: 1px solid #00000;text-align: center;"><b>'.$gmqty2.' </b></td> 
                         <td  style="border-top: 1px solid #00000;text-align: center;"><b>'.$gmqty1.' </b></td> 
                         <td  style="text-align: right;" colspan="2"></td> 
