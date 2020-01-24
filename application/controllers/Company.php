@@ -169,6 +169,7 @@ class Company extends CI_Controller {
                             'company_type' => $inputs['company_type'],
                             'company_grade    ' => $inputs['company_grade'],
                             'reg_no' => $inputs['reg_no'],
+                            'bank_details' => $inputs['bank_details'],
 //                            'logo' => 'logo.jpg',
                             'status' => $inputs['status'],
                             'updated_on' => date('Y-m-d'),

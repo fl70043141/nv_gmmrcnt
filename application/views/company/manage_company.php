@@ -19,6 +19,7 @@
                         'reg_no'=>"",
                         'logo'=>"",
                         'status'=>"",
+                        'bank_details'=>"",
 
 
                         'bank_name'=>"",
@@ -312,6 +313,15 @@ endswitch;
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                        <label class="col-md-3 control-label">Bank details<span style="color: red"></span></label>
+                                                        <div class="col-md-9">
+                                                            <?php echo form_textarea(array('name'=>'bank_details','rows'=>'4','cols'=>'60', 'class'=>'form-control', 'placeholder'=>'Enter bank_details' ), set_value('bank_details',$result['bank_details']),$dis.' '.$o_dis.' '); ?>
+                                                            <span class="help-block"><?php echo form_error('bank_details');?></span>
+                                                        </div>
+                                                    </div>
+                                            </div>
                                              
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -360,7 +370,7 @@ endswitch;
                                         
                         </div>
                            
-                        <div class="col-md-6 ">
+                        <div class="col-md-6 hide" >
                                        <h5>Company bank account </h5>
                                        <hr>          
                                             <div class="form-group">

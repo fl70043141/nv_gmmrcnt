@@ -19,6 +19,7 @@
                         'currency_code'=>(isset($so_data['currency_code'])?$so_data['currency_code']:$this->session->userdata(SYSTEM_CODE)['default_currency']),
                         'item_quantity'=>1,
                         'item_quantity_2'=>1,
+                        'parcel_count'=>1,
                         );   		
 	
 	 
@@ -332,6 +333,13 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                             <h5>Order Delivery Info</h5>
                             <hr>
                             <div class="col-md-6"> 
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Number of Parcels<span style="color: red"></span></label>
+                                    <div class="col-md-9">  
+                                        <input type="number" name="parcel_count" id="parcel_count" min="0" value="<?php echo $result['parcel_count']; ?>" class="form-control" placeholder="Enter Number of parcel for this invoice" <?php echo $dis.' '.$o_dis;?> >  
+                                        <?php echo form_error('parcel_count');?>
+                                    </div> 
+                                </div>
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">Deliver_from<span style="color: red">*</span></label>
                                     <div class="col-md-9">    
