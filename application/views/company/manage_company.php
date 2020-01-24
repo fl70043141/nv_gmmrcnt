@@ -19,6 +19,17 @@
                         'reg_no'=>"",
                         'logo'=>"",
                         'status'=>"",
+                        'bank_details'=>"",
+
+
+                        'bank_name'=>"",
+                        'bank_code'=>"",
+                        'swift_code'=>"",
+                        'bank_account_number'=>"",
+                        'bank_account_name'=>"",
+                        'bank_account_branch'=>"",
+                        'bank_account_branch_code'=>"",
+                        'bank_account_branch_address'=>"",
                         );   	
 	
 	 
@@ -302,6 +313,15 @@ endswitch;
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                        <label class="col-md-3 control-label">Bank details<span style="color: red"></span></label>
+                                                        <div class="col-md-9">
+                                                            <?php echo form_textarea(array('name'=>'bank_details','rows'=>'4','cols'=>'60', 'class'=>'form-control', 'placeholder'=>'Enter bank_details' ), set_value('bank_details',$result['bank_details']),$dis.' '.$o_dis.' '); ?>
+                                                            <span class="help-block"><?php echo form_error('bank_details');?></span>
+                                                        </div>
+                                                    </div>
+                                            </div>
                                              
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -349,6 +369,70 @@ endswitch;
                                         </div>
                                         
                         </div>
+                           
+                        <div class="col-md-6 hide" >
+                                       <h5>Company bank account </h5>
+                                       <hr>          
+                                            <div class="form-group">
+                                                    <label class="col-md-3 control-label">Bank Name</label>
+                                                    <div class="col-md-9">    
+                                                         <?php echo form_input('bank_name', set_value('bank_name',$result['bank_name']), 'id="bank_name" class="form-control" placeholder="Enter Bank Name"'.$dis.' '.$o_dis.' '); ?>
+                                                        <?php echo form_error('bank_name');?>&nbsp;
+                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label class="col-md-3 control-label">Bank Code</label>
+                                                    <div class="col-md-9">    
+                                                         <?php echo form_input('bank_code', set_value('bank_code',$result['bank_code']), 'id="bank_code" class="form-control" placeholder="Enter Bank Code"'.$dis.' '.$o_dis.' '); ?>
+                                                        <?php echo form_error('bank_code');?>&nbsp;
+                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label class="col-md-3 control-label">Swift Code</label>
+                                                    <div class="col-md-9">    
+                                                         <?php echo form_input('swift_code', set_value('swift_code',$result['swift_code']), 'id="swift_code" class="form-control" placeholder="Enter Bank Swift Code"'.$dis.' '.$o_dis.' '); ?>
+                                                        <?php echo form_error('swift_code');?>&nbsp;
+                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label class="col-md-3 control-label">Bank A/C No</label>
+                                                    <div class="col-md-9">    
+                                                         <?php echo form_input('bank_account_number', set_value('bank_account_number',$result['bank_account_number']), 'id="bank_account_number" class="form-control" placeholder="Enter Bank Account No"'.$dis.' '.$o_dis.' '); ?>
+                                                        <?php echo form_error('bank_account_number');?>&nbsp;
+                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label class="col-md-3 control-label">Bank A/C Name</label>
+                                                    <div class="col-md-9">    
+                                                         <?php echo form_input('bank_account_name', set_value('bank_account_name',$result['bank_account_name']), 'id="bank_account_name" class="form-control" placeholder="Enter Bank Account name"'.$dis.' '.$o_dis.' '); ?>
+                                                         <?php echo form_error('bank_account_name');?>&nbsp; 
+                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label class="col-md-3 control-label">Bank A/C Branch</label>
+                                                    <div class="col-md-9">    
+                                                         <?php echo form_input('bank_account_branch', set_value('bank_account_branch',$result['bank_account_branch']), 'id="bank_account_name" class="form-control" placeholder="Enter Bank Account Branch"'.$dis.' '.$o_dis.' '); ?>
+                                                         <?php echo form_error('bank_account_branch');?>&nbsp; 
+                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label class="col-md-3 control-label">Branch Code</label>
+                                                    <div class="col-md-9">    
+                                                         <?php echo form_input('bank_account_branch_code', set_value('bank_account_branch_code',$result['bank_account_branch_code']), 'id="bank_account_branch_code" class="form-control" placeholder="Enter Bank Account Branch code"'.$dis.' '.$o_dis.' '); ?>
+                                                         <?php echo form_error('bank_account_branch_code');?>&nbsp; 
+                                                    </div>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label class="col-md-3 control-label">Branch Address</label>
+                                                    <div class="col-md-9">    
+                                                         <?php echo form_input('bank_account_branch_address', set_value('bank_account_branch_address',$result['bank_account_branch_address']), 'id="bank_account_branch_address" class="form-control" placeholder="Enter Bank Account Branch address"'.$dis.' '.$o_dis.' '); ?>
+                                                         <?php echo form_error('bank_account_branch_address');?>&nbsp; 
+                                                    </div>
+                                            </div>
+                        
+                                      
+
+                                </div> 
                     </div>
                           <!-- /.box-body -->
 

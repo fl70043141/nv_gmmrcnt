@@ -179,6 +179,7 @@ class Sales_invoices extends CI_Controller {
                                     'currency_code' => $inputs['currency_code'], 
                                     'currency_value' => $cur_det['value'], 
                                     'location_id' => $inputs['location_id'],
+                                    'parcel_count' => $inputs['parcel_count'],
                                     'payment_settled' => 0,
                                     'status' => 1,
                                     'added_on' => date('Y-m-d'),

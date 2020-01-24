@@ -614,14 +614,18 @@ function inv_html_generator_bangrak($inv_data, $tmp_mail=''){
 
     $html = $bank_html = '';
     if(BANK_INFO !='' && $bank_info=='1'){
-        $bank_info = json_decode(BANK_INFO, true);
+
+        $company_info = get_single_row_helper(COMPANIES,'id = 1');
         // echo '<pre>'; print_r($bank_info);
-        foreach($bank_info as  $bank_value){
-            foreach($bank_value as $bank_key => $bank_col){
-                $bank_html .=  '<tr><td style="padding:10px; text-align:right">'.(($bank_key!='')?$bank_key.': ':'').$bank_col.'</td></tr>';
+        if($company_info['bank_details'] != ""){
+            $bank_info = explode(PHP_EOL,$company_info['bank_details']);
+            foreach($bank_info as  $bank_value){
+                $bank_html .=  '<tr><td style="padding:10px; text-align:right">'.$bank_value.'</td></tr>';
             }
         }
+        
     }
+    // echo"<pre>"; print_r($inv_dets); die;
     $html .= '<table style="padding:2;" border="0.0"> 
                 <tr>
                     <td>
@@ -636,7 +640,7 @@ function inv_html_generator_bangrak($inv_data, $tmp_mail=''){
                                 <td style="padding:10px;">Full Name: '.$inv_dets['customer_name'].'</td> 
                             </tr>   
                             <tr>
-                                <td style="padding:10px;">Address: '.$inv_dets['address'].(($inv_dets['city']!='')?', '.$inv_dets['city']:'').'</td> 
+                                <td style="padding:10px;">Address: '.$inv_dets['address'].(($inv_dets['city']!='')?', '.$inv_dets['city']:'').(($inv_dets['cust_country']!='')?', '.$inv_dets['cust_country']:'').'</td> 
                             </tr>   
                         </table> 
                     </td>
@@ -697,12 +701,14 @@ function inv_html_generator_bangrak($inv_data, $tmp_mail=''){
                     $lwh = '';
             }
             $gem_list_html .= '<tr>
-                                <td width="19%" style="text-align: left;">'.$inv_itm['item_description'].'</td> 
+                                <td width="3%" style="text-align: left;">'.$gmcount.'.</td> 
+                                <td width="17%" style="text-align: left;">'.$inv_itm['item_description'].'</td> 
                                 <td width="10%" style="text-align: left;">'.$inv_itm['item_code'].'</td>  
                                 <td width="10%">'. (($item_info['treatment']>0)?get_dropdown_value($item_info['treatment']):'-').'</td>  
                                 <td width="15%">'. (($item_info['shape']>0)?get_dropdown_value($item_info['shape']):'-').(($lwh.="")?' <br>'.$lwh:'').'</td>  
-                                <td width="18%" style="text-align: center;">'.$inv_itm['item_quantity'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['item_quantity_uom_id_2']>0)?' / '.$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
-                                <td width="14%" style="text-align: right;"> '. number_format($inv_itm['unit_price'],2).'</td> 
+                                <td width="9%" style="text-align: center;">'.(($inv_itm['item_quantity_uom_id_2']>0)?$inv_itm['item_quantity_2'].' '.$inv_itm['unit_abbreviation_2']:'--').'</td> 
+                                <td width="9%" style="text-align: center;">'.$inv_itm['item_quantity'].' '.$inv_itm['unit_abbreviation'].'</td> 
+                                <td width="13%" style="text-align: right;"> '. number_format($inv_itm['unit_price'],2).'</td> 
                                 <td width="14%" style="text-align: right;"> '. number_format($inv_itm['sub_total'],2).'</td> 
                             </tr> ';
             $inv_tot+=$inv_itm['sub_total'];
@@ -752,20 +758,23 @@ function inv_html_generator_bangrak($inv_data, $tmp_mail=''){
         $html .= '<table id="example2" class="table-line" border="0">
                         <thead> 
                             <tr style=""> 
-                                <th width="19%" style="text-align: left;"><u><b>Gemstone</b></u></th>  
+                                <th width="3%" style="text-align: left;"><u><b>#</b></u></th>  
+                                <th width="17%" style="text-align: left;"><u><b>Gemstone</b></u></th>  
                                 <th width="10%" style="text-align: left;"><u><b>Item Code</b></u></th>  
                                 <th width="10%" style="text-align: left;"><u><b>CDC</b></u></th> 
                                 <th  width="15%" style="text-align: left;" ><u><b>Shape</b></u></th>   
-                                <th  width="18%" style="text-align: center;" ><u><b>Weight</b></u></th>  
-                                <th width="14%" style="text-align: right;"><u><b>Unit Prc. ('.$cur_det['symbol_left'].')</b></u></th> 
+                                <th  width="9%" style="text-align: center;" ><u><b>Pcs</b></u></th>  
+                                <th  width="9%" style="text-align: center;" ><u><b>Weight</b></u></th>  
+                                <th width="13%" style="text-align: right;"><u><b>Unit Prc. ('.$cur_det['symbol_left'].')</b></u></th> 
                                 <th width="14%" style="text-align: right;"><u><b>Price ('.$cur_det['symbol_left'].')</b></u></th> 
                                 </tr>
                         </thead>
                     <tbody>';
         $html .= $gem_list_html;
         $html .= '<tr>
-                        <td  style="text-align: right;" colspan="5"><b>Total units: </b></td> 
-                        <td  style="border-top: 1px solid #00000;text-align: center;"><b> '.$gmqty1.' / '.$gmqty2.' </b></td> 
+                        <td  style="text-align: right;" colspan="4"><b>Total units: </b></td> 
+                        <td  style="border-top: 1px solid #00000;text-align: center;"><b>'.$gmqty2.' </b></td> 
+                        <td  style="border-top: 1px solid #00000;text-align: center;"><b>'.$gmqty1.' </b></td> 
                         <td  style="text-align: right;" colspan="2"></td> 
                     </tr>';
         $html .= ' <tr><td  colspan="5"></td></tr></tbody></table>';  
@@ -794,7 +803,7 @@ function inv_html_generator_bangrak($inv_data, $tmp_mail=''){
             }
           
             $html .= '<tr>
-                        <td  style="text-align: right;" colspan="4"><b>Total</b></td> 
+                        <td  style="text-align: right;" colspan="4"><b>CIF '.(($inv_dets['cust_country']!='')?$inv_dets['cust_country']:'').'</b></td> 
                         <td width="20%"  style="border-top: 1.5px solid #00000;text-align: right;"><b> '. number_format($inv_tot,2).'</b></td> 
                     </tr>';
     }
@@ -828,9 +837,12 @@ function inv_html_generator_bangrak($inv_data, $tmp_mail=''){
                         
                         
     $html .= $payment.$old_gold;
-    $html .= '<table><tr>
-                <td>('.strtoupper($cur_det['title']).' '.numberTowords($inv_tot).')</td> 
-            </tr></table';
+    $html .= '<table>
+                    <tr><td>('.strtoupper($cur_det['title']).' '.numberTowords($inv_tot).')</td></tr>
+                    <tr><td></td></tr>
+                    <tr><td>TOTAL '.numberTowords($inv_dets['parcel_count']).' PARCEL(S) ONLY </td></tr>
+                    <tr><td>NET. W '.($gmqty1/5).' GMS </td></tr>
+                </table';
 
     if($cert_info==1 || $bank_info==1 || $html_certs!=''){
         $html .= '<table border="0">
