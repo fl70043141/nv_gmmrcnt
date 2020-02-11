@@ -249,6 +249,12 @@ endswitch;
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group pad1">
+                                                <label for="certification_no">Cert. Reference</label>
+                                                <input type="text" name="certification_no" class="form-control add_item_inpt" value="" id="certification_no" placeholder="Enter certification number">
+                                            </div>
+                                        </div>
+                                        <div hidden class="col-md-2">
+                                            <div class="form-group pad1">
                                                 <label for="partnership_value">Partnership <input type="checkbox" name="is_partnership" id="is_partnership" value="1" ></label>
                                                 <input type="text" name="partnership_value" class="form-control add_item_inpt" value="1" id="partnership_value" placeholder="Enter Partnership Ratio">
                                             </div>
@@ -329,8 +335,8 @@ endswitch;
                                                <th width="3%"  style="text-align: left;">#</th> 
                                                <th width="10%"  style="text-align: left;">Stone</th> 
                                                <th hidden width="7%"  style="text-align: left;">Code</th> 
-                                               <th width="6%" style="text-align: center;">N/H</th> 
-                                               <th width="9%" style="text-align: center;">Partnership</th> 
+                                               <th width="6%" style="text-align: center;">N/H</th>  
+                                               <!-- <th width="9%" style="text-align: center;">Partnership</th>  -->
                                                <th width="9%" style="text-align: center;">Dimension(mm)</th>
                                                <th width="7%" style="text-align: center;">Shape</th> 
                                                <th width="8%" style="text-align: center;">Color</th> 
@@ -517,10 +523,10 @@ $(document).ready(function(){
                                                         '<td hidden><input hidden name="inv_items['+rowCount+'][item_code]" class="item_code_row" value="'+$('#item_code').val()+'">'+$('#item_code').val()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_treatments]" value="'+$('#treatments').val()+'">'+$("#treatments option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][dimension]" value="'+$('#dimension').val()+'">'+$("#dimension").val()+'</td>'+
-                                                        '<td align="center"><input hidden name="inv_items['+rowCount+'][partnership_ratio]" value="'+$('#partnership_value').val()+'"><input hidden name="inv_items['+rowCount+'][is_partnership]" value="'+(($("#is_partnership").prop('checked'))?1:0)+'">'+(($("#is_partnership").prop('checked') && $("#partnership_value").val()!='1')?'P-'+$("#partnership_value").val():'-')+'</td>'+
+                                                        '<td hidden align="center"><input hidden name="inv_items['+rowCount+'][partnership_ratio]" value="'+$('#partnership_value').val()+'"><input hidden name="inv_items['+rowCount+'][is_partnership]" value="'+(($("#is_partnership").prop('checked'))?1:0)+'">'+(($("#is_partnership").prop('checked') && $("#partnership_value").val()!='1')?'P-'+$("#partnership_value").val():'-')+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][shape]" value="'+$('#shape').val()+'">'+$("#shape option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][color]" value="'+$('#color').val()+'">'+$("#color option:selected" ).text()+'</td>'+
-                                                        '<td align="center"><input hidden name="inv_items['+rowCount+'][certification]" value="'+$('#certification').val()+'">'+$("#certification option:selected" ).text()+'</td>'+
+                                                        '<td align="center"><input hidden name="inv_items['+rowCount+'][certification]" value="'+$('#certification').val()+'"><input hidden name="inv_items['+rowCount+'][certification_no]" value="'+$('#certification_no').val()+'">'+$("#certification option:selected" ).text()+' '+(($('#certification_no').val()!="")?'<br>('+$('#certification_no').val()+')':'')+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][origin]" value="'+$('#origin').val()+'">'+$("#origin option:selected" ).text()+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][selling_price]" value="'+unit_selling_price+'">'+unit_selling_price.toFixed(2)+'</td>'+
                                                         '<td align="center"><input hidden name="inv_items['+rowCount+'][item_quantity]" value="'+$('#item_quantity').val()+'"><input hidden name="inv_items['+rowCount+'][item_quantity_2]" value="'+(($('#item_quantity_2').val()==null)?0:$('#item_quantity_2').val())+'">'+

@@ -164,6 +164,7 @@ class Purchasing_gemstones extends CI_Controller {
                                                     'item_uom_id_2' => $item['item_quantity_uom_id_2'],
                                                     'item_category_id' => $item['cat_id'],
                                                     'certification' => $item['certification'],
+                                                    'certification_no' => $item['certification_no'],
                                                     'color' => $item['color'],
                                                     'treatment' => $item['item_treatments'],
                                                     'shape' => $item['shape'],

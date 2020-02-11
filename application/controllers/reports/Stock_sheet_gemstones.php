@@ -151,20 +151,22 @@ class Stock_sheet_gemstones extends CI_Controller {
 
             }
                 // set font
-                $pdf->SetFont('times', '', 9.4);
+                $pdf->SetFont('times', '', 8);
                 $pdf->SetTextColor(32,32,32);
             
             $html .= '<table id="example1" class="table-line" border="0">
                                                     <thead> 
                                                         <tr style=""> 
-                                <th width="12%" align="center"><b>Code</b></th> 
-                                <th width="23%" align="center"><b>Desc</b></th> 
-                                <th width="9%" align="center"><b>Treatment</b></th> 
-                                <th width="9%" align="center"><b>color</b></th> 
-                                <th width="9%" align="center"><b>shape</b></th> 
-                                <th width="13%" align="right" colspan="1"><b>In Stock</b></th> 
-                                <th width="13%" align="right" colspan="1"><b>On Lapidary</b></th>  
-                                <th width="13%" align="right" colspan="1"><b>On Consignee</b></th>
+                                <th width="7%" align="center"><b>Code</b></th> 
+                                <th width="14%" align="center"><b>Desc</b></th> 
+                                <th width="13%" align="center"><b>Dimension</b></th> 
+                                <th width="8%" align="center"><b>Treatment</b></th> 
+                                <th width="10%" align="center"><b>color</b></th> 
+                                <th width="8%" align="center"><b>shape</b></th> 
+                                <th width="5%" align="center"><b>Selling</b></th> 
+                                <th width="12%" align="right" colspan="1"><b>In Stock</b></th> 
+                                <th width="12%" align="right" colspan="1"><b>On Lapidary</b></th>  
+                                <th width="12%" align="right" colspan="1"><b>On Consignee</b></th>
                             </tr> 
                         </thead>
                         <tbody>';  
@@ -175,14 +177,16 @@ class Stock_sheet_gemstones extends CI_Controller {
              
                         if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
                            $html .= '<tr>
-                                        <td width="12%" align="center">'.$item['item_code'].'</td>
-                                        <td width="23%" align="center" >'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
-                                        <td width="9%" align="center" >'.$item['treatment_name'].'</td>
-                                        <td width="9%" align="center" >'.$item['color_name'].'</td>
-                                        <td width="9%" align="center" >'.$item['shape_name'].'</td>
-                                        <td width="13%" align="right" >'.$item['units_available'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'').'</td> 
-                                        <td width="13%" align="right">'.$item['units_on_workshop'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_workshop_2'].' '.$item['uom_name_2']:'').'</td>
-                                        <td width="13%" align="right">'.$item['units_on_consignee'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_consignee_2'].' '.$item['uom_name_2']:'').'</td>
+                                        <td width="7%" align="center">'.$item['item_code'].'</td>
+                                        <td width="14%" align="center" >'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                                        <td width="13%" align="center" >'.$item['dimension'].'</td>
+                                        <td width="8%" align="center" >'.$item['treatment_name'].'</td>
+                                        <td width="10%" align="center" >'.$item['color_name'].'</td>
+                                        <td width="8%" align="center" >'.$item['shape_name'].'</td>
+                                        <td width="5%" align="center" >'.$item['selling_price'].'</td>
+                                        <td width="12%" align="right" >'.$item['units_available'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'').'</td> 
+                                        <td width="12%" align="right">'.$item['units_on_workshop'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_workshop_2'].' '.$item['uom_name_2']:'').'</td>
+                                        <td width="12%" align="right">'.$item['units_on_consignee'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_consignee_2'].' '.$item['uom_name_2']:'').'</td>
 
                                     </tr>';
                             }   
@@ -229,17 +233,32 @@ class Stock_sheet_gemstones extends CI_Controller {
             $input = (empty($input_post))? $input_get:$input_post; 
 //            echo '<pre>';            print_r($input); die;  
             $this->load->model("Reports_all_model");
+            $this->load->model("Items_model");
             $item_stocks = $this->Reports_all_model->get_item_stocks_gemstones($input);
             
-//            echo '<pre>';            print_r($item_stocks); die; 
+        //    echo '<pre>';            print_r($item_stocks); die; 
+
             $ret_arr = array();
-//            foreach ($item_stocks as $item_stock){
-//                $ret_arr[$item_stock['item_category_id']]['item_category_name'] = $item_stock['item_category_name'];
-//                $ret_arr[$item_stock['item_category_id']]['item_list'][$item_stock['item_id']] = $item_stock;
-//            } 
+           foreach ($item_stocks as $item_stock){
+            //    $ret_arr[$item_stock['item_category_id']]['item_category_name'] = $item_stock['item_category_name'];
+            //    $ret_arr[$item_stock['item_category_id']]['item_list'][$item_stock['item_id']] = $item_stock;
+                $item_sale__price_info = $this->Items_model->get_item_purch_prices($item_stock['item_id'], 'ip.item_price_type=2 AND ip.sales_type_id=15'); //sale type=2
+                if(!empty($item_sale__price_info)){
+                    $item_stock['selling_price'] = $item_sale__price_info[0]['symbol_left'].number_format($item_sale__price_info[0]['cost_amount'],2);
+                }
+
+                $item_info = get_single_row_helper(ITEMS, "id=".$item_stock['item_id']);
+                    
+                $dimension = (($item_info['length']>0)?$item_info['length'].' x ':'').(($item_info['width']>0)?$item_info['width'].' x ':'').(($item_info['length']>0)?$item_info['height']:'');
+                $dimension = ($dimension!="")?$dimension.' mm '.$item_info['size']:$item_info['size'];
+                $item_stock['dimension'] = $dimension;
+
+                // echo '<pre>';            print_r($item_info); die; 
+                $ret_arr[] = $item_stock;
+           } 
             
-//            echo '<pre>';            print_r($ret_arr); die; 
-            return $item_stocks;
+        //    echo '<pre>';            print_r($ret_arr[0]); die; 
+            return $ret_arr;
         }
         
         function print_report2(){
@@ -257,14 +276,16 @@ class Stock_sheet_gemstones extends CI_Controller {
             $html .= '<table width="100%" id="example1" class="table-line" border="0">
                                                     <thead> 
                                                         <tr style=""> 
-                                <th width="12%" align="center"><b>Code</b></th> 
-                                <th width="23%" align="center"><b>Desc</b></th> 
-                                <th width="9%" align="center"><b>Treatment</b></th> 
-                                <th width="9%" align="center"><b>color</b></th> 
-                                <th width="9%" align="center"><b>shape</b></th> 
-                                <th width="13%" align="right" colspan="1"><b>In Stock</b></th> 
-                                <th width="13%" align="right" colspan="1"><b>On Lapidary</b></th>  
-                                <th width="13%" align="right" colspan="1"><b>On Consignee</b></th>
+                                <th width="7%" "8%" align="center"><b>Code</b></th> 
+                                <th width="14%" "18%" align="center"><b>Desc</b></th> 
+                                <th width="13%" "9%" align="center"><b>Dimension</b></th> 
+                                <th width="8%" "7%" align="center"><b>CDC</b></th> 
+                                <th width="10%" "7%" align="center"><b>color</b></th> 
+                                <th width="8%" "7%" align="center"><b>shape</b></th> 
+                                <th width="5%" "9%" align="right"><b>Selling price</b></th> 
+                                <th width="12%" "11%" align="right" colspan="1"><b>In Stock</b></th> 
+                                <th width="12%" "11%" align="right" colspan="1"><b>On Lapidary</b></th>  
+                                <th width="12%" "11%" align="right" colspan="1"><b>On Consignee</b></th>
                             </tr> 
                         </thead>
                         <tbody>';  
@@ -275,14 +296,16 @@ class Stock_sheet_gemstones extends CI_Controller {
              
                         if($item['units_available']>0 || $item['units_on_workshop']>0 || $item['units_on_consignee']>0){
                            $html .= '<tr>
-                                        <td width="12%" align="center">'.$item['item_code'].'</td>
-                                        <td width="23%" align="center" >'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
-                                        <td width="9%" align="center" >'.$item['treatment_name'].'</td>
-                                        <td width="9%" align="center" >'.$item['color_name'].'</td>
-                                        <td width="9%" align="center" >'.$item['shape_name'].'</td>
-                                        <td width="13%" align="right" >'.$item['units_available'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'').'</td> 
-                                        <td width="13%" align="right">'.$item['units_on_workshop'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_workshop_2'].' '.$item['uom_name_2']:'').'</td>
-                                        <td width="13%" align="right">'.$item['units_on_consignee'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_consignee_2'].' '.$item['uom_name_2']:'').'</td>
+                                        <td width="7%" align="center">'.$item['item_code'].'</td>
+                                        <td width="14%" align="center" >'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                                        <td width="13%" align="center" >'.$item['dimension'].'</td>
+                                        <td width="8%" align="center" >'.$item['treatment_name'].'</td>
+                                        <td width="10%" align="center" >'.$item['color_name'].'</td>
+                                        <td width="8%" align="center" >'.$item['shape_name'].'</td>
+                                        <td width="5%" align="right" >'.$item['selling_price'].'</td>
+                                        <td width="12%" align="right" >'.$item['units_available'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_available_2'].' '.$item['uom_name_2']:'').'</td> 
+                                        <td width="12%" align="right">'.$item['units_on_workshop'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_workshop_2'].' '.$item['uom_name_2']:'').'</td>
+                                        <td width="12%" align="right">'.$item['units_on_consignee'].' '.$item['uom_name'].(($item['uom_id_2']!=0)?' | '.$item['units_on_consignee_2'].' '.$item['uom_name_2']:'').'</td>
 
                                     </tr>';
                             }   
