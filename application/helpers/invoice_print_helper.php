@@ -2,10 +2,11 @@
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 function inv_print_congiguration($inv_data, $company_code='', $tmp_mail){
-    if($company_code=='NV_GEM_MERCH_DEV')
-        inv_html_generator_bangrak($inv_data,$tmp_mail);
-    else
-        inv_html_generator_default($inv_data,$tmp_mail);
+    switch($company_code){
+        case 'NV_GEM_MERCH_DEV': inv_html_generator_bangrak($inv_data,$tmp_mail); break;
+        case 'NV_BANGRAK_LIVE': inv_html_generator_bangrak($inv_data,$tmp_mail); break;
+        default: inv_html_generator_bangrak($inv_data,$tmp_mail); break;
+    }
 }
 
 function inv_html_generator_default($inv_data, $tmp_mail=''){
