@@ -64,7 +64,7 @@ function barcode_print_items($item_id, $purchase_id=''){
                                 <td  colspan="2"><b>'.$item_info['item_name'].(($item_info['color']!='')?' ('.$item_info['color_name'].')':'').(($item_info['certification']>0)?' - C':'').' </b></td>
                             </tr>
                             <tr>
-                                <td  colspan="2">'.(($dimension=='')?'':$dimension.' ').$item_info['shape_name'].'</td>
+                                <td  colspan="2">'.$dimension.' '.$item_info['shape_name'].'</td>
                             </tr>
                             <tr>
                                 <td  colspan="2">'.$item_info['treatment_name'].'</td>
