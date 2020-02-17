@@ -164,6 +164,7 @@ class Purchasing_gemstones extends CI_Controller {
                                                     'item_uom_id_2' => $item['item_quantity_uom_id_2'],
                                                     'item_category_id' => $item['cat_id'],
                                                     'certification' => $item['certification'],
+                                                    'certification_no' => $item['certification_no'],
                                                     'color' => $item['color'],
                                                     'treatment' => $item['item_treatments'],
                                                     'shape' => $item['shape'],
@@ -646,8 +647,11 @@ class Purchasing_gemstones extends CI_Controller {
         
         function print_barcode_purchase($item_id,$purch_id=''){
             $this->load->helper('print_pdf_helper');
-            
-            barcode_print_items($item_id,$purch_id);
+            // print_r(NO_GEM); die;
+            if(NO_GEM==1)
+                barcode_print_jwl_items($item_id,$purch_id);
+            else
+                barcode_print_items($item_id,$purch_id);
         }
 
         function supplier_invoice_print($inv_id){ 

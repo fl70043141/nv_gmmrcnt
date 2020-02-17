@@ -5,9 +5,11 @@
                         <th>#</th>
                         <th style="text-align:center;">Code</th> 
                         <th style="text-align:center;">Desc</th>  
+                        <th style="text-align:center;">Dimension</th>  
                         <th style="text-align:center;">CDC</th> 
                         <th style="text-align:center;">Color</th> 
                         <th style="text-align:center;">Shape</th> 
+                        <th style="text-align:right;">Selling price</th> 
                         <th style="text-align:center;">In Stock</th>  
                         <th style="text-align:center;">On Lapidary</th>   
                         <th style="text-align:center;">On Consignee</th>   
@@ -41,9 +43,11 @@
                                             <td>'.($i+1).'</td> 
                                             <td align="center">'.$item['item_code'].'</td>
                                             <td align="center">'.$item['item_name'].(($item['type_short_name']!='')?' <b>('.$item['type_short_name'].')</b>':'').'</td>
+                                            <td align="center">'.$item['dimension'].'</td>
                                             <td align="center">'.$item['treatment_name'].'</td>
                                             <td align="center">'.$item['color_name'].'</td>
                                             <td align="center">'.$item['shape_name'].'</td>
+                                            <td align="right">'.$item['selling_price'].'</td>
                                             <td align="center">'.$item['units_available'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_available_2'].' '.$item['uom_name_2']:'').'</td>
                                             <td align="center">'.$item['units_on_workshop'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_on_workshop_2'].' '.$item['uom_name_2']:'').'</td>
                                             <td align="center">'.$item['units_on_consignee'].' '.$item['uom_name'].' '.(($item['uom_id_2']!=0)?'| '.$item['units_on_consignee_2'].' '.$item['uom_name_2']:'').'</td>

@@ -178,7 +178,7 @@ $inv_trans = $inv_data['inv_transection'];
                                         <td width="" style="text-align: left;">'. (($item_info['shape']>0)?get_dropdown_value($item_info['shape']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['color']>0)?get_dropdown_value($item_info['color']):'-').'</td>   
                                         <td width="" style="text-align: left;">'. (($item_info['origin']>0)?get_dropdown_value($item_info['origin']):'-').'</td>   
-                                        <td width="" style="text-align: left;">'. (($item_info['certification']>0)?get_dropdown_value($item_info['certification']):'-').'</td>   
+                                        <td width="" style="text-align: left;">'. (($item_info['certification']>0)?get_dropdown_value($item_info['certification']):'-'). (($item_info['certification_no']!='')?' ('.$item_info['certification_no'].')':'').'</td>   
                                         <td width="">'.$inv_itm['purchasing_unit'].' '.$inv_itm['unit_abbreviation'].(($inv_itm['secondary_unit_uom_id']>0)?' | '.$inv_itm['secondary_unit'].' '.$inv_itm['unit_abbreviation_2']:'').'</td> 
                                         <td width="" style="text-align: right;">'. number_format($inv_itm['purchasing_unit_price'],2).'</td> 
                                         <td width="" style="text-align: right;">'. number_format($inv_itm['sub_total'],2).(($item_info['cost_code']!='')?' ('.$item_info['cost_code'].')':"").'</td> 
