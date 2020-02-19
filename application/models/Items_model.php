@@ -33,6 +33,7 @@ class Items_model extends CI_Model
 	
           public function get_single_row($id){
             $this->db->select('i.*');
+            $this->db->select('ic.category_code');
             $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.color)  as color_name');
             $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.shape)  as shape_name');
             $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.treatment)  as treatment_name');
@@ -99,6 +100,7 @@ class Items_model extends CI_Model
             $this->db->select('(ip.price_amount * sd.purchasing_unit) as cost_amount');
             $this->db->select('sd.purchasing_unit,sd.purchasing_unit_uom_id,sd.secondary_unit,sd.secondary_unit_uom_id');
             $this->db->select('(select supplier_name from '.SUPPLIERS.' where id = ip.supplier_id)  as supplier_name');
+            $this->db->select('(select supplier_ref from '.SUPPLIERS.' where id = ip.supplier_id)  as supplier_code');
             $this->db->select('(select symbol_left from '.CURRENCY.' where code = ip.currency_code)  as symbol_left');
             $this->db->join(SUPPLIER_INVOICE_DESC." sd", 'sd.item_id = ip.item_id');    
             $this->db->join(SUPPLIER_INVOICE." si", 'si.id = sd.supplier_invoice_id');    
