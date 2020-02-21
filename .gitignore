@@ -12,7 +12,7 @@ application/logs/*
 !application/logs/.htaccess
 /error_log/*
 composer.lock
-
+/storage/*
 user_guide_src/build/*
 user_guide_src/cilexer/build/*
 user_guide_src/cilexer/dist/*
