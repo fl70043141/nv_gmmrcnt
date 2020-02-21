@@ -10,7 +10,7 @@ application/logs/*
 /application/config/database.php
 !application/logs/index.html
 !application/logs/.htaccess
-
+/error_log/*
 composer.lock
 
 user_guide_src/build/*
