@@ -128,7 +128,7 @@ class Sales_pos extends CI_Controller {
 	function create(){   
             
             $inputs = $this->input->post();
-//            echo '<pre>';            print_r($inputs); die;
+        //    echo '<pre>';            print_r($inputs); die;
             $invoice_id = get_autoincrement_no(INVOICES);
             $invoice_no = gen_id(INVOICE_NO_PREFIX, INVOICES, 'id');
             
@@ -153,6 +153,7 @@ class Sales_pos extends CI_Controller {
                                     'currency_code' => $cur_det['code'], 
                                     'currency_value' => $cur_det['value'], 
                                     'location_id' => $inputs['location_id'],
+                                    'sales_person_id' => $inputs['sales_person_id'],
                                     'status' => 1,
                                     'added_on' => date('Y-m-d'),
                                     'added_by' => $this->session->userdata(SYSTEM_CODE)['ID'],
@@ -670,6 +671,7 @@ class Sales_pos extends CI_Controller {
             $data['shape_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Shape','dropdown_id = 16'); //16 for Shape
             $data['color_list'] = get_dropdown_data(DROPDOWN_LIST,'dropdown_value','id','No Color','dropdown_id = 17'); //17 for Color
             
+            $data['sales_person_list'] = get_dropdown_data(SALES_PERSONS, 'sales_person_name', 'id','No sales person');
             
             $data['country_list'] = get_dropdown_data(COUNTRY_LIST,'country_name','country_code',''); 
             return $data;
