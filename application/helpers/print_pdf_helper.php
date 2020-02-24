@@ -90,7 +90,7 @@ function barcode_print_items($item_id, $purchase_id=''){
                                 </tr>
                             </table>';
                 $pdf->Image($base64,1.5,31,37);
-                $pdf->writeHTMLCell(39, 10, 0.5, 28, $html2); 
+                $pdf->writeHTMLCell(39, 38, 0.5, 28, $html2); 
                 $pdf->writeHTMLCell(39, 38, 0.5, 0.5, $html); 
             }
         }
