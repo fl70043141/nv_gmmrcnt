@@ -68,22 +68,12 @@ function barcode_print_items($item_id, $purchase_id=''){
                             </tr>
                             <tr>
                                 <td  colspan="2">'.$item_info['treatment_name'].'</td>
-                            </tr>
-                            <tr>
-                                <td  colspan="2">Ref No: '.(($purch_price!=0)?$purch_price['supplier_invoice_no']:'').' </td>
-                            </tr>
+                            </tr> 
                             <tr>
                                 <td  colspan="2">'.$item_info['cost_code'].'</td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="line-height:15px;"><h3>'.(($sale_price['cost_amount']>0)?$sale_price['symbol_left'].number_format($sale_price['price_amount'],2).' ('.$sale_price['symbol_left'].number_format($sale_price['cost_amount'],2).')':'-').'</h3></td>
-                            </tr>
-                            <tr>
-                                <td colspan="1"><b>'.$item_stock[0]['units_available'].$item_stock[0]['uom_name'].' '.(($item_stock[0]['units_available_2']>0)?'| '.$item_stock[0]['units_available_2'].' '.$item_stock[0]['uom_name_2']:'').'</b></td>
-                                <td align="right" colspan="1"> '.$item_info['item_code'].'</td>
-                            </tr>
-                            <tr>
-                                <td  colspan="2"><img style="width:200px;" src="'.$base64.'"></td>
                             </tr>
                         </table>
                         <style>
@@ -92,7 +82,15 @@ function barcode_print_items($item_id, $purchase_id=''){
                             }
                         </style>
                 ';
-                
+
+                $html2 =  '<table border="0">
+                                <tr>
+                                    <td colspan="1"><b>'.$item_stock[0]['units_available'].$item_stock[0]['uom_name'].' '.(($item_stock[0]['units_available_2']>0)?'| '.$item_stock[0]['units_available_2'].' '.$item_stock[0]['uom_name_2']:'').'</b></td>
+                                    <td align="right" colspan="1"> '.$item_info['item_code'].'</td>
+                                </tr>
+                            </table>';
+                $pdf->Image($base64,1.5,31,37);
+                $pdf->writeHTMLCell(39, 38, 0.5, 28, $html2); 
                 $pdf->writeHTMLCell(39, 38, 0.5, 0.5, $html); 
             }
         }
