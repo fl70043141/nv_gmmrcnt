@@ -110,11 +110,12 @@ if ( ! function_exists('get_autoincrement_no'))
     }
     
 // single row
-    function get_single_row_helper($table='', $where=''){
+    function get_single_row_helper($table='', $where='', $order_by=''){
             $CI =& get_instance();
             $CI->db->select("*");	
             $CI->db->from($table);
             if($where!='')$CI->db->where($where);
+            if($order_by!='')$CI->db->order_by('id','desc');
                     
             $res = $CI->db->get()->result_array();	
             

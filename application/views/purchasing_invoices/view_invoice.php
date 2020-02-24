@@ -35,6 +35,7 @@ $inv_trans = $inv_data['inv_transection'];
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], 'Customer_payments', 'add_customer_payment'))?'<a href="'.base_url('Customer_payments/add_customer_payment/'.$inv_dets['id'].'/20').'" class="btn btn-app "><i class="fa fa-money"></i>Payments</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'delete'))?'<a href="'.base_url($this->router->fetch_class().'/delete/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-trash"></i>Delete Invoice</a>':''; ?>
             <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'supplier_invoice_print'))?'<a target="_blank" href="'.base_url($this->router->fetch_class().'/supplier_invoice_print/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-print"></i>Print Invoice</a>':''; ?>
+            <?php echo ($this->user_default_model->check_authority($this->session->userdata(SYSTEM_CODE)['user_role_ID'], $this->router->class, 'print_barcode_purchase'))?'<a target="_blank" href="'.base_url($this->router->fetch_class().'/print_barcode_purchase/0/'.$inv_dets['id']).'" class="btn btn-app "><i class="fa fa-barcode"></i>Print Barcodes</a>':''; ?>
 
         </div>
     </div>

@@ -32,6 +32,12 @@
             <i class="fa fa-user"></i> <span id="cust_refname">Customer</span>
         </a> 
     </div>
+    
+    <div class="col-md-12">
+        <div class="pull-right">
+        <?php echo form_dropdown('sales_person_id',$sales_person_list,set_value('sales_person_id'),' class="form-control  select2" style="width:100%;" id="sales_person_id"');?>
+        </div>
+    </div>
 </div>
 <script>
 

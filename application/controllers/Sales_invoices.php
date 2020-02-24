@@ -179,6 +179,7 @@ class Sales_invoices extends CI_Controller {
                                     'currency_code' => $inputs['currency_code'], 
                                     'currency_value' => $cur_det['value'], 
                                     'location_id' => $inputs['location_id'],
+                                    'sales_person_id' => $inputs['sales_person_id'],
                                     'parcel_count' => $inputs['parcel_count'],
                                     'payment_settled' => 0,
                                     'status' => 1,
@@ -1071,6 +1072,7 @@ class Sales_invoices extends CI_Controller {
             } 
             
             $data['customer_list'] = get_dropdown_data(CUSTOMERS, 'customer_name', 'id','');
+            $data['sales_person_list'] = get_dropdown_data(SALES_PERSONS, 'sales_person_name', 'id','No sales person');
             $data['customer_type_list'] = get_dropdown_data(CUSTOMER_TYPE, 'customer_type_name', 'id','');
             $data['country_list'] = get_dropdown_data(COUNTRY_LIST,'country_name','country_code',''); 
             $data['supplier_list'] = get_dropdown_data(SUPPLIERS,'supplier_name','id','No Supplier');
@@ -1348,7 +1350,7 @@ class Sales_invoices extends CI_Controller {
                             </tr>  
                             <tr>
                                 <td align="left"></td> 
-                                <td align="center"></td> 
+                                <td align="center">'.(($inv_dets['sales_person_name']!="")?'Sales person: '.$inv_dets['sales_person_name']:'').'</td> 
                                 <td align="right">Currency: '.$cur_det['code'].'</td> 
                             </tr>  
                             <tr><td  colspan="3"><br></td></tr>
@@ -1825,6 +1827,10 @@ class Sales_invoices extends CI_Controller {
                                 <td align="center">'.(($inv_dets['order_date']!='')?'Order Date: '.date(SYS_DATE_FORMAT,$inv_dets['order_date']):'').'</td> 
                                 <td align="right">'.(($inv_dets['sales_order_no']!='')?'Order No: '.$inv_dets['sales_order_no']:'').'</td> 
                             </tr>   
+                            <tr>
+                                <td style="line-height:0px;"  colspan="2"></td>
+                                <td style="line-height:9px; text-align:right">'.(($inv_dets['sales_person_name']!="")?'Sales person: '.$inv_dets['sales_person_name']:'').'</td> 
+                            </tr>
                             <tr><td style="line-height:5px;"  colspan="3"><br></td></tr>
                         </table>  ';
            

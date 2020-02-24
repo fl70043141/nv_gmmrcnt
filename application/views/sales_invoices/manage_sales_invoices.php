@@ -20,6 +20,7 @@
                         'item_quantity'=>1,
                         'item_quantity_2'=>1,
                         'parcel_count'=>1,
+                        'sales_person_id'=>"'",
                         );   		
 	
 	 
@@ -341,7 +342,14 @@ $so_hide = (isset($so_data['id'])?'hidden':""); //hid in Order to Invoice
                                     </div> 
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label">Deliver_from<span style="color: red">*</span></label>
+                                    <label class="col-md-3 control-label">Sales person<span style="color: red">*</span></label>
+                                    <div class="col-md-9">    
+                                         <?php  echo form_dropdown('sales_person_id',$sales_person_list,set_value('sales_person_id',$result['sales_person_id']),' class="form-control select2" data-live-search="true" id="sales_person_id"');?>
+                                         <!--<span class="help-block"><?php // echo form_error('customer_type_id');?>&nbsp;</span>-->
+                                    </div> 
+                                </div> 
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Deliver from<span style="color: red">*</span></label>
                                     <div class="col-md-9">    
                                          <?php  echo form_dropdown('location_id',$location_list,set_value('location_id',$result['location_id']),' class="form-control select2" data-live-search="true" id="location_id"');?>
                                          <!--<span class="help-block"><?php // echo form_error('customer_type_id');?>&nbsp;</span>-->
