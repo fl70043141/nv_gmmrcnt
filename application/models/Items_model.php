@@ -14,6 +14,7 @@ class Items_model extends CI_Model
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id)  as unit_abbreviation');
             $this->db->select('(select unit_abbreviation from '.ITEM_UOM.' where id = i.item_uom_id_2)  as unit_abbreviation_2');
             $this->db->select('(select category_name from '.ITEM_CAT.' where id = i.item_category_id)  as category_name');
+            $this->db->select('(select dropdown_value from '.DROPDOWN_LIST.' where id = i.shape)  as shape_name');
             $this->db->from(ITEMS." i");  
             if(isset($data['item_type_id']) && $data['item_type_id']==1) $this->db->join(SUPPLIER_INVOICE_DESC.' sd','sd.item_id = i.id'); 
             if(isset($data['item_type_id']) && $data['item_type_id']==1)  $this->db->join(SUPPLIER_INVOICE." si", 'si.id = sd.supplier_invoice_id'); 
